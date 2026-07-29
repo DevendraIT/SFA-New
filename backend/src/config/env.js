@@ -20,7 +20,7 @@ const envSchema = z.object({
   
  // CORS
   CORS_ORIGIN: z.string().default(
-  "http://localhost:5173,https://sfa-new.vercel.app/"
+  "http://localhost:5173,https://sfa-beige.vercel.app/"
 ),
   
   
