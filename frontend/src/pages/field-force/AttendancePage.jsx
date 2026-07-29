@@ -18,13 +18,6 @@ import { TableSkeleton } from "../../components/dashboard/LoadingSkeleton";
 
 export default function AttendancePage() {
   const { user } = useAuth();
-
-  const isSuperAdmin = Boolean(
-    user?.roles?.some((r) =>
-      typeof r === "string" ? r.toLowerCase().includes("super admin") : r.role?.name?.toLowerCase().includes("super admin")
-    )
-  );
-
   const [todayAttendance, setTodayAttendance] = useState(null);
   const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [attendanceSummary, setAttendanceSummary] = useState(null);
@@ -121,19 +114,14 @@ export default function AttendancePage() {
     );
   }
 
-  if (isSuperAdmin) {
-    return (
-      <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 shadow-sm space-y-4">
-        <div className="h-16 w-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
-          <LogIn size={28} />
-        </div>
-        <h2 className="text-xl font-bold text-slate-800">Attendance Operations Not Applicable</h2>
-        <p className="text-sm text-slate-500 max-w-md mx-auto">
-          Super Admin role manages platform administration and organization-wide analytics. Attendance check-in and check-out operations are reserved for field force employees.
-        </p>
-      </div>
-    );
+  if (error) {
+    return <ErrorState message="Failed to load attendance data" onRetry={loadData} />;
   }
+
+  const isCheckedIn = !!todayAttendance?.checkInAt && !todayAttendance?.checkOutAt;
+  const isCheckedOut = !!todayAttendance?.checkOutAt;
+  const duration = todayAttendance?.durationMins;
+  const summary = attendanceSummary || {};
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">

@@ -1,16 +1,13 @@
-import { useAuth } from "../../context/AuthContext";
-import useExecutiveDashboard from "../../hooks/useExecutiveDashboard";
-import OrgPerformanceTable from "../../components/dashboard/OrgPerformanceTable";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { RefreshCw, Search, TrendingUp } from "lucide-react";
+import useTeamMembers from "../../hooks/useTeamMembers";
+import useExecutiveData from "../../hooks/useExecutiveData";
+import ExecutivePerformanceCard from "../../components/team/ExecutivePerformanceCard";
+import ExecutivePerformanceChart from "../../components/team/ExecutivePerformanceChart";
+import ErrorState from "../../components/dashboard/ErrorState";
 
 export default function ExecutivePerformance() {
-  const { user } = useAuth();
-  const isSuperAdmin = Boolean(
-    user?.roles?.some((r) =>
-      typeof r === "string" ? r.toLowerCase().includes("super admin") : r.role?.name?.toLowerCase().includes("super admin")
-    )
-  );
-
-  const { dashboard, loading: superAdminLoading, refresh: refreshSuperAdmin } = useExecutiveDashboard();
   const { members, loading: membersLoading, error: membersError, refresh: refreshMembers } = useTeamMembers();
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,28 +28,6 @@ export default function ExecutivePerformance() {
       setSelectedMemberId(members[0].id);
     }
   }, [members, selectedMemberId]);
-
-  if (isSuperAdmin) {
-    return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <p className="text-sm text-slate-500 font-medium">Enterprise Control Center</p>
-            <h1 className="text-3xl font-bold text-slate-900 mt-1">Target & Performance Analytics</h1>
-            <p className="text-slate-500 mt-1">Organization-wide sales targets, achievement metrics, and performance status</p>
-          </div>
-          <button
-            onClick={refreshSuperAdmin}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-medium hover:bg-slate-50 transition"
-          >
-            <RefreshCw size={16} /> Refresh
-          </button>
-        </div>
-
-        <OrgPerformanceTable data={dashboard?.organizationPerformance || []} />
-      </motion.div>
-    );
-  }
 
   if (membersError) {
     return (

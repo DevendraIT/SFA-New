@@ -89,14 +89,6 @@ export default function Sidebar({
     if (isSuperAdmin) {
       return navigation.map((item) => {
         if (item.title === "Field Force") {
-          if (Array.isArray(item.children)) {
-            return {
-              ...item,
-              children: item.children.filter(
-                (child) => child.title !== "Attendance" && child.path !== "/field-force/attendance"
-              ),
-            };
-          }
           return {
             title: "Field Force",
             icon: item.icon,

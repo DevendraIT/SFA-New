@@ -26,7 +26,6 @@ export class DashboardService {
       recentUsers,
       recentOrders,
       orderMetrics,
-      organizationPerformance,
     ] = await Promise.all([
       this.repo.getOrganizationCount(),
       this.repo.getCompanyCount(organizationId),
@@ -45,7 +44,6 @@ export class DashboardService {
       this.repo.getRecentUsers(organizationId),
       this.repo.getRecentOrders(organizationId),
       this.repo.getOrderMetrics(organizationId, null, null, null),
-      this.repo.getOrganizationPerformanceMetrics(organizationId),
     ]);
 
     const formattedAllVisits = this._formatGroupBy(visitMetricsAll, 'status');
@@ -92,7 +90,6 @@ export class DashboardService {
       recentCompanies,
       recentUsers,
       recentOrders,
-      organizationPerformance,
     };
   }
 

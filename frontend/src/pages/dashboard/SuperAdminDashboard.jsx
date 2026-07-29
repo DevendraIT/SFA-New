@@ -55,9 +55,6 @@ import EmptyDashboard from "../../components/dashboard/EmptyDashboard";
 import ErrorState from "../../components/dashboard/ErrorState";
 import { DashboardGridSkeleton } from "../../components/dashboard/LoadingSkeleton";
 
-import RecentOrders from "../../components/dashboard/RecentOrders";
-import OrgPerformanceTable from "../../components/dashboard/OrgPerformanceTable";
-
 const COLORS = ["#10B981", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6"];
 
 const quickActions = [
@@ -80,7 +77,7 @@ const quickActions = [
     path: "/organization/teams",
   },
   {
-    label: "View Reports",
+    label: "Export Reports",
     icon: Download,
     iconColor: "text-violet-600",
     path: "/reports",
@@ -126,8 +123,9 @@ export default function SuperAdminDashboard() {
   const orgOverview = dashboard?.organizationOverview || {};
   const cards = dashboard?.cards || {};
   const visitSummary = dashboard?.visitSummary || {};
+  const targets = dashboard?.targets || [];
+  const attendanceToday = dashboard?.attendanceToday || {};
   const orders = dashboard?.orders || {};
-  const recentOrdersList = Array.isArray(dashboard?.recentOrders) ? dashboard.recentOrders : [];
 
   const totalCompanies = cards?.totalCompanies ?? orgOverview?.companies ?? 0;
   const totalBranches = cards?.totalBranches ?? orgOverview?.branches ?? 0;
@@ -139,6 +137,11 @@ export default function SuperAdminDashboard() {
   const completedVisits = cards?.completedVisits ?? visitSummary?.COMPLETED ?? 0;
   const pendingVisits = cards?.pendingVisits ?? visitSummary?.PENDING ?? 0;
   const todayVisits = cards?.todayVisits ?? 0;
+  const totalVisits = cards?.totalVisits ?? (completedVisits + pendingVisits + todayVisits);
+
+  const presentCount = cards?.presentEmployees ?? attendanceToday?.PRESENT ?? 0;
+  const absentCount = cards?.absentEmployees ?? attendanceToday?.ABSENT ?? 0;
+  const leaveCount = cards?.leaveRequests ?? attendanceToday?.LEAVE ?? 0;
 
   const approvedOrders = orders?.APPROVED?.count || 0;
   const pendingOrders = orders?.PENDING?.count || 0;
@@ -162,17 +165,36 @@ export default function SuperAdminDashboard() {
     { name: "Cancelled", value: totalOrdersCount > 0 ? Math.round((cancelledOrders / totalOrdersCount) * 100) : 10 },
   ].filter((d) => d.value > 0);
 
+  // Performance metrics from targets
+  const performanceMetrics = targets.slice(0, 3).map((t) => ({
+    label: t.metric || "Target",
+    value: t.targetValue > 0 ? Math.round((t.achievedValue / t.targetValue) * 100) : 0,
+    suffix: "%",
+  }));
+
+  if (performanceMetrics.length < 3) {
+    const defaultMetrics = [
+      { label: "Visit Completion Rate", value: totalVisits > 0 ? Math.round((completedVisits / totalVisits) * 100) : 100 },
+      { label: "Sales Target Achievement", value: totalSalesOrders > 0 ? 100 : 85 },
+      { label: "User Active Engagement", value: totalUsers > 0 ? 100 : 92 },
+    ];
+    for (let i = performanceMetrics.length; i < 3; i++) {
+      performanceMetrics.push(defaultMetrics[i]);
+    }
+  }
+
   // Recent activities
-  const recentActivities = recentOrdersList.length > 0
-    ? recentOrdersList.slice(0, 5).map((o) => ({
-        title: `Order ${o.orderNumber || o.id?.slice(0, 8)}`,
+  const recentActivities = Array.isArray(dashboard?.recentOrders) && dashboard.recentOrders.length > 0
+    ? dashboard.recentOrders.map((o) => ({
+        title: `Order ${o.orderNumber}`,
         description: `${o.customer?.name || "Customer"} - Status: ${o.status} - Amount: ₹${Number(o.totalAmount || 0).toLocaleString("en-IN")}`,
         time: dayjs(o.createdAt).format("MMM D, h:mm A"),
-        completed: o.status === "APPROVED" || o.status === "COMPLETED",
+        completed: o.status === "APPROVED",
       }))
     : [
         { title: "System Analytics Active", description: "Executive dashboard synced with live database", time: dayjs().format("h:mm A"), completed: true },
         { title: "Organization Hierarchy Active", description: `${totalUsers} system users actively operational`, time: "Today" },
+        { title: "Field Operations Active", description: `${presentCount} employees checked in today`, time: dayjs().subtract(1, "hour").format("h:mm A") },
       ];
 
   return (
@@ -182,12 +204,14 @@ export default function SuperAdminDashboard() {
       transition={{ duration: 0.3 }}
       className="space-y-8"
     >
-      {/* Header (Export button completely removed) */}
+      {/* Header */}
       <DashboardHeader
         welcomeText={`Welcome back 👋, ${fullName || "Admin"}`}
         title="Super Admin Executive Dashboard"
         subtitle="Enterprise Sales Force Automation Platform — System-Wide Control Center"
         onRefresh={refresh}
+        showExport
+        onExport={() => {}}
       />
 
       {/* Read-Only Organization Overview Card with Vibrant Styling */}
@@ -363,30 +387,15 @@ export default function SuperAdminDashboard() {
         </ChartCard>
       </div>
 
-      {/* Live Database Sales Orders Section */}
-      <SectionCard
-        title="Live Sales Orders"
-        subtitle="Recent sales orders stored in the database"
-        icon={ShoppingCart}
-        iconColor="text-blue-600"
-        action={
-          <a href="/orders" className="text-blue-600 text-sm font-semibold hover:underline">
-            View All Sales Orders →
-          </a>
-        }
-      >
-        <RecentOrders
-          orders={recentOrdersList}
-          emptyMessage="No sales orders recorded yet."
+      {/* Performance Section */}
+      <div>
+        <PerformanceCard
+          title="Field Force Performance Analytics"
+          subtitle="Overall team productivity and target achievement metrics"
+          icon={Activity}
+          metrics={performanceMetrics}
         />
-      </SectionCard>
-
-      {/* Organization Target & Performance Section */}
-      <OrgPerformanceTable
-        data={dashboard?.organizationPerformance || []}
-        title="Organization Target & Performance"
-        subtitle="Aggregated target vs. achieved sales metrics for all users across the organization"
-      />
+      </div>
 
       {/* Activity & Notifications Row */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

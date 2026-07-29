@@ -43,14 +43,4 @@ export class ReportsController {
       next(err);
     }
   };
-
-  getBusinessAnalytics = async (req, res, next) => {
-    try {
-      const data = await this.service.getBusinessAnalyticsData(req.user.organizationId);
-      return successResponse(res, data, 'Business analytics retrieved successfully.');
-    } catch (err) {
-      next(err);
-    }
-  };
 }
-

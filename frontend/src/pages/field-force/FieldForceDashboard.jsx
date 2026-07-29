@@ -106,31 +106,19 @@ export default function FieldForceDashboard() {
     }
   };
 
-  const isSuperAdmin = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
-  }, [user]);
-
   const fullName = useMemo(() => {
     if (!user) return "";
     return `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
   }, [user]);
 
   const quickActions = [
-    ...(!isSuperAdmin
-      ? [
-          {
-            label: "Check-In",
-            icon: LogIn,
-            iconColor: "text-emerald-600",
-            onClick: handleCheckIn,
-            disabled: !gpsLocation || !!todayAttendance?.checkInAt,
-          },
-        ]
-      : []),
+    {
+      label: "Check-In",
+      icon: LogIn,
+      iconColor: "text-emerald-600",
+      onClick: handleCheckIn,
+      disabled: !gpsLocation || !!todayAttendance?.checkInAt,
+    },
     {
       label: "Plan Visit",
       icon: ClipboardCheck,
@@ -188,35 +176,33 @@ export default function FieldForceDashboard() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
       <DashboardHeader
-        welcomeText={`Good ${dayjs().hour() < 12 ? "morning" : dayjs().hour() < 17 ? "afternoon" : "evening"}, ${fullName || "User"} 👋`}
-        title={isSuperAdmin ? "Field Operations Management" : "Field Force Dashboard"}
+        welcomeText={`Good ${dayjs().hour() < 12 ? "morning" : dayjs().hour() < 17 ? "afternoon" : "evening"}, ${fullName || "Sales Executive"} 👋`}
+        title="Field Force Dashboard"
         subtitle="Your complete field operations & task execution status"
         onRefresh={refresh}
       />
 
-      {/* Attendance & Check-In Row (Hidden for Super Admin) */}
-      {!isSuperAdmin && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <CheckInCard
-              todayAttendance={todayAttendance}
-              onCheckIn={handleCheckIn}
-              onCheckOut={handleCheckOut}
-              checkingIn={checkingIn}
-              checkingOut={checkingOut}
-              location={gpsLocation}
-            />
-          </div>
-          <AttendanceCard
-            present={visitSummary.completed}
-            absent={visitSummary.cancelled}
-            leave={0}
-            rate={visitSummary.total > 0 ? Math.round((visitSummary.completed / visitSummary.total) * 100) : 0}
-            title="Today's Activity"
-            subtitle="Visit completion summary"
+      {/* Attendance & Check-In Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <CheckInCard
+            todayAttendance={todayAttendance}
+            onCheckIn={handleCheckIn}
+            onCheckOut={handleCheckOut}
+            checkingIn={checkingIn}
+            checkingOut={checkingOut}
+            location={gpsLocation}
           />
         </div>
-      )}
+        <AttendanceCard
+          present={visitSummary.completed}
+          absent={visitSummary.cancelled}
+          leave={0}
+          rate={visitSummary.total > 0 ? Math.round((visitSummary.completed / visitSummary.total) * 100) : 0}
+          title="Today's Activity"
+          subtitle="Visit completion summary"
+        />
+      </div>
 
       {/* Real Task Database Statistics Grid */}
       <StatsGrid>
