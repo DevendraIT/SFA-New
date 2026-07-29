@@ -18,8 +18,11 @@ const envSchema = z.object({
   JWT_REFRESH_SECRET: z.string().default("your-super-secret-refresh-token-key-should-be-at-least-32-characters"),
   JWT_REFRESH_EXPIRY: z.string().default("7d"),
   
-  // CORS
-  CORS_ORIGIN: z.string().default("http://localhost:5173"),
+ // CORS
+  CORS_ORIGIN: z.string().default(
+  "http://localhost:5173,https://sfa-new.vercel.app/"
+),
+  
   
   // Logging
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
