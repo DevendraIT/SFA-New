@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { USER_ROLES } from "../../config/constants";
 
 import SuperAdminDashboard from "./SuperAdminDashboard";
+import HeadOfSalesDashboard from "./HeadOfSalesDashboard";
 import ManagerDashboard from "./ManagerDashboard";
 import SalesDashboard from "./SalesDashboard";
 
@@ -21,9 +22,12 @@ export default function Dashboard() {
 
   // Route to the appropriate dashboard based on role
   switch (role) {
+    case USER_ROLES.SUPER_ADMIN:
     case USER_ROLES.ADMIN:
-    case USER_ROLES.HEAD_OF_SALES:
       return <SuperAdminDashboard />;
+
+    case USER_ROLES.HEAD_OF_SALES:
+      return <HeadOfSalesDashboard />;
 
     case USER_ROLES.SALES_MANAGER:
       return <ManagerDashboard />;
@@ -32,7 +36,10 @@ export default function Dashboard() {
       return <SalesDashboard />;
 
     default:
-      if (role?.toLowerCase().includes("admin") || role?.toLowerCase().includes("head")) {
+      if (role?.toLowerCase().includes("head")) {
+        return <HeadOfSalesDashboard />;
+      }
+      if (role?.toLowerCase().includes("admin")) {
         return <SuperAdminDashboard />;
       }
       if (role?.toLowerCase().includes("manager")) {
@@ -41,4 +48,5 @@ export default function Dashboard() {
       return <SalesDashboard />;
   }
 }
+
 

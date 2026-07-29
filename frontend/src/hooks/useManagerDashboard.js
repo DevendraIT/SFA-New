@@ -11,11 +11,13 @@ export default function useManagerDashboard() {
       setLoading(true);
       setError(null);
 
-      const response = await dashboardService.getTeamDashboard();
+      let response;
+      try {
+        response = await dashboardService.getManagerDashboard();
+      } catch (e) {
+        response = await dashboardService.getTeamDashboard();
+      }
 
-      // After fixing successResponse param order:
-      // response.data = { success: true, message: "...", data: { ... actual dashboard data ... } }
-      // The actual data is in response.data.data
       const dashboardData = response?.data?.data || response?.data || response;
       setDashboard(dashboardData);
     } catch (err) {
@@ -25,6 +27,7 @@ export default function useManagerDashboard() {
       setLoading(false);
     }
   }, []);
+
 
   useEffect(() => {
     loadDashboard();

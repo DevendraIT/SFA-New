@@ -18,30 +18,22 @@ export default function useDashboard() {
     try {
       setLoading(true);
 
-      const response =
-        await dashboardService.getUserDashboard();
+      const response = await dashboardService.getExecutiveDashboard();
 
-        console.log("Dashboard API Response:", response);
-
-      setDashboard(
-        response.data ?? {
-          myLeads: {},
-          myVisits: {},
-          myTargets: [],
-        }
-      );
+      setDashboard(response?.data?.data || response?.data || response || {});
     } catch (err) {
-      console.error(err);
-
-      setDashboard({
-        myLeads: {},
-        myVisits: {},
-        myTargets: [],
-      });
+      console.error("Executive Dashboard API Error:", err);
+      try {
+        const fallback = await dashboardService.getUserDashboard();
+        setDashboard(fallback?.data?.data || fallback?.data || fallback || {});
+      } catch {
+        setDashboard({});
+      }
     } finally {
       setLoading(false);
     }
   };
+
 
   return {
     dashboard,

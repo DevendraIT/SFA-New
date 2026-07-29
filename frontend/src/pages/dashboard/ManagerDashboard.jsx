@@ -15,7 +15,12 @@ import {
   Plus,
   FileText,
   Calendar,
+  Building2,
+  Building,
+  GitBranch,
+  LayoutGrid,
 } from "lucide-react";
+
 import {
   ResponsiveContainer,
   BarChart,
@@ -105,28 +110,30 @@ export default function ManagerDashboard() {
     );
   }
 
-  const teamVisits = dashboard?.teamVisits || {};
+  const totalSalesExecutives = dashboard?.totalSalesExecutives ?? 0;
+  const totalTeams = dashboard?.totalTeams ?? 0;
+  const totalCustomers = dashboard?.totalCustomers ?? 0;
+  const totalSalesOrders = dashboard?.totalSalesOrders ?? 0;
+
+  const todayVisits = dashboard?.todayVisits ?? 0;
+  const pendingVisits = dashboard?.pendingVisits ?? 0;
+  const completedVisits = dashboard?.completedVisits ?? 0;
+  const revenue = dashboard?.revenue ?? 0;
+
+  const approvedOrders = dashboard?.approvedOrders ?? 0;
+  const pendingOrders = dashboard?.pendingOrders ?? 0;
+  const attendance = dashboard?.attendance || { present: 0, absent: 0, leave: 0, rate: 0 };
+
   const teamTargets = dashboard?.teamTargets || [];
-  const teamOrders = dashboard?.teamOrders || {};
-
-  const completedVisits = teamVisits?.COMPLETED || 0;
-  const pendingVisits = teamVisits?.PENDING || 0;
-  const inProgressVisits = teamVisits?.IN_PROGRESS || 0;
-  const totalVisits = completedVisits + pendingVisits + inProgressVisits;
-
-  const approvedOrders = teamOrders?.APPROVED?.count || 0;
-  const pendingOrders = teamOrders?.PENDING?.count || 0;
-  const revenue = teamOrders?.APPROVED?.revenue || 0;
-  const totalOrders = approvedOrders + pendingOrders;
-
   const performanceMetrics = teamTargets.slice(0, 3).map((t) => ({
     label: t.metric || "Target",
     value: t.targetValue > 0 ? Math.round((t.achievedValue / t.targetValue) * 100) : 0,
   }));
 
   if (performanceMetrics.length < 3) {
+    const totalVisitsCount = todayVisits + pendingVisits + completedVisits;
     const defaults = [
-      { label: "Visit Completion", value: totalVisits > 0 ? Math.round((completedVisits / totalVisits) * 100) : 0 },
+      { label: "Visit Completion", value: totalVisitsCount > 0 ? Math.round((completedVisits / totalVisitsCount) * 100) : 0 },
       { label: "Team Sales Target", value: 0 },
       { label: "Customer Meetings", value: 0 },
     ];
@@ -135,20 +142,31 @@ export default function ManagerDashboard() {
     }
   }
 
-  // Chart data for team performance
   const chartData = [
     { name: "Completed", visits: completedVisits },
-    { name: "In Progress", visits: inProgressVisits },
+    { name: "In Progress", visits: todayVisits },
     { name: "Pending", visits: pendingVisits },
   ];
 
-  // Recent tasks
-  const recentTasks = teamTargets.slice(0, 5).map((t) => ({
-    id: t.id,
-    title: t.metric || "Target",
-    description: `${t.achievedValue || 0} / ${t.targetValue || 0} achieved`,
-    status: t.achievedValue >= t.targetValue ? "COMPLETED" : "IN_PROGRESS",
-  }));
+  const recentTasksList = (dashboard?.recentTasks && dashboard.recentTasks.length > 0)
+    ? dashboard.recentTasks.map((t) => ({
+        id: t.id,
+        title: t.title || "Task",
+        description: t.description || "Assigned task",
+        status: t.status || "PENDING",
+      }))
+    : teamTargets.slice(0, 5).map((t) => ({
+        id: t.id,
+        title: t.metric || "Target",
+        description: `${t.achievedValue || 0} / ${t.targetValue || 0} achieved`,
+        status: t.achievedValue >= t.targetValue ? "COMPLETED" : "IN_PROGRESS",
+      }));
+
+  const recentActivitiesList = dashboard?.recentActivities || [
+    { title: "Team Dashboard Viewed", description: "Manager accessed team overview", time: dayjs().format("h:mm A"), completed: true },
+    { title: "Visits Updated", description: `${completedVisits} visits completed`, time: "Today" },
+    { title: "Orders Processed", description: `${approvedOrders} orders approved`, time: dayjs().subtract(2, "hours").format("h:mm A") },
+  ];
 
   return (
     <motion.div
@@ -164,25 +182,112 @@ export default function ManagerDashboard() {
         onRefresh={refresh}
       />
 
+      {/* Assigned Scope / Organization Information Card */}
+      {dashboard?.organizationInfo && (
+        <SectionCard
+          title="Organization Scope"
+          subtitle="Your assigned Organization hierarchy details (Read-Only)"
+          icon={Building2}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-indigo-100 p-2.5 text-indigo-600">
+                  <Building size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Company</p>
+                  <h4 className="font-semibold text-slate-800 text-base">
+                    {dashboard.organizationInfo.company?.name || "Not Assigned"}
+                  </h4>
+                  {dashboard.organizationInfo.company?.code && (
+                    <span className="text-xs text-slate-500">Code: {dashboard.organizationInfo.company.code}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-blue-100 p-2.5 text-blue-600">
+                  <GitBranch size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Branch</p>
+                  <h4 className="font-semibold text-slate-800 text-base">
+                    {dashboard.organizationInfo.branch?.name || "Not Assigned"}
+                  </h4>
+                  {dashboard.organizationInfo.branch?.code && (
+                    <span className="text-xs text-slate-500">Code: {dashboard.organizationInfo.branch.code}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-purple-100 p-2.5 text-purple-600">
+                  <LayoutGrid size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Department</p>
+                  <h4 className="font-semibold text-slate-800 text-base">
+                    {dashboard.organizationInfo.department?.name || "Not Assigned"}
+                  </h4>
+                  {dashboard.organizationInfo.department?.code && (
+                    <span className="text-xs text-slate-500">Code: {dashboard.organizationInfo.department.code}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+      )}
+
       {/* Stats Grid */}
+
       <StatsGrid>
         <StatCard
-          title="Team Visits"
-          value={totalVisits}
+          title="Sales Executives"
+          value={totalSalesExecutives}
+          icon={Users}
+          color="bg-indigo-600"
+        />
+        <StatCard
+          title="Total Teams"
+          value={totalTeams}
+          icon={UserCheck}
+          color="bg-purple-600"
+        />
+        <StatCard
+          title="Total Customers"
+          value={totalCustomers}
+          icon={Users}
+          color="bg-sky-600"
+        />
+        <StatCard
+          title="Sales Orders"
+          value={totalSalesOrders}
+          icon={ShoppingCart}
+          color="bg-cyan-500"
+        />
+        <StatCard
+          title="Today's Visits"
+          value={todayVisits}
           icon={MapPin}
           color="bg-blue-500"
         />
         <StatCard
-          title="Completed"
+          title="Pending Visits"
+          value={pendingVisits}
+          icon={Clock3}
+          color="bg-amber-500"
+        />
+        <StatCard
+          title="Completed Visits"
           value={completedVisits}
           icon={ClipboardCheck}
           color="bg-emerald-500"
-        />
-        <StatCard
-          title="Approved Orders"
-          value={approvedOrders}
-          icon={ShoppingCart}
-          color="bg-cyan-500"
         />
         <StatCard
           title="Team Revenue"
@@ -225,10 +330,10 @@ export default function ManagerDashboard() {
       {/* Attendance & Orders */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AttendanceCard
-          present={24}
-          absent={2}
-          leave={1}
-          rate={96}
+          present={attendance.present || 0}
+          absent={attendance.absent || 0}
+          leave={attendance.leave || 0}
+          rate={attendance.rate || 0}
           title="Team Attendance"
           subtitle="Today's team attendance"
         />
@@ -242,18 +347,16 @@ export default function ManagerDashboard() {
           <div className="space-y-4">
             {[
               { label: `${pendingOrders} Orders Pending Approval`, count: pendingOrders },
-              { label: "Expense Claims", count: 8 },
-              { label: "Leave Requests", count: 3 },
-              { label: "Visit Reports", count: 5 },
+              { label: `${pendingVisits} Visits Pending Review`, count: pendingVisits },
             ].map((item, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between border-b border-slate-100 pb-3 last:border-0 last:pb-0"
               >
                 <span className="font-medium text-slate-700 text-sm">{item.label}</span>
-                <button className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition">
-                  Review
-                </button>
+                <span className="px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold">
+                  {item.count} items
+                </span>
               </div>
             ))}
           </div>
@@ -267,10 +370,10 @@ export default function ManagerDashboard() {
           subtitle="Assigned targets and objectives"
           icon={Target}
           action={
-            <span className="text-xs text-slate-500">{recentTasks.length} tasks</span>
+            <span className="text-xs text-slate-500">{recentTasksList.length} tasks</span>
           }
         >
-          <RecentTasks tasks={recentTasks} emptyMessage="No tasks assigned to the team yet." />
+          <RecentTasks tasks={recentTasksList} emptyMessage="No tasks assigned to the team yet." />
         </SectionCard>
 
         <SectionCard title="Quick Actions" subtitle="Common management tasks">
@@ -283,19 +386,11 @@ export default function ManagerDashboard() {
         title="Recent Activity"
         subtitle="Latest team activities"
         icon={Activity}
-        action={
-          <button className="text-blue-600 text-sm font-semibold hover:underline">View All</button>
-        }
       >
-        <ActivityTimeline
-          activities={[
-            { title: "Team Dashboard Viewed", description: "Manager accessed team overview", time: dayjs().format("h:mm A"), completed: true },
-            { title: "Visits Updated", description: `${completedVisits} visits completed today`, time: "Today" },
-            { title: "Orders Processed", description: `${approvedOrders} orders approved`, time: dayjs().subtract(2, "hours").format("h:mm A") },
-          ]}
-        />
+        <ActivityTimeline activities={recentActivitiesList} />
       </SectionCard>
     </motion.div>
+
   );
 }
 

@@ -5,14 +5,25 @@ export class DashboardController {
     this.service = dashboardService;
   }
 
-  getExecutiveDashboard = async (req, res, next) => {
+  getSuperAdminDashboard = async (req, res, next) => {
     try {
-      const data = await this.service.getExecutiveDashboard(req.user.organizationId);
+      const data = await this.service.getSuperAdminDashboard(req.user.organizationId);
+      return successResponse(res, data, 'Super Admin dashboard data retrieved.');
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  getExecutiveDashboard = async (req, res, next) => {
+
+    try {
+      const data = await this.service.getExecutiveDashboard(req.user);
       return successResponse(res, data, 'Executive dashboard data retrieved.');
     } catch (err) {
       next(err);
     }
   };
+
 
   getTeamDashboard = async (req, res, next) => {
     try {
@@ -31,4 +42,24 @@ export class DashboardController {
       next(err);
     }
   };
+
+  getHeadOfSalesDashboard = async (req, res, next) => {
+    try {
+      const data = await this.service.getHeadOfSalesDashboard(req.user);
+      return successResponse(res, data, 'Head of Sales dashboard data retrieved.');
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  getManagerDashboard = async (req, res, next) => {
+
+    try {
+      const data = await this.service.getManagerDashboard(req.user);
+      return successResponse(res, data, 'Manager dashboard data retrieved.');
+    } catch (err) {
+      next(err);
+    }
+  };
 }
+

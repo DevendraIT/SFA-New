@@ -58,13 +58,82 @@ export default function Sidebar({
     );
   };
 
+  const isSuperAdmin = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  }, [user]);
+
+  const isSalesManager = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+  }, [user]);
+
+  const isSalesExecutive = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some(
+      (r) => r && (r.toLowerCase().includes("sales executive") || r.toLowerCase().includes("sales person"))
+    );
+  }, [user]);
+
+
+  const filteredNavigation = useMemo(() => {
+    if (isSuperAdmin) {
+      return navigation.map((item) => {
+        if (item.title === "Field Force") {
+          return {
+            title: "Field Force",
+            icon: item.icon,
+            path: "/field-force/dashboard",
+          };
+        }
+        return item;
+      });
+    }
+
+
+
+    if (isSalesExecutive) {
+      return navigation.filter(
+        (item) => !["Organization", "Team Management"].includes(item.title)
+      );
+    }
+
+    if (isSalesManager) {
+      return navigation.map((item) => {
+        if (item.title === "Organization" && Array.isArray(item.children)) {
+          return {
+            ...item,
+            children: item.children.filter(
+              (child) =>
+                !["/organization/company", "/organization/branch", "/organization/department"].includes(child.path)
+            ),
+          };
+        }
+        return item;
+      });
+    }
+
+    return navigation;
+  }, [isSuperAdmin, isSalesManager, isSalesExecutive]);
+
+
+
   return (
     <aside
       className={`h-screen sticky top-0 transition-all duration-300 border-r border-slate-200 bg-white shadow-sm flex flex-col ${
         collapsed ? "w-20" : "w-72"
       }`}
     >
-            {/* Logo */}
+      {/* Logo */}
 
       <div className="h-20 border-b border-slate-200 flex items-center justify-between px-5">
 
@@ -110,7 +179,7 @@ export default function Sidebar({
 
         <nav className="space-y-2">
 
-          {navigation.map((item) => {
+          {filteredNavigation.map((item) => {
 
             if (item.children) {
 
@@ -142,6 +211,7 @@ export default function Sidebar({
         </nav>
 
       </div>
+
 
             {/* User */}
 

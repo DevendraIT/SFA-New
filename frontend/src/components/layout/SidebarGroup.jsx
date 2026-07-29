@@ -1,4 +1,5 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
 
 export default function SidebarGroup({
@@ -8,12 +9,21 @@ export default function SidebarGroup({
   toggle,
 }) {
   const Icon = item.icon;
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    toggle();
+    if (item.path) {
+      navigate(item.path);
+    }
+  };
 
   return (
     <div>
 
       <button
-        onClick={toggle}
+        onClick={handleClick}
+
         className="
           w-full
           flex

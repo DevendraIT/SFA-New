@@ -109,6 +109,16 @@ const navigation = [
         icon: LogIn,
       },
       {
+        title: "Beat Plans",
+        path: "/field-force/beat-plans",
+        icon: Map,
+      },
+      {
+        title: "Route",
+        path: "/field-force/route",
+        icon: Navigation,
+      },
+      {
         title: "Tasks",
         path: "/field-force/tasks",
         icon: Target,
@@ -117,6 +127,26 @@ const navigation = [
         title: "Visits",
         path: "/field-force/visits",
         icon: ClipboardCheck,
+      },
+      {
+        title: "Photos",
+        path: "/field-force/photo-upload",
+        icon: Camera,
+      },
+      {
+        title: "Meeting Notes",
+        path: "/field-force/meeting-notes",
+        icon: StickyNote,
+      },
+      {
+        title: "Expenses",
+        path: "/field-force/expenses",
+        icon: IndianRupee,
+      },
+      {
+        title: "Calendar",
+        path: "/field-force/calendar",
+        icon: Calendar,
       },
       {
         title: "Activities",

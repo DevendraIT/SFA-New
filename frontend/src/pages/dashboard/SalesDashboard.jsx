@@ -15,11 +15,13 @@ import {
   DollarSign,
   UserCheck,
   Activity,
+  Building2,
 } from "lucide-react";
 import dayjs from "dayjs";
 
 import useDashboard from "../../hooks/useDashboard";
 import { useAuth } from "../../context/AuthContext";
+
 
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatsGrid from "../../components/dashboard/StatsGrid";
@@ -87,12 +89,38 @@ export default function SalesDashboard() {
   const myTargets = dashboard?.myTargets || [];
   const myOrders = dashboard?.myOrders || {};
 
-  const completedVisits = myVisits?.COMPLETED || 0;
-  const pendingVisits = myVisits?.PENDING || 0;
-  const totalVisits = completedVisits + pendingVisits;
+  const todayVisits = dashboard?.todayVisits ?? 0;
+  const completedVisits = dashboard?.completedVisits ?? (myVisits?.COMPLETED || 0);
+  const pendingVisits = dashboard?.pendingVisits ?? (myVisits?.PENDING || 0);
+  const totalAssignedCustomers = dashboard?.totalAssignedCustomers ?? 0;
+  const totalSalesOrders = dashboard?.totalSalesOrders ?? 0;
 
-  const approvedOrders = myOrders?.APPROVED?.count || 0;
-  const pendingOrders = myOrders?.PENDING?.count || 0;
+  const approvedOrders = dashboard?.approvedOrders ?? (myOrders?.APPROVED?.count || 0);
+  const pendingOrders = dashboard?.pendingOrders ?? (myOrders?.PENDING?.count || 0);
+  const attendanceStatus = dashboard?.attendanceStatus || "Not Checked In";
+  const checkInTime = dashboard?.checkInTime ? dayjs(dashboard.checkInTime).format("h:mm A") : null;
+  const checkOutTime = dashboard?.checkOutTime ? dayjs(dashboard.checkOutTime).format("h:mm A") : null;
+
+  const recentOrdersList = Array.isArray(dashboard?.recentOrders)
+    ? dashboard.recentOrders.map((o) => ({
+        id: o.id,
+        orderNumber: o.orderNumber,
+        status: o.status,
+        totalAmount: o.totalAmount,
+        customerName: o.customer?.name || "Customer",
+      }))
+    : [];
+
+  const recentActivitiesList = Array.isArray(dashboard?.recentActivities)
+    ? dashboard.recentActivities
+    : [
+        {
+          title: "Dashboard Viewed",
+          description: "You accessed your sales dashboard",
+          time: dayjs().format("h:mm A"),
+          completed: true,
+        },
+      ];
 
   // Build target performance metrics
   const performanceMetrics = myTargets.slice(0, 3).map((t) => ({
@@ -103,14 +131,16 @@ export default function SalesDashboard() {
 
   if (performanceMetrics.length < 3) {
     const defaults = [
-      { label: "Visit Target", value: totalVisits > 0 ? Math.round((completedVisits / totalVisits) * 100) : 0 },
-      { label: "Sales Target", value: 0 },
-      { label: "Call Target", value: 0 },
+      { label: "Visit Target", value: todayVisits > 0 ? Math.round((completedVisits / todayVisits) * 100) : 0 },
+      { label: "Sales Target", value: totalSalesOrders > 0 ? 100 : 0 },
+      { label: "Customer Target", value: totalAssignedCustomers > 0 ? 100 : 0 },
     ];
     for (let i = performanceMetrics.length; i < 3; i++) {
       performanceMetrics.push(defaults[i]);
     }
   }
+
+  const organizationInfo = dashboard?.organizationInfo || {};
 
   return (
     <motion.div
@@ -126,30 +156,65 @@ export default function SalesDashboard() {
         onRefresh={refresh}
       />
 
+      {/* Organization Information Card */}
+      <SectionCard
+        title="Organization Information"
+        subtitle="Your assigned company, branch, department, and reporting manager details"
+        icon={Building2}
+        iconColor="text-indigo-600"
+      >
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Company</span>
+            <span className="text-sm font-bold text-slate-800">{organizationInfo.companyName || user?.company?.name || user?.branch?.company?.name || "Assigned Company"}</span>
+          </div>
+
+          <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Branch</span>
+            <span className="text-sm font-bold text-slate-800">{organizationInfo.branchName || user?.branch?.name || "Assigned Branch"}</span>
+          </div>
+
+          <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Department</span>
+            <span className="text-sm font-bold text-slate-800">{organizationInfo.departmentName || user?.department?.name || "Assigned Department"}</span>
+          </div>
+
+          <div className="p-3 rounded-xl border border-indigo-100 bg-indigo-50/50">
+            <span className="text-xs font-semibold text-indigo-500 uppercase tracking-wider block mb-1">Reporting Manager</span>
+            <span className="text-sm font-bold text-indigo-900">
+              {organizationInfo.managerName || (user?.manager ? `${user.manager.firstName || ''} ${user.manager.lastName || ''}`.trim() : "Not Assigned")}
+            </span>
+          </div>
+        </div>
+      </SectionCard>
+
+
       {/* Stats Grid - Today's overview */}
       <StatsGrid>
+
         <StatCard
           title="Today's Visits"
-          value={totalVisits}
+          value={todayVisits}
           icon={MapPin}
           color="bg-blue-500"
         />
         <StatCard
-          title="Completed"
+          title="Completed Visits"
           value={completedVisits}
           icon={CheckCircle2}
           color="bg-emerald-500"
         />
         <StatCard
           title="My Orders"
-          value={approvedOrders + pendingOrders}
+          value={totalSalesOrders}
           icon={ShoppingCart}
           color="bg-cyan-500"
         />
         <StatCard
-          title="Pending Tasks"
-          value={pendingVisits + pendingOrders}
-          icon={Clock3}
+          title="Assigned Customers"
+          value={totalAssignedCustomers}
+          icon={UserCheck}
           color="bg-amber-500"
         />
       </StatsGrid>
@@ -170,25 +235,25 @@ export default function SalesDashboard() {
                   <span className="font-medium text-sm text-slate-700">Attendance</span>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
-                  Checked In
+                  {attendanceStatus}
                 </span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50">
                 <div className="flex items-center gap-3">
                   <MapPin size={20} className="text-blue-600" />
-                  <span className="font-medium text-sm text-slate-700">Check-In Status</span>
+                  <span className="font-medium text-sm text-slate-700">Check-In Time</span>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">
-                  {completedVisits > 0 ? "Checked In" : "Pending"}
+                  {checkInTime || "Not Checked In"}
                 </span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-xl bg-violet-50">
                 <div className="flex items-center gap-3">
                   <FileText size={20} className="text-violet-600" />
-                  <span className="font-medium text-sm text-slate-700">DAR Status</span>
+                  <span className="font-medium text-sm text-slate-700">Check-Out Time</span>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-xs font-semibold">
-                  {completedVisits > 0 ? "Submitted" : "Pending"}
+                  {checkOutTime || "Not Checked Out"}
                 </span>
               </div>
             </div>
@@ -203,27 +268,27 @@ export default function SalesDashboard() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-slate-600">Assigned Customers</span>
-                <span className="font-bold text-slate-900">{totalVisits + 12}</span>
+                <span className="font-bold text-slate-900">{totalAssignedCustomers}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-slate-600">Today's Visits</span>
-                <span className="font-bold text-slate-900">{totalVisits}</span>
+                <span className="font-bold text-slate-900">{todayVisits}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-slate-600">Pending Visits</span>
                 <span className="font-bold text-amber-600">{pendingVisits}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Completed</span>
+                <span className="text-sm text-slate-600">Completed Visits</span>
                 <span className="font-bold text-emerald-600">{completedVisits}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Orders</span>
-                <span className="font-bold text-slate-900">{approvedOrders + pendingOrders}</span>
+                <span className="text-sm text-slate-600">Total Sales Orders</span>
+                <span className="font-bold text-slate-900">{totalSalesOrders}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-600">Expenses</span>
-                <span className="font-bold text-slate-900">3</span>
+                <span className="text-sm text-slate-600">Approved Orders</span>
+                <span className="font-bold text-emerald-600">{approvedOrders}</span>
               </div>
             </div>
           </SectionCard>
@@ -244,31 +309,9 @@ export default function SalesDashboard() {
           title="My Orders"
           subtitle="Recent order activity"
           icon={ShoppingCart}
-          action={
-            <button className="text-blue-600 text-sm font-semibold hover:underline">View All</button>
-          }
         >
           <RecentOrders
-            orders={
-              approvedOrders > 0 || pendingOrders > 0
-                ? [
-                    {
-                      id: "1",
-                      orderNumber: "ORD-001",
-                      status: "APPROVED",
-                      totalAmount: 50000,
-                      customerName: "Customer A",
-                    },
-                    {
-                      id: "2",
-                      orderNumber: "ORD-002",
-                      status: "PENDING",
-                      totalAmount: 25000,
-                      customerName: "Customer B",
-                    },
-                  ]
-                : []
-            }
+            orders={recentOrdersList}
             emptyMessage="No orders yet. Create your first order!"
           />
         </SectionCard>
@@ -285,7 +328,7 @@ export default function SalesDashboard() {
             tasks={
               myTargets.length > 0
                 ? myTargets.map((t) => ({
-                    id: t.id,
+                    id: t.id || Math.random().toString(),
                     title: t.metric || "Target",
                     description: `${t.achievedValue || 0} / ${t.targetValue || 0} achieved`,
                     status: t.achievedValue >= t.targetValue ? "COMPLETED" : "IN_PROGRESS",
@@ -308,38 +351,14 @@ export default function SalesDashboard() {
           title="Recent Activity"
           subtitle="Your latest activities"
           icon={Activity}
-          action={
-            <button className="text-blue-600 text-sm font-semibold hover:underline">View All</button>
-          }
         >
           <ActivityTimeline
-            activities={[
-              {
-                title: "Dashboard Viewed",
-                description: "You accessed your sales dashboard",
-                time: dayjs().format("h:mm A"),
-                completed: true,
-              },
-              completedVisits > 0
-                ? {
-                    title: "Visit Completed",
-                    description: `${completedVisits} visit(s) completed today`,
-                    time: "Today",
-                    completed: true,
-                  }
-                : null,
-              pendingOrders > 0
-                ? {
-                    title: "Orders Pending",
-                    description: `${pendingOrders} order(s) awaiting action`,
-                    time: "Today",
-                  }
-                : null,
-            ].filter(Boolean)}
+            activities={recentActivitiesList}
           />
         </SectionCard>
       </div>
     </motion.div>
   );
 }
+
 

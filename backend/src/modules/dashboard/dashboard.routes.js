@@ -12,8 +12,15 @@ const controller = new DashboardController(service);
 
 router.use(authenticate, requireOrganization);
 
-router.get('/executive', authorize(['dashboard:org', 'dashboard:sales']), controller.getExecutiveDashboard);
+router.get('/superadmin', controller.getSuperAdminDashboard);
+router.get('/head-of-sales', controller.getHeadOfSalesDashboard);
+router.get('/executive', controller.getExecutiveDashboard);
+
 router.get('/team', authorize(['analytics:team']), controller.getTeamDashboard);
+router.get('/manager', controller.getManagerDashboard);
 router.get('/me', controller.getUserDashboard);
 
+
+
 export default router;
+
