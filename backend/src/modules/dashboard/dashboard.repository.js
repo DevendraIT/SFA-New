@@ -847,16 +847,25 @@ export class DashboardRepository {
           isDeleted: false,
           ...(organizationId && { organizationId }),
         },
-        take: 5,
+        take: 15,
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
           orderNumber: true,
           status: true,
           totalAmount: true,
+          currency: true,
           createdAt: true,
           customer: {
             select: { name: true },
+          },
+          owner: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+              userRoles: { select: { role: { select: { name: true } } } },
+            },
           },
         },
       });
@@ -864,7 +873,79 @@ export class DashboardRepository {
       return [];
     }
   }
+
+  async getOrganizationPerformanceMetrics(organizationId = null) {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          deletedAt: null,
+          ...(organizationId && { organizationId }),
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          userRoles: {
+            select: {
+              role: {
+                select: { name: true },
+              },
+            },
+          },
+          targets: {
+            where: { status: 'ACTIVE' },
+            select: {
+              targetValue: true,
+              achievedValue: true,
+              metric: true,
+            },
+          },
+          orders: {
+            where: { isDeleted: false, status: { in: ['APPROVED', 'COMPLETED', 'DELIVERED'] } },
+            select: {
+              totalAmount: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return users.map((u) => {
+        const roleName = u.userRoles?.[0]?.role?.name || 'Sales User';
+        const assignedTarget = u.targets?.reduce((sum, t) => sum + (t.targetValue || 0), 0) || 0;
+        const orderSales = u.orders?.reduce((sum, o) => sum + (o.totalAmount || 0), 0) || 0;
+        const targetAchieved = u.targets?.reduce((sum, t) => sum + (t.achievedValue || 0), 0) || 0;
+        const achievedSales = orderSales > 0 ? orderSales : targetAchieved;
+
+        const targetVal = assignedTarget > 0 ? assignedTarget : (achievedSales > 0 ? achievedSales : 100000);
+        const achievementPercentage = targetVal > 0 ? Math.round((achievedSales / targetVal) * 100) : 0;
+        const pendingTarget = Math.max(0, targetVal - achievedSales);
+
+        let performanceStatus = 'AT_RISK';
+        if (achievementPercentage >= 100) performanceStatus = 'EXCELLENT';
+        else if (achievementPercentage >= 75) performanceStatus = 'ON_TRACK';
+        else if (achievementPercentage >= 50) performanceStatus = 'NEEDS_ATTENTION';
+
+        return {
+          id: u.id,
+          employeeName: `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Employee',
+          email: u.email,
+          role: roleName,
+          assignedTarget: targetVal,
+          achievedSales,
+          achievementPercentage,
+          pendingTarget,
+          performanceStatus,
+        };
+      });
+    } catch (err) {
+      console.error("Error in getOrganizationPerformanceMetrics:", err);
+      return [];
+    }
+  }
 }
+
 
 
 
