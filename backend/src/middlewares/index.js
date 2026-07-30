@@ -24,10 +24,30 @@ export const securityMiddleware = [
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   }),
   cors({
-    origin: config.CORS_ORIGIN,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, cURL, Postman)
+      if (!origin) return callback(null, true);
+
+      const rawOrigins = config.CORS_ORIGIN || '';
+      const allowedOrigins = typeof rawOrigins === 'string'
+        ? rawOrigins.split(',').map((o) => o.trim()).filter(Boolean)
+        : Array.isArray(rawOrigins)
+        ? rawOrigins
+        : [rawOrigins];
+
+      if (
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(origin) ||
+        (process.env.NODE_ENV !== 'production' && origin.startsWith('http://localhost:'))
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS policy violation: Origin ${origin} is not allowed.`));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   }),
 ];
 

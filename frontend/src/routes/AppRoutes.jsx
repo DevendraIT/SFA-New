@@ -23,7 +23,7 @@ import ExecutivePerformance from "../pages/team/ExecutivePerformance";
 import TaskDetail from "../pages/team/TaskDetail";
 
 // Field Force Pages
-import FieldForceDashboard from "../pages/field-force/FieldForceDashboard";
+import FieldForceDashboardWrapper from "../pages/field-force/FieldForceDashboardWrapper";
 import AttendancePage from "../pages/field-force/AttendancePage";
 import TasksPage from "../pages/field-force/TasksPage";
 import VisitsPage from "../pages/field-force/VisitsPage";
@@ -31,8 +31,6 @@ import ActivitiesPage from "../pages/field-force/ActivitiesPage";
 import DARPage from "../pages/field-force/DARPage";
 import ProfilePage from "../pages/field-force/ProfilePage";
 import TaskExecutionPage from "../pages/field-force/TaskExecutionPage";
-
-// Additional Pages
 import OrdersPage from "../pages/sales-order/OrdersPage";
 import VisitDetailPage from "../pages/field-force/VisitDetailPage";
 import ReportsPage from "../pages/reports/ReportsPage";
@@ -132,8 +130,8 @@ export default function AppRoutes() {
   <Route path="/settings" element={<SettingsPage />} />
 
   {/* ===== FIELD FORCE AUTOMATION ROUTES ===== */}
-  <Route path="/field-force" element={<FieldForceDashboard />} />
-  <Route path="/field-force/dashboard" element={<FieldForceDashboard />} />
+  <Route path="/field-force" element={<FieldForceDashboardWrapper />} />
+  <Route path="/field-force/dashboard" element={<FieldForceDashboardWrapper />} />
   <Route path="/field-force/attendance" element={<AttendancePage />} />
   <Route path="/field-force/tasks" element={<TasksPage />} />
   <Route path="/field-force/tasks/:id/execute" element={<TaskExecutionPage />} />

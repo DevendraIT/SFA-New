@@ -18,11 +18,8 @@ const envSchema = z.object({
   JWT_REFRESH_SECRET: z.string().default("your-super-secret-refresh-token-key-should-be-at-least-32-characters"),
   JWT_REFRESH_EXPIRY: z.string().default("7d"),
   
- // CORS
-  CORS_ORIGIN: z.string().default(
-  "http://localhost:5173", 
-  "https://sfa-beige.vercel.app"
-),
+  // CORS
+  CORS_ORIGIN: z.string().default("http://localhost:5173,https://sfa-beige.vercel.app"),
   
   
   // Logging
@@ -152,5 +149,7 @@ export const config = {
 
   N8N_WEBHOOK_URL: parsed.data.N8N_WEBHOOK_URL,
 };
+
+console.log("CORS_ORIGIN:", parsed.data.CORS_ORIGIN);
 
 export default config;
