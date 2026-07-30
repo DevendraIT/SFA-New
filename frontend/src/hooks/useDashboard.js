@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dashboardService from "../services/dashboard.service";
 
 export default function useDashboard() {
@@ -10,21 +10,17 @@ export default function useDashboard() {
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadDashboard();
-  }, []);
-
-  const loadDashboard = async () => {
+  const loadDashboard = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await dashboardService.getExecutiveDashboard();
+      const response = await dashboardService.getUserDashboard();
 
       setDashboard(response?.data?.data || response?.data || response || {});
     } catch (err) {
-      console.error("Executive Dashboard API Error:", err);
+      console.error("Sales Dashboard API Error:", err);
       try {
-        const fallback = await dashboardService.getUserDashboard();
+        const fallback = await dashboardService.getExecutiveDashboard();
         setDashboard(fallback?.data?.data || fallback?.data || fallback || {});
       } catch {
         setDashboard({});
@@ -32,12 +28,15 @@ export default function useDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
 
   return {
     dashboard,
     loading,
     refresh: loadDashboard,
   };
-}
+}

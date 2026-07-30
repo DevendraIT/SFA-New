@@ -15,13 +15,7 @@ export default function useExecutiveDashboard() {
       setDashboard(response?.data?.data || response?.data || response);
     } catch (err) {
       console.error("Super Admin Dashboard fetch error:", err);
-      try {
-        const fallback = await dashboardService.getExecutiveDashboard();
-        setDashboard(fallback?.data?.data || fallback?.data || fallback);
-      } catch (fallbackErr) {
-        console.error(fallbackErr);
-        setError(fallbackErr);
-      }
+      setError(err);
     } finally {
       setLoading(false);
     }

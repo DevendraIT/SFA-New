@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { USER_ROLES } from "../../config/constants";
 
 import SuperAdminDashboard from "./SuperAdminDashboard";
 import HeadOfSalesDashboard from "./HeadOfSalesDashboard";
@@ -14,39 +13,38 @@ export default function Dashboard() {
     if (!user) return null;
 
     if (Array.isArray(user.roles) && user.roles.length > 0) {
-      return user.roles[0]?.role?.name;
+      for (const r of user.roles) {
+        const name = typeof r === "string" ? r : r?.role?.name || r?.name;
+        if (name) return name;
+      }
     }
 
+    if (typeof user.role === "string") return user.role;
     return user.role?.name || null;
   }, [user]);
 
+  const roleLower = (role || "").toLowerCase();
+
   // Route to the appropriate dashboard based on role
-  switch (role) {
-    case USER_ROLES.SUPER_ADMIN:
-    case USER_ROLES.ADMIN:
-      return <SuperAdminDashboard />;
-
-    case USER_ROLES.HEAD_OF_SALES:
-      return <HeadOfSalesDashboard />;
-
-    case USER_ROLES.SALES_MANAGER:
-      return <ManagerDashboard />;
-
-    case USER_ROLES.SALES_PERSON:
-      return <SalesDashboard />;
-
-    default:
-      if (role?.toLowerCase().includes("head")) {
-        return <HeadOfSalesDashboard />;
-      }
-      if (role?.toLowerCase().includes("admin")) {
-        return <SuperAdminDashboard />;
-      }
-      if (role?.toLowerCase().includes("manager")) {
-        return <ManagerDashboard />;
-      }
-      return <SalesDashboard />;
+  if (
+    roleLower.includes("super") ||
+    roleLower === "admin" ||
+    roleLower === "administrator" ||
+    (roleLower.includes("admin") && !roleLower.includes("company"))
+  ) {
+    return <SuperAdminDashboard />;
   }
+
+  if (roleLower.includes("head")) {
+    return <HeadOfSalesDashboard />;
+  }
+
+  if (roleLower.includes("manager")) {
+    return <ManagerDashboard />;
+  }
+
+  return <SalesDashboard />;
 }
+
 
 
