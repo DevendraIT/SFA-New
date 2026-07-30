@@ -18,6 +18,7 @@ import {
   Plus,
   FileText,
   Calendar,
+  Target,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -60,12 +61,6 @@ const quickActions = [
     path: "/organization/users",
   },
   {
-    label: "Manage Teams",
-    icon: Users,
-    iconColor: "text-emerald-600",
-    path: "/organization/teams",
-  },
-  {
     label: "Sales Reports",
     icon: FileText,
     iconColor: "text-orange-500",
@@ -94,8 +89,8 @@ export default function HeadOfSalesDashboard() {
   if (!hasData) return <EmptyDashboard title="No Dashboard Data" description="Head of Sales dashboard data will appear once activities are recorded." onAction={refresh} />;
 
   const totalSalesManagers = dashboard?.totalSalesManagers ?? 0;
+  const presentSalesManagers = dashboard?.presentSalesManagers ?? 0;
   const totalSalesExecutives = dashboard?.totalSalesExecutives ?? 0;
-  const totalTeams = dashboard?.totalTeams ?? 0;
   const totalCustomers = dashboard?.totalCustomers ?? 0;
   const totalSalesOrders = dashboard?.totalSalesOrders ?? 0;
   const todayVisits = dashboard?.todayVisits ?? 0;
@@ -108,19 +103,29 @@ export default function HeadOfSalesDashboard() {
   const attendance = dashboard?.attendance || { present: 0, absent: 0, leave: 0, rate: 0 };
   const organizationInfo = dashboard?.organizationInfo || {};
 
+  const targetMetrics = dashboard?.targetMetrics || {};
+  const totalCompanyTarget = targetMetrics.totalCompanyTarget ?? 0;
+  const achievedTarget = targetMetrics.achievedTarget ?? 0;
+  const remainingTarget = targetMetrics.remainingTarget ?? 0;
+  const targetAchievementPercent = targetMetrics.targetAchievementPercent ?? 0;
+  const monthlyTarget = targetMetrics.monthlyTarget ?? 0;
+  const quarterlyTarget = targetMetrics.quarterlyTarget ?? 0;
+  const yearlyTarget = targetMetrics.yearlyTarget ?? 0;
+
   const companyName = organizationInfo.company?.name || organizationInfo.companyName || "Not Assigned";
   const branchName = organizationInfo.branch?.name || organizationInfo.branchName || "Not Assigned";
   const departmentName = organizationInfo.department?.name || organizationInfo.departmentName || "Not Assigned";
 
   const totalVisitsCount = todayVisits + pendingVisits + completedVisits;
   const performanceMetrics = [
+    { label: "Company Target Achievement", value: targetAchievementPercent, suffix: "%" },
     { label: "Visit Completion Rate", value: totalVisitsCount > 0 ? Math.round((completedVisits / totalVisitsCount) * 100) : 0, suffix: "%" },
-    { label: "Manager Target Achievement", value: totalSalesOrders > 0 ? 100 : 85, suffix: "%" },
+    { label: "Order Approval Rate", value: totalSalesOrders > 0 ? Math.round((approvedOrders / totalSalesOrders) * 100) : 0, suffix: "%" },
     { label: "Executive Attendance Rate", value: attendance.rate || 0, suffix: "%" },
   ];
 
   const orderData = [
-    { name: "Approved Orders", value: approvedOrders || 1, color: "#10B981" },
+    { name: "Approved Orders", value: approvedOrders || 0, color: "#10B981" },
     { name: "Pending Review", value: pendingOrders || 0, color: "#F59E0B" },
   ];
 
@@ -131,17 +136,29 @@ export default function HeadOfSalesDashboard() {
   ];
 
   const recentActivitiesList = dashboard?.recentActivities || [
-    { title: "Head of Sales Overview", description: `Scope: ${companyName} - ${branchName}`, time: dayjs().format("h:mm A"), completed: true },
-    { title: "Visits Updated", description: `${completedVisits} visits completed in assigned branch`, time: "Today" },
-    { title: "Orders Processed", description: `${approvedOrders} orders approved`, time: dayjs().subtract(2, "hours").format("h:mm A") },
+    { title: "Dashboard Live Sync", description: `Organization Scope: ${companyName} - ${branchName}`, time: dayjs().format("h:mm A"), completed: true },
+    { title: "Field Visits Metrics", description: `${completedVisits} completed visits, ${pendingVisits} pending visits`, time: "Today" },
+    { title: "Sales Orders Stream", description: `${approvedOrders} approved orders out of ${totalSalesOrders} total sales orders`, time: dayjs().format("h:mm A") },
   ];
 
   const salesManagers = dashboard?.salesManagers || [];
   const salesExecutives = dashboard?.salesExecutives || [];
-  const teams = dashboard?.teams || [];
   const customers = dashboard?.customers || [];
   const recentVisits = dashboard?.recentVisits || [];
   const recentOrders = dashboard?.recentOrders || [];
+
+  const targetAnalytics = dashboard?.targetAnalytics || {};
+  const performanceAnalytics = dashboard?.performanceAnalytics || {};
+
+  const branchTargetPerformance = targetAnalytics.branchTargetPerformance || [];
+  const departmentTargetPerformance = targetAnalytics.departmentTargetPerformance || [];
+  const salesManagerTargetPerformance = targetAnalytics.salesManagerTargetPerformance || [];
+  const topSalesExecutives = targetAnalytics.topSalesExecutives || [];
+
+  const branchPerformance = performanceAnalytics.branchPerformance || [];
+  const departmentPerformance = performanceAnalytics.departmentPerformance || [];
+  const managerPerformance = performanceAnalytics.managerPerformance || [];
+  const executivePerformance = performanceAnalytics.executivePerformance || [];
 
   const companyAdminName = organizationInfo.companyAdminName || "Company Admin";
   const headOfSalesName = organizationInfo.headOfSalesName || fullName || "Head of Sales";
@@ -151,112 +168,23 @@ export default function HeadOfSalesDashboard() {
       {/* Header */}
       <DashboardHeader
         welcomeText={`Welcome back, ${headOfSalesName} 👋`}
-        title="Head of Sales Executive Control Center"
+        title="Head Sales Dashboard"
         subtitle="Assigned Company, Branch & Department Sales Performance Control"
         onRefresh={refresh}
       />
 
       {/* KPI Stats Grid */}
-
       <StatsGrid>
-        <StatCard title="Total Sales Managers" value={totalSalesManagers} icon={UserCheck} color="bg-indigo-600" />
-        <StatCard title="Managers Present Today" value={presentSalesManagers} icon={UserCheck} color="bg-emerald-600" />
         <StatCard title="Sales Executives" value={totalSalesExecutives} icon={Users} color="bg-blue-600" />
-        <StatCard title="Total Teams" value={totalTeams} icon={Users} color="bg-purple-600" />
         <StatCard title="Total Customers" value={totalCustomers} icon={UserCheck} color="bg-sky-600" />
         <StatCard title="Total Sales Orders" value={totalSalesOrders} icon={ShoppingCart} color="bg-cyan-500" />
         <StatCard title="Today's Visits" value={todayVisits} icon={MapPin} color="bg-blue-500" />
         <StatCard title="Pending Visits" value={pendingVisits} icon={Clock3} color="bg-amber-500" />
         <StatCard title="Completed Visits" value={completedVisits} icon={ClipboardCheck} color="bg-emerald-500" />
-        <StatCard title="Department Revenue" value={revenue} icon={IndianRupee} color="bg-green-600" format="currency" />
+        <StatCard title="Company Revenue" value={revenue} icon={IndianRupee} color="bg-green-600" format="currency" />
       </StatsGrid>
 
-      {/* Sales Managers & Sales Executives Summary Lists */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SectionCard title="Sales Managers Summary" subtitle="Assigned sales managers & team counts" icon={UserCheck} iconColor="text-indigo-600">
-          {salesManagers.length === 0 ? (
-            <p className="text-sm text-slate-500 py-4 text-center">No sales managers assigned yet.</p>
-          ) : (
-            <div className="space-y-3">
-              {salesManagers.map((m) => (
-                <div key={m.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/70">
-                  <div>
-                    <h5 className="font-semibold text-slate-900 text-sm">{m.name}</h5>
-                    <p className="text-xs text-slate-500">{m.email}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-semibold text-indigo-600 block">{m.executiveCount} Executives</span>
-                    <span className="text-xs text-slate-500">{m.teamCount} Teams</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </SectionCard>
 
-        <SectionCard title="Sales Executives Summary" subtitle="Assigned sales executives & manager hierarchy" icon={Users} iconColor="text-blue-600">
-          {salesExecutives.length === 0 ? (
-            <p className="text-sm text-slate-500 py-4 text-center">No sales executives assigned yet.</p>
-          ) : (
-            <div className="space-y-3">
-              {salesExecutives.map((e) => (
-                <div key={e.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/70">
-                  <div>
-                    <h5 className="font-semibold text-slate-900 text-sm">{e.name}</h5>
-                    <p className="text-xs text-slate-500">{e.email}</p>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
-                    Manager: {e.managerName}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </SectionCard>
-      </div>
-
-      {/* Teams & Customers Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SectionCard title="Teams Overview" subtitle="Sales teams, team leaders & member counts" icon={Users} iconColor="text-purple-600">
-          {teams.length === 0 ? (
-            <p className="text-sm text-slate-500 py-4 text-center">No teams created yet.</p>
-          ) : (
-            <div className="space-y-3">
-              {teams.map((t) => (
-                <div key={t.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/70">
-                  <div>
-                    <h5 className="font-semibold text-slate-900 text-sm">{t.name}</h5>
-                    <p className="text-xs text-slate-500">Leader: {t.leadName}</p>
-                  </div>
-                  <span className="px-3 py-1 rounded-lg bg-purple-50 text-purple-700 text-xs font-semibold">
-                    {t.memberCount} Members
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </SectionCard>
-
-        <SectionCard title="Recent Customers Overview" subtitle="Assigned customers & owner hierarchy" icon={UserCheck} iconColor="text-sky-600">
-          {customers.length === 0 ? (
-            <p className="text-sm text-slate-500 py-4 text-center">No customers found.</p>
-          ) : (
-            <div className="space-y-3">
-              {customers.map((c) => (
-                <div key={c.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/70">
-                  <div>
-                    <h5 className="font-semibold text-slate-900 text-sm">{c.name}</h5>
-                    <p className="text-xs text-slate-500">Executive: {c.executiveName} | Manager: {c.managerName}</p>
-                  </div>
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${c.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-700"}`}>
-                    {c.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </SectionCard>
-      </div>
 
       {/* Visual Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -342,16 +270,10 @@ export default function HeadOfSalesDashboard() {
         </SectionCard>
       </div>
 
-      {/* Quick Actions & Recent Activities */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SectionCard title="Quick Management Actions" subtitle="Sales management shortcuts">
-          <QuickActions actions={quickActions} />
-        </SectionCard>
-
-        <SectionCard title="Recent Sales Activity" subtitle="Latest team operations" icon={Activity}>
-          <ActivityTimeline activities={recentActivitiesList} />
-        </SectionCard>
-      </div>
+      {/* Recent Sales Activity */}
+      <SectionCard title="Recent Sales Activity" subtitle="Latest team operations" icon={Activity}>
+        <ActivityTimeline activities={recentActivitiesList} />
+      </SectionCard>
     </motion.div>
   );
 }

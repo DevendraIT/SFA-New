@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import { BarChart3, TrendingUp, Target, Users, Calendar, RefreshCw, Loader2, FileText, ShoppingCart, IndianRupee, Package, Award } from "lucide-react";
@@ -6,6 +6,8 @@ import fieldForceApi from "../../api/fieldForce.api";
 import { getReportsAnalytics } from "../../api/report.api";
 import PageHeader from "../../components/dashboard/PageHeader";
 import SectionCard from "../../components/dashboard/SectionCard";
+import TargetPerformanceAnalytics from "./TargetPerformanceAnalytics";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ReportsPage() {
   const [loading, setLoading] = useState(true);

@@ -52,6 +52,24 @@ export class DashboardController {
     }
   };
 
+  getSalesManagerCount = async (req, res, next) => {
+    try {
+      const data = await this.service.getSalesManagerCount(req.user);
+      return successResponse(res, data, 'Sales manager count retrieved.');
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  getPresentSalesManagerCount = async (req, res, next) => {
+    try {
+      const data = await this.service.getPresentSalesManagerCount(req.user);
+      return successResponse(res, data, 'Present sales manager count retrieved.');
+    } catch (err) {
+      next(err);
+    }
+  };
+
   getManagerDashboard = async (req, res, next) => {
 
     try {

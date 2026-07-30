@@ -213,7 +213,7 @@ export class ReportsService {
         ordersCount: 0,
         totalRevenue: 0,
         visitsCompleted: 0,
-        targetValue: 100000,
+        targetValue: 0,
         achievedValue: 0,
       };
     });
@@ -235,62 +235,66 @@ export class ReportsService {
 
     targets.forEach(t => {
       if (t.userId && employeePerformanceMap[t.userId]) {
-        employeePerformanceMap[t.userId].targetValue = t.targetValue || 100000;
+        employeePerformanceMap[t.userId].targetValue = t.targetValue || 0;
         employeePerformanceMap[t.userId].achievedValue = t.achievedValue || employeePerformanceMap[t.userId].totalRevenue;
       }
     });
 
     const topEmployees = Object.values(employeePerformanceMap)
       .map(emp => {
-        const rate = emp.targetValue > 0 ? Math.min(100, Math.round((emp.achievedValue / emp.targetValue) * 100)) : (emp.ordersCount > 0 ? 90 : 75);
+        const rate = emp.targetValue > 0 ? Math.min(100, Math.round((emp.achievedValue / emp.targetValue) * 100)) : (emp.ordersCount > 0 ? 100 : 0);
         return { ...emp, achievementPercent: rate };
       })
       .sort((a, b) => b.totalRevenue - a.totalRevenue)
       .slice(0, 10);
 
-    // Sales breakdown by period
-    const monthlySales = [
-      { period: "Jan", orders: 12, revenue: 85000 },
-      { period: "Feb", orders: 15, revenue: 95000 },
-      { period: "Mar", orders: 18, revenue: 110000 },
-      { period: "Apr", orders: 20, revenue: 125000 },
-      { period: "May", orders: 22, revenue: 140000 },
-      { period: "Jun", orders: orders.length || 25, revenue: totalRevenue || 155000 },
-    ];
+    // Sales breakdown by month from actual orders
+    const monthlySalesMap = {};
+    orders.forEach(o => {
+      const monthKey = new Date(o.createdAt).toLocaleString('default', { month: 'short' });
+      if (!monthlySalesMap[monthKey]) monthlySalesMap[monthKey] = { period: monthKey, orders: 0, revenue: 0 };
+      monthlySalesMap[monthKey].orders += 1;
+      if (o.status === 'APPROVED' || o.status === 'COMPLETED') {
+        monthlySalesMap[monthKey].revenue += Number(o.totalAmount || 0);
+      }
+    });
+    const monthlySales = Object.values(monthlySalesMap);
 
     // Order Summary
     const orderSummary = {
-      totalOrders: orders.length || (approvedOrdersCount + pendingOrdersCount + cancelledOrdersCount),
-      approvedOrders: approvedOrdersCount || Math.round(orders.length * 0.7) || 15,
-      pendingOrders: pendingOrdersCount || Math.round(orders.length * 0.2) || 4,
-      cancelledOrders: cancelledOrdersCount || Math.round(orders.length * 0.1) || 2,
+      totalOrders: orders.length,
+      approvedOrders: approvedOrdersCount,
+      pendingOrders: pendingOrdersCount,
+      cancelledOrders: cancelledOrdersCount,
     };
 
     // Customer Summary
     const customerSummary = {
-      totalCustomers: customers.length || 45,
-      activeCustomers: customers.length > 0 ? Math.round(customers.length * 0.8) : 36,
-      topCustomers: customers.slice(0, 5).map(c => ({ id: c.id, name: c.name, industry: c.industry || 'Enterprise' })),
+      totalCustomers: customers.length,
+      activeCustomers: customers.filter(c => c.orders && c.orders.length > 0).length,
+      topCustomers: customers.slice(0, 5).map(c => ({ id: c.id, name: c.name, industry: c.industry || 'Standard' })),
     };
 
     return {
-      totalRevenue: totalRevenue || 710000,
-      yearlyRevenue: totalRevenue ? totalRevenue * 1.5 : 1200000,
+      totalRevenue,
+      yearlyRevenue: totalRevenue,
       totalOrders: orderSummary.totalOrders,
       orderSummary,
       customerSummary,
-      topSellingProducts: topProducts.length > 0 ? topProducts : [
-        { id: "p1", name: "SFA Enterprise License", sku: "SFA-ENT-001", unitsSold: 45, totalRevenue: 225000 },
-        { id: "p2", name: "Field Track Mobile Module", sku: "SFA-MOB-002", unitsSold: 60, totalRevenue: 180000 },
-      ],
+      topSellingProducts: topProducts,
       topPerformingEmployees: topEmployees,
       monthlySales,
-      teamPerformance: teams.map(t => ({
-        id: t.id,
-        name: t.name,
-        memberCount: t.users.length,
-        totalRevenue: Math.round(totalRevenue / (teams.length || 1)),
-      })),
+      teamPerformance: teams.map(t => {
+        const teamRevenue = orders
+          .filter(o => o.owner && o.owner.teamId === t.id && (o.status === 'APPROVED' || o.status === 'COMPLETED'))
+          .reduce((sum, o) => sum + Number(o.totalAmount || 0), 0);
+        return {
+          id: t.id,
+          name: t.name,
+          memberCount: t.users ? t.users.length : 0,
+          totalRevenue: teamRevenue,
+        };
+      }),
     };
   }
 }

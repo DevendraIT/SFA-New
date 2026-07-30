@@ -14,6 +14,8 @@ router.use(authenticate, requireOrganization);
 
 router.get('/superadmin', controller.getSuperAdminDashboard);
 router.get('/head-of-sales', controller.getHeadOfSalesDashboard);
+router.get('/sales-managers-count', controller.getSalesManagerCount);
+router.get('/present-sales-managers-count', controller.getPresentSalesManagerCount);
 router.get('/executive', controller.getExecutiveDashboard);
 
 router.get('/team', authorize(['analytics:team']), controller.getTeamDashboard);

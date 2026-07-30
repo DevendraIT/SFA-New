@@ -6,6 +6,12 @@ export const getSuperAdminDashboard = () =>
 export const getHeadOfSalesDashboard = () =>
   api.get("/dashboard/head-of-sales");
 
+export const getSalesManagerCount = () =>
+  api.get("/dashboard/sales-managers-count");
+
+export const getPresentSalesManagerCount = () =>
+  api.get("/dashboard/present-sales-managers-count");
+
 export const getExecutiveDashboard = () =>
 
   api.get("/dashboard/executive");

@@ -37,6 +37,26 @@ import ReportsPage from "../pages/reports/ReportsPage";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
 import SettingsPage from "../pages/settings/SettingsPage";
 
+import TargetPerformanceAnalytics from "../pages/reports/TargetPerformanceAnalytics";
+import { useAuth } from "../context/AuthContext";
+import { useMemo } from "react";
+
+function PerformanceWrapper() {
+  const { user } = useAuth();
+  const isHeadOfSales = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
+  }, [user]);
+
+  if (isHeadOfSales) {
+    return <TargetPerformanceAnalytics />;
+  }
+  return <ExecutivePerformance />;
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -117,14 +137,15 @@ export default function AppRoutes() {
 
   <Route
     path="/team/performance"
-    element={<ExecutivePerformance />}
+    element={<PerformanceWrapper />}
   />
 
   {/* ===== SALES ORDERS ===== */}
   <Route path="/orders" element={<OrdersPage />} />
 
   {/* ===== PERFORMANCE & REPORTS & SETTINGS ===== */}
-  <Route path="/performance" element={<ExecutivePerformance />} />
+  <Route path="/performance" element={<PerformanceWrapper />} />
+  <Route path="/reports/target-performance" element={<PerformanceWrapper />} />
   <Route path="/reports" element={<ReportsPage />} />
   <Route path="/notifications" element={<NotificationsPage />} />
   <Route path="/settings" element={<SettingsPage />} />

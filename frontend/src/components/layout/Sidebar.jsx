@@ -93,6 +93,14 @@ export default function Sidebar({
   }, [user]);
 
 
+  const isHeadOfSales = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
+  }, [user]);
+
   const filteredNavigation = useMemo(() => {
     if (isSuperAdmin) {
       return navigation
@@ -109,7 +117,11 @@ export default function Sidebar({
         });
     }
 
-
+    if (isHeadOfSales) {
+      return navigation.filter(
+        (item) => !["Field Force", "Team Management"].includes(item.title)
+      );
+    }
 
     if (isSalesExecutive) {
       return navigation
@@ -148,7 +160,7 @@ export default function Sidebar({
     }
 
     return navigation;
-  }, [isSuperAdmin, isSalesManager, isSalesExecutive]);
+  }, [isSuperAdmin, isHeadOfSales, isSalesManager, isSalesExecutive]);
 
 
 
