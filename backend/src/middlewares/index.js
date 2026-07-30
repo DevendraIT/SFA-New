@@ -24,23 +24,12 @@ export const securityMiddleware = [
     contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   }),
-  
-
-cors({
-  origin(origin, callback) {
-    // Allow requests without an Origin header (Postman, server-to-server)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(new Error(`Origin ${origin} not allowed by CORS`));
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-})
+  cors({
+    origin: config.CORS_ORIGIN,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
 ];
 
 /**

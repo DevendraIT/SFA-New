@@ -63,7 +63,15 @@ export default function Sidebar({
     const roleNames = Array.isArray(user.roles)
       ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
       : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+    return roleNames.some(
+      (r) =>
+        r &&
+        (r === "SUPER_ADMIN" ||
+          r === "Super Admin" ||
+          r === "Admin" ||
+          r.toLowerCase().includes("super") ||
+          (r.toLowerCase().includes("admin") && !r.toLowerCase().includes("company")))
+    );
   }, [user]);
 
   const isSalesManager = useMemo(() => {
