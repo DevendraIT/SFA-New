@@ -21,11 +21,7 @@ export default function EmptyDashboard({
       <p className="text-slate-500 text-center max-w-md mb-6">{description}</p>
       {onAction && (
         <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            onAction();
-          }}
+          onClick={onAction}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-medium text-sm hover:bg-blue-700 transition-all shadow-sm"
         >
           <RefreshCcw size={16} />

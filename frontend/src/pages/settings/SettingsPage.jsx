@@ -29,7 +29,7 @@ export default function SettingsPage() {
         email: user.email || "",
         phoneNumber: user.phoneNumber || "",
         designation: user.designation || "Sales Executive",
-        department: user.department?.name || "Sales",
+        department: user.department?.name || "Field Force",
       });
     }
   }, [user]);

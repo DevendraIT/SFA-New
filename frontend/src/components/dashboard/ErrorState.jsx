@@ -19,11 +19,7 @@ export default function ErrorState({
       <p className="text-slate-500 text-center max-w-md mb-6">{message}</p>
       {onRetry && (
         <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            onRetry();
-          }}
+          onClick={onRetry}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-medium text-sm hover:bg-blue-700 transition-all shadow-sm"
         >
           <RefreshCcw size={16} />

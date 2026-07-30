@@ -29,11 +29,7 @@ export default function DashboardHeader({
 
         {onRefresh && (
           <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              onRefresh();
-            }}
+            onClick={onRefresh}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all text-sm font-medium text-slate-700"
           >
             <RefreshCcw size={16} />
@@ -43,11 +39,7 @@ export default function DashboardHeader({
 
         {showExport && onExport && (
           <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              onExport();
-            }}
+            onClick={onExport}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white shadow-sm hover:bg-blue-700 transition-all text-sm font-medium"
           >
             <Download size={16} />
