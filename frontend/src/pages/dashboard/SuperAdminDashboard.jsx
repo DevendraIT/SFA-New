@@ -210,8 +210,6 @@ export default function SuperAdminDashboard() {
         title="Super Admin Executive Dashboard"
         subtitle="Enterprise Sales Force Automation Platform — System-Wide Control Center"
         onRefresh={refresh}
-        showExport
-        onExport={() => {}}
       />
 
       {/* Read-Only Organization Overview Card with Vibrant Styling */}

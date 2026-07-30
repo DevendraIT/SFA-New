@@ -87,39 +87,56 @@ export default function Sidebar({
 
   const filteredNavigation = useMemo(() => {
     if (isSuperAdmin) {
-      return navigation.map((item) => {
-        if (item.title === "Field Force") {
-          return {
-            title: "Field Force",
-            icon: item.icon,
-            path: "/field-force/dashboard",
-          };
-        }
-        return item;
-      });
+      return navigation
+        .filter((item) => item.title !== "Team Management")
+        .map((item) => {
+          if (item.title === "Field Force") {
+            return {
+              title: "Field Force",
+              icon: item.icon,
+              path: "/field-force/dashboard",
+            };
+          }
+          return item;
+        });
     }
 
 
 
     if (isSalesExecutive) {
-      return navigation.filter(
-        (item) => !["Organization", "Team Management"].includes(item.title)
-      );
+      return navigation
+        .filter(
+          (item) => !["Organization", "Team Management", "Sales Orders"].includes(item.title)
+        )
+        .map((item) => {
+          if (item.title === "Field Force" && Array.isArray(item.children)) {
+            return {
+              ...item,
+              children: item.children.filter(
+                (child) =>
+                  !["Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar"].includes(child.title)
+              ),
+            };
+          }
+          return item;
+        });
     }
 
     if (isSalesManager) {
-      return navigation.map((item) => {
-        if (item.title === "Organization" && Array.isArray(item.children)) {
-          return {
-            ...item,
-            children: item.children.filter(
-              (child) =>
-                !["/organization/company", "/organization/branch", "/organization/department"].includes(child.path)
-            ),
-          };
-        }
-        return item;
-      });
+      return navigation
+        .filter((item) => item.title !== "Field Force")
+        .map((item) => {
+          if (item.title === "Organization" && Array.isArray(item.children)) {
+            return {
+              ...item,
+              children: item.children.filter(
+                (child) =>
+                  !["/organization/company", "/organization/branch", "/organization/department"].includes(child.path)
+              ),
+            };
+          }
+          return item;
+        });
     }
 
     return navigation;

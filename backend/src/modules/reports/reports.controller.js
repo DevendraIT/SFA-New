@@ -43,4 +43,13 @@ export class ReportsController {
       next(err);
     }
   };
+
+  getAnalytics = async (req, res, next) => {
+    try {
+      const analytics = await this.service.getOrganizationAnalytics(req.user.organizationId);
+      return successResponse(res, analytics, 'Organization reports analytics retrieved.');
+    } catch (err) {
+      next(err);
+    }
+  };
 }

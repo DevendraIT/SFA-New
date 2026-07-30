@@ -18,17 +18,29 @@ export const requestIdMiddleware = (req, res, next) => {
 /**
  * Security middleware configuration
  */
+const allowedOrigins = config.CORS_ORIGIN.split(",").map(origin => origin.trim());
 export const securityMiddleware = [
   helmet({
     contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   }),
-  cors({
-    origin: config.CORS_ORIGIN,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
+  
+
+cors({
+  origin(origin, callback) {
+    // Allow requests without an Origin header (Postman, server-to-server)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+})
 ];
 
 /**

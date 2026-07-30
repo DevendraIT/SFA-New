@@ -153,4 +153,6 @@ export const config = {
   N8N_WEBHOOK_URL: parsed.data.N8N_WEBHOOK_URL,
 };
 
+console.log("CORS_ORIGIN:", parsed.data.CORS_ORIGIN);
+
 export default config;

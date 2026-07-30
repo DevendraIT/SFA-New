@@ -15,5 +15,6 @@ router.use(authenticate, requireOrganization);
 
 router.get('/export', controller.downloadReport);
 router.get('/forecast', authorize([SYSTEM_PERMISSIONS.VIEW_FORECAST]), controller.getForecast);
+router.get('/analytics', controller.getAnalytics);
 
 export default router;

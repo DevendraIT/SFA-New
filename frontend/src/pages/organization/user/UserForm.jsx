@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import userService from "../../../services/user.service";
@@ -6,9 +6,22 @@ import roleService from "../../../services/role.service";
 import branchService from "../../../services/branch.service";
 import departmentService from "../../../services/department.service";
 import teamService from "../../../services/team.service";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function UserForm({ user, onClose, onSuccess }) {
+  const { user: currentUser } = useAuth();
   const isEditMode = !!user;
+
+  const isSalesManager = useMemo(() => {
+    if (!currentUser) return false;
+    const roleNames = Array.isArray(currentUser.roles)
+      ? currentUser.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [currentUser.role?.name || ""];
+    return (
+      roleNames.some((r) => r && r.toLowerCase().includes("sales manager")) &&
+      !roleNames.some((r) => r && (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("head of sales")))
+    );
+  }, [currentUser]);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -35,6 +48,14 @@ export default function UserForm({ user, onClose, onSuccess }) {
   const [loadingDeps, setLoadingDeps] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
 
+  const filteredRoles = useMemo(() => {
+    if (!roles) return [];
+    if (isSalesManager) {
+      return roles.filter((role) => role.name && role.name.toLowerCase() === "sales executive");
+    }
+    return roles;
+  }, [roles, isSalesManager]);
+
   // Fetch lookup data on mount
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +74,15 @@ export default function UserForm({ user, onClose, onSuccess }) {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (!isEditMode && isSalesManager && filteredRoles.length > 0 && form.roleIds.length === 0) {
+      setForm((prev) => ({
+        ...prev,
+        roleIds: filteredRoles.map((r) => r.id),
+      }));
+    }
+  }, [filteredRoles, isSalesManager, isEditMode, form.roleIds.length]);
 
   // Fetch departments when branch changes
   useEffect(() => {
@@ -367,10 +397,10 @@ export default function UserForm({ user, onClose, onSuccess }) {
           Roles <span className="text-red-500">*</span>
         </label>
         <div className="flex flex-wrap gap-3 rounded-lg border border-slate-200 p-4">
-          {roles.length === 0 && (
+          {filteredRoles.length === 0 && (
             <p className="text-sm text-slate-400">No roles available</p>
           )}
-          {roles.map((role) => (
+          {filteredRoles.map((role) => (
             <label
               key={role.id}
               className={`flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm transition ${

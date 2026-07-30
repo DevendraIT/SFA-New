@@ -41,4 +41,13 @@ export class TargetPerformanceController {
       next(err);
     }
   };
+
+  getCompanyOverview = async (req, res, next) => {
+    try {
+      const result = await this.service.getCompanyOverview(req.user.organizationId);
+      return successResponse(res, result, 'Company performance overview retrieved successfully.');
+    } catch (err) {
+      next(err);
+    }
+  };
 }

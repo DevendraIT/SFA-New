@@ -96,7 +96,7 @@ export class UserService {
     if (!roleIds || roleIds.length < USER_VALIDATION.ROLE_MIN_COUNT) {
       throw AppError.badRequest(`At least ${USER_VALIDATION.ROLE_MIN_COUNT} role is required.`);
     }
-    await this._validateRoles(roleIds, organizationId);
+    await this._validateRoles(roleIds, organizationId, req);
 
     // Validate password requirements
     if (!password || password.length < USER_VALIDATION.PASSWORD_MIN_LENGTH) {
@@ -205,7 +205,7 @@ export class UserService {
     //   throw AppError.badRequest('Roles cannot be modified for reserved user types.');
     // }
 
-    await this._validateRoles(roleIds, organizationId);
+    await this._validateRoles(roleIds, organizationId, req);
     await this.repo.updateUserRoles(id, roleIds);
 
     await logAudit({
@@ -391,11 +391,32 @@ export class UserService {
   // Private Validation Helpers
   // --------------------------------------------------
 
-  async _validateRoles(roleIds, organizationId) {
+  async _validateRoles(roleIds, organizationId, req) {
     if (!roleIds?.length) return;
     const validRoles = await this.repo.findRolesByIds(roleIds, organizationId);
     if (validRoles.length !== roleIds.length) {
       throw AppError.badRequest(USER_ERRORS.INVALID_ROLES);
+    }
+
+    // If caller is a Sales Manager (and not Super Admin or Head of Sales), restrict target roles to Sales Executive only
+    const userRoles = req?.user?.roles || [];
+    const isSalesManager =
+      userRoles.some(
+        (r) => typeof r === "string" && r.toLowerCase().includes("sales manager")
+      ) &&
+      !userRoles.some(
+        (r) =>
+          typeof r === "string" &&
+          (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("head of sales"))
+      );
+
+    if (isSalesManager) {
+      const nonExecutiveRoles = validRoles.filter(
+        (r) => !r.name || r.name.toLowerCase() !== "sales executive"
+      );
+      if (nonExecutiveRoles.length > 0) {
+        throw AppError.forbidden("Sales Managers can create user accounts only for Sales Executives.");
+      }
     }
   }
 

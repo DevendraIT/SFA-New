@@ -15,6 +15,7 @@ import {
   Plus,
   FileText,
   Calendar,
+  Settings,
   Building2,
   Building,
   GitBranch,
@@ -52,9 +53,10 @@ import { DashboardGridSkeleton } from "../../components/dashboard/LoadingSkeleto
 
 const quickActions = [
   {
-    label: "Assign Task",
+    label: "Assigned Tasks",
     icon: Plus,
     iconColor: "text-blue-600",
+    path: "/team/assigned-tasks",
   },
   {
     label: "View Team",
@@ -69,9 +71,10 @@ const quickActions = [
     path: "/reports",
   },
   {
-    label: "Schedule",
-    icon: Calendar,
+    label: "Settings",
+    icon: Settings,
     iconColor: "text-violet-600",
+    path: "/settings",
   },
 ];
 

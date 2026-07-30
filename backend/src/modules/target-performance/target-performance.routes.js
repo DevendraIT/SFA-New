@@ -18,5 +18,6 @@ router.get('/targets', controller.getTargets);
 router.post('/targets', validate(createTargetSchema), controller.createTarget);
 router.post('/targets/plan', authorize([SYSTEM_PERMISSIONS.MANAGE_TARGETS]), controller.planTargets);
 router.get('/leaderboard', controller.getLeaderboard);
+router.get('/company-overview', controller.getCompanyOverview);
 
 export default router;

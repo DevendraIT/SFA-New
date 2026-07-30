@@ -78,4 +78,41 @@ export class TargetPerformanceRepository {
       },
     });
   }
+
+  async getCompanyOverview(organizationId) {
+    const [targets, orders, teams, users, visits] = await Promise.all([
+      prisma.target.findMany({
+        where: { organizationId },
+        include: {
+          user: { select: { id: true, firstName: true, lastName: true, email: true } },
+          team: { select: { id: true, name: true } },
+        },
+      }),
+      prisma.order.findMany({
+        where: { organizationId, isDeleted: false },
+        include: {
+          owner: { select: { id: true, firstName: true, lastName: true, email: true } },
+        },
+      }),
+      prisma.team.findMany({
+        where: { organizationId },
+        include: {
+          users: { select: { id: true, firstName: true, lastName: true, email: true } },
+        },
+      }),
+      prisma.user.findMany({
+        where: { organizationId, deletedAt: null },
+        include: {
+          roles: { include: { role: true } },
+          team: { select: { id: true, name: true } },
+        },
+      }),
+      prisma.visit.findMany({
+        where: { organizationId },
+        select: { id: true, userId: true, status: true },
+      }),
+    ]);
+
+    return { targets, orders, teams, users, visits };
+  }
 }
