@@ -314,4 +314,3 @@ export default function FieldForceDashboard() {
     </motion.div>
   );
 }
-
