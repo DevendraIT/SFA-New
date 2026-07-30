@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Search, Bell, Menu, ChevronDown } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar({
   collapsed,
   setCollapsed,
 }) {
+
+  const navigate = useNavigate();
+
   const { user, logout } = useAuth();
 
   const [openProfile, setOpenProfile] = useState(false);
@@ -50,7 +54,7 @@ export default function Navbar({
 
       {/* Center */}
 
-      <div className="hidden lg:flex w-full max-w-xl mx-10">
+      {/* <div className="hidden lg:flex w-full max-w-xl mx-10">
 
         <div className="relative w-full">
 
@@ -66,13 +70,13 @@ export default function Navbar({
 
         </div>
 
-      </div>
+      </div> */}
 
             {/* Right */}
 
       <div className="flex items-center gap-5">
 
-        <button
+        <button onClick={() => navigate("/notifications")}
           className="relative rounded-xl p-2 hover:bg-slate-100 transition"
         >
 
