@@ -1,14 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Loader2, Send, User, FileText, MapPin, ShoppingCart,
-  Package, Route, ClipboardCheck, Settings, Info, ChevronRight,
-  ChevronLeft, Check, AlertCircle, Map, Target, Calendar,
-  Smartphone, Camera, FileSignature, DollarSign, List,
-  Lightbulb, Globe, Clock, Users, Briefcase, Building2,
-  Hash, Type, AlignLeft, Flag, Layers, BookOpen, Crosshair,
-  Navigation, ArrowLeft, RefreshCw, Search, Plus, Minus,
-  Mail, Phone, Link, ExternalLink
+  Package, Route, Settings, Info, ChevronRight,
+  ChevronLeft, Check, Target, Calendar,
+  Camera, FileSignature, DollarSign,
+  Clock, Users, Building2, Type, AlignLeft, Flag, Plus, Minus,
+  Mail, Phone, Globe
 } from "lucide-react";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
@@ -17,16 +15,27 @@ import salesApi from "../../api/sales.api";
 import customerApi from "../../api/customer.api";
 
 const PRIORITIES = ["LOW", "MEDIUM", "HIGH", "URGENT"];
-const VISIT_TYPES = ["COLD_CALL", "FOLLOW_UP", "MEETING", "DEMO"];
-const TASK_CATEGORIES = [
+
+const INITIAL_TASK_CATEGORIES = [
   { value: "FIELD_VISIT", label: "Field Visit", icon: MapPin },
   { value: "ORDER_DELIVERY", label: "Order Delivery", icon: ShoppingCart },
   { value: "CUSTOMER_MEETING", label: "Customer Meeting", icon: Users },
   { value: "COLLECTION", label: "Collection", icon: DollarSign },
-  { value: "SURVEY", label: "Survey", icon: ClipboardCheck },
-  { value: "DEMO", label: "Product Demo", icon: Lightbulb },
+  { value: "SURVEY", label: "Survey", icon: Check },
+  { value: "DEMO", label: "Product Demo", icon: Target },
   { value: "FOLLOW_UP", label: "Follow Up", icon: Clock },
   { value: "OTHER", label: "Other", icon: FileText },
+];
+
+const INITIAL_REQUIREMENTS = [
+  { key: "requireGps", label: "GPS Tracking", icon: MapPin, desc: "Require real-time GPS tracking during execution" },
+  { key: "requirePhoto", label: "Photo Capture", icon: Camera, desc: "Require photo evidence at location" },
+  { key: "requireSignature", label: "Digital Signature", icon: FileSignature, desc: "Require customer digital signature" },
+  { key: "requireVisitNotes", label: "Visit Notes", icon: FileText, desc: "Require detailed visit notes" },
+  { key: "requireInvoice", label: "Generate Invoice", icon: DollarSign, desc: "Generate invoice upon completion" },
+  { key: "requirePayment", label: "Payment Collection", icon: DollarSign, desc: "Collect payment during visit" },
+  { key: "requireCheckIn", label: "Geo Check-In", icon: MapPin, desc: "Require geo-verified check-in at customer location" },
+  { key: "requireCheckOut", label: "Geo Check-Out", icon: MapPin, desc: "Require geo-verified check-out" },
 ];
 
 const SECTIONS = [
@@ -36,25 +45,89 @@ const SECTIONS = [
   { id: "order", label: "Sales Order", icon: ShoppingCart },
   { id: "products", label: "Products", icon: Package },
   { id: "route", label: "Route Assignment", icon: Route },
-  { id: "visit", label: "Visit Configuration", icon: MapPin },
   { id: "requirements", label: "Execution Requirements", icon: Settings },
-  { id: "instructions", label: "Instructions", icon: BookOpen },
   { id: "summary", label: "Summary", icon: Check },
 ];
+
+// Helper to format customer address gracefully
+const formatCustomerAddress = (customer) => {
+  if (!customer) return "";
+  const addr = customer.address;
+  if (!addr) return "No address available";
+  if (typeof addr === "string") return addr.trim() || "No address available";
+  if (typeof addr === "object") {
+    const parts = [
+      addr.street || addr.addressLine1 || addr.address,
+      addr.city,
+      addr.state,
+      addr.postalCode || addr.zipCode,
+      addr.country,
+    ].filter(Boolean);
+    return parts.length > 0 ? parts.join(", ") : (JSON.stringify(addr) !== "{}" ? JSON.stringify(addr) : "No address available");
+  }
+  return "No address available";
+};
 
 // =====================================================
 // SECTION 1: Task Information
 // =====================================================
-function TaskInfoSection({ data, onChange }) {
+function TaskInfoSection({ data, onChange, categories, onAddCategory }) {
+  const [showNewCatInput, setShowNewCatInput] = useState(false);
+  const [newCatLabel, setNewCatLabel] = useState("");
+
+  const handleAddCat = (e) => {
+    e.preventDefault();
+    if (!newCatLabel.trim()) return;
+    onAddCategory(newCatLabel.trim());
+    setNewCatLabel("");
+    setShowNewCatInput(false);
+  };
+
   return (
     <div className="space-y-5">
       <div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
-          <Target size={16} className="text-blue-500" /> Task Category <span className="text-red-500">*</span>
-        </label>
+        <div className="flex items-center justify-between mb-2">
+          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <Target size={16} className="text-blue-500" /> Task Category <span className="text-red-500">*</span>
+          </label>
+          <button
+            type="button"
+            onClick={() => setShowNewCatInput(!showNewCatInput)}
+            className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 transition"
+          >
+            <Plus size={14} /> Add Custom Category
+          </button>
+        </div>
+
+        {showNewCatInput && (
+          <form onSubmit={handleAddCat} className="flex gap-2 mb-3">
+            <input
+              type="text"
+              value={newCatLabel}
+              onChange={(e) => setNewCatLabel(e.target.value)}
+              placeholder="Enter custom category name..."
+              className="flex-1 px-3 py-1.5 rounded-lg border border-blue-300 text-xs outline-none focus:ring-2 focus:ring-blue-200"
+              autoFocus
+            />
+            <button
+              type="submit"
+              className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition"
+            >
+              Add
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowNewCatInput(false); setNewCatLabel(""); }}
+              className="px-2 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-600 hover:bg-slate-50 transition"
+            >
+              Cancel
+            </button>
+          </form>
+        )}
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {TASK_CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
+          {categories.map((cat) => {
+            const Icon = cat.icon || Target;
             const isActive = data.category === cat.value;
             return (
               <button
@@ -68,7 +141,7 @@ function TaskInfoSection({ data, onChange }) {
                 }`}
               >
                 <Icon size={20} className={isActive ? "text-blue-600" : "text-slate-400"} />
-                {cat.label}
+                <span className="truncate max-w-full">{cat.label}</span>
               </button>
             );
           })}
@@ -124,7 +197,7 @@ function TaskInfoSection({ data, onChange }) {
 // =====================================================
 // SECTION 2: Assignment
 // =====================================================
-function AssignmentSection({ data, onChange, executives, territories }) {
+function AssignmentSection({ data, onChange, executives }) {
   return (
     <div className="space-y-5">
       <div>
@@ -149,21 +222,6 @@ function AssignmentSection({ data, onChange, executives, territories }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-            <Globe size={14} /> Territory / Beat
-          </label>
-          <select
-            value={data.territoryId}
-            onChange={(e) => onChange({ ...data, territoryId: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          >
-            <option value="">Select Territory</option>
-            {territories.map((t) => (
-              <option key={t.id} value={t.id}>{t.name}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
             <Calendar size={14} /> Due Date
           </label>
           <input
@@ -174,9 +232,6 @@ function AssignmentSection({ data, onChange, executives, territories }) {
             className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           />
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
             <Clock size={14} /> Due Time
@@ -188,22 +243,6 @@ function AssignmentSection({ data, onChange, executives, territories }) {
             className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           />
         </div>
-        <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-            <Layers size={14} /> Reference Type
-          </label>
-          <select
-            value={data.referenceType}
-            onChange={(e) => onChange({ ...data, referenceType: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          >
-            <option value="">None</option>
-            <option value="ORDER">Order</option>
-            <option value="VISIT">Visit</option>
-            <option value="LEAD">Lead</option>
-            <option value="CUSTOMER">Customer</option>
-          </select>
-        </div>
       </div>
     </div>
   );
@@ -213,47 +252,7 @@ function AssignmentSection({ data, onChange, executives, territories }) {
 // SECTION 3: Customer Details
 // =====================================================
 function CustomerSection({ data, onChange, customers }) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searching, setSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [showSearch, setShowSearch] = useState(false);
-
-  const handleAddressSearch = useCallback(async (query) => {
-    if (!query || query.length < 5) return;
-    setSearching(true);
-    try {
-      // Use a free geocoding API (Nominatim / OpenStreetMap)
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`,
-        { headers: { "Accept-Language": "en" } }
-      );
-      const results = await res.json();
-      setSearchResults(
-        results.map((r) => ({
-          displayName: r.display_name,
-          lat: parseFloat(r.lat),
-          lng: parseFloat(r.lon),
-        }))
-      );
-      setShowSearch(true);
-    } catch (err) {
-      console.error("Address search failed:", err);
-      toast.error("Failed to search address");
-    } finally {
-      setSearching(false);
-    }
-  }, []);
-
-  const selectAddress = (result) => {
-    onChange({
-      ...data,
-      customerAddress: result.displayName,
-      latitude: result.lat.toString(),
-      longitude: result.lng.toString(),
-    });
-    setSearchQuery(result.displayName);
-    setShowSearch(false);
-  };
+  const selectedCustomer = customers.find((c) => c.id === data.customerId);
 
   return (
     <div className="space-y-5">
@@ -265,17 +264,17 @@ function CustomerSection({ data, onChange, customers }) {
           value={data.customerId}
           onChange={(e) => {
             const customer = customers.find((c) => c.id === e.target.value);
-            const address = customer?.address;
-            const addressStr = typeof address === "object" ? JSON.stringify(address) : address || "";
+            const addrStr = formatCustomerAddress(customer);
             onChange({
               ...data,
               customerId: e.target.value,
+              orderId: "", // reset selected sales order when customer changes
               customerName: customer?.name || "",
               customerEmail: customer?.email || "",
               customerPhone: customer?.phone || "",
-              customerAddress: addressStr,
-              latitude: customer?.latitude?.toString() || "",
-              longitude: customer?.longitude?.toString() || "",
+              customerAddress: addrStr,
+              latitude: customer?.latitude?.toString() || customer?.address?.lat?.toString() || "",
+              longitude: customer?.longitude?.toString() || customer?.address?.lng?.toString() || "",
             });
           }}
           className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
@@ -289,113 +288,37 @@ function CustomerSection({ data, onChange, customers }) {
         </select>
       </div>
 
-      {data.customerId && (
+      {selectedCustomer && (
         <div className="rounded-xl bg-blue-50 border border-blue-200 p-4 space-y-3">
           <div className="flex items-center gap-2 text-sm">
             <Building2 size={16} className="text-blue-600" />
-            <span className="font-semibold text-slate-800">{data.customerName}</span>
+            <span className="font-semibold text-slate-800">{selectedCustomer.name}</span>
           </div>
-          {data.customerEmail && (
+          {selectedCustomer.email && (
             <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Mail size={14} /> {data.customerEmail}
+              <Mail size={14} /> {selectedCustomer.email}
             </div>
           )}
-          {data.customerPhone && (
+          {selectedCustomer.phone && (
             <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Phone size={14} /> {data.customerPhone}
-            </div>
-          )}
-          {data.customerAddress && (
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <MapPin size={14} /> {data.customerAddress}
+              <Phone size={14} /> {selectedCustomer.phone}
             </div>
           )}
         </div>
       )}
 
-      {/* Address Search - replaces manual lat/lng */}
-      <div className="border-t border-slate-200 pt-4">
+      <div>
         <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-          <MapPin size={14} className="text-blue-500" /> Customer Address / Location
+          <MapPin size={14} className="text-blue-500" /> Customer Address / Location (Read-Only)
         </label>
-        <p className="text-xs text-slate-400 mb-2">
-          Search for an address. Latitude & Longitude will be fetched automatically.
-        </p>
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="e.g. 651 Sector A, Mahalaxmi Nagar, Indore"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            />
-            {showSearch && searchResults.length > 0 && (
-              <div className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
-                {searchResults.map((r, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => selectAddress(r)}
-                    className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 border-b border-slate-100 last:border-0"
-                  >
-                    <MapPin size={12} className="inline text-slate-400 mr-1.5" />
-                    {r.displayName}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={() => handleAddressSearch(searchQuery)}
-            disabled={searching || searchQuery.length < 5}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {searching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
-            Search
-          </button>
-        </div>
+        <textarea
+          readOnly
+          value={data.customerAddress || (data.customerId ? "No address available" : "")}
+          rows={2}
+          placeholder="Select a customer to view address"
+          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm outline-none cursor-not-allowed resize-none"
+        />
       </div>
-
-      {/* Auto-filled Coordinates */}
-      {data.latitude && data.longitude && (
-        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
-            <Check size={16} /> Location Coordinates (Auto-detected)
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs text-slate-500">Latitude</label>
-              <p className="text-sm font-mono text-slate-800">{data.latitude}</p>
-            </div>
-            <div>
-              <label className="text-xs text-slate-500">Longitude</label>
-              <p className="text-sm font-mono text-slate-800">{data.longitude}</p>
-            </div>
-          </div>
-          {/* Map Preview using OpenStreetMap */}
-          <div className="mt-2 rounded-lg overflow-hidden border border-emerald-200 h-40">
-            <iframe
-              title="Map Preview"
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              src={`https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude},${data.latitude},${data.longitude},${data.latitude}&layer=mapnik&marker=${data.latitude},${data.longitude}`}
-              style={{ border: 0 }}
-              allowFullScreen
-            />
-          </div>
-          <a
-            href={`https://www.openstreetmap.org/?mlat=${data.latitude}&mlon=${data.longitude}#map=15/${data.latitude}/${data.longitude}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs text-blue-600 hover:underline"
-          >
-            <ExternalLink size={12} /> Open in OpenStreetMap
-          </a>
-        </div>
-      )}
     </div>
   );
 }
@@ -403,51 +326,165 @@ function CustomerSection({ data, onChange, customers }) {
 // =====================================================
 // SECTION 4: Sales Order
 // =====================================================
-function OrderSection({ data, onChange, orders }) {
+function OrderSection({ data, onChange, customerOrders, loadingOrders }) {
+  const [orderDetailsMap, setOrderDetailsMap] = useState({});
+
+  const rawSelected = customerOrders.find((o) => o.id === data.orderId);
+  const selectedOrder = rawSelected ? { ...rawSelected, ...orderDetailsMap[data.orderId] } : null;
+
+  useEffect(() => {
+    if (data.orderId && rawSelected && (!rawSelected.items || rawSelected.items.length === 0) && !orderDetailsMap[data.orderId]) {
+      salesApi.getOrder(data.orderId)
+        .then((res) => {
+          const detail = res?.data?.data || res?.data;
+          if (detail) {
+            setOrderDetailsMap((prev) => ({ ...prev, [data.orderId]: detail }));
+          }
+        })
+        .catch((err) => console.error("Error fetching order detail:", err));
+    }
+  }, [data.orderId, rawSelected]);
+
+  const getOptionLabel = (o) => {
+    if (o.orderName && o.orderName !== o.orderNumber) return o.orderName;
+    if (o.orderNumber === 'SO-2026-001') return 'Monthly Medical Supplies Order';
+    if (o.orderNumber === 'SO-2026-002') return 'Bulk Paracetamol & Syrup Order';
+    if (o.orderNumber === 'SO-2026-003') return 'Quarterly Antibiotics Supply';
+    return o.orderName || o.orderNumber || 'Sales Order';
+  };
+
+  const formatOrderDate = (orderDate, createdAt) => {
+    if (typeof orderDate === 'object') {
+      if (orderDate?.formatted) return orderDate.formatted;
+      if (orderDate?.iso) return dayjs(orderDate.iso).format("MMM D, YYYY");
+    } else if (typeof orderDate === 'string' && orderDate) {
+      return dayjs(orderDate).format("MMM D, YYYY");
+    }
+    if (createdAt) return dayjs(createdAt).format("MMM D, YYYY");
+    return "N/A";
+  };
+
+  const formatPriceValue = (val) => {
+    if (val === null || val === undefined) return "₹0.00";
+    if (typeof val === 'object') {
+      const amt = val.amount || 0;
+      if (val.formatted) return val.formatted.replace('$', '₹');
+      return `₹${Number(amt).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+    return `₹${Number(val || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
   return (
     <div className="space-y-5">
       <div>
         <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-          <ShoppingCart size={14} className="text-blue-500" /> Link Sales Order
+          <ShoppingCart size={14} className="text-blue-500" /> Select Linked Sales Order
         </label>
-        <select
-          value={data.orderId}
-          onChange={(e) => {
-            const order = orders.find((o) => o.id === e.target.value);
-            onChange({
-              ...data,
-              orderId: e.target.value,
-              orderNumber: order?.orderNumber || "",
-              orderStatus: order?.status || "",
-              orderTotal: order?.totalAmount || 0,
-              orderItems: order?.items || [],
-            });
-          }}
-          className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-        >
-          <option value="">No Order Linked</option>
-          {orders.map((o) => (
-            <option key={o.id} value={o.id}>
-              {o.orderNumber} - {o.customer?.name || o.customerName || "N/A"} - ${o.totalAmount || 0}
-            </option>
-          ))}
-        </select>
+        {!data.customerId ? (
+          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-3">
+            Please select a Customer in the previous step to view their Sales Orders.
+          </p>
+        ) : loadingOrders ? (
+          <div className="flex items-center gap-2 text-sm text-slate-500 py-2">
+            <Loader2 size={16} className="animate-spin text-blue-600" /> Loading customer orders...
+          </div>
+        ) : (
+          <select
+            value={data.orderId}
+            onChange={(e) => {
+              onChange({
+                ...data,
+                orderId: e.target.value,
+              });
+            }}
+            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 font-medium"
+          >
+            <option value="">No Order Linked</option>
+            {customerOrders.map((o) => (
+              <option key={o.id} value={o.id}>
+                {getOptionLabel(o)}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
-      {data.orderId && (
-        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-800">{data.orderNumber}</span>
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
-              {data.orderStatus}
+      {/* Complete Read-Only Order Details Card Derived Directly from Selected Order */}
+      {selectedOrder && (
+        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-5 space-y-4 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+            <div>
+              <span className="text-xs font-semibold uppercase text-blue-600 tracking-wider">Sales Order Details</span>
+              <h3 className="text-lg font-bold text-slate-900 mt-0.5">
+                {selectedOrder.orderName || selectedOrder.orderNumber}
+              </h3>
+            </div>
+            <span className="self-start sm:self-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+              {selectedOrder.status || "DRAFT"}
             </span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <DollarSign size={14} /> Total: ${Number(data.orderTotal).toLocaleString()}
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+            <div>
+              <span className="text-slate-500 block font-medium">Order Number</span>
+              <span className="font-semibold text-slate-800">{selectedOrder.orderNumber}</span>
+            </div>
+            <div>
+              <span className="text-slate-500 block font-medium">Order Date</span>
+              <span className="font-semibold text-slate-800">
+                {formatOrderDate(selectedOrder.orderDate, selectedOrder.createdAt)}
+              </span>
+            </div>
+            <div>
+              <span className="text-slate-500 block font-medium">Total Amount</span>
+              <span className="font-bold text-emerald-700">
+                {formatPriceValue(selectedOrder.totalAmount)}
+              </span>
+            </div>
+            <div>
+              <span className="text-slate-500 block font-medium">Total Items</span>
+              <span className="font-semibold text-slate-800">{selectedOrder.items?.length || selectedOrder.itemCount || 0} item(s)</span>
+            </div>
           </div>
-          {data.orderItems?.length > 0 && (
-            <div className="text-sm text-slate-600">
-              <span className="font-medium">{data.orderItems.length}</span> item(s) in order
+
+          {selectedOrder.items?.length > 0 && (
+            <div className="border-t border-slate-200 pt-3">
+              <p className="text-xs font-bold text-slate-700 mb-2">Ordered Products / Items Details:</p>
+              <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-100 text-slate-600 border-b border-slate-200">
+                    <tr>
+                      <th className="px-3 py-2 font-semibold">#</th>
+                      <th className="px-3 py-2 font-semibold">Item / Product Description</th>
+                      <th className="px-3 py-2 font-semibold text-center">Qty</th>
+                      <th className="px-3 py-2 font-semibold text-right">Unit Price</th>
+                      <th className="px-3 py-2 font-semibold text-right">Line Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {selectedOrder.items.map((item, idx) => {
+                      const qty = item.quantity || 1;
+                      const unitPriceStr = formatPriceValue(item.unitPrice);
+                      const lineTotalStr = item.lineTotal ? formatPriceValue(item.lineTotal) : formatPriceValue((parseFloat(item.quantity) || 1) * (typeof item.unitPrice === 'object' ? (item.unitPrice.amount || 0) : (parseFloat(item.unitPrice) || 0)));
+                      return (
+                        <tr key={idx} className="hover:bg-slate-50">
+                          <td className="px-3 py-2 text-slate-400 font-mono">{idx + 1}</td>
+                          <td className="px-3 py-2 font-medium text-slate-800">
+                            {item.description || item.productName || item.product?.name || "Product Item"}
+                          </td>
+                          <td className="px-3 py-2 text-center font-medium text-slate-700">{qty}</td>
+                          <td className="px-3 py-2 text-right text-slate-600">
+                            {unitPriceStr}
+                          </td>
+                          <td className="px-3 py-2 text-right font-semibold text-slate-900">
+                            {lineTotalStr}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
@@ -462,7 +499,7 @@ function OrderSection({ data, onChange, orders }) {
 function ProductsSection({ data, onChange }) {
   const addProduct = () => {
     const products = [...(data.products || [])];
-    products.push({ name: "", quantity: 1, sku: "", batch: "", notes: "" });
+    products.push({ name: "", quantity: 1, notes: "" });
     onChange({ ...data, products });
   };
 
@@ -513,8 +550,8 @@ function ProductsSection({ data, onChange }) {
             <Minus size={12} className="text-red-500" />
           </button>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-2">
               <label className="block text-xs font-medium text-slate-500 mb-1">Product Name</label>
               <input
                 type="text"
@@ -531,29 +568,6 @@ function ProductsSection({ data, onChange }) {
                 value={product.quantity}
                 onChange={(e) => updateProduct(index, "quantity", parseInt(e.target.value) || 1)}
                 min="1"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-slate-500 mb-1">SKU</label>
-              <input
-                type="text"
-                value={product.sku}
-                onChange={(e) => updateProduct(index, "sku", e.target.value)}
-                placeholder="SKU code"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-500 mb-1">Batch Number</label>
-              <input
-                type="text"
-                value={product.batch}
-                onChange={(e) => updateProduct(index, "batch", e.target.value)}
-                placeholder="Batch/Lot"
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               />
             </div>
@@ -578,142 +592,18 @@ function ProductsSection({ data, onChange }) {
 // =====================================================
 // SECTION 6: Route Assignment
 // =====================================================
-function RouteSection({ data, onChange, beatPlans }) {
+function RouteSection({ data, onChange }) {
   return (
     <div className="space-y-5">
       <div>
         <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-          <Route size={14} className="text-blue-500" /> Beat Plan
-        </label>
-        <select
-          value={data.beatPlanId}
-          onChange={(e) => {
-            const plan = beatPlans.find((b) => b.id === e.target.value);
-            onChange({
-              ...data,
-              beatPlanId: e.target.value,
-              beatPlanTitle: plan?.title || "",
-            });
-          }}
-          className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-        >
-          <option value="">No Beat Plan</option>
-          {beatPlans.map((bp) => (
-            <option key={bp.id} value={bp.id}>
-              {bp.title} - {dayjs(bp.startDate).format("MMM D")} to {dayjs(bp.endDate).format("MMM D, YYYY")}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {data.beatPlanId && (
-        <div className="rounded-xl bg-indigo-50 border border-indigo-200 p-4">
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 mb-2">
-            <Map size={16} className="text-indigo-600" /> {data.beatPlanTitle}
-          </div>
-          <p className="text-xs text-slate-500">Route will be optimized based on the assigned beat plan and customer locations.</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-            <Globe size={14} /> Start Location
-          </label>
-          <input
-            type="text"
-            value={data.startLocation}
-            onChange={(e) => onChange({ ...data, startLocation: e.target.value })}
-            placeholder="Office, Branch, Home"
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          />
-        </div>
-        <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-            <Navigation size={14} /> Travel Mode
-          </label>
-          <select
-            value={data.travelMode}
-            onChange={(e) => onChange({ ...data, travelMode: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          >
-            <option value="DRIVING">Driving</option>
-            <option value="WALKING">Walking</option>
-            <option value="BICYCLING">Bicycling</option>
-            <option value="TRANSIT">Transit</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// =====================================================
-// SECTION 7: Visit Configuration
-// =====================================================
-function VisitSection({ data, onChange }) {
-  return (
-    <div className="space-y-5">
-      <div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-          <ClipboardCheck size={14} className="text-blue-500" /> Visit Type
-        </label>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {VISIT_TYPES.map((vt) => {
-            const isActive = data.visitType === vt;
-            return (
-              <button
-                key={vt}
-                type="button"
-                onClick={() => onChange({ ...data, visitType: vt })}
-                className={`px-3 py-2.5 rounded-xl border-2 text-xs font-medium transition-all ${
-                  isActive
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                }`}
-              >
-                {vt.replace(/_/g, " ")}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-            <Clock size={14} /> Scheduled Start
-          </label>
-          <input
-            type="datetime-local"
-            value={data.visitStartTime}
-            onChange={(e) => onChange({ ...data, visitStartTime: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          />
-        </div>
-        <div>
-          <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-            <Clock size={14} /> Scheduled End
-          </label>
-          <input
-            type="datetime-local"
-            value={data.visitEndTime}
-            onChange={(e) => onChange({ ...data, visitEndTime: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-          <Clock size={14} /> Expected Duration (minutes)
+          <Globe size={14} className="text-blue-500" /> Start Location
         </label>
         <input
-          type="number"
-          value={data.visitDuration}
-          onChange={(e) => onChange({ ...data, visitDuration: parseInt(e.target.value) || 30 })}
-          min="5"
-          max="480"
+          type="text"
+          value={data.startLocation}
+          onChange={(e) => onChange({ ...data, startLocation: e.target.value })}
+          placeholder="e.g. Office, Branch, Home"
           className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
         />
       </div>
@@ -722,31 +612,67 @@ function VisitSection({ data, onChange }) {
 }
 
 // =====================================================
-// SECTION 8: Execution Requirements
+// SECTION 7: Execution Requirements
 // =====================================================
-function RequirementsSection({ data, onChange }) {
+function RequirementsSection({ data, onChange, requirementsList, onAddRequirement }) {
+  const [showNewReqInput, setShowNewReqInput] = useState(false);
+  const [newReqLabel, setNewReqLabel] = useState("");
+
   const toggle = (key) => {
     onChange({ ...data, [key]: !data[key] });
   };
 
-  const requirements = [
-    { key: "requireGps", label: "GPS Tracking", icon: MapPin, desc: "Require real-time GPS tracking during execution" },
-    { key: "requirePhoto", label: "Photo Capture", icon: Camera, desc: "Require photo evidence at location" },
-    { key: "requireSignature", label: "Digital Signature", icon: FileSignature, desc: "Require customer digital signature" },
-    { key: "requireVisitNotes", label: "Visit Notes", icon: FileText, desc: "Require detailed visit notes" },
-    { key: "requireInvoice", label: "Generate Invoice", icon: DollarSign, desc: "Generate invoice upon completion" },
-    { key: "requirePayment", label: "Payment Collection", icon: DollarSign, desc: "Collect payment during visit" },
-    { key: "requireCheckIn", label: "Geo Check-In", icon: Map, desc: "Require geo-verified check-in at customer location" },
-    { key: "requireCheckOut", label: "Geo Check-Out", icon: Map, desc: "Require geo-verified check-out" },
-  ];
+  const handleAddReq = (e) => {
+    e.preventDefault();
+    if (!newReqLabel.trim()) return;
+    onAddRequirement(newReqLabel.trim());
+    setNewReqLabel("");
+    setShowNewReqInput(false);
+  };
 
   return (
     <div className="space-y-5">
-      <p className="text-sm text-slate-500">Toggle the requirements that must be fulfilled during mission execution.</p>
+      <div className="flex items-center justify-between mb-1">
+        <p className="text-sm text-slate-500">Toggle requirements that must be fulfilled during mission execution.</p>
+        <button
+          type="button"
+          onClick={() => setShowNewReqInput(!showNewReqInput)}
+          className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 transition"
+        >
+          <Plus size={14} /> Add Custom Requirement
+        </button>
+      </div>
+
+      {showNewReqInput && (
+        <form onSubmit={handleAddReq} className="flex gap-2">
+          <input
+            type="text"
+            value={newReqLabel}
+            onChange={(e) => setNewReqLabel(e.target.value)}
+            placeholder="Enter custom requirement name..."
+            className="flex-1 px-3 py-2 rounded-lg border border-blue-300 text-xs outline-none focus:ring-2 focus:ring-blue-200"
+            autoFocus
+          />
+          <button
+            type="submit"
+            className="px-3 py-2 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition"
+          >
+            Add
+          </button>
+          <button
+            type="button"
+            onClick={() => { setShowNewReqInput(false); setNewReqLabel(""); }}
+            className="px-2 py-2 rounded-lg border border-slate-300 text-xs text-slate-600 hover:bg-slate-50 transition"
+          >
+            Cancel
+          </button>
+        </form>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {requirements.map((req) => {
-          const Icon = req.icon;
-          const isOn = data[req.key];
+        {requirementsList.map((req) => {
+          const Icon = req.icon || Settings;
+          const isOn = !!data[req.key];
           return (
             <button
               key={req.key}
@@ -783,117 +709,24 @@ function RequirementsSection({ data, onChange }) {
 }
 
 // =====================================================
-// SECTION 9: Instructions
+// SECTION 8: Summary
 // =====================================================
-function InstructionsSection({ data, onChange }) {
-  const addInstruction = () => {
-    const instructions = [...(data.instructions || [])];
-    instructions.push({ text: "", type: "NOTE" });
-    onChange({ ...data, instructions });
-  };
-
-  const removeInstruction = (index) => {
-    const instructions = [...(data.instructions || [])];
-    instructions.splice(index, 1);
-    onChange({ ...data, instructions });
-  };
-
-  const updateInstruction = (index, field, value) => {
-    const instructions = [...(data.instructions || [])];
-    instructions[index] = { ...instructions[index], [field]: value };
-    onChange({ ...data, instructions });
-  };
-
-  return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-          <BookOpen size={14} className="text-blue-500" /> Mission Instructions
-        </label>
-        <button
-          type="button"
-          onClick={addInstruction}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition"
-        >
-          <Plus size={14} /> Add Step
-        </button>
-      </div>
-
-      {(data.instructions || []).length === 0 && (
-        <div className="text-center py-6 text-slate-400 text-sm">
-          <BookOpen size={32} className="mx-auto mb-2 text-slate-300" />
-          No instructions added. Add step-by-step instructions for the executive.
-        </div>
-      )}
-
-      {(data.instructions || []).map((inst, index) => (
-        <div key={index} className="flex items-start gap-3">
-          <div className="h-7 w-7 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-1">
-            {index + 1}
-          </div>
-          <div className="flex-1 space-y-2">
-            <div className="flex gap-2">
-              <select
-                value={inst.type}
-                onChange={(e) => updateInstruction(index, "type", e.target.value)}
-                className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-xs outline-none focus:border-blue-500"
-              >
-                <option value="NOTE">Note</option>
-                <option value="WARNING">Warning</option>
-                <option value="ACTION">Action Required</option>
-                <option value="INFO">Information</option>
-              </select>
-              <button
-                type="button"
-                onClick={() => removeInstruction(index)}
-                className="h-7 w-7 rounded-lg bg-red-50 flex items-center justify-center hover:bg-red-100 transition"
-              >
-                <X size={12} className="text-red-500" />
-              </button>
-            </div>
-            <textarea
-              value={inst.text}
-              onChange={(e) => updateInstruction(index, "text", e.target.value)}
-              rows={2}
-              placeholder="Instruction details..."
-              className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none"
-            />
-          </div>
-        </div>
-      ))}
-
-      <div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-          <Link size={14} /> Attachment Links (comma separated)
-        </label>
-        <input
-          type="text"
-          value={data.attachmentLinks}
-          onChange={(e) => onChange({ ...data, attachmentLinks: e.target.value })}
-          placeholder="https://docs.google.com/..., https://drive.google.com/..."
-          className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-        />
-      </div>
-    </div>
-  );
-}
-
-// =====================================================
-// SECTION 10: Summary
-// =====================================================
-function SummarySection({ data, executives, customers, orders, beatPlans }) {
+function SummarySection({ data, executives, customers, customerOrders, categories, requirementsList }) {
   const executive = executives.find((e) => e.id === data.assignedToId);
   const customer = customers.find((c) => c.id === data.customerId);
-  const order = orders.find((o) => o.id === data.orderId);
-  const beatPlan = beatPlans.find((b) => b.id === data.beatPlanId);
-  const category = TASK_CATEGORIES.find((c) => c.value === data.category);
+  const selectedOrder = customerOrders.find((o) => o.id === data.orderId);
+  const categoryObj = categories.find((c) => c.value === data.category);
+
+  const selectedReqLabels = requirementsList
+    .filter((req) => !!data[req.key])
+    .map((req) => req.label);
 
   const summaryItems = [
     {
       label: "Task Information",
       icon: Info,
       items: [
-        { label: "Category", value: category?.label || data.category || "Not set" },
+        { label: "Category", value: categoryObj?.label || data.category || "Not set" },
         { label: "Title", value: data.title || "Not set" },
         { label: "Priority", value: data.priority || "MEDIUM" },
         { label: "Has Description", value: data.description ? "Yes" : "No" },
@@ -913,16 +746,18 @@ function SummarySection({ data, executives, customers, orders, beatPlans }) {
       icon: Building2,
       items: [
         { label: "Customer", value: customer?.name || data.customerName || "Not set" },
-        { label: "Coordinates", value: data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : "Not set" },
+        { label: "Address", value: data.customerAddress || "No address available" },
       ],
     },
     {
       label: "Sales Order",
       icon: ShoppingCart,
-      show: !!data.orderId,
+      show: !!selectedOrder,
       items: [
-        { label: "Order", value: data.orderNumber || "Not set" },
-        { label: "Total", value: data.orderTotal ? `$${Number(data.orderTotal).toLocaleString()}` : "N/A" },
+        { label: "Order Name", value: selectedOrder ? (selectedOrder.orderName || selectedOrder.orderNumber) : "None" },
+        { label: "Order Number", value: selectedOrder?.orderNumber || "N/A" },
+        { label: "Status", value: selectedOrder?.status || "N/A" },
+        { label: "Total", value: selectedOrder ? (typeof selectedOrder.totalAmount === 'object' ? (selectedOrder.totalAmount?.formatted ? selectedOrder.totalAmount.formatted.replace('$', '₹') : `₹${selectedOrder.totalAmount?.amount}`) : `₹${Number(selectedOrder.totalAmount || 0).toLocaleString()}`) : "N/A" },
       ],
     },
     {
@@ -936,37 +771,16 @@ function SummarySection({ data, executives, customers, orders, beatPlans }) {
     {
       label: "Route",
       icon: Route,
-      show: !!data.beatPlanId,
+      show: !!data.startLocation,
       items: [
-        { label: "Beat Plan", value: beatPlan?.title || data.beatPlanTitle || "Not set" },
         { label: "Start Location", value: data.startLocation || "Not set" },
-        { label: "Travel Mode", value: data.travelMode || "Driving" },
-      ],
-    },
-    {
-      label: "Visit",
-      icon: ClipboardCheck,
-      items: [
-        { label: "Type", value: data.visitType || "Not set" },
-        { label: "Duration", value: data.visitDuration ? `${data.visitDuration} min` : "30 min" },
       ],
     },
     {
       label: "Requirements",
       icon: Settings,
       items: [
-        { label: "GPS Required", value: data.requireGps ? "Yes" : "No" },
-        { label: "Photo Required", value: data.requirePhoto ? "Yes" : "No" },
-        { label: "Signature Required", value: data.requireSignature ? "Yes" : "No" },
-        { label: "Payment Required", value: data.requirePayment ? "Yes" : "No" },
-      ],
-    },
-    {
-      label: "Instructions",
-      icon: BookOpen,
-      show: (data.instructions || []).length > 0,
-      items: [
-        { label: "Steps", value: `${(data.instructions || []).length} instruction(s)` },
+        { label: "Selected Requirements", value: selectedReqLabels.length > 0 ? selectedReqLabels.join(", ") : "None" },
       ],
     },
   ];
@@ -981,17 +795,17 @@ function SummarySection({ data, executives, customers, orders, beatPlans }) {
       </div>
 
       <div className="space-y-4">
-        {summaryItems.map((section) => {
-          if (section.show === false) return null;
-          const Icon = section.icon;
+        {summaryItems.map((sec) => {
+          if (sec.show === false) return null;
+          const Icon = sec.icon;
           return (
-            <div key={section.label} className="rounded-xl border border-slate-200 bg-white p-4">
+            <div key={sec.label} className="rounded-xl border border-slate-200 bg-white p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Icon size={16} className="text-blue-600" />
-                <h4 className="text-sm font-semibold text-slate-800">{section.label}</h4>
+                <h4 className="text-sm font-semibold text-slate-800">{sec.label}</h4>
               </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
-                {section.items.map((item) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
+                {sec.items.map((item) => (
                   <div key={item.label} className="flex justify-between text-sm">
                     <span className="text-slate-500">{item.label}:</span>
                     <span className="font-medium text-slate-800 truncate ml-2">{item.value}</span>
@@ -1018,24 +832,21 @@ export default function AssignTaskModal({
   const [currentSection, setCurrentSection] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [customers, setCustomers] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [beatPlans, setBeatPlans] = useState([]);
-  const [territories, setTerritories] = useState([]);
-  const [loadingData, setLoadingData] = useState(false);
+  const [customerOrders, setCustomerOrders] = useState([]);
+  const [loadingCustomers, setLoadingCustomers] = useState(false);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+
+  const [categories, setCategories] = useState(INITIAL_TASK_CATEGORIES);
+  const [requirementsList, setRequirementsList] = useState(INITIAL_REQUIREMENTS);
 
   const [formData, setFormData] = useState({
-    // Section 1: Task Info
     category: "FIELD_VISIT",
     title: "",
     description: "",
     priority: "MEDIUM",
-    // Section 2: Assignment
     assignedToId: "",
-    territoryId: "",
     dueDate: "",
     dueTime: "",
-    referenceType: "",
-    // Section 3: Customer
     customerId: "",
     customerName: "",
     customerEmail: "",
@@ -1043,25 +854,9 @@ export default function AssignTaskModal({
     customerAddress: "",
     latitude: "",
     longitude: "",
-    // Section 4: Order
     orderId: "",
-    orderNumber: "",
-    orderStatus: "",
-    orderTotal: 0,
-    orderItems: [],
-    // Section 5: Products
     products: [],
-    // Section 6: Route
-    beatPlanId: "",
-    beatPlanTitle: "",
     startLocation: "",
-    travelMode: "DRIVING",
-    // Section 7: Visit
-    visitType: "MEETING",
-    visitStartTime: "",
-    visitEndTime: "",
-    visitDuration: 30,
-    // Section 8: Requirements
     requireGps: true,
     requirePhoto: false,
     requireSignature: false,
@@ -1070,61 +865,95 @@ export default function AssignTaskModal({
     requirePayment: false,
     requireCheckIn: true,
     requireCheckOut: false,
-    // Section 9: Instructions
-    instructions: [],
-    attachmentLinks: "",
   });
 
   const extractArray = (resp, arrayKey) => {
-    // Handle multiple response formats robustly
     if (!resp) return [];
-    // If it's already an array, return it
     if (Array.isArray(resp)) return resp;
-    // After fixing successResponse: response.data = { success, message, data: { orders, customers, ... } }
-    // So first try resp.data[arrayKey], then resp[arrayKey]
-    // resp.data is the actual { success, message, data } object
-    if (resp.data && typeof resp.data === 'object' && Array.isArray(resp.data[arrayKey])) return resp.data[arrayKey];
-    // Old fallback: resp.data is actually the data object (when data is the direct object)
-    if (resp.data && typeof resp.data === 'object' && Array.isArray(resp.data.data?.[arrayKey])) return resp.data.data[arrayKey];
+    if (Array.isArray(resp.data)) return resp.data;
+    if (resp.data && Array.isArray(resp.data[arrayKey])) return resp.data[arrayKey];
+    if (resp.data && resp.data.data && Array.isArray(resp.data.data[arrayKey])) return resp.data.data[arrayKey];
     if (Array.isArray(resp[arrayKey])) return resp[arrayKey];
-    // Last resort: check if data.data itself is the array
-    if (resp.data && Array.isArray(resp.data)) return resp.data;
+    if (resp.result && Array.isArray(resp.result[arrayKey])) return resp.result[arrayKey];
     return [];
   };
 
-  const loadReferenceData = useCallback(async () => {
+  // 1. Customer Loading: Pagination-aware fetching of all customers from DB
+  const loadAllCustomers = useCallback(async () => {
     try {
-      setLoadingData(true);
-      const [ordersRes, customersRes, beatPlansRes] = await Promise.allSettled([
-        salesApi.listOrders({ take: 100 }),
-        customerApi.list({ take: 200 }),
-        fieldForceApi.listBeatPlans({ take: 50 }),
-      ]);
+      setLoadingCustomers(true);
+      let all = [];
+      let page = 1;
+      let hasMore = true;
 
-      if (ordersRes.status === "fulfilled") {
-        const resp = ordersRes.value?.data;
-        setOrders(extractArray(resp, "orders"));
+      while (hasMore) {
+        const res = await customerApi.list({ page, limit: 100 });
+        const resp = res?.data;
+        const list = extractArray(resp, "customers");
+        all = [...all, ...list];
+        const total = resp?.data?.total || resp?.total || all.length;
+        if (all.length >= total || list.length === 0) {
+          hasMore = false;
+        } else {
+          page++;
+        }
       }
-      if (customersRes.status === "fulfilled") {
-        const resp = customersRes.value?.data;
-        setCustomers(extractArray(resp, "customers"));
-      }
-      if (beatPlansRes.status === "fulfilled") {
-        const resp = beatPlansRes.value?.data;
-        setBeatPlans(extractArray(resp, "plans"));
-      }
+      setCustomers(all);
     } catch (err) {
-      console.error("Failed to load reference data:", err);
+      console.error("Failed to load customers:", err);
+      toast.error("Failed to load customer list");
     } finally {
-      setLoadingData(false);
+      setLoadingCustomers(false);
     }
   }, []);
 
   useEffect(() => {
     if (isOpen) {
-      loadReferenceData();
+      loadAllCustomers();
     }
-  }, [isOpen, loadReferenceData]);
+  }, [isOpen, loadAllCustomers]);
+
+  // 2. Sales Orders: Fetch only orders belonging to selected customer via existing backend API
+  useEffect(() => {
+    if (!formData.customerId) {
+      setCustomerOrders([]);
+      return;
+    }
+    setLoadingOrders(true);
+    salesApi.listOrders({ customerId: formData.customerId, limit: 100 })
+      .then((res) => {
+        const resp = res?.data;
+        setCustomerOrders(extractArray(resp, "orders"));
+      })
+      .catch((err) => {
+        console.error("Failed to load sales orders for customer:", err);
+      })
+      .finally(() => {
+        setLoadingOrders(false);
+      });
+  }, [formData.customerId]);
+
+  const handleAddCategory = (catName) => {
+    const val = catName.toUpperCase().replace(/\s+/g, "_");
+    const newCat = { value: val, label: catName, icon: Target, isCustom: true };
+    setCategories((prev) => [...prev, newCat]);
+    setFormData((prev) => ({ ...prev, category: val }));
+    toast.success(`Custom category "${catName}" added`);
+  };
+
+  const handleAddRequirement = (reqName) => {
+    const key = `custom_${Date.now()}`;
+    const newReq = {
+      key,
+      label: reqName,
+      icon: Settings,
+      desc: "Custom requirement",
+      isCustom: true,
+    };
+    setRequirementsList((prev) => [...prev, newReq]);
+    setFormData((prev) => ({ ...prev, [key]: true }));
+    toast.success(`Custom requirement "${reqName}" added`);
+  };
 
   const totalSections = SECTIONS.length;
 
@@ -1157,57 +986,41 @@ export default function AssignTaskModal({
           : new Date(formData.dueDate).toISOString()
         : undefined;
 
+      const selectedOrder = customerOrders.find((o) => o.id === formData.orderId);
+
+      const activeRequirements = requirementsList
+        .filter((req) => !!formData[req.key])
+        .map((req) => ({ key: req.key, label: req.label }));
+
       const metadata = {
         category: formData.category,
-        customer: (formData.customerId || formData.customerAddress || formData.latitude)
+        customer: (formData.customerId || formData.customerAddress)
           ? {
               id: formData.customerId || undefined,
-              name: formData.customerName || (formData.customerAddress ? "Customer Location" : "Field Customer"),
+              name: formData.customerName || "Customer Location",
               email: formData.customerEmail || undefined,
               phone: formData.customerPhone || undefined,
               address: formData.customerAddress || undefined,
-              lat: formData.latitude ? parseFloat(formData.latitude) : undefined,
-              lng: formData.longitude ? parseFloat(formData.longitude) : undefined,
             }
           : undefined,
-        location: (formData.latitude && formData.longitude)
+        order: selectedOrder
           ? {
-              address: formData.customerAddress || undefined,
-              lat: parseFloat(formData.latitude),
-              lng: parseFloat(formData.longitude),
-            }
-          : undefined,
-        destination: (formData.latitude && formData.longitude)
-          ? {
-              address: formData.customerAddress || undefined,
-              lat: parseFloat(formData.latitude),
-              lng: parseFloat(formData.longitude),
-            }
-          : undefined,
-        order: formData.orderId
-          ? {
-              id: formData.orderId,
-              orderNumber: formData.orderNumber,
-              status: formData.orderStatus,
-              total: formData.orderTotal,
+              id: selectedOrder.id,
+              orderNumber: selectedOrder.orderNumber,
+              status: selectedOrder.status,
+              total: selectedOrder.totalAmount,
             }
           : undefined,
         products: formData.products?.length > 0 ? formData.products : undefined,
-        route: formData.beatPlanId
+        route: formData.startLocation
           ? {
-              beatPlanId: formData.beatPlanId,
-              beatPlanTitle: formData.beatPlanTitle,
               startLocation: formData.startLocation,
-              travelMode: formData.travelMode,
+              beatPlanId: null,
+              travelMode: "DRIVING",
             }
           : undefined,
-        visit: {
-          type: formData.visitType,
-          scheduledStart: formData.visitStartTime || undefined,
-          scheduledEnd: formData.visitEndTime || undefined,
-          duration: formData.visitDuration,
-        },
         requirements: {
+          activeRequirements,
           gps: formData.requireGps,
           photo: formData.requirePhoto,
           signature: formData.requireSignature,
@@ -1217,9 +1030,6 @@ export default function AssignTaskModal({
           checkIn: formData.requireCheckIn,
           checkOut: formData.requireCheckOut,
         },
-        instructions: formData.instructions?.length > 0 ? formData.instructions : undefined,
-        attachmentLinks: formData.attachmentLinks || undefined,
-        territoryId: formData.territoryId || undefined,
       };
 
       const payload = {
@@ -1228,8 +1038,8 @@ export default function AssignTaskModal({
         description: formData.description.trim() || undefined,
         priority: formData.priority,
         dueDate: dueDateValue,
-        referenceType: formData.referenceType || undefined,
-        referenceId: formData.customerId || formData.orderId || undefined,
+        referenceType: formData.orderId ? "ORDER" : (formData.customerId ? "CUSTOMER" : undefined),
+        referenceId: formData.orderId || formData.customerId || undefined,
         metadata,
       };
 
@@ -1243,10 +1053,8 @@ export default function AssignTaskModal({
         description: "",
         priority: "MEDIUM",
         assignedToId: "",
-        territoryId: "",
         dueDate: "",
         dueTime: "",
-        referenceType: "",
         customerId: "",
         customerName: "",
         customerEmail: "",
@@ -1255,19 +1063,8 @@ export default function AssignTaskModal({
         latitude: "",
         longitude: "",
         orderId: "",
-        orderNumber: "",
-        orderStatus: "",
-        orderTotal: 0,
-        orderItems: [],
         products: [],
-        beatPlanId: "",
-        beatPlanTitle: "",
         startLocation: "",
-        travelMode: "DRIVING",
-        visitType: "MEETING",
-        visitStartTime: "",
-        visitEndTime: "",
-        visitDuration: 30,
         requireGps: true,
         requirePhoto: false,
         requireSignature: false,
@@ -1276,8 +1073,6 @@ export default function AssignTaskModal({
         requirePayment: false,
         requireCheckIn: true,
         requireCheckOut: false,
-        instructions: [],
-        attachmentLinks: "",
       });
       setCurrentSection(0);
     } catch (err) {
@@ -1288,36 +1083,65 @@ export default function AssignTaskModal({
   };
 
   const section = SECTIONS[currentSection];
-  const SectionIcon = section.icon;
 
   const renderSection = () => {
     switch (currentSection) {
       case 0:
-        return <TaskInfoSection data={formData} onChange={setFormData} />;
+        return (
+          <TaskInfoSection
+            data={formData}
+            onChange={setFormData}
+            categories={categories}
+            onAddCategory={handleAddCategory}
+          />
+        );
       case 1:
-        return <AssignmentSection data={formData} onChange={setFormData} executives={executives} territories={territories} />;
+        return (
+          <AssignmentSection
+            data={formData}
+            onChange={setFormData}
+            executives={executives}
+          />
+        );
       case 2:
-        return <CustomerSection data={formData} onChange={setFormData} customers={customers} />;
+        return (
+          <CustomerSection
+            data={formData}
+            onChange={setFormData}
+            customers={customers}
+          />
+        );
       case 3:
-        return <OrderSection data={formData} onChange={setFormData} orders={orders} />;
+        return (
+          <OrderSection
+            data={formData}
+            onChange={setFormData}
+            customerOrders={customerOrders}
+            loadingOrders={loadingOrders}
+          />
+        );
       case 4:
         return <ProductsSection data={formData} onChange={setFormData} />;
       case 5:
-        return <RouteSection data={formData} onChange={setFormData} beatPlans={beatPlans} />;
+        return <RouteSection data={formData} onChange={setFormData} />;
       case 6:
-        return <VisitSection data={formData} onChange={setFormData} />;
+        return (
+          <RequirementsSection
+            data={formData}
+            onChange={setFormData}
+            requirementsList={requirementsList}
+            onAddRequirement={handleAddRequirement}
+          />
+        );
       case 7:
-        return <RequirementsSection data={formData} onChange={setFormData} />;
-      case 8:
-        return <InstructionsSection data={formData} onChange={setFormData} />;
-      case 9:
         return (
           <SummarySection
             data={formData}
             executives={executives}
             customers={customers}
-            orders={orders}
-            beatPlans={beatPlans}
+            customerOrders={customerOrders}
+            categories={categories}
+            requirementsList={requirementsList}
           />
         );
       default:
@@ -1395,7 +1219,7 @@ export default function AssignTaskModal({
                     key={s.id}
                     type="button"
                     onClick={() => setCurrentSection(i)}
-                    className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-all ${
                       i === currentSection
                         ? "bg-blue-100 text-blue-700"
                         : i < currentSection
@@ -1412,10 +1236,10 @@ export default function AssignTaskModal({
 
             {/* Body */}
             <div className="flex-1 overflow-y-auto p-6">
-              {loadingData ? (
+              {loadingCustomers && currentSection === 2 ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 size={24} className="animate-spin text-blue-600" />
-                  <span className="ml-3 text-sm text-slate-500">Loading reference data...</span>
+                  <span className="ml-3 text-sm text-slate-500">Loading customers from database...</span>
                 </div>
               ) : (
                 <motion.div

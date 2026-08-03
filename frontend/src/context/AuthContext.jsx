@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const initializeAuth = async () => {
+const initializeAuth = async () => {
     try {
       const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 
@@ -23,18 +23,44 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
+      // Restore the cached user (with roles) immediately so the UI doesn't
+      // lose the role context on refresh before the profile request completes.
+      const cachedUser = localStorage.getItem(STORAGE_KEYS.USER);
+      if (cachedUser) {
+        try {
+          setUser(JSON.parse(cachedUser));
+        } catch (e) {
+          localStorage.removeItem(STORAGE_KEYS.USER);
+        }
+      }
+
       const response = await authService.getProfile();
 
       // AuthController.getMe uses handleSuccess(response.data.data = user object)
       // response = { success, message, data: { id, email, firstName, ... } }
       const profileData = response.data || response;
+
+      // The getMe endpoint returns a slim DTO without roles. Merge the fresh
+      // profile data with the cached user (which contains roles) so that
+      // role-based navigation and routing keep working after a refresh.
+      let mergedUser = { ...profileData };
       if (profileData && profileData.id) {
-        setUser(profileData);
+        if (cachedUser) {
+          try {
+            const cached = JSON.parse(cachedUser);
+            mergedUser = { ...cached, ...profileData };
+          } catch (e) {
+            /* ignore */
+          }
+        }
+        setUser(mergedUser);
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(mergedUser));
       }
     } catch (error) {
       console.error(error);
 
       localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.USER);
 
       setUser(null);
     } finally {
@@ -60,6 +86,7 @@ export const AuthProvider = ({ children }) => {
 
   if (user) {
     setUser(user);
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
   }
 
   return response;
@@ -71,6 +98,7 @@ export const AuthProvider = ({ children }) => {
     } catch (e) {}
 
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER);
 
     setUser(null);
   };

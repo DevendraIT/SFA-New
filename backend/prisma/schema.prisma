@@ -376,6 +376,7 @@ model Order {
   id             String  @id @default(uuid()) @db.Uuid
   organizationId String  @db.Uuid
   orderNumber    String  @unique
+  orderName      String?
   customerId     String  @db.Uuid
   ownerId        String  @db.Uuid
   companyId      String? @db.Uuid
@@ -488,22 +489,6 @@ model Visit {
   customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, userId])
-}
-
-
-
-  @@index([organizationId, userId])
-}
-
-
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, date])
 }
 
 enum AttendanceStatus {

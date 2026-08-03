@@ -43,7 +43,7 @@ export default function RouteMap({
           onClick={handleOpenGoogleMaps}
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-sm font-semibold shadow-lg shadow-blue-600/30 transition-all cursor-pointer"
         >
-          <Navigation size={16} /> Navigate in Google Maps <ExternalLink size={14} />
+          <Navigation size={16} /> Live Navigation (TomTom / Maps) <ExternalLink size={14} />
         </button>
       </div>
 
@@ -118,7 +118,7 @@ export default function RouteMap({
         </div>
         <div className="col-span-2 sm:col-span-1 bg-slate-800/50 rounded-xl p-3 border border-slate-700/40">
           <p className="text-slate-400">Navigation Engine</p>
-          <p className="text-base font-bold text-slate-200 mt-0.5">Google Maps API</p>
+          <p className="text-base font-bold text-slate-200 mt-0.5">TomTom Routing API</p>
         </div>
       </div>
     </div>
