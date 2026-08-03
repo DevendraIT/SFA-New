@@ -33,17 +33,17 @@ export default function Sidebar({
   }, [user]);
 
   const primaryRole = useMemo(() => {
-  if (!user) return "";
+    if (!user) return "";
 
-  if (
-    Array.isArray(user.roles) &&
-    user.roles.length > 0
-  ) {
-    return user.roles[0]?.role?.name ?? "";
-  }
+    if (
+      Array.isArray(user.roles) &&
+      user.roles.length > 0
+    ) {
+      return user.roles[0]?.role?.name ?? "";
+    }
 
-  return "";
-}, [user]);
+    return "";
+  }, [user]);
 
   const toggleGroup = (title) => {
     setOpenGroups((prev) => ({
@@ -70,7 +70,7 @@ export default function Sidebar({
           r === "Super Admin" ||
           r === "Admin" ||
           r.toLowerCase().includes("super") ||
-          (r.toLowerCase().includes("admin") && !r.toLowerCase().includes("company")))
+          (r.toLowerCase().includes("admin") && !r.toLowerCase().includes("organization")))
     );
   }, [user]);
 
@@ -151,7 +151,7 @@ export default function Sidebar({
               ...item,
               children: item.children.filter(
                 (child) =>
-                  !["/organization/company", "/organization/branch", "/organization/department"].includes(child.path)
+                  !["/organization/organization", "/organization/branch", "/organization/department"].includes(child.path)
               ),
             };
           }
@@ -166,9 +166,8 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`h-screen sticky top-0 transition-all duration-300 border-r border-slate-200 bg-white shadow-sm flex flex-col ${
-        collapsed ? "w-20" : "w-72"
-      }`}
+      className={`h-screen sticky top-0 transition-all duration-300 border-r border-slate-200 bg-white shadow-sm flex flex-col ${collapsed ? "w-20" : "w-72"
+        }`}
     >
       {/* Logo */}
 
@@ -250,7 +249,7 @@ export default function Sidebar({
       </div>
 
 
-            {/* User */}
+      {/* User */}
 
       <div className="border-t border-slate-200 p-4">
 

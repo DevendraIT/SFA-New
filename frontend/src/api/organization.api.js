@@ -1,49 +1,21 @@
 import api from "./axios";
 
-export const getCompanies = async (params = {}) => {
-  const { data } = await api.get(
-    "/organization/companies",
-    {
-      params,
-    }
-  );
-
+export const getCurrentOrganization = async () => {
+  const { data } = await api.get("/organization/current");
   return data;
 };
 
-export const getCompany = async (id) => {
-  const { data } = await api.get(
-    `/organization/companies/${id}`
-  );
-
+export const createOrganization = async (payload) => {
+  const { data } = await api.post("/organization", payload);
   return data;
 };
 
-export const createCompany = async (payload) => {
-  const { data } = await api.post(
-    "/organization/companies",
-    payload
-  );
-
+export const updateCurrentOrganization = async (payload) => {
+  const { data } = await api.put("/organization/current", payload);
   return data;
 };
 
-export const updateCompany = async (
-  id,
-  payload
-) => {
-  const { data } = await api.put(
-    `/organization/companies/${id}`,
-    payload
-  );
-
-  return data;
-};
-
-export const deleteCompany = async (id) => {
-  const { data } = await api.delete(
-    `/organization/companies/${id}`
-  );
-
+export const deleteOrganization = async (id) => {
+  const { data } = await api.delete(`/organization/${id}`);
   return data;
 };

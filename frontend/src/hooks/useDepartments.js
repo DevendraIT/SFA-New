@@ -21,13 +21,14 @@ export default function useDepartments(options = {}) {
       setLoading(true);
 
       const params = { search: debouncedSearch };
-      if (branchId) params.branchId = branchId;
 
       const response = await departmentService.getDepartments(params);
 
-      setDepartments(
-        response?.data?.departments || []
-      );
+      let data = response?.data?.departments || [];
+      if (branchId) {
+        data = data.filter(d => d.branchId === branchId || !d.branchId);
+      }
+      setDepartments(data);
     } catch (err) {
       console.error(err);
     } finally {

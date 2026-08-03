@@ -76,7 +76,7 @@ export class EventPayloadBuilder {
         totalAmount: order.totalAmount,
         currency: order.currency,
         ownerId: order.ownerId,
-        companyId: order.companyId,
+        organizationId: order.organizationId,
         branchId: order.branchId,
         ...metadata,
       },

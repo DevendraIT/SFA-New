@@ -190,7 +190,7 @@ export default function TeamList() {
               <div className="space-y-3 text-sm text-slate-700">
                 <p><strong>Branch:</strong> {viewTeam.branch?.name || "-"}</p>
                 <p><strong>Department:</strong> {viewTeam.department?.name || "-"}</p>
-                <p><strong>Company:</strong> {viewTeam.branch?.company?.name || "-"}</p>
+                <p><strong>Organization:</strong> {viewTeam.branch?.organization?.name || "-"}</p>
                 <p><strong>Team Leader:</strong> {viewTeam.leader ? `${viewTeam.leader.firstName ?? ''} ${viewTeam.leader.lastName ?? ''}`.trim() : viewTeam.leadName || "Unassigned"}</p>
                 <p><strong>Members Count:</strong> {viewTeam._count?.users ?? viewTeam.memberCount ?? 0}</p>
               </div>
@@ -246,7 +246,7 @@ export default function TeamList() {
               <th className="px-6 py-4 text-left">Team</th>
               <th className="px-6 py-4 text-left">Branch</th>
               <th className="px-6 py-4 text-left">Department</th>
-              <th className="px-6 py-4 text-left">Company</th>
+              <th className="px-6 py-4 text-left">Organization</th>
               <th className="px-6 py-4 text-center">Users</th>
               <th className="px-6 py-4 text-center">Actions</th>
             </tr>
@@ -309,7 +309,7 @@ export default function TeamList() {
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-2">
                       <Building size={15} className="text-slate-400" />
-                      <span className="text-slate-700">{team.branch?.company?.name || "-"}</span>
+                      <span className="text-slate-700">{team.branch?.organization?.name || "-"}</span>
                     </div>
                   </td>
                   <td className="px-6 py-5 text-center">
@@ -369,7 +369,7 @@ export default function TeamList() {
             <div className="space-y-3 text-sm text-slate-700">
               <p><strong>Branch:</strong> {viewTeam.branch?.name || "-"}</p>
               <p><strong>Department:</strong> {viewTeam.department?.name || "-"}</p>
-              <p><strong>Company:</strong> {viewTeam.branch?.company?.name || "-"}</p>
+              <p><strong>Organization:</strong> {viewTeam.branch?.organization?.name || "-"}</p>
               <p><strong>Users:</strong> {viewTeam._count?.users ?? 0}</p>
             </div>
           </div>

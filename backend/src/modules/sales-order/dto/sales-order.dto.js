@@ -107,7 +107,7 @@ export class OrderDetailsDto extends BaseOrderDto {
 
     // Organization Context
     this.organization = {
-      companyId: order.companyId,
+      organizationId: order.organizationId,
       companyName: order.companyName || order.company?.name,
       branchId: order.branchId,
       branchName: order.branchName || order.branch?.name,
@@ -185,7 +185,7 @@ export class OrderDetailsDto extends BaseOrderDto {
 export class OrderCreateDto {
   constructor(requestData = {}) {
     this.customerId = requestData.customerId;
-    this.companyId = requestData.companyId;
+    this.organizationId = requestData.organizationId;
     this.branchId = requestData.branchId;
     this.territoryId = requestData.territoryId;
     this.ownerId = requestData.ownerId;
@@ -216,7 +216,7 @@ export class OrderCreateDto {
 export class OrderUpdateDto {
   constructor(requestData = {}) {
     if (requestData.customerId) this.customerId = requestData.customerId;
-    if (requestData.companyId) this.companyId = requestData.companyId;
+    if (requestData.organizationId) this.organizationId = requestData.organizationId;
     if (requestData.branchId) this.branchId = requestData.branchId;
     if (requestData.territoryId) this.territoryId = requestData.territoryId;
     if (requestData.ownerId) this.ownerId = requestData.ownerId;

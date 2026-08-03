@@ -1,6 +1,5 @@
 import { AppError } from '../../../shared/response.js';
 import { logAudit } from '../../../utils/audit.js';
-import { CompanyRepository } from '../repositories/CompanyRepository.js';
 import { BranchRepository } from '../repositories/BranchRepository.js';
 import { DepartmentRepository } from '../repositories/DepartmentRepository.js';
 import { TerritoryRepository } from '../repositories/TerritoryRepository.js';
@@ -12,7 +11,6 @@ import { TerritoryRepository } from '../repositories/TerritoryRepository.js';
 export class OrganizationService {
   constructor(organizationRepository) {
     this.repo = organizationRepository;
-    this.companyRepo = new CompanyRepository();
     this.branchRepo = new BranchRepository();
     this.departmentRepo = new DepartmentRepository();
     this.territoryRepo = new TerritoryRepository();
@@ -261,150 +259,6 @@ export class OrganizationService {
   }
 
   // --------------------------------------------------
-  // Company
-  // --------------------------------------------------
-
-  async listCompanies(organizationId, query) {
-    const options = this._buildListOptions(query);
-    const { companies, total } = await this.companyRepo.findAll(organizationId, options);
-    return { companies, meta: this._buildPaginationMeta(total, query.page, query.limit) };
-  }
-
-  async getCompany(id, organizationId) {
-    const company = await this.companyRepo.findById(id, organizationId);
-    if (!company) throw AppError.notFound('Company not found.');
-    return company;
-  }
-
-  async createCompany(organizationId, data, req) {
-    // Enforce code uniqueness within organization
-    if (data.code) {
-      const existing = await this.companyRepo.findByCode(organizationId, data.code);
-      if (existing) throw AppError.badRequest(`Company code '${data.code}' is already in use.`);
-    }
-
-    const company = await this.companyRepo.create({
-  organizationId,
-
-  name: data.name,
-  code: data.code,
-
-  email: data.email,
-  phone: data.phone,
-
-  address: data.address,
-  city: data.city,
-  state: data.state,
-  country: data.country,
-  postalCode: data.postalCode,
-
-  gstNumber: data.gstNumber,
-  panNumber: data.panNumber,
-
-  isActive: data.isActive ?? true,
-});
-
-    await logAudit({
-      organizationId,
-      userId: req.user.id,
-      action: 'company.create',
-      moduleName: 'organization',
-      details: { companyId: company.id, name: company.name },
-      req,
-    });
-
-    return company;
-  }
-
-  async updateCompany(id, organizationId, data, req) {
-    const company = await this.companyRepo.findById(id, organizationId);
-    if (!company) throw AppError.notFound('Company not found.');
-
-    // Code uniqueness check — skip if code unchanged
-    if (data.code && data.code !== company.code) {
-      const existing = await this.companyRepo.findByCode(organizationId, data.code);
-      if (existing) throw AppError.badRequest(`Company code '${data.code}' is already in use.`);
-    }
-
-    const updated = await this.companyRepo.update(id, {
-  ...(data.name !== undefined && { name: data.name }),
-  ...(data.code !== undefined && { code: data.code }),
-
-  ...(data.email !== undefined && { email: data.email }),
-  ...(data.phone !== undefined && { phone: data.phone }),
-
-  ...(data.address !== undefined && { address: data.address }),
-  ...(data.city !== undefined && { city: data.city }),
-  ...(data.state !== undefined && { state: data.state }),
-  ...(data.country !== undefined && { country: data.country }),
-  ...(data.postalCode !== undefined && { postalCode: data.postalCode }),
-
-  ...(data.gstNumber !== undefined && { gstNumber: data.gstNumber }),
-  ...(data.panNumber !== undefined && { panNumber: data.panNumber }),
-
-  ...(data.isActive !== undefined && { isActive: data.isActive }),
-});
-
-    await logAudit({
-      organizationId,
-      userId: req.user.id,
-      action: 'company.update',
-      moduleName: 'organization',
-      details: { companyId: id, changes: data },
-      req,
-    });
-
-    return updated;
-  }
-
- 
-    async deleteCompany(id, organizationId, req) {
-  const company = await this.companyRepo.findById(id, organizationId);
-
-  if (!company) {
-    throw AppError.notFound("Company not found.");
-  }
-
-  if (company._count.branches > 0) {
-    throw AppError.conflict(
-      "Cannot delete company while branches exist."
-    );
-  }
-
-  await this.companyRepo.delete(id);
-
-  await logAudit({
-    organizationId,
-    userId: req.user.id,
-    action: "company.delete",
-    moduleName: "organization",
-    details: {
-      companyId: id,
-      name: company.name,
-    },
-    req,
-  });
-
-  return true;
-}
-  
-  // async restoreCompany(id, organizationId, req) {
-  //   const company = await this.companyRepo.findById(id, organizationId);
-  //   if (!company) throw AppError.notFound('Company not found.');
-
-  //   await logAudit({
-  //     organizationId,
-  //     userId: req.user.id,
-  //     action: 'company.restore.rejected',
-  //     moduleName: 'organization',
-  //     details: { companyId: id, reason: 'Soft delete fields unavailable in Prisma schema.' },
-  //     req,
-  //   });
-
-  //   throw AppError.conflict('Company restore is unavailable because the current Prisma schema does not provide soft-delete fields.');
-  // }
-
-  // --------------------------------------------------
   // Branch
   // --------------------------------------------------
 
@@ -412,7 +266,7 @@ export class OrganizationService {
     const options = this._buildListOptions(query);
     const { branches, total } = await this.branchRepo.findAll(organizationId, {
       ...options,
-      companyId: query.companyId,
+      
     });
     return { branches, meta: this._buildPaginationMeta(total, query.page, query.limit) };
   }
@@ -424,25 +278,24 @@ export class OrganizationService {
   }
 
   async createBranch(organizationId, data, req) {
-    // Verify company belongs to this organization
-    const companyExists = await this.companyRepo.belongsToOrganization(data.companyId, organizationId);
-    if (!companyExists) throw AppError.badRequest('Company not found within your organization.');
-
-    // Code uniqueness within the company
     if (data.code) {
-      const existing = await this.branchRepo.findByCode(data.companyId, data.code);
+      const existing = await this.branchRepo.findByCode(organizationId, data.code);
       if (existing) throw AppError.badRequest(`Branch code '${data.code}' is already in use within this company.`);
     }
 
-    const branch = await this.branchRepo.create({
-      companyId: data.companyId,
+    const territory = await this.territoryRepo.findById(data.territoryId, organizationId);
+    if (!territory) throw AppError.badRequest('Territory not found within your organization.');
+    const department = await this.departmentRepo.findById(data.departmentId, organizationId);
+    if (!department) throw AppError.badRequest('Department not found within your organization.');
 
+    const branch = await this.branchRepo.create({
+      organizationId,
+      departmentId: data.departmentId,
+      territoryId: data.territoryId,
       name: data.name,
       code: data.code,
-
       email: data.email,
       phone: data.phone,
-
       address: data.address,
       city: data.city,
       state: data.state,
@@ -455,7 +308,7 @@ export class OrganizationService {
       userId: req.user.id,
       action: 'branch.create',
       moduleName: 'organization',
-      details: { branchId: branch.id, name: branch.name, companyId: data.companyId },
+      details: { branchId: branch.id, name: branch.name, organizationId: data.organizationId },
       req,
     });
 
@@ -467,11 +320,13 @@ export class OrganizationService {
     if (!branch) throw AppError.notFound('Branch not found.');
 
     if (data.code && data.code !== branch.code) {
-      const existing = await this.branchRepo.findByCode(branch.companyId, data.code);
+      const existing = await this.branchRepo.findByCode(organizationId, data.code);
       if (existing) throw AppError.badRequest(`Branch code '${data.code}' is already in use within this company.`);
     }
 
     const updated = await this.branchRepo.update(id, {
+      ...(data.departmentId !== undefined && { departmentId: data.departmentId }),
+      ...(data.territoryId !== undefined && { territoryId: data.territoryId }),
       ...(data.name !== undefined && { name: data.name }),
       ...(data.code !== undefined && { code: data.code }),
 
@@ -544,21 +399,18 @@ export class OrganizationService {
   }
 
   async createDepartment(organizationId, data, req) {
-    const branchExists = await this.branchRepo.belongsToOrganization(data.branchId, organizationId);
-    if (!branchExists) throw AppError.badRequest('Branch not found within your organization.');
-
     if (data.code) {
-      const existing = await this.departmentRepo.findByCode(data.branchId, data.code);
-      if (existing) throw AppError.badRequest(`Department code '${data.code}' is already in use within this branch.`);
+      const existing = await this.departmentRepo.findByCode(organizationId, data.code);
+      if (existing) throw AppError.badRequest(`Department code '${data.code}' is already in use within this organization.`);
     }
 
-    const department = await this.departmentRepo.create(data);
+    const department = await this.departmentRepo.create({ ...data, organizationId });
     await logAudit({
       organizationId,
       userId: req.user.id,
       action: 'department.create',
       moduleName: 'organization',
-      details: { departmentId: department.id, name: department.name, branchId: data.branchId },
+      details: { departmentId: department.id, name: department.name },
       req,
     });
 
@@ -570,8 +422,8 @@ export class OrganizationService {
     if (!department) throw AppError.notFound('Department not found.');
 
     if (data.code && data.code !== department.code) {
-      const existing = await this.departmentRepo.findByCode(department.branchId, data.code);
-      if (existing) throw AppError.badRequest(`Department code '${data.code}' is already in use within this branch.`);
+      const existing = await this.departmentRepo.findByCode(organizationId, data.code);
+      if (existing) throw AppError.badRequest(`Department code '${data.code}' is already in use within this organization.`);
     }
 
     const updated = await this.departmentRepo.update(id, data);
@@ -622,7 +474,7 @@ export class OrganizationService {
     const options = this._buildListOptions(query);
     const { territories, total } = await this.territoryRepo.findAll(organizationId, {
       ...options,
-      companyId: query.companyId,
+      
     });
     return { territories, meta: this._buildPaginationMeta(total, query.page, query.limit) };
   }
@@ -634,9 +486,12 @@ export class OrganizationService {
   }
 
   async createTerritory(organizationId, data, req) {
-    if (data.companyId) {
-      const companyExists = await this.companyRepo.belongsToOrganization(data.companyId, organizationId);
-      if (!companyExists) throw AppError.badRequest('Company not found within your organization.');
+    const department = await this.departmentRepo.findById(data.departmentId, organizationId);
+    if (!department) throw AppError.badRequest('Department not found within your organization.');
+
+    if (data.code) {
+      const existing = await this.territoryRepo.findByCode(organizationId, data.code);
+      if (existing) throw AppError.badRequest(`Territory code '${data.code}' is already in use within this organization.`);
     }
 
     const territory = await this.territoryRepo.create({ ...data, organizationId });
@@ -657,9 +512,9 @@ export class OrganizationService {
     const territory = await this.territoryRepo.findById(id, organizationId);
     if (!territory) throw AppError.notFound('Territory not found.');
 
-    if (data.companyId) {
-      const companyExists = await this.companyRepo.belongsToOrganization(data.companyId, organizationId);
-      if (!companyExists) throw AppError.badRequest('Company not found within your organization.');
+    if (data.code && data.code !== territory.code) {
+      const existing = await this.territoryRepo.findByCode(organizationId, data.code);
+      if (existing) throw AppError.badRequest(`Territory code '${data.code}' is already in use within this organization.`);
     }
 
     const updated = await this.territoryRepo.update(id, data);

@@ -25,7 +25,7 @@ export class SalesOrderController {
 
   /**
    * GET /orders - Get paginated list of orders
-   * Query params: page, limit, status, customerId, companyId, branchId, territoryId, ownerId, fromDate, toDate, q, sortBy, sortOrder
+   * Query params: page, limit, status, customerId, organizationId, branchId, territoryId, ownerId, fromDate, toDate, q, sortBy, sortOrder
    */
   async getOrdersList(req, res, next) {
     try {
@@ -34,7 +34,7 @@ export class SalesOrderController {
         limit: Math.min(100, parseInt(req.query.limit) || 20),
         status: req.query.status,
         customerId: req.query.customerId,
-        companyId: req.query.companyId,
+        organizationId: req.query.organizationId,
         branchId: req.query.branchId,
         territoryId: req.query.territoryId,
         ownerId: req.query.ownerId,
@@ -96,7 +96,7 @@ export class SalesOrderController {
         organizationId: req.user.organizationId,
         roles: req.user.roles,
         permissions: req.user.permissions,
-        companyId: req.user.companyId,
+        organizationId: req.user.organizationId,
         branchId: req.user.branchId,
         territoryId: req.user.territoryId,
       };
@@ -273,7 +273,7 @@ export class SalesOrderController {
         fromDate: req.query.fromDate,
         toDate: req.query.toDate,
         customerId: req.query.customerId,
-        companyId: req.query.companyId,
+        organizationId: req.query.organizationId,
         branchId: req.query.branchId,
         territoryId: req.query.territoryId,
         ownerId: req.query.ownerId,

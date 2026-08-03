@@ -126,14 +126,7 @@ exports.Prisma.OrganizationScalarFieldEnum = {
   slug: 'slug',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CompanyScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  name: 'name',
-  code: 'code',
+  updatedAt: 'updatedAt',
   email: 'email',
   phone: 'phone',
   address: 'address',
@@ -142,15 +135,14 @@ exports.Prisma.CompanyScalarFieldEnum = {
   country: 'country',
   postalCode: 'postalCode',
   gstNumber: 'gstNumber',
-  panNumber: 'panNumber',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  panNumber: 'panNumber'
 };
 
 exports.Prisma.BranchScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
+  organizationId: 'organizationId',
+  departmentId: 'departmentId',
+  territoryId: 'territoryId',
   name: 'name',
   code: 'code',
   email: 'email',
@@ -166,9 +158,11 @@ exports.Prisma.BranchScalarFieldEnum = {
 
 exports.Prisma.DepartmentScalarFieldEnum = {
   id: 'id',
-  branchId: 'branchId',
+  organizationId: 'organizationId',
   name: 'name',
   code: 'code',
+  description: 'description',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -176,9 +170,11 @@ exports.Prisma.DepartmentScalarFieldEnum = {
 exports.Prisma.TerritoryScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
-  companyId: 'companyId',
+  departmentId: 'departmentId',
   name: 'name',
+  code: 'code',
   description: 'description',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -321,7 +317,6 @@ exports.Prisma.OrderScalarFieldEnum = {
   orderNumber: 'orderNumber',
   customerId: 'customerId',
   ownerId: 'ownerId',
-  companyId: 'companyId',
   branchId: 'branchId',
   territoryId: 'territoryId',
   status: 'status',
@@ -394,34 +389,6 @@ exports.Prisma.VisitScalarFieldEnum = {
   location: 'location',
   notes: 'notes',
   photoUrl: 'photoUrl',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ExpenseScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  userId: 'userId',
-  approvedById: 'approvedById',
-  amount: 'amount',
-  category: 'category',
-  date: 'date',
-  status: 'status',
-  receiptUrl: 'receiptUrl',
-  notes: 'notes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DailyActivityReportScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  userId: 'userId',
-  date: 'date',
-  totalVisits: 'totalVisits',
-  totalOrders: 'totalOrders',
-  summary: 'summary',
-  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -554,6 +521,26 @@ exports.Prisma.BusinessRuleConfigScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ExpenseScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  approverId: 'approverId',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DailyActivityReportScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -598,25 +585,6 @@ exports.VisitStatus = exports.$Enums.VisitStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED'
-};
-
-exports.ExpenseCategory = exports.$Enums.ExpenseCategory = {
-  TRAVEL: 'TRAVEL',
-  MEALS: 'MEALS',
-  ACCOMMODATION: 'ACCOMMODATION',
-  OTHER: 'OTHER'
-};
-
-exports.ExpenseStatus = exports.$Enums.ExpenseStatus = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED'
-};
-
-exports.DarStatus = exports.$Enums.DarStatus = {
-  DRAFT: 'DRAFT',
-  SUBMITTED: 'SUBMITTED',
-  APPROVED: 'APPROVED'
 };
 
 exports.TargetMetric = exports.$Enums.TargetMetric = {
@@ -677,7 +645,6 @@ exports.TaskPriority = exports.$Enums.TaskPriority = {
 
 exports.Prisma.ModelName = {
   Organization: 'Organization',
-  Company: 'Company',
   Branch: 'Branch',
   Department: 'Department',
   Territory: 'Territory',
@@ -698,8 +665,6 @@ exports.Prisma.ModelName = {
   OrderNote: 'OrderNote',
   Attendance: 'Attendance',
   Visit: 'Visit',
-  Expense: 'Expense',
-  DailyActivityReport: 'DailyActivityReport',
   Target: 'Target',
   Notification: 'Notification',
   NotificationTemplate: 'NotificationTemplate',
@@ -707,7 +672,9 @@ exports.Prisma.ModelName = {
   BeatPlan: 'BeatPlan',
   CalendarEvent: 'CalendarEvent',
   NotificationPreference: 'NotificationPreference',
-  BusinessRuleConfig: 'BusinessRuleConfig'
+  BusinessRuleConfig: 'BusinessRuleConfig',
+  Expense: 'Expense',
+  DailyActivityReport: 'DailyActivityReport'
 };
 
 /**

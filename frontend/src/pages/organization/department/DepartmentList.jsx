@@ -139,7 +139,6 @@ export default function DepartmentList() {
                   <div key={d.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/70">
                     <div className="flex items-center justify-between">
                       <h5 className="font-semibold text-slate-900 text-sm">{d.name}</h5>
-                      <span className="text-xs font-semibold text-purple-600">{d.branch?.name || "Branch"}</span>
                     </div>
                     <div className="flex justify-between items-center mt-2 text-xs text-slate-500">
                       <span>Code: {d.code || "-"}</span>
@@ -163,7 +162,7 @@ export default function DepartmentList() {
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-900 text-base">{dept.name}</h4>
-                      <p className="text-xs text-slate-500">{dept.branch?.name || "-"} ({dept.company?.name || "-"})</p>
+                      <p className="text-xs text-slate-500">{dept.organization?.name || "-"}</p>
                     </div>
                   </div>
                   <button onClick={() => setViewDepartment(dept)} className="p-2 rounded-lg border hover:bg-slate-50 text-slate-600" title="View Full Record">
@@ -195,8 +194,8 @@ export default function DepartmentList() {
               <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewDepartment.name}</h2>
               <div className="space-y-3 text-sm text-slate-700">
                 <p><strong>Code:</strong> {viewDepartment.code || "-"}</p>
-                <p><strong>Branch:</strong> {viewDepartment.branch?.name || "-"}</p>
-                <p><strong>Company:</strong> {viewDepartment.company?.name || "-"}</p>
+                <p><strong>Organization:</strong> {viewDepartment.organization?.name || "-"}</p>
+                <p><strong>Description:</strong> {viewDepartment.description || "-"}</p>
                 <p><strong>Teams:</strong> {viewDepartment._count?.teams ?? 0}</p>
                 <p><strong>Users:</strong> {viewDepartment._count?.users ?? 0}</p>
               </div>
@@ -251,8 +250,7 @@ export default function DepartmentList() {
             <tr>
               <th className="px-6 py-4 text-left">Department</th>
               <th className="px-6 py-4 text-left">Code</th>
-              <th className="px-6 py-4 text-left">Branch</th>
-              <th className="px-6 py-4 text-left">Company</th>
+              <th className="px-6 py-4 text-left">Organization</th>
               <th className="px-6 py-4 text-center">Teams</th>
               <th className="px-6 py-4 text-center">Users</th>
               <th className="px-6 py-4 text-center">Actions</th>
@@ -261,13 +259,13 @@ export default function DepartmentList() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={7} className="py-16 text-center text-slate-500">
+                <td colSpan={6} className="py-16 text-center text-slate-500">
                   Loading departments...
                 </td>
               </tr>
             ) : departments.length === 0 ? (
               <tr>
-                <td colSpan={7}>
+                <td colSpan={6}>
                   <div className="flex flex-col items-center justify-center py-16">
                     <LayoutGrid size={60} className="text-slate-300" />
                     <h3 className="mt-5 text-xl font-semibold text-slate-700">
@@ -304,14 +302,8 @@ export default function DepartmentList() {
                   <td className="px-6 py-5 text-slate-600">{dept.code || "-"}</td>
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-2">
-                      <GitBranch size={15} className="text-slate-400" />
-                      <span className="text-slate-700">{dept.branch?.name || "-"}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-2">
                       <Building size={15} className="text-slate-400" />
-                      <span className="text-slate-700">{dept.company?.name || "-"}</span>
+                      <span className="text-slate-700">{dept.organization?.name || "-"}</span>
                     </div>
                   </td>
                   <td className="px-6 py-5 text-center">{dept._count?.teams ?? 0}</td>
@@ -387,8 +379,8 @@ export default function DepartmentList() {
             <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewDepartment.name}</h2>
             <div className="space-y-3 text-sm text-slate-700">
               <p><strong>Code:</strong> {viewDepartment.code || "-"}</p>
-              <p><strong>Branch:</strong> {viewDepartment.branch?.name || "-"}</p>
-              <p><strong>Company:</strong> {viewDepartment.company?.name || "-"}</p>
+              <p><strong>Organization:</strong> {viewDepartment.organization?.name || "-"}</p>
+              <p><strong>Description:</strong> {viewDepartment.description || "-"}</p>
               <p><strong>Teams:</strong> {viewDepartment._count?.teams ?? 0}</p>
               <p><strong>Users:</strong> {viewDepartment._count?.users ?? 0}</p>
             </div>

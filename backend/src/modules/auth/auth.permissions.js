@@ -13,12 +13,12 @@ export const PERMISSIONS = {
   },
 
   // Company Management
-  COMPANIES: {
-    READ: 'read:companies',
-    CREATE: 'create:company',
-    UPDATE: 'update:company',
-    DELETE: 'delete:company',
-  },
+  // COMPANIES: {
+  //   READ: 'read:companies',
+  //   CREATE: 'create:company',
+  //   UPDATE: 'update:company',
+  //   DELETE: 'delete:company',
+  // },
 
   // Branch Management
   BRANCHES: {

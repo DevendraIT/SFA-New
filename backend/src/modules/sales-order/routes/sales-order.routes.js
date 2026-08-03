@@ -52,7 +52,7 @@ router.use(auditOrderOperation);
 
 /**
  * GET /orders - Get paginated list of orders
- * Query: page, limit, status, customerId, companyId, branchId, territoryId, ownerId, fromDate, toDate, q, sortBy, sortOrder
+ * Query: page, limit, status, customerId, organizationId, branchId, territoryId, ownerId, fromDate, toDate, q, sortBy, sortOrder
  */
 router.get('/',
   requireReadOrderPermission,

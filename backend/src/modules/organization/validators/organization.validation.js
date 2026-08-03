@@ -40,64 +40,13 @@ export const updateOrganizationSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-// --------------------------------------------------
-// Company
-// --------------------------------------------------
-export const createCompanySchema = z.object({
-  name: nameSchema("Company name"),
-  code: codeSchema,
-
-  email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
-
-  phone: z.string().trim().max(20, "Phone cannot exceed 20 characters.").optional(),
-
-  address: z.string().trim().max(255, "Address cannot exceed 255 characters.").optional(),
-
-  city: z.string().trim().max(100, "City cannot exceed 100 characters.").optional(),
-
-  state: z.string().trim().max(100, "State cannot exceed 100 characters.").optional(),
-
-  country: z.string().trim().max(100, "Country cannot exceed 100 characters.").optional(),
-
-  postalCode: z.string().trim().max(20, "Postal Code cannot exceed 20 characters.").optional(),
-
-  gstNumber: z.string().trim().max(30, "GST Number cannot exceed 30 characters.").optional(),
-
-  panNumber: z.string().trim().max(20, "PAN Number cannot exceed 20 characters.").optional(),
-
-  isActive: z.boolean().optional().default(true),
-});
-
-export const updateCompanySchema = z.object({
-  name: nameSchema("Company name").optional(),
-  code: codeSchema,
-
-  email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
-
-  phone: z.string().trim().max(20).optional(),
-
-  address: z.string().trim().max(255).optional(),
-
-  city: z.string().trim().max(100).optional(),
-
-  state: z.string().trim().max(100).optional(),
-
-  country: z.string().trim().max(100).optional(),
-
-  postalCode: z.string().trim().max(20).optional(),
-
-  gstNumber: z.string().trim().max(30).optional(),
-
-  panNumber: z.string().trim().max(20).optional(),
-
-  isActive: z.boolean().optional(),
-});
 
 // --------------------------------------------------
 // Branch
 // --------------------------------------------------
 export const createBranchSchema = z.object({
-  companyId: uuidSchema('Company'),
+  departmentId: uuidSchema('Department'),
+  territoryId: uuidSchema('Territory'),
   name: nameSchema('Branch name'),
   code: codeSchema,
 
@@ -111,6 +60,8 @@ export const createBranchSchema = z.object({
 });
 
 export const updateBranchSchema = z.object({
+  departmentId: uuidSchema('Department').optional(),
+  territoryId: uuidSchema('Territory').optional(),
   name: nameSchema('Branch name').optional(),
   code: codeSchema,
 
@@ -127,29 +78,36 @@ export const updateBranchSchema = z.object({
 // Department
 // --------------------------------------------------
 export const createDepartmentSchema = z.object({
-  branchId: uuidSchema('Branch'),
   name: nameSchema('Department name'),
   code: codeSchema,
+  description: z.string().trim().max(500).optional(),
+  isActive: z.boolean().optional().default(true),
 });
 
 export const updateDepartmentSchema = z.object({
   name: nameSchema('Department name').optional(),
   code: codeSchema,
+  description: z.string().trim().max(500).optional(),
+  isActive: z.boolean().optional(),
 });
 
 // --------------------------------------------------
 // Territory
 // --------------------------------------------------
 export const createTerritorySchema = z.object({
-  companyId: uuidSchema('Company').optional(),
+  departmentId: uuidSchema('Department'),
   name: nameSchema('Territory name'),
+  code: codeSchema,
   description: z.string().trim().max(500).optional(),
+  isActive: z.boolean().optional().default(true),
 });
 
 export const updateTerritorySchema = z.object({
-  companyId: uuidSchema('Company').optional().nullable(),
+  departmentId: uuidSchema('Department').optional(),
   name: nameSchema('Territory name').optional(),
+  code: codeSchema,
   description: z.string().trim().max(500).optional().nullable(),
+  isActive: z.boolean().optional(),
 });
 
 // --------------------------------------------------

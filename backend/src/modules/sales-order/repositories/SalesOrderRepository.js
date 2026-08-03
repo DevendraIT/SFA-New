@@ -63,7 +63,7 @@ export class SalesOrderRepository {
           orderNumber: orderData.orderNumber || `SO-${Date.now()}`,
           customerId: orderData.customerId,
           ownerId: orderData.ownerId,
-          companyId: orderData.companyId,
+          organizationId: orderData.organizationId,
           branchId: orderData.branchId,
           territoryId: orderData.territoryId,
           status: orderData.status || ORDER_STATUS.DRAFT,
@@ -221,12 +221,12 @@ export class SalesOrderRepository {
   /**
    * Get next sequence number for order number generation
    */
-  async getNextSequence(companyId) {
+  async getNextSequence(organizationId) {
     try {
       // In a real system, you might have a Sequence table.
       // For now, count total orders in the company to generate a sequence.
       const count = await prisma.order.count({
-        where: { companyId }
+        where: { organizationId }
       });
       return count + 1;
     } catch (error) {
@@ -277,7 +277,7 @@ export class SalesOrderRepository {
     if (filters.organizationId) where.organizationId = filters.organizationId;
     if (filters.status) where.status = filters.status;
     if (filters.customerId) where.customerId = filters.customerId;
-    if (filters.companyId) where.companyId = filters.companyId;
+    if (filters.organizationId) where.organizationId = filters.organizationId;
     if (filters.branchId) where.branchId = filters.branchId;
     if (filters.territoryId) where.territoryId = filters.territoryId;
     if (filters.ownerId) where.ownerId = filters.ownerId;

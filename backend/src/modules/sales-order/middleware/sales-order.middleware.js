@@ -461,8 +461,8 @@ export const parseFilters = (req, res, next) => {
   if (req.query.customerId) {
     filters.customerId = req.query.customerId;
   }
-  if (req.query.companyId) {
-    filters.companyId = req.query.companyId;
+  if (req.query.organizationId) {
+    filters.organizationId = req.query.organizationId;
   }
   if (req.query.branchId) {
     filters.branchId = req.query.branchId;

@@ -6,19 +6,18 @@ import { prisma } from '../../../config/database.js';
  */
 export class DepartmentRepository {
 
-  // Standard includes for department queries
   #departmentIncludes = {
-    branch: {
+    organization: {
       select: {
         id: true,
         name: true,
-        company: { 
-          select: { 
-            id: true, 
-            name: true 
-          } 
-        },
       },
+    },
+    territories: {
+      orderBy: { name: 'asc' }
+    },
+    branches: {
+      orderBy: { name: 'asc' }
     },
     teams: { 
       orderBy: { name: 'asc' } 
@@ -32,16 +31,10 @@ export class DepartmentRepository {
   };
 
   // Build where clause for department queries
-  #buildWhereClause(organizationId, { search, branchId } = {}) {
+  #buildWhereClause(organizationId, { search } = {}) {
     const where = {
-      branch: { 
-        company: { organizationId } 
-      }
+      organizationId
     };
-    
-    if (branchId) {
-      where.branchId = branchId;
-    }
     
     if (search) {
       where.name = { 
@@ -59,11 +52,10 @@ export class DepartmentRepository {
       take = 20,
       search,
       sortBy = 'createdAt',
-      sortOrder = 'desc',
-      branchId
+      sortOrder = 'desc'
     } = options;
 
-    const where = this.#buildWhereClause(organizationId, { search, branchId });
+    const where = this.#buildWhereClause(organizationId, { search });
 
     const [departments, total] = await Promise.all([
       prisma.department.findMany({
@@ -72,16 +64,10 @@ export class DepartmentRepository {
         take,
         orderBy: { [sortBy]: sortOrder },
         include: {
-          branch: {
+          organization: {
             select: {
               id: true,
               name: true,
-              company: { 
-                select: { 
-                  id: true, 
-                  name: true 
-                } 
-              },
             },
           },
           _count: { 
@@ -102,19 +88,17 @@ export class DepartmentRepository {
     return prisma.department.findFirst({
       where: { 
         id, 
-        branch: { 
-          company: { organizationId } 
-        } 
+        organizationId
       },
       include: this.#departmentIncludes,
     });
   }
 
-  async findByCode(branchId, code) {
+  async findByCode(organizationId, code) {
     return prisma.department.findUnique({
       where: { 
-        branchId_code: { 
-          branchId, 
+        organizationId_code: { 
+          organizationId, 
           code 
         } 
       },
@@ -125,16 +109,10 @@ export class DepartmentRepository {
     return prisma.department.create({ 
       data,
       include: {
-        branch: {
+        organization: {
           select: {
             id: true,
             name: true,
-            company: { 
-              select: { 
-                id: true, 
-                name: true 
-              } 
-            },
           },
         },
         _count: { 
@@ -152,16 +130,10 @@ export class DepartmentRepository {
       where: { id },
       data,
       include: {
-        branch: {
+        organization: {
           select: {
             id: true,
             name: true,
-            company: { 
-              select: { 
-                id: true, 
-                name: true 
-              } 
-            },
           },
         },
         _count: { 
@@ -204,9 +176,9 @@ export class DepartmentRepository {
     );
   }
 
-  async existsByCode(branchId, code, excludeId = null) {
+  async existsByCode(organizationId, code, excludeId = null) {
     const where = { 
-      branchId, 
+      organizationId, 
       code 
     };
     

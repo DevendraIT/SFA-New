@@ -10,15 +10,6 @@ export const ORGANIZATION_PERMISSIONS = Object.freeze({
     DELETE_ORGANIZATION: "organization:delete",
 
     // ---------------------------------------------------------------------
-    // Company
-    // ---------------------------------------------------------------------
-
-    CREATE_COMPANY: "company:create",
-    READ_COMPANIES: "company:read",
-    UPDATE_COMPANY: "company:update",
-    DELETE_COMPANY: "company:delete",
-
-    // ---------------------------------------------------------------------
     // Branch
     // ---------------------------------------------------------------------
 

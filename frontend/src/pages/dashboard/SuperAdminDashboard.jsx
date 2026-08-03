@@ -62,7 +62,7 @@ const quickActions = [
     label: "Add Organization",
     icon: Building2,
     iconColor: "text-blue-600",
-    path: "/organization/company",
+    path: "/organization/organization",
   },
   {
     label: "Add User",
@@ -127,7 +127,7 @@ export default function SuperAdminDashboard() {
   const attendanceToday = dashboard?.attendanceToday || {};
   const orders = dashboard?.orders || {};
 
-  const totalCompanies = cards?.totalCompanies ?? orgOverview?.companies ?? 0;
+  const totalOrganizations = cards?.totalOrganizations ?? orgOverview?.organizations ?? 0;
   const totalBranches = cards?.totalBranches ?? orgOverview?.branches ?? 0;
   const totalUsers = cards?.totalUsers ?? orgOverview?.users ?? 0;
   const totalCustomers = cards?.totalCustomers ?? 0;
@@ -186,16 +186,16 @@ export default function SuperAdminDashboard() {
   // Recent activities
   const recentActivities = Array.isArray(dashboard?.recentOrders) && dashboard.recentOrders.length > 0
     ? dashboard.recentOrders.map((o) => ({
-        title: `Order ${o.orderNumber}`,
-        description: `${o.customer?.name || "Customer"} - Status: ${o.status} - Amount: ₹${Number(o.totalAmount || 0).toLocaleString("en-IN")}`,
-        time: dayjs(o.createdAt).format("MMM D, h:mm A"),
-        completed: o.status === "APPROVED",
-      }))
+      title: `Order ${o.orderNumber}`,
+      description: `${o.customer?.name || "Customer"} - Status: ${o.status} - Amount: ₹${Number(o.totalAmount || 0).toLocaleString("en-IN")}`,
+      time: dayjs(o.createdAt).format("MMM D, h:mm A"),
+      completed: o.status === "APPROVED",
+    }))
     : [
-        { title: "System Analytics Active", description: "Executive dashboard synced with live database", time: dayjs().format("h:mm A"), completed: true },
-        { title: "Organization Hierarchy Active", description: `${totalUsers} system users actively operational`, time: "Today" },
-        { title: "Field Operations Active", description: `${presentCount} employees checked in today`, time: dayjs().subtract(1, "hour").format("h:mm A") },
-      ];
+      { title: "System Analytics Active", description: "Executive dashboard synced with live database", time: dayjs().format("h:mm A"), completed: true },
+      { title: "Organization Hierarchy Active", description: `${totalUsers} system users actively operational`, time: "Today" },
+      { title: "Field Operations Active", description: `${presentCount} employees checked in today`, time: dayjs().subtract(1, "hour").format("h:mm A") },
+    ];
 
   return (
     <motion.div
@@ -215,14 +215,14 @@ export default function SuperAdminDashboard() {
       {/* Read-Only Organization Overview Card with Vibrant Styling */}
       <SectionCard
         title="Organization Overview & Hierarchy"
-        subtitle="Live organization structure, companies, branches, departments, and user totals"
+        subtitle="Live organization structure, organizations, branches, departments, and user totals"
         icon={Building2}
         iconColor="text-blue-600"
       >
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
             { label: "Organizations", value: orgOverview.organizations ?? 0, icon: Building2, color: "from-blue-500/10 to-indigo-500/10 text-blue-600 border-blue-200" },
-            { label: "Companies", value: orgOverview.companies ?? 0, icon: Building, color: "from-purple-500/10 to-violet-500/10 text-purple-600 border-purple-200" },
+            { label: "Organizations", value: orgOverview.organizations ?? 0, icon: Building, color: "from-purple-500/10 to-violet-500/10 text-purple-600 border-purple-200" },
             { label: "Branches", value: orgOverview.branches ?? 0, icon: GitBranch, color: "from-cyan-500/10 to-blue-500/10 text-cyan-600 border-cyan-200" },
             { label: "Departments", value: orgOverview.departments ?? 0, icon: Layers, color: "from-amber-500/10 to-orange-500/10 text-amber-600 border-amber-200" },
             { label: "Teams", value: orgOverview.teams ?? 0, icon: Briefcase, color: "from-emerald-500/10 to-teal-500/10 text-emerald-600 border-emerald-200" },
@@ -261,8 +261,8 @@ export default function SuperAdminDashboard() {
           color="bg-blue-500"
         />
         <StatCard
-          title="Total Companies"
-          value={totalCompanies}
+          title="Total Organizations"
+          value={totalOrganizations}
           icon={Building2}
           color="bg-purple-500"
         />

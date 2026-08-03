@@ -8,21 +8,23 @@ export class BranchRepository {
 
   // Standard includes for branch queries
   #branchIncludes = {
-    company: { 
+    organization: { 
       select: { 
         id: true, 
         name: true 
       } 
     },
-    departments: { 
-      orderBy: { name: 'asc' } 
+    department: { 
+      select: { id: true, name: true }
+    },
+    territory: { 
+      select: { id: true, name: true }
     },
     teams: { 
       orderBy: { name: 'asc' } 
     },
     _count: { 
       select: { 
-        departments: true, 
         users: true, 
         teams: true 
       } 
@@ -30,14 +32,11 @@ export class BranchRepository {
   };
 
   // Build where clause for branch queries
-  #buildWhereClause(organizationId, { search, companyId } = {}) {
+  #buildWhereClause(organizationId, { search } = {}) {
     const where = {
-      company: { organizationId }
+      organizationId
     };
     
-    if (companyId) {
-      where.companyId = companyId;
-    }
     
     if (search) {
       where.name = { 
@@ -55,11 +54,10 @@ export class BranchRepository {
       take = 20,
       search,
       sortBy = 'createdAt',
-      sortOrder = 'desc',
-      companyId
+      sortOrder = 'desc'
     } = options;
 
-    const where = this.#buildWhereClause(organizationId, { search, companyId });
+    const where = this.#buildWhereClause(organizationId, { search });
 
     const [branches, total] = await Promise.all([
       prisma.branch.findMany({
@@ -68,15 +66,16 @@ export class BranchRepository {
         take,
         orderBy: { [sortBy]: sortOrder },
         include: {
-          company: { 
+          organization: { 
             select: { 
               id: true, 
               name: true 
             } 
           },
+          department: { select: { id: true, name: true } },
+          territory: { select: { id: true, name: true } },
           _count: { 
             select: { 
-              departments: true, 
               users: true, 
               teams: true 
             } 
@@ -93,17 +92,17 @@ export class BranchRepository {
     return prisma.branch.findFirst({
       where: { 
         id, 
-        company: { organizationId } 
+        organizationId
       },
       include: this.#branchIncludes,
     });
   }
 
-  async findByCode(companyId, code) {
+  async findByCode(organizationId, code) {
     return prisma.branch.findUnique({
       where: { 
-        companyId_code: { 
-          companyId, 
+        organizationId_code: { 
+          organizationId, 
           code 
         } 
       },
@@ -114,15 +113,16 @@ export class BranchRepository {
     return prisma.branch.create({ 
       data,
       include: {
-        company: { 
+        organization: { 
           select: { 
             id: true, 
             name: true 
           } 
         },
+        department: { select: { id: true, name: true } },
+        territory: { select: { id: true, name: true } },
         _count: { 
           select: { 
-            departments: true, 
             users: true, 
             teams: true 
           } 
@@ -136,15 +136,16 @@ export class BranchRepository {
       where: { id },
       data,
       include: {
-        company: { 
+        organization: { 
           select: { 
             id: true, 
             name: true 
           } 
         },
+        department: { select: { id: true, name: true } },
+        territory: { select: { id: true, name: true } },
         _count: { 
           select: { 
-            departments: true, 
             users: true, 
             teams: true 
           } 
@@ -183,9 +184,9 @@ export class BranchRepository {
     );
   }
 
-  async existsByCode(companyId, code, excludeId = null) {
+  async existsByCode(organizationId, code, excludeId = null) {
     const where = { 
-      companyId, 
+      organizationId, 
       code 
     };
     
@@ -201,7 +202,7 @@ export class BranchRepository {
     const branch = await prisma.branch.findFirst({
       where: { 
         id: branchId, 
-        company: { organizationId } 
+        organizationId
       },
       select: { id: true },
     });

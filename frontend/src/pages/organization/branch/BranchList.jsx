@@ -97,7 +97,6 @@ export default function BranchList() {
     if (!branches || branches.length === 0) return [];
     return branches.map((b) => ({
       name: b.name,
-      departments: b._count?.departments || 0,
       teams: b._count?.teams || 0,
       users: b._count?.users || 0,
     }));
@@ -109,14 +108,14 @@ export default function BranchList() {
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-8">
         <DashboardHeader
           title="Branch Analytics & Performance"
-          subtitle="Branch-wise capacity, department allocation, team strength & revenue metrics"
+          subtitle="Branch-wise capacity, team strength & revenue metrics"
           onRefresh={reload}
         />
 
         <StatsGrid>
           <StatCard title="Total Branches" value={branches?.length || 0} icon={GitBranch} color="bg-indigo-600" />
           <StatCard title="Active Branches" value={activeBranchesCount} icon={GitBranch} color="bg-emerald-600" />
-          <StatCard title="Total Departments" value={totalDepartmentsCount} icon={LayoutGrid} color="bg-blue-600" />
+
           <StatCard title="Total Teams" value={totalTeamsCount} icon={Users} color="bg-purple-600" />
           <StatCard title="Branch Employees" value={totalUsersCount} icon={Users} color="bg-cyan-500" />
           <StatCard title="Branch Revenue" value={revenue} icon={IndianRupee} color="bg-green-600" format="currency" />
@@ -131,7 +130,6 @@ export default function BranchList() {
                   <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip />
-                  <Bar dataKey="departments" fill="#2563EB" radius={[6, 6, 0, 0]} name="Departments" />
                   <Bar dataKey="teams" fill="#8B5CF6" radius={[6, 6, 0, 0]} name="Teams" />
                   <Bar dataKey="users" fill="#10B981" radius={[6, 6, 0, 0]} name="Users" />
                 </BarChart>
@@ -148,7 +146,7 @@ export default function BranchList() {
                   <div key={b.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/70">
                     <div className="flex items-center justify-between">
                       <h5 className="font-semibold text-slate-900 text-sm">{b.name}</h5>
-                      <span className="text-xs font-semibold text-indigo-600">{b.company?.name || "Company"}</span>
+                      <span className="text-xs font-semibold text-indigo-600">{b.department?.name || "Department"}</span>
                     </div>
                     <div className="flex justify-between items-center mt-2 text-xs text-slate-500">
                       <span>Code: {b.code || "-"}</span>
@@ -172,7 +170,7 @@ export default function BranchList() {
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-900 text-base">{branch.name}</h4>
-                      <p className="text-xs text-slate-500">{branch.company?.name || "-"}</p>
+                      <p className="text-xs text-slate-500">{branch.department?.name || "-"} / {branch.territory?.name || "-"}</p>
                     </div>
                   </div>
                   <button onClick={() => setViewBranch(branch)} className="p-2 rounded-lg border hover:bg-slate-50 text-slate-600" title="View Full Record">
@@ -181,8 +179,8 @@ export default function BranchList() {
                 </div>
                 <div className="grid grid-cols-3 gap-2 pt-2 border-t text-xs">
                   <div>
-                    <span className="text-slate-400 block">Depts</span>
-                    <span className="font-bold text-slate-800 text-sm">{branch._count?.departments ?? 0}</span>
+                    <span className="text-slate-400 block">Territory</span>
+                    <span className="font-bold text-slate-800 text-sm truncate max-w-[80px]" title={branch.territory?.name || "-"}>{branch.territory?.name || "-"}</span>
                   </div>
                   <div>
                     <span className="text-slate-400 block">Teams</span>
@@ -208,11 +206,12 @@ export default function BranchList() {
               <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewBranch.name}</h2>
               <div className="space-y-3 text-sm text-slate-700">
                 <p><strong>Code:</strong> {viewBranch.code || "-"}</p>
-                <p><strong>Company:</strong> {viewBranch.company?.name || "-"}</p>
+                <p><strong>Organization:</strong> {viewBranch.organization?.name || "-"}</p>
                 <p><strong>Email:</strong> {viewBranch.email || "-"}</p>
                 <p><strong>Phone:</strong> {viewBranch.phone || "-"}</p>
                 <p><strong>Address:</strong> {viewBranch.address || "-"}</p>
-                <p><strong>Departments:</strong> {viewBranch._count?.departments ?? 0}</p>
+                <p><strong>Department:</strong> {viewBranch.department?.name || "-"}</p>
+                <p><strong>Territory:</strong> {viewBranch.territory?.name || "-"}</p>
                 <p><strong>Teams:</strong> {viewBranch._count?.teams ?? 0}</p>
                 <p><strong>Users:</strong> {viewBranch._count?.users ?? 0}</p>
               </div>
@@ -267,8 +266,8 @@ export default function BranchList() {
             <tr>
               <th className="px-6 py-4 text-left">Branch</th>
               <th className="px-6 py-4 text-left">Code</th>
-              <th className="px-6 py-4 text-left">Company</th>
-              <th className="px-6 py-4 text-center">Departments</th>
+              <th className="px-6 py-4 text-left">Department</th>
+              <th className="px-6 py-4 text-left">Territory</th>
               <th className="px-6 py-4 text-center">Teams</th>
               <th className="px-6 py-4 text-center">Users</th>
               <th className="px-6 py-4 text-center">Actions</th>
@@ -320,11 +319,13 @@ export default function BranchList() {
                   <td className="px-6 py-5 text-slate-600">{branch.code || "-"}</td>
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-2">
-                      <Building size={15} className="text-slate-400" />
-                      <span className="text-slate-700">{branch.company?.name || "-"}</span>
+                      <LayoutGrid size={15} className="text-slate-400" />
+                      <span className="text-slate-700">{branch.department?.name || "-"}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-5 text-center">{branch._count?.departments ?? 0}</td>
+                  <td className="px-6 py-5">
+                    <span className="text-slate-700">{branch.territory?.name || "-"}</span>
+                  </td>
                   <td className="px-6 py-5 text-center">{branch._count?.teams ?? 0}</td>
                   <td className="px-6 py-5 text-center">
                     <div className="flex items-center justify-center gap-1">
@@ -365,10 +366,7 @@ export default function BranchList() {
           <h4 className="text-sm text-slate-500">Total Branches</h4>
           <h2 className="mt-2 text-3xl font-bold">{branches?.length || 0}</h2>
         </div>
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
-          <h4 className="text-sm text-slate-500">Total Departments</h4>
-          <h2 className="mt-2 text-3xl font-bold">{totalDepartmentsCount}</h2>
-        </div>
+
         <div className="rounded-2xl border bg-white p-6 shadow-sm">
           <h4 className="text-sm text-slate-500">Total Users</h4>
           <h2 className="mt-2 text-3xl font-bold">{totalUsersCount}</h2>
@@ -398,10 +396,11 @@ export default function BranchList() {
             <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewBranch.name}</h2>
             <div className="space-y-3 text-sm text-slate-700">
               <p><strong>Code:</strong> {viewBranch.code || "-"}</p>
-              <p><strong>Company:</strong> {viewBranch.company?.name || "-"}</p>
+              <p><strong>Organization:</strong> {viewBranch.organization?.name || "-"}</p>
               <p><strong>Email:</strong> {viewBranch.email || "-"}</p>
               <p><strong>Phone:</strong> {viewBranch.phone || "-"}</p>
-              <p><strong>Departments:</strong> {viewBranch._count?.departments ?? 0}</p>
+              <p><strong>Department:</strong> {viewBranch.department?.name || "-"}</p>
+              <p><strong>Territory:</strong> {viewBranch.territory?.name || "-"}</p>
               <p><strong>Teams:</strong> {viewBranch._count?.teams ?? 0}</p>
               <p><strong>Users:</strong> {viewBranch._count?.users ?? 0}</p>
             </div>

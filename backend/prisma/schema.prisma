@@ -15,14 +15,23 @@ datasource db {
 // --------------------------------------------------
 
 model Organization {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String
-  slug      String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  slug       String   @unique
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  email      String?
+  phone      String?
+  address    String?
+  city       String?
+  state      String?
+  country    String?
+  postalCode String?
+  gstNumber  String?
+  panNumber  String?
 
-  companies   Company[]
+  branches    Branch[]
   territories Territory[]
   teams       Team[]
   roles       Role[]
@@ -45,18 +54,20 @@ model Organization {
   customers             Customer[]
   products              Product[]
   orders                Order[]
+  departments           Department[]
 }
 
 // --------------------------------------------------
 // 2. Corporate Hierarchy
 // --------------------------------------------------
 
-model Company {
-  id             String @id @default(uuid()) @db.Uuid
-  organizationId String @db.Uuid
-
-  name String
-  code String?
+model Branch {
+  id             String  @id @default(uuid()) @db.Uuid
+  organizationId String  @db.Uuid
+  departmentId   String  @db.Uuid
+  territoryId    String  @db.Uuid
+  name           String
+  code           String?
 
   email      String?
   phone      String?
@@ -65,75 +76,58 @@ model Company {
   state      String?
   country    String?
   postalCode String?
-  gstNumber  String?
-  panNumber  String?
-  isActive   Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  branches     Branch[]
-  territories  Territory[]
+  department   Department   @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  territory    Territory    @relation(fields: [territoryId], references: [id], onDelete: Cascade)
+  teams        Team[]
+  users        User[]
 
   @@unique([organizationId, code])
 }
 
-model Branch {
-  id        String  @id @default(uuid()) @db.Uuid
-  companyId String  @db.Uuid
-  name      String
-  code      String?
-
-  email      String?
-  phone      String?
-  address    String?
-  city       String?
-  state      String?
-  country    String?
-  postalCode String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  departments Department[]
-  teams       Team[]
-  users       User[]
-
-  @@unique([companyId, code])
-}
-
 model Department {
-  id       String  @id @default(uuid()) @db.Uuid
-  branchId String  @db.Uuid
-  name     String
-  code     String?
+  id             String  @id @default(uuid()) @db.Uuid
+  organizationId String  @db.Uuid
+  name           String
+  code           String?
+  description    String?
+  isActive       Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  teams  Team[]
-  users  User[]
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  territories  Territory[]
+  branches     Branch[]
+  teams        Team[]
+  users        User[]
 
-  @@unique([branchId, code])
+  @@unique([organizationId, code])
 }
 
 model Territory {
   id             String  @id @default(uuid()) @db.Uuid
   organizationId String  @db.Uuid
-  companyId      String? @db.Uuid
+  departmentId   String  @db.Uuid
   name           String
+  code           String?
   description    String?
+  isActive       Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  company      Company?     @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  department   Department   @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  branches     Branch[]
   teams        Team[]
   users        User[]
+
+  @@unique([organizationId, code])
 }
 
 model Team {
@@ -167,9 +161,8 @@ model Role {
   description    String?
   isSystem       Boolean @default(false)
 
-  isSystem       Boolean @default(false)
-  level          Int?
-  parentRoleId   String? @db.Uuid
+  level        Int?
+  parentRoleId String? @db.Uuid
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -378,7 +371,6 @@ model Order {
   orderNumber    String  @unique
   customerId     String  @db.Uuid
   ownerId        String  @db.Uuid
-  companyId      String? @db.Uuid
   branchId       String? @db.Uuid
   territoryId    String? @db.Uuid
   status         String  @default("DRAFT")
@@ -488,22 +480,6 @@ model Visit {
   customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, userId])
-}
-
-
-
-  @@index([organizationId, userId])
-}
-
-
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, date])
 }
 
 enum AttendanceStatus {
@@ -803,4 +779,29 @@ model BusinessRuleConfig {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@unique([organizationId, ruleKey])
+}
+
+model Expense {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  userId         String       @db.Uuid
+  approverId     String?      @db.Uuid
+  amount         Float
+  status         String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+  approver       User?        @relation("ExpenseApprover", fields: [approverId], references: [id])
+}
+
+model DailyActivityReport {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @db.Uuid
+  userId         String       @db.Uuid
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
 }

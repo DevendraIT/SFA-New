@@ -54,13 +54,13 @@ export default function TargetPerformanceAnalytics() {
   const [trendPeriod, setTrendPeriod] = useState("Monthly");
 
   const organizationInfo = dashboard?.organizationInfo || {};
-  const companyName = organizationInfo.company?.name || organizationInfo.companyName || "Assigned Company";
+  const organizationName = organizationInfo.organization?.name || organizationInfo.organizationName || "Assigned Organization";
 
   const targetAnalytics = dashboard?.targetAnalytics || {};
   const performanceAnalytics = dashboard?.performanceAnalytics || {};
 
   // 1. KPI Summary Data
-  const totalCompanyTarget = targetAnalytics.totalCompanyTarget ?? 0;
+  const totalOrganizationTarget = targetAnalytics.totalOrganizationTarget ?? 0;
   const achievedTarget = targetAnalytics.achievedTarget ?? 0;
   const remainingTarget = targetAnalytics.remainingTarget ?? 0;
   const targetAchievementPercent = targetAnalytics.targetAchievementPercent ?? 0;
@@ -72,11 +72,11 @@ export default function TargetPerformanceAnalytics() {
   const totalSalesExecutives = dashboard?.totalSalesExecutives ?? 0;
   const overallPerformanceScore = Math.min(100, Math.round((targetAchievementPercent + (performanceAnalytics.conversionRate || 75)) / 2));
 
-  // 2. Company Target Breakdown
-  const monthlyTarget = targetAnalytics.monthlyTarget ?? Math.round(totalCompanyTarget / 12);
-  const quarterlyTarget = targetAnalytics.quarterlyTarget ?? Math.round(totalCompanyTarget / 4);
-  const halfYearlyTarget = Math.round(totalCompanyTarget / 2);
-  const yearlyTarget = targetAnalytics.yearlyTarget ?? totalCompanyTarget;
+  // 2. Organization Target Breakdown
+  const monthlyTarget = targetAnalytics.monthlyTarget ?? Math.round(totalOrganizationTarget / 12);
+  const quarterlyTarget = targetAnalytics.quarterlyTarget ?? Math.round(totalOrganizationTarget / 4);
+  const halfYearlyTarget = Math.round(totalOrganizationTarget / 2);
+  const yearlyTarget = targetAnalytics.yearlyTarget ?? totalOrganizationTarget;
 
   // 3. Branch & Dept Performance Data
   const branchTargetPerformance = targetAnalytics.branchTargetPerformance || [];
@@ -129,7 +129,7 @@ export default function TargetPerformanceAnalytics() {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-4">
         <Loader2 size={40} className="animate-spin text-blue-600" />
-        <p className="text-sm text-slate-500 font-medium">Fetching Head of Sales company analytics & target performance...</p>
+        <p className="text-sm text-slate-500 font-medium">Fetching Head of Sales organization analytics & target performance...</p>
       </div>
     );
   }
@@ -139,7 +139,7 @@ export default function TargetPerformanceAnalytics() {
       {/* Header */}
       <PageHeader
         title="Target & Performance Analytics"
-        subtitle={`Live sales analytics & target achievement control for ${companyName}`}
+        subtitle={`Live sales analytics & target achievement control for ${organizationName}`}
       >
         <button
           onClick={refresh}
@@ -152,8 +152,8 @@ export default function TargetPerformanceAnalytics() {
       {/* 1. KPI Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
-          <span className="text-xs font-semibold text-slate-500 block">Total Company Target</span>
-          <span className="text-xl font-bold text-slate-900 mt-1 block">₹{Number(totalCompanyTarget).toLocaleString("en-IN")}</span>
+          <span className="text-xs font-semibold text-slate-500 block">Total Organization Target</span>
+          <span className="text-xl font-bold text-slate-900 mt-1 block">₹{Number(totalOrganizationTarget).toLocaleString("en-IN")}</span>
         </div>
         <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200 shadow-sm">
           <span className="text-xs font-semibold text-emerald-700 block">Achieved Target</span>
@@ -195,7 +195,7 @@ export default function TargetPerformanceAnalytics() {
       </div>
 
       {/* 13. Key Business Insights */}
-      <SectionCard title="Key Business Insights" subtitle="Automated intelligence for company sales & performance status" icon={Zap} iconColor="text-amber-500">
+      <SectionCard title="Key Business Insights" subtitle="Automated intelligence for organization sales & performance status" icon={Zap} iconColor="text-amber-500">
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4">
           <div className="p-4 rounded-xl border border-slate-100 bg-slate-50">
             <span className="text-xs text-slate-400 font-medium block">Best Performing Branch</span>
@@ -225,13 +225,13 @@ export default function TargetPerformanceAnalytics() {
           <div className="p-4 rounded-xl border border-slate-100 bg-slate-50">
             <span className="text-xs text-slate-400 font-medium block">Target Achievement Status</span>
             <span className="text-base font-bold text-slate-900 block mt-0.5">{targetAchievementPercent >= 80 ? "On Track" : "Needs Acceleration"}</span>
-            <span className="text-xs text-emerald-600 font-semibold block mt-1">{targetAchievementPercent}% company goal reached</span>
+            <span className="text-xs text-emerald-600 font-semibold block mt-1">{targetAchievementPercent}% organization goal reached</span>
           </div>
         </div>
       </SectionCard>
 
-      {/* 2. Company Target Overview */}
-      <SectionCard title="Company Target Overview" subtitle="Target breakdown & progress across periods" icon={Target} iconColor="text-indigo-600">
+      {/* 2. Organization Target Overview */}
+      <SectionCard title="Organization Target Overview" subtitle="Target breakdown & progress across periods" icon={Target} iconColor="text-indigo-600">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { period: "Monthly Target", assigned: monthlyTarget, achieved: Math.round(achievedTarget / 12) },
@@ -418,7 +418,7 @@ export default function TargetPerformanceAnalytics() {
 
       {/* 7. Revenue & Sales Analytics Visual Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <SectionCard title="Revenue Trend vs Target" subtitle="Monthly company revenue achievement" icon={TrendingUp} iconColor="text-emerald-600">
+        <SectionCard title="Revenue Trend vs Target" subtitle="Monthly organization revenue achievement" icon={TrendingUp} iconColor="text-emerald-600">
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueTrendData}>
@@ -456,7 +456,7 @@ export default function TargetPerformanceAnalytics() {
       </div>
 
       {/* 12. Leaderboards Section */}
-      <SectionCard title="Company Leaderboards" subtitle="Top performing branches, departments, managers & executives" icon={Award} iconColor="text-amber-500">
+      <SectionCard title="Organization Leaderboards" subtitle="Top performing branches, departments, managers & executives" icon={Award} iconColor="text-amber-500">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="p-4 rounded-xl border border-slate-100 bg-slate-50 space-y-2">
             <span className="text-xs font-bold text-slate-500 uppercase block">Top Branch</span>

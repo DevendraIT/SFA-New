@@ -104,7 +104,7 @@ export default function HeadOfSalesDashboard() {
   const organizationInfo = dashboard?.organizationInfo || {};
 
   const targetMetrics = dashboard?.targetMetrics || {};
-  const totalCompanyTarget = targetMetrics.totalCompanyTarget ?? 0;
+  const totalOrganizationTarget = targetMetrics.totalOrganizationTarget ?? 0;
   const achievedTarget = targetMetrics.achievedTarget ?? 0;
   const remainingTarget = targetMetrics.remainingTarget ?? 0;
   const targetAchievementPercent = targetMetrics.targetAchievementPercent ?? 0;
@@ -112,13 +112,13 @@ export default function HeadOfSalesDashboard() {
   const quarterlyTarget = targetMetrics.quarterlyTarget ?? 0;
   const yearlyTarget = targetMetrics.yearlyTarget ?? 0;
 
-  const companyName = organizationInfo.company?.name || organizationInfo.companyName || "Not Assigned";
+  const organizationName = organizationInfo.organization?.name || organizationInfo.organizationName || "Not Assigned";
   const branchName = organizationInfo.branch?.name || organizationInfo.branchName || "Not Assigned";
   const departmentName = organizationInfo.department?.name || organizationInfo.departmentName || "Not Assigned";
 
   const totalVisitsCount = todayVisits + pendingVisits + completedVisits;
   const performanceMetrics = [
-    { label: "Company Target Achievement", value: targetAchievementPercent, suffix: "%" },
+    { label: "Organization Target Achievement", value: targetAchievementPercent, suffix: "%" },
     { label: "Visit Completion Rate", value: totalVisitsCount > 0 ? Math.round((completedVisits / totalVisitsCount) * 100) : 0, suffix: "%" },
     { label: "Order Approval Rate", value: totalSalesOrders > 0 ? Math.round((approvedOrders / totalSalesOrders) * 100) : 0, suffix: "%" },
     { label: "Executive Attendance Rate", value: attendance.rate || 0, suffix: "%" },
@@ -136,7 +136,7 @@ export default function HeadOfSalesDashboard() {
   ];
 
   const recentActivitiesList = dashboard?.recentActivities || [
-    { title: "Dashboard Live Sync", description: `Organization Scope: ${companyName} - ${branchName}`, time: dayjs().format("h:mm A"), completed: true },
+    { title: "Dashboard Live Sync", description: `Organization Scope: ${organizationName} - ${branchName}`, time: dayjs().format("h:mm A"), completed: true },
     { title: "Field Visits Metrics", description: `${completedVisits} completed visits, ${pendingVisits} pending visits`, time: "Today" },
     { title: "Sales Orders Stream", description: `${approvedOrders} approved orders out of ${totalSalesOrders} total sales orders`, time: dayjs().format("h:mm A") },
   ];
@@ -160,7 +160,7 @@ export default function HeadOfSalesDashboard() {
   const managerPerformance = performanceAnalytics.managerPerformance || [];
   const executivePerformance = performanceAnalytics.executivePerformance || [];
 
-  const companyAdminName = organizationInfo.companyAdminName || "Company Admin";
+  const organizationAdminName = organizationInfo.organizationAdminName || "Organization Admin";
   const headOfSalesName = organizationInfo.headOfSalesName || fullName || "Head of Sales";
 
   return (
@@ -169,7 +169,7 @@ export default function HeadOfSalesDashboard() {
       <DashboardHeader
         welcomeText={`Welcome back, ${headOfSalesName} 👋`}
         title="Head Sales Dashboard"
-        subtitle="Assigned Company, Branch & Department Sales Performance Control"
+        subtitle="Assigned Organization, Branch & Department Sales Performance Control"
         onRefresh={refresh}
       />
 
@@ -181,7 +181,7 @@ export default function HeadOfSalesDashboard() {
         <StatCard title="Today's Visits" value={todayVisits} icon={MapPin} color="bg-blue-500" />
         <StatCard title="Pending Visits" value={pendingVisits} icon={Clock3} color="bg-amber-500" />
         <StatCard title="Completed Visits" value={completedVisits} icon={ClipboardCheck} color="bg-emerald-500" />
-        <StatCard title="Company Revenue" value={revenue} icon={IndianRupee} color="bg-green-600" format="currency" />
+        <StatCard title="Organization Revenue" value={revenue} icon={IndianRupee} color="bg-green-600" format="currency" />
       </StatsGrid>
 
 

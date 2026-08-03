@@ -10,9 +10,11 @@ import DashboardLayout from "../layouts/DashboardLayout";
 
 import ProtectedRoute from "./ProtectedRoute";
 
-import CompanyList from "../pages/organization/company/CompanyList";
+
 import BranchList from "../pages/organization/branch/BranchList";
+import OrganizationProfile from "../pages/organization/OrganizationProfile";
 import DepartmentList from "../pages/organization/department/DepartmentList";
+import TerritoryList from "../pages/organization/territory/TerritoryList";
 import TeamList from "../pages/organization/team/TeamList";
 import UserList from "../pages/organization/user/UserList";
 
@@ -82,86 +84,93 @@ export default function AppRoutes() {
       />
 
       <Route
-  element={
-    <ProtectedRoute>
-      <DashboardLayout />
-    </ProtectedRoute>
-  }
->
-  <Route path="/dashboard" element={<Dashboard />} />
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/dashboard" element={<Dashboard />} />
 
-  <Route
-    path="/organization/company"
-    element={<CompanyList />}
-  />
 
-  <Route
-    path="/organization/branch"
-    element={<BranchList />}
-  />
 
-  <Route
-    path="/organization/department"
-    element={<DepartmentList />}
-  />
+        <Route
+          path="/organization/organization"
+          element={<OrganizationProfile />}
+        />
 
-  <Route
-    path="/organization/teams"
-    element={<TeamList />}
-  />
+        <Route
+          path="/organization/branch"
+          element={<BranchList />}
+        />
 
-  <Route
-    path="/organization/users"
-    element={<UserList />}
-  />
+        <Route
+          path="/organization/department"
+          element={<DepartmentList />}
+        />
 
-  <Route
-    path="/team/manage"
-    element={<TeamManagement />}
-  />
+        <Route
+          path="/organization/territory"
+          element={<TerritoryList />}
+        />
 
-  <Route
-    path="/team/members/:id"
-    element={<ExecutiveDetail />}
-  />
+        <Route
+          path="/organization/teams"
+          element={<TeamList />}
+        />
 
-  <Route
-    path="/team/assigned-tasks"
-    element={<AssignedTasks />}
-  />
+        <Route
+          path="/organization/users"
+          element={<UserList />}
+        />
 
-  <Route
-    path="/team/tasks/:id"
-    element={<TaskDetail />}
-  />
+        <Route
+          path="/team/manage"
+          element={<TeamManagement />}
+        />
 
-  <Route
-    path="/team/performance"
-    element={<PerformanceWrapper />}
-  />
+        <Route
+          path="/team/members/:id"
+          element={<ExecutiveDetail />}
+        />
 
-  {/* ===== SALES ORDERS ===== */}
-  <Route path="/orders" element={<OrdersPage />} />
+        <Route
+          path="/team/assigned-tasks"
+          element={<AssignedTasks />}
+        />
 
-  {/* ===== PERFORMANCE & REPORTS & SETTINGS ===== */}
-  <Route path="/performance" element={<PerformanceWrapper />} />
-  <Route path="/reports/target-performance" element={<PerformanceWrapper />} />
-  <Route path="/reports" element={<ReportsPage />} />
-  <Route path="/notifications" element={<NotificationsPage />} />
-  <Route path="/settings" element={<SettingsPage />} />
+        <Route
+          path="/team/tasks/:id"
+          element={<TaskDetail />}
+        />
 
-  {/* ===== FIELD FORCE AUTOMATION ROUTES ===== */}
-  <Route path="/field-force" element={<FieldForceDashboardWrapper />} />
-  <Route path="/field-force/dashboard" element={<FieldForceDashboardWrapper />} />
-  <Route path="/field-force/attendance" element={<AttendancePage />} />
-  <Route path="/field-force/tasks" element={<TasksPage />} />
-  <Route path="/field-force/tasks/:id/execute" element={<TaskExecutionPage />} />
-  <Route path="/field-force/visits" element={<VisitsPage />} />
-  <Route path="/field-force/visits/:id" element={<VisitDetailPage />} />
-  <Route path="/field-force/activities" element={<ActivitiesPage />} />
-  <Route path="/field-force/dar" element={<DARPage />} />
-  <Route path="/field-force/profile" element={<ProfilePage />} />
-</Route>
+        <Route
+          path="/team/performance"
+          element={<PerformanceWrapper />}
+        />
+
+        {/* ===== SALES ORDERS ===== */}
+        <Route path="/orders" element={<OrdersPage />} />
+
+        {/* ===== PERFORMANCE & REPORTS & SETTINGS ===== */}
+        <Route path="/performance" element={<PerformanceWrapper />} />
+        <Route path="/reports/target-performance" element={<PerformanceWrapper />} />
+        <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+
+        {/* ===== FIELD FORCE AUTOMATION ROUTES ===== */}
+        <Route path="/field-force" element={<FieldForceDashboardWrapper />} />
+        <Route path="/field-force/dashboard" element={<FieldForceDashboardWrapper />} />
+        <Route path="/field-force/attendance" element={<AttendancePage />} />
+        <Route path="/field-force/tasks" element={<TasksPage />} />
+        <Route path="/field-force/tasks/:id/execute" element={<TaskExecutionPage />} />
+        <Route path="/field-force/visits" element={<VisitsPage />} />
+        <Route path="/field-force/visits/:id" element={<VisitDetailPage />} />
+        <Route path="/field-force/activities" element={<ActivitiesPage />} />
+        <Route path="/field-force/dar" element={<DARPage />} />
+        <Route path="/field-force/profile" element={<ProfilePage />} />
+      </Route>
 
     </Routes>
   );
