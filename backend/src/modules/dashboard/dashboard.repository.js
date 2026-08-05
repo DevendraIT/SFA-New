@@ -58,56 +58,14 @@ export class DashboardRepository {
     return prisma.task.count({ where });
   }
 
-  async getCompanyIdForUser(user) {
-    if (!user) return null;
-    if (user.companyId) return user.companyId;
-
-    if (user.branchId) {
-      try {
-        const branch = await prisma.branch.findUnique({
-          where: { id: user.branchId },
-          select: { companyId: true },
-        });
-        if (branch?.companyId) return branch.companyId;
-      } catch (e) {
-        console.error("Error finding companyId from branchId:", e);
-      }
-    }
-
-    if (user.departmentId) {
-      try {
-        const dept = await prisma.department.findUnique({
-          where: { id: user.departmentId },
-          select: { branch: { select: { companyId: true } } },
-        });
-        if (dept?.branch?.companyId) return dept.branch.companyId;
-      } catch (e) {
-        console.error("Error finding companyId from departmentId:", e);
-      }
-    }
-
-    if (user.teamId) {
-      try {
-        const team = await prisma.team.findUnique({
-          where: { id: user.teamId },
-          select: { branch: { select: { companyId: true } } },
-        });
-        if (team?.branch?.companyId) return team.branch.companyId;
-      } catch (e) {
-        console.error("Error finding companyId from teamId:", e);
-      }
-    }
-
-    return null;
-  }
-
-  async getHeadOfSalesTargetAnalytics(organizationId, companyId = null) {
+  
+  async getHeadOfSalesTargetAnalytics(organizationId) {
     try {
       const targetWhere = { organizationId, status: 'ACTIVE' };
-      if (companyId) {
+      if (organizationId) {
         targetWhere.OR = [
-          { user: { branch: { companyId } } },
-          { team: { branch: { companyId } } },
+          { user: { branch: { organizationId } } },
+          { team: { branch: { organizationId } } },
         ];
       }
 
@@ -134,7 +92,7 @@ export class DashboardRepository {
         }
       });
 
-      if (targets.length === 0 && companyId) {
+      if (targets.length === 0 && organizationId) {
         targets = await prisma.target.findMany({
           where: { organizationId, status: 'ACTIVE' },
           include: {
@@ -274,11 +232,11 @@ export class DashboardRepository {
     }
   }
 
-  async getHeadOfSalesPerformanceAnalytics(organizationId, companyId = null) {
+  async getHeadOfSalesPerformanceAnalytics(organizationId) {
     try {
       const orderWhere = { organizationId, isDeleted: false };
-      if (companyId) {
-        orderWhere.owner = { branch: { companyId } };
+      if (organizationId) {
+        orderWhere.owner = { branch: { organizationId } };
       }
 
       const [orders, visits, customers] = await Promise.all([
@@ -303,7 +261,7 @@ export class DashboardRepository {
           }
         }),
         prisma.visit.findMany({
-          where: companyId ? { organizationId, user: { branch: { companyId } } } : { organizationId },
+          where: organizationId ? { organizationId, user: { branch: { organizationId } } } : { organizationId },
           select: {
             id: true,
             userId: true,
@@ -312,7 +270,7 @@ export class DashboardRepository {
           }
         }),
         prisma.customer.findMany({
-          where: companyId ? { OR: [{ organizationId, companyId }, { organizationId, createdBy: { branch: { companyId } } }] } : { organizationId },
+          where: organizationId ? { OR: [{ organizationId, organizationId }, { organizationId, createdBy: { branch: { organizationId } } }] } : { organizationId },
           select: { id: true, name: true, createdAt: true }
         })
       ]);
@@ -448,12 +406,12 @@ export class DashboardRepository {
     }
   }
 
-  async getCompanyTargetMetrics(organizationId, companyId = null) {
+  async getCompanyTargetMetrics(organizationId) {
     const where = { organizationId, status: 'ACTIVE' };
-    if (companyId) {
+    if (organizationId) {
       where.OR = [
-        { user: { branch: { companyId } } },
-        { team: { branch: { companyId } } },
+        { user: { branch: { organizationId } } },
+        { team: { branch: { organizationId } } },
       ];
     }
 
@@ -468,7 +426,7 @@ export class DashboardRepository {
         },
       });
 
-      if (targets.length === 0 && companyId) {
+      if (targets.length === 0 && organizationId) {
         targets = await prisma.target.findMany({
           where: { organizationId, status: 'ACTIVE' },
           select: {
@@ -565,7 +523,7 @@ export class DashboardRepository {
     return orderStats;
   }
 
-  async getManagerUserCount(organizationId, companyId = null, branchId = null, departmentId = null) {
+  async getManagerUserCount(organizationId, branchId = null, departmentId = null) {
     const roleWhere = {
       roles: {
         some: {
@@ -580,12 +538,12 @@ export class DashboardRepository {
       }
     };
 
-    const companyUserFilter = companyId
+    const companyUserFilter = organizationId
       ? {
           OR: [
-            { branch: { companyId } },
-            { department: { branch: { companyId } } },
-            { team: { branch: { companyId } } },
+            { branch: { organizationId } },
+            { department: { branch: { organizationId } } },
+            { team: { branch: { organizationId } } },
           ]
         }
       : {};
@@ -596,13 +554,13 @@ export class DashboardRepository {
       isActive: true,
       ...roleWhere,
       ...companyUserFilter,
-      ...(branchId && !companyId && { branchId }),
-      ...(departmentId && !companyId && { departmentId }),
+      ...(branchId && !organizationId && { branchId }),
+      ...(departmentId && !organizationId && { departmentId }),
     };
 
     try {
       let count = await prisma.user.count({ where });
-      if (count === 0 && companyId) {
+      if (count === 0 && organizationId) {
         count = await prisma.user.count({
           where: {
             organizationId,
@@ -628,12 +586,12 @@ export class DashboardRepository {
     return prisma.team.count({ where });
   }
 
-  async getManagerCustomerCount(organizationId, companyId = null) {
+  async getManagerCustomerCount(organizationId) {
     const where = { organizationId };
-    if (companyId) {
+    if (organizationId) {
       where.OR = [
-        { companyId },
-        { createdBy: { branch: { companyId } } }
+        { organizationId },
+        { createdBy: { branch: { organizationId } } }
       ];
     }
     try {
@@ -643,10 +601,10 @@ export class DashboardRepository {
     }
   }
 
-  async getManagerOrderMetrics(organizationId, companyId = null, branchId = null, departmentId = null, startDate = null, endDate = null) {
+  async getManagerOrderMetrics(organizationId, branchId = null, departmentId = null, startDate = null, endDate = null) {
     const where = { organizationId, isDeleted: false };
-    if (companyId) {
-      where.owner = { branch: { companyId } };
+    if (organizationId) {
+      where.owner = { branch: { organizationId } };
     } else if (branchId || departmentId) {
       where.owner = {
         ...(branchId && { branchId }),
@@ -665,10 +623,10 @@ export class DashboardRepository {
     });
   }
 
-  async getManagerVisitMetrics(organizationId, companyId = null, branchId = null, departmentId = null, startDate = null, endDate = null) {
+  async getManagerVisitMetrics(organizationId, branchId = null, departmentId = null, startDate = null, endDate = null) {
     const where = { organizationId };
-    if (companyId) {
-      where.user = { branch: { companyId } };
+    if (organizationId) {
+      where.user = { branch: { organizationId } };
     } else if (branchId || departmentId) {
       where.user = {
         ...(branchId && { branchId }),
@@ -686,7 +644,7 @@ export class DashboardRepository {
     });
   }
 
-  async getManagerAttendanceMetrics(organizationId, companyId = null, branchId = null, departmentId = null, date = new Date()) {
+  async getManagerAttendanceMetrics(organizationId, branchId = null, departmentId = null, date = new Date()) {
     const start = new Date(date);
     start.setHours(0, 0, 0, 0);
     const end = new Date(date);
@@ -696,8 +654,8 @@ export class DashboardRepository {
       organizationId,
       date: { gte: start, lte: end },
     };
-    if (companyId) {
-      where.user = { branch: { companyId } };
+    if (organizationId) {
+      where.user = { branch: { organizationId } };
     } else if (branchId || departmentId) {
       where.user = {
         ...(branchId && { branchId }),
@@ -739,7 +697,7 @@ export class DashboardRepository {
     });
   }
 
-  async getSalesManagerCount(organizationId, companyId = null, branchId = null, departmentId = null) {
+  async getSalesManagerCount(organizationId, branchId = null, departmentId = null) {
     try {
       const baseWhere = {
         organizationId,
@@ -763,13 +721,13 @@ export class DashboardRepository {
         ]
       };
 
-      if (companyId) {
+      if (organizationId) {
         baseWhere.AND = [
           {
             OR: [
-              { branch: { companyId } },
-              { department: { branch: { companyId } } },
-              { team: { branch: { companyId } } },
+              { branch: { organizationId } },
+              { department: { branch: { organizationId } } },
+              { team: { branch: { organizationId } } },
               { branchId: null },
             ]
           }
@@ -795,7 +753,7 @@ export class DashboardRepository {
     }
   }
 
-  async getPresentSalesManagerCount(organizationId, companyId = null, branchId = null, departmentId = null, date = new Date()) {
+  async getPresentSalesManagerCount(organizationId, branchId = null, departmentId = null, date = new Date()) {
     const start = new Date(date);
     start.setHours(0, 0, 0, 0);
     const end = new Date(date);
@@ -811,7 +769,7 @@ export class DashboardRepository {
       });
 
       if (count === 0) {
-        const totalManagers = await this.getSalesManagerCount(organizationId, companyId, branchId, departmentId);
+        const totalManagers = await this.getSalesManagerCount(organizationId, branchId, departmentId);
         if (totalManagers > 0) {
           const recentCheckIn = await prisma.attendance.count({
             where: {

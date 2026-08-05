@@ -23,18 +23,42 @@ async function main() {
 
   console.log(`🏢 Organization created: ${org.name} (${org.slug})`);
 
-  // 1b. Create Company
-  const company = await prisma.company.upsert({
+  // 1b. Create Department -> Territory -> Branch
+  const dept = await prisma.department.upsert({
+    where: { organizationId_code: { organizationId: org.id, code: 'SALES' } },
+    update: {},
+    create: {
+      organizationId: org.id,
+      name: 'Sales Department',
+      code: 'SALES',
+    }
+  });
+  console.log(`🏢 Department created: ${dept.name} (${dept.code})`);
+
+  const terr = await prisma.territory.upsert({
+    where: { organizationId_code: { organizationId: org.id, code: 'NORTH-AMERICA' } },
+    update: {},
+    create: {
+      organizationId: org.id,
+      departmentId: dept.id,
+      name: 'North America',
+      code: 'NORTH-AMERICA',
+    }
+  });
+  console.log(`🏢 Territory created: ${terr.name} (${terr.code})`);
+
+  const branch = await prisma.branch.upsert({
     where: { organizationId_code: { organizationId: org.id, code: 'ACME-US' } },
     update: {},
     create: {
       organizationId: org.id,
+      departmentId: dept.id,
+      territoryId: terr.id,
       name: 'Acme US Operations',
       code: 'ACME-US',
     }
   });
-
-  console.log(`🏢 Company created: ${company.name} (${company.code})`);
+  console.log(`🏢 Branch created: ${branch.name} (${branch.code})`);
 
   // 2. Roles
   const rolesMap = {};

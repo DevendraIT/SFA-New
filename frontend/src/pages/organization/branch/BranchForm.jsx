@@ -4,10 +4,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import branchService from "../../../services/branch.service";
-import useCompanies from "../../../hooks/useCompanies";
+import useDepartments from "../../../hooks/useDepartments";
+import useTerritories from "../../../hooks/useTerritories";
 
 const schema = z.object({
-  companyId: z.string().uuid("Please select a company."),
+  departmentId: z.string().uuid("Please select a department."),
+  territoryId: z.string().uuid("Please select a territory."),
   name: z
     .string()
     .trim()
@@ -29,18 +31,20 @@ const schema = z.object({
 });
 
 export default function BranchForm({ branch, onClose, onSuccess }) {
-  const { companies } = useCompanies();
+  const { departments } = useDepartments();
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      companyId: "",
+      departmentId: "",
+      territoryId: "",
       name: "",
       code: "",
       email: "",
@@ -53,11 +57,16 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
     },
   });
 
+  const selectedDepartmentId = watch("departmentId");
+  const { territories } = useTerritories({ debounce: false });
+  const filteredTerritories = territories.filter(t => t.departmentId === selectedDepartmentId);
+
   useEffect(() => {
     if (!branch) return;
 
     reset({
-      companyId: branch.companyId || "",
+      departmentId: branch.departmentId || "",
+      territoryId: branch.territoryId || "",
       name: branch.name || "",
       code: branch.code || "",
       email: branch.email || "",
@@ -108,23 +117,46 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
         </h3>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          <div className="md:col-span-2">
+          <div className="md:col-span-1">
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Company *
+              Department *
             </label>
             <select
-              {...register("companyId")}
+              {...register("departmentId", {
+                onChange: () => setValue("territoryId", "")
+              })}
               className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
             >
-              <option value="">Select a company...</option>
-              {companies.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name} {c.code ? `(${c.code})` : ""}
+              <option value="">Select a department...</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name} {d.code ? `(${d.code})` : ""}
                 </option>
               ))}
             </select>
-            {errors.companyId && (
-              <p className="mt-1 text-sm text-red-500">{errors.companyId.message}</p>
+            {errors.departmentId && (
+              <p className="mt-1 text-sm text-red-500">{errors.departmentId.message}</p>
+            )}
+          </div>
+
+          <div className="md:col-span-1">
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Territory *
+            </label>
+            <select
+              {...register("territoryId")}
+              disabled={!selectedDepartmentId}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 disabled:bg-slate-100 disabled:cursor-not-allowed"
+            >
+              <option value="">Select a territory...</option>
+              {filteredTerritories.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name} {t.code ? `(${t.code})` : ""}
+                </option>
+              ))}
+            </select>
+            {errors.territoryId && (
+              <p className="mt-1 text-sm text-red-500">{errors.territoryId.message}</p>
             )}
           </div>
 

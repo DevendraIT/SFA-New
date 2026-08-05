@@ -231,7 +231,7 @@ export class OrderDataSanitizer {
   static sanitizeCreateData(data) {
     const sanitized = {
       customerId: data.customerId?.trim(),
-      companyId: data.companyId?.trim(),
+      organizationId: data.organizationId?.trim(),
       branchId: data.branchId?.trim(),
       territoryId: data.territoryId?.trim(),
       ownerId: data.ownerId?.trim(),
@@ -288,8 +288,8 @@ export class OrderQueryHelper {
     if (queryParams.customerId) {
       filters.customerId = queryParams.customerId;
     }
-    if (queryParams.companyId) {
-      filters.companyId = queryParams.companyId;
+    if (queryParams.organizationId) {
+      filters.organizationId = queryParams.organizationId;
     }
     if (queryParams.branchId) {
       filters.branchId = queryParams.branchId;

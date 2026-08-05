@@ -8,8 +8,6 @@ import { OrganizationController } from '../controllers/organization.controller.j
 import {
   createOrganizationSchema,
   updateOrganizationSchema,
-  createCompanySchema,
-  updateCompanySchema,
   createBranchSchema,
   updateBranchSchema,
   createDepartmentSchema,
@@ -59,12 +57,6 @@ router.get(
   organizationController.listOrganizations
 );
 
-router.get(
-  '/companies',
-  authorize(P.READ_COMPANIES),
-  validate(listQuerySchema, 'query'),
-  organizationController.listCompanies
-);
 
 router.get(
   '/branches',
@@ -130,46 +122,6 @@ router.delete(
   authorize(P.DELETE_ORGANIZATION),
   validate(idParamSchema, 'params'),
   organizationController.deleteOrganization
-);
-
-// --------------------------------------------------
-// Companies
-// --------------------------------------------------
-
-router.post(
-  '/companies',
-  authorize(P.CREATE_COMPANY),
-  validate(createCompanySchema, 'body'),
-  organizationController.createCompany
-);
-
-router.get(
-  '/companies/:id',
-  authorize(P.READ_COMPANIES),
-  validate(idParamSchema, 'params'),
-  organizationController.getCompany
-);
-
-router.put(
-  '/companies/:id',
-  authorize(P.UPDATE_COMPANY),
-  validate(idParamSchema, 'params'),
-  validate(updateCompanySchema, 'body'),
-  organizationController.updateCompany
-);
-
-router.delete(
-  '/companies/:id',
-  authorize(P.DELETE_COMPANY),
-  validate(idParamSchema, 'params'),
-  organizationController.deleteCompany
-);
-
-router.patch(
-  '/companies/:id/restore',
-  authorize(P.UPDATE_COMPANY),
-  validate(idParamSchema, 'params'),
-  organizationController.restoreCompany
 );
 
 // --------------------------------------------------

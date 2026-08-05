@@ -15,7 +15,7 @@ export const listOrdersQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
   q: z.string().trim().optional(),
   status: z.string().trim().max(50).optional(),
-  companyId: uuidSchema('Company').optional(),
+  organizationId: uuidSchema('Organization').optional(),
   branchId: uuidSchema('Branch').optional(),
   customerId: uuidSchema('Customer').optional(),
   ownerId: uuidSchema('Owner').optional(),
@@ -40,7 +40,7 @@ export const orderLineItemSchema = z.object({
 
 export const createOrderSchema = z.object({
   customerId: uuidSchema('Customer'),
-  companyId: uuidSchema('Company').optional(),
+  organizationId: uuidSchema('Organization').optional(),
   branchId: uuidSchema('Branch').optional(),
   territoryId: uuidSchema('Territory').optional(),
   ownerId: uuidSchema('Owner').optional(),

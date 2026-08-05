@@ -199,12 +199,12 @@ export default function ManagerDashboard() {
                   <Building size={20} />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Company</p>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Organization</p>
                   <h4 className="font-semibold text-slate-800 text-base">
-                    {dashboard.organizationInfo.company?.name || "Not Assigned"}
+                    {dashboard.organizationInfo.organization?.name || "Not Assigned"}
                   </h4>
-                  {dashboard.organizationInfo.company?.code && (
-                    <span className="text-xs text-slate-500">Code: {dashboard.organizationInfo.company.code}</span>
+                  {dashboard.organizationInfo.organization?.code && (
+                    <span className="text-xs text-slate-500">Code: {dashboard.organizationInfo.organization.code}</span>
                   )}
                 </div>
               </div>

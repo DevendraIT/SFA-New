@@ -86,64 +86,6 @@ export class OrganizationController {
   };
 
   // --------------------------------------------------
-  // Company
-  // --------------------------------------------------
-
-  listCompanies = async (req, res, next) => {
-    try {
-      const { companies, meta } = await this.service.listCompanies(req.user.organizationId, req.query);
-      res.json(ApiResponse.success('Companies retrieved successfully.', { companies }, meta));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getCompany = async (req, res, next) => {
-    try {
-      const company = await this.service.getCompany(req.params.id, req.user.organizationId);
-      res.json(ApiResponse.success('Company retrieved successfully.', company));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  createCompany = async (req, res, next) => {
-    try {
-      const company = await this.service.createCompany(req.user.organizationId, req.body, req);
-      res.status(201).json(ApiResponse.success('Company created successfully.', company));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updateCompany = async (req, res, next) => {
-    try {
-      const company = await this.service.updateCompany(req.params.id, req.user.organizationId, req.body, req);
-      res.json(ApiResponse.success('Company updated successfully.', company));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  deleteCompany = async (req, res, next) => {
-    try {
-      await this.service.deleteCompany(req.params.id, req.user.organizationId, req);
-      res.json(ApiResponse.success('Company deleted successfully.'));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  restoreCompany = async (req, res, next) => {
-    try {
-      const company = await this.service.restoreCompany(req.params.id, req.user.organizationId, req);
-      res.json(ApiResponse.success('Company restored successfully.', company));
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  // --------------------------------------------------
   // Branch
   // --------------------------------------------------
 

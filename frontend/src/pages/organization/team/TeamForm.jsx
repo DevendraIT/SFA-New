@@ -141,7 +141,7 @@ export default function TeamForm({ team, onClose, onSuccess }) {
             <option value="">Select a branch</option>
             {branches.map((b) => (
               <option key={b.id} value={b.id}>
-                {b.name} {b.company?.name ? `(${b.company.name})` : ""}
+                {b.name} {b.organization?.name ? `(${b.organization.name})` : ""}
               </option>
             ))}
           </select>

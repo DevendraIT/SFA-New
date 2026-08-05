@@ -24,7 +24,7 @@ export default function FieldForceDashboardWrapper() {
       role === USER_ROLES.SUPER_ADMIN ||
       role === USER_ROLES.ADMIN ||
       role?.toLowerCase().includes("super") ||
-      (role?.toLowerCase().includes("admin") && !role?.toLowerCase().includes("company"))
+      (role?.toLowerCase().includes("admin") && !role?.toLowerCase().includes("organization"))
     );
   }, [user]);
 

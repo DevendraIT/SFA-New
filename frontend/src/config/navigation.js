@@ -25,6 +25,7 @@ import {
   Activity,
   FileText,
   User,
+  MapPin,
 } from "lucide-react";
 
 const navigation = [
@@ -39,8 +40,8 @@ const navigation = [
     icon: Building2,
     children: [
       {
-        title: "Company",
-        path: "/organization/company",
+        title: "Organization",
+        path: "/organization/organization",
         icon: Building,
       },
       {
@@ -52,6 +53,11 @@ const navigation = [
         title: "Department",
         path: "/organization/department",
         icon: LayoutGrid,
+      },
+      {
+        title: "Territory",
+        path: "/organization/territory",
+        icon: MapPin,
       },
       {
         title: "Teams",

@@ -116,7 +116,7 @@ export class SalesOrderService {
       }
 
       // Generate order number
-      const orderNumber = await this.generateOrderNumber(createDto.companyId);
+      const orderNumber = await this.generateOrderNumber(createDto.organizationId);
 
       // Calculate totals
       const totals = OrderCalculations.calculateOrderTotals(createDto.items);
@@ -415,22 +415,22 @@ export class SalesOrderService {
   /**
    * Generate unique order number
    */
-  async generateOrderNumber(companyId) {
+  async generateOrderNumber(organizationId) {
     // TODO: Get next sequence from database
-    const sequence = await this.salesOrderRepository.getNextSequence(companyId);
-    const companyCode = await this.getCompanyCode(companyId);
+    const sequence = await this.salesOrderRepository.getNextSequence(organizationId);
+    const companyCode = await this.getCompanyCode(organizationId);
     return OrderNumberGenerator.generateOrderNumber(companyCode, sequence);
   }
 
   /**
    * Get company code for order number generation
    */
-  async getCompanyCode(companyId) {
-    if (!companyId) return 'SO';
+  async getCompanyCode(organizationId) {
+    if (!organizationId) return 'SO';
     try {
       const { prisma } = await import('../../../config/database.js');
       const company = await prisma.company.findUnique({
-        where: { id: companyId },
+        where: { id: organizationId },
         select: { code: true }
       });
       return company?.code || 'SO';

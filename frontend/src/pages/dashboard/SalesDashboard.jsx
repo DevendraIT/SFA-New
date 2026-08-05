@@ -87,14 +87,14 @@ const { user } = useAuth();
       {/* Organization Information Card */}
       <SectionCard
         title="Organization Information"
-        subtitle="Your assigned company, branch, department, and reporting manager details"
+        subtitle="Your assigned organization, branch, department, and reporting manager details"
         icon={Building2}
         iconColor="text-indigo-600"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Company</span>
-            <span className="text-sm font-bold text-slate-800">{organizationInfo.companyName || user?.company?.name || user?.branch?.company?.name || "Assigned Company"}</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Organization</span>
+            <span className="text-sm font-bold text-slate-800">{organizationInfo.organizationName || user?.organization?.name || user?.branch?.organization?.name || "Assigned Organization"}</span>
           </div>
 
           <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">

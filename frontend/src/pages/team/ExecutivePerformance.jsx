@@ -5,7 +5,7 @@ import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, CartesianGrid, XAx
 import useTeamMembers from "../../hooks/useTeamMembers";
 import useExecutiveData from "../../hooks/useExecutiveData";
 import { useAuth } from "../../context/AuthContext";
-import { getCompanyOverview, getTargets } from "../../api/targetPerformance.api";
+import { getOrganizationOverview, getTargets } from "../../api/targetPerformance.api";
 import ExecutivePerformanceCard from "../../components/team/ExecutivePerformanceCard";
 import ExecutivePerformanceChart from "../../components/team/ExecutivePerformanceChart";
 import ErrorState from "../../components/dashboard/ErrorState";
@@ -64,7 +64,7 @@ export default function ExecutivePerformance() {
   const loadOrgOverview = async () => {
     try {
       setOrgLoading(true);
-      const res = await getCompanyOverview();
+      const res = await getOrganizationOverview();
       setOrgData(res.data?.data || res.data);
     } catch (err) {
       console.warn("Falling back to aggregated target metrics:", err);
@@ -99,9 +99,9 @@ export default function ExecutivePerformance() {
   // Render Super Admin Organization-Wide Overview
   if (isSuperAdmin) {
     const overview = orgData || {};
-    const companyTarget = overview.companyTarget || 800000;
-    const companyAchieved = overview.companyAchieved || 710000;
-    const completionRate = overview.completionPercentage || Math.round((companyAchieved / companyTarget) * 100);
+    const organizationTarget = overview.organizationTarget || 800000;
+    const organizationAchieved = overview.organizationAchieved || 710000;
+    const completionRate = overview.completionPercentage || Math.round((organizationAchieved / organizationTarget) * 100);
     const executives = overview.executivesPerformance || [];
     const managers = overview.managersPerformance || [];
     const teamComparison = overview.teamComparison || [];
@@ -112,7 +112,7 @@ export default function ExecutivePerformance() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <p className="text-sm text-slate-500 font-medium">Organization-Wide Target & Performance</p>
-            <h1 className="text-3xl font-bold text-slate-900 mt-1">Company Performance Overview</h1>
+            <h1 className="text-3xl font-bold text-slate-900 mt-1">Organization Performance Overview</h1>
             <p className="text-slate-500 mt-1">Aggregated target achievement, executive performance, and team comparison</p>
           </div>
           <button
@@ -123,26 +123,26 @@ export default function ExecutivePerformance() {
           </button>
         </div>
 
-        {/* Company-Wide KPI Grid */}
+        {/* Organization-Wide KPI Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-200 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between text-blue-700">
-              <span className="text-xs font-bold uppercase tracking-wider">Company Target</span>
+              <span className="text-xs font-bold uppercase tracking-wider">Organization Target</span>
               <Target size={20} />
             </div>
             <p className="text-2xl font-black text-slate-900 mt-2">
-              ₹{Number(companyTarget).toLocaleString("en-IN")}
+              ₹{Number(organizationTarget).toLocaleString("en-IN")}
             </p>
             <p className="text-xs text-slate-500 mt-1">Organization-wide quota</p>
           </div>
 
           <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-200 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between text-emerald-700">
-              <span className="text-xs font-bold uppercase tracking-wider">Company Achievement</span>
+              <span className="text-xs font-bold uppercase tracking-wider">Organization Achievement</span>
               <Award size={20} />
             </div>
             <p className="text-2xl font-black text-slate-900 mt-2">
-              ₹{Number(companyAchieved).toLocaleString("en-IN")}
+              ₹{Number(organizationAchieved).toLocaleString("en-IN")}
             </p>
             <p className="text-xs text-slate-500 mt-1">Total revenue achieved</p>
           </div>

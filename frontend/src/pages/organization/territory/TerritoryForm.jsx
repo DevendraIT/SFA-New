@@ -1,28 +1,32 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import departmentService from "../../../services/department.service";
-import branchService from "../../../services/branch.service";
+import territoryService from "../../../services/territory.service";
+import useDepartments from "../../../hooks/useDepartments";
 import { Loader2 } from "lucide-react";
 
-export default function DepartmentForm({ department, onClose, onSuccess }) {
-  const isEdit = !!department;
+export default function TerritoryForm({ territory, onClose, onSuccess }) {
+  const isEdit = !!territory;
 
   const [form, setForm] = useState({
+    departmentId: "",
     name: "",
     code: "",
     description: "",
   });
+  
+  const { departments, loading: loadingDepartments } = useDepartments();
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (department) {
+    if (territory) {
       setForm({
-        name: department.name || "",
-        code: department.code || "",
-        description: department.description || "",
+        departmentId: territory.departmentId || "",
+        name: territory.name || "",
+        code: territory.code || "",
+        description: territory.description || "",
       });
     }
-  }, [department]);
+  }, [territory]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,26 +36,29 @@ export default function DepartmentForm({ department, onClose, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    e.preventDefault();
+    if (!form.departmentId) {
+      toast.error("Please select a department");
+      return;
+    }
     if (!form.name.trim()) {
-      toast.error("Department name is required");
+      toast.error("Territory name is required");
       return;
     }
 
     try {
       setSubmitting(true);
       if (isEdit) {
-        await departmentService.updateDepartment(department.id, form);
-        toast.success("Department updated successfully");
+        await territoryService.updateTerritory(territory.id, form);
+        toast.success("Territory updated successfully");
       } else {
-        await departmentService.createDepartment(form);
-        toast.success("Department created successfully");
+        await territoryService.createTerritory(form);
+        toast.success("Territory created successfully");
       }
       onSuccess?.();
       onClose?.();
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Failed to save department");
+      toast.error(err?.response?.data?.message || "Failed to save territory");
     } finally {
       setSubmitting(false);
     }
@@ -59,9 +66,32 @@ export default function DepartmentForm({ department, onClose, onSuccess }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div>
+        <label className="mb-1.5 block text-sm font-medium text-slate-700">
+          Department <span className="text-red-500">*</span>
+        </label>
+        {loadingDepartments ? (
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <Loader2 size={16} className="animate-spin" />
+            Loading departments...
+          </div>
+        ) : (
+          <select
+            name="departmentId"
+            value={form.departmentId}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">Select a department</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name} {d.code ? `(${d.code})` : ""}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
 
-
-      {/* Basic Information */}
       <div className="rounded-xl border border-slate-200 p-5">
         <h3 className="mb-4 text-lg font-semibold text-slate-800">
           Basic Information
@@ -69,27 +99,27 @@ export default function DepartmentForm({ department, onClose, onSuccess }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-slate-700">
-              Department Name <span className="text-red-500">*</span>
+              Territory Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="Enter department name"
+              placeholder="Enter territory name"
               className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-medium text-slate-700">
-              Department Code
+              Territory Code
             </label>
             <input
               type="text"
               name="code"
               value={form.code}
               onChange={(e) => setForm((prev) => ({ ...prev, code: e.target.value.toUpperCase() }))}
-              placeholder="e.g. DEP-001"
+              placeholder="e.g. TER-001"
               className="w-full rounded-xl border border-slate-300 px-4 py-3 uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -103,13 +133,12 @@ export default function DepartmentForm({ department, onClose, onSuccess }) {
             value={form.description}
             onChange={handleChange}
             rows={3}
-            placeholder="Department description..."
+            placeholder="Territory description..."
             className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           ></textarea>
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex justify-end gap-3">
         <button
           type="button"
@@ -124,10 +153,9 @@ export default function DepartmentForm({ department, onClose, onSuccess }) {
           className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700 transition disabled:opacity-60"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
-          {isEdit ? "Update Department" : "Create Department"}
+          {isEdit ? "Update Territory" : "Create Territory"}
         </button>
       </div>
     </form>
   );
 }
-

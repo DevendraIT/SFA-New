@@ -8,12 +8,16 @@ export class TerritoryRepository {
 
   // Standard includes for territory queries
   #territoryIncludes = {
-    company: { 
+    organization: { 
       select: { 
         id: true, 
         name: true 
       } 
     },
+    department: {
+      select: { id: true, name: true }
+    },
+    branches: { orderBy: { name: 'asc' } },
     teams: { 
       orderBy: { name: 'asc' } 
     },
@@ -26,12 +30,9 @@ export class TerritoryRepository {
   };
 
   // Build where clause for territory queries
-  #buildWhereClause(organizationId, { search, companyId } = {}) {
+  #buildWhereClause(organizationId, { search } = {}) {
     const where = { organizationId };
     
-    if (companyId) {
-      where.companyId = companyId;
-    }
     
     if (search) {
       where.name = { 
@@ -49,11 +50,10 @@ export class TerritoryRepository {
       take = 20,
       search,
       sortBy = 'createdAt',
-      sortOrder = 'desc',
-      companyId
+      sortOrder = 'desc'
     } = options;
 
-    const where = this.#buildWhereClause(organizationId, { search, companyId });
+    const where = this.#buildWhereClause(organizationId, { search });
 
     const [territories, total] = await Promise.all([
       prisma.territory.findMany({
@@ -62,7 +62,7 @@ export class TerritoryRepository {
         take,
         orderBy: { [sortBy]: sortOrder },
         include: {
-          company: { 
+          organization: { 
             select: { 
               id: true, 
               name: true 
@@ -92,11 +92,22 @@ export class TerritoryRepository {
     });
   }
 
+  async findByCode(organizationId, code) {
+    return prisma.territory.findUnique({
+      where: { 
+        organizationId_code: { 
+          organizationId, 
+          code 
+        } 
+      },
+    });
+  }
+
   async create(data) {
     return prisma.territory.create({ 
       data,
       include: {
-        company: { 
+        organization: { 
           select: { 
             id: true, 
             name: true 
@@ -117,7 +128,7 @@ export class TerritoryRepository {
       where: { id },
       data,
       include: {
-        company: { 
+        organization: { 
           select: { 
             id: true, 
             name: true 
