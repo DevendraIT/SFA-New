@@ -59,6 +59,15 @@ export class OrganizationRepository {
         name: true,
         slug: true,
         isActive: true,
+        email: true,
+        phone: true,
+        address: true,
+        city: true,
+        state: true,
+        country: true,
+        postalCode: true,
+        gstNumber: true,
+        panNumber: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -120,6 +129,15 @@ export class OrganizationRepository {
         name: true,
         slug: true,
         isActive: true,
+        email: true,
+        phone: true,
+        address: true,
+        city: true,
+        state: true,
+        country: true,
+        postalCode: true,
+        gstNumber: true,
+        panNumber: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -135,6 +153,15 @@ export class OrganizationRepository {
         name: true,
         slug: true,
         isActive: true,
+        email: true,
+        phone: true,
+        address: true,
+        city: true,
+        state: true,
+        country: true,
+        postalCode: true,
+        gstNumber: true,
+        panNumber: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -150,35 +177,31 @@ export class OrganizationRepository {
 
   async getStatistics(organizationId) {
     const [
-      companiesCount,
       branchesCount,
       departmentsCount,
       territoriesCount,
       activeUsersCount,
       inactiveUsersCount,
     ] = await Promise.all([
-      prisma.company.count({
+      prisma.branch.count({
         where: { organizationId },
       }),
-      prisma.branch.count({
-        where: { company: { organizationId } },
-      }),
       prisma.department.count({
-        where: { branch: { company: { organizationId } } },
+        where: { organizationId },
       }),
       prisma.territory.count({
         where: { organizationId },
       }),
       prisma.user.count({
-        where: { organizationId, isActive: true, deletedAt: null },
+        where: { organizationId, isActive: true },
       }),
       prisma.user.count({
-        where: { organizationId, isActive: false, deletedAt: null },
+        where: { organizationId, isActive: false },
       }),
     ]);
 
     return {
-      companies: companiesCount,
+      companies: 0,
       branches: branchesCount,
       departments: departmentsCount,
       territories: territoriesCount,

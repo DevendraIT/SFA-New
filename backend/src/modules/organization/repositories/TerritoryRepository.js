@@ -65,11 +65,26 @@ export class TerritoryRepository {
           organization: { 
             select: { 
               id: true, 
-              name: true 
+              name: true,
+              slug: true
             } 
+          },
+          department: {
+            select: { id: true, name: true, code: true }
+          },
+          branches: {
+            select: { id: true, name: true, code: true, city: true }
+          },
+          teams: {
+            select: { id: true, name: true, description: true }
+          },
+          users: {
+            where: { deletedAt: null },
+            select: { id: true, firstName: true, lastName: true, email: true, phoneNumber: true, isActive: true }
           },
           _count: { 
             select: { 
+              branches: true,
               teams: true, 
               users: true 
             } 

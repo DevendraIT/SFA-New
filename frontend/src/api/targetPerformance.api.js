@@ -7,4 +7,4 @@ export const getLeaderboard = (params = {}) =>
   api.get("/target-performance/leaderboard", { params });
 
 export const getOrganizationOverview = () =>
-  api.get("/target-performance/organization-overview");
+  api.get("/target-performance/company-overview");

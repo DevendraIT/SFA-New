@@ -448,14 +448,22 @@ export class SalesOrderService {
     // Add organization context
     filters.organizationId = userContext.organizationId;
 
-    // Apply user-specific filters based on roles and permissions
-    if (!userContext.roles?.includes('Administrator')) {
-      // Non-admins can only see orders in their territory/branch
-      if (userContext.territoryId) {
-        filters.territoryId = userContext.territoryId;
-      }
+    const userRoles = (userContext.roles || []).map(r => 
+      typeof r === 'string' ? r : (r.role?.name || r.name || '')
+    );
+
+    const isGlobalAdmin = userRoles.some(r => 
+      ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
+    );
+
+    // Super Admin / Company Admin / Head of Sales see all orders in org.
+    // Sales Managers & Sales Executives only see sales orders for their assigned branch.
+    if (!isGlobalAdmin) {
       if (userContext.branchId) {
         filters.branchId = userContext.branchId;
+      }
+      if (userContext.territoryId && !userContext.branchId) {
+        filters.territoryId = userContext.territoryId;
       }
     }
 
@@ -466,23 +474,24 @@ export class SalesOrderService {
    * Validate user access to order
    */
   validateUserAccess(order, userContext, operation) {
-    // Administrator bypass
-    if (userContext.roles?.includes('Administrator')) {
+    const userRoles = (userContext.roles || []).map(r => 
+      typeof r === 'string' ? r : (r.role?.name || r.name || '')
+    );
+
+    const isGlobalAdmin = userRoles.some(r => 
+      ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
+    );
+
+    if (isGlobalAdmin) {
       return true;
     }
 
-    // Check organization context
-    if (order.organizationId !== userContext.organizationId) {
-      throw AppError.forbidden('Access denied: Order belongs to different organization');
+    if (order.organizationId && userContext.organizationId && order.organizationId !== userContext.organizationId) {
+      throw AppError.forbidden('Access denied: Order belongs to a different organization');
     }
 
-    // Check ownership for sensitive operations
-    if (['update', 'delete'].includes(operation) && order.ownerId !== userContext.userId) {
-      // Check if user has override permissions
-      const hasOverridePermission = userContext.permissions?.includes(`override:orders_${operation}`);
-      if (!hasOverridePermission) {
-        throw AppError.forbidden(`Access denied: You can only ${operation} your own orders`);
-      }
+    if (userContext.branchId && order.branchId && order.branchId !== userContext.branchId) {
+      throw AppError.forbidden('Access denied: Order belongs to a different branch');
     }
 
     return true;

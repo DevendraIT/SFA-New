@@ -32,19 +32,19 @@ export default function DepartmentForm({ department, onClose, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    e.preventDefault();
-    if (!form.name.trim()) {
-      toast.error("Department name is required");
-      return;
-    }
+    const payload = {
+      name: form.name.trim(),
+      ...(form.code?.trim() ? { code: form.code.trim().toUpperCase() } : {}),
+      ...(form.description?.trim() ? { description: form.description.trim() } : {}),
+    };
 
     try {
       setSubmitting(true);
       if (isEdit) {
-        await departmentService.updateDepartment(department.id, form);
+        await departmentService.updateDepartment(department.id, payload);
         toast.success("Department updated successfully");
       } else {
-        await departmentService.createDepartment(form);
+        await departmentService.createDepartment(payload);
         toast.success("Department created successfully");
       }
       onSuccess?.();

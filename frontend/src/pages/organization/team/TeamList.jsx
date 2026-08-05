@@ -50,6 +50,14 @@ export default function TeamList() {
     return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
   }, [user]);
 
+  const canManageTeam = useMemo(() => {
+    if (!user) return true;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return !roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  }, [user]);
+
   const { teams, loading, search, setSearch, reload } = useTeams({
     debounce: true,
   });
@@ -61,7 +69,7 @@ export default function TeamList() {
   const [viewTeam, setViewTeam] = useState(null);
 
   const handleDelete = async (team) => {
-    if (isHeadOfSales) return;
+    if (!canManageTeam) return;
     const confirmed = window.confirm(`Delete "${team.name}" ?`);
     if (!confirmed) return;
 
@@ -215,16 +223,18 @@ export default function TeamList() {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setSelectedTeam(null);
-            setShowModal(true);
-          }}
-          className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700 transition"
-        >
-          <Plus size={18} />
-          Create Team
-        </button>
+        {canManageTeam && (
+          <button
+            onClick={() => {
+              setSelectedTeam(null);
+              setShowModal(true);
+            }}
+            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700 transition"
+          >
+            <Plus size={18} />
+            Create Team
+          </button>
+        )}
       </div>
 
       {/* Search */}
@@ -269,12 +279,14 @@ export default function TeamList() {
                     <p className="mt-2 text-slate-500">
                       Create your first team to get started.
                     </p>
-                    <button
-                      onClick={() => setShowModal(true)}
-                      className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
-                    >
-                      Create Team
-                    </button>
+                    {canManageTeam && (
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
+                      >
+                        Create Team
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -323,12 +335,16 @@ export default function TeamList() {
                       <button onClick={() => setViewTeam(team)} className="rounded-lg border p-2 hover:bg-slate-100" title="View">
                         <Eye size={17} />
                       </button>
-                      <button onClick={() => { setSelectedTeam(team); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
-                        <Pencil size={17} />
-                      </button>
-                      <button onClick={() => handleDelete(team)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
-                        <Trash2 size={17} />
-                      </button>
+                      {canManageTeam && (
+                        <>
+                          <button onClick={() => { setSelectedTeam(team); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
+                            <Pencil size={17} />
+                          </button>
+                          <button onClick={() => handleDelete(team)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
+                            <Trash2 size={17} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -358,19 +374,131 @@ export default function TeamList() {
         </div>
       )}
 
-      {/* View Modal */}
+      {/* Rich Enterprise Team View Details Modal */}
       {viewTeam && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setViewTeam(null)}>
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <button type="button" onClick={() => setViewTeam(null)} className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-              <X size={22} />
-            </button>
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewTeam.name}</h2>
-            <div className="space-y-3 text-sm text-slate-700">
-              <p><strong>Branch:</strong> {viewTeam.branch?.name || "-"}</p>
-              <p><strong>Department:</strong> {viewTeam.department?.name || "-"}</p>
-              <p><strong>Organization:</strong> {viewTeam.branch?.organization?.name || "-"}</p>
-              <p><strong>Users:</strong> {viewTeam._count?.users ?? 0}</p>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={() => setViewTeam(null)}
+        >
+          <div
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Hero Banner Header */}
+            <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 md:p-8 relative">
+              <button
+                type="button"
+                onClick={() => setViewTeam(null)}
+                className="absolute right-5 top-5 rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition"
+              >
+                <X size={20} />
+              </button>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-indigo-300">
+                    <UsersRound size={32} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-indigo-300">Team Details</span>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        Active Team
+                      </span>
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mt-1">{viewTeam.name}</h2>
+                    <p className="text-sm text-indigo-200 mt-0.5">{viewTeam.description || "Field Execution & Sales Unit"}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-indigo-200 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
+                    Branch: {viewTeam.branch?.name || "Mohit Branch"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-slate-50 border-b border-slate-100">
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Assigned Branch</span>
+                <span className="block text-base font-bold text-slate-800 mt-1 truncate">{viewTeam.branch?.name || "-"}</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Department</span>
+                <span className="block text-base font-bold text-slate-800 mt-1 truncate">{viewTeam.department?.name || "-"}</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Territory</span>
+                <span className="block text-base font-bold text-indigo-600 mt-1 truncate">{viewTeam.territory?.name || "-"}</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Team Strength</span>
+                <span className="block text-base font-bold text-emerald-600 mt-1">{viewTeam._count?.users ?? viewTeam.users?.length ?? 0} Members</span>
+              </div>
+            </div>
+
+            {/* Scrollable Main Content */}
+            <div className="p-6 md:p-8 space-y-6 max-h-[55vh] overflow-y-auto">
+              {/* General Info */}
+              <div>
+                <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                  <UsersRound className="w-4 h-4 text-indigo-600" />
+                  General Team Attributes
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm">
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-400 uppercase">Team ID</span>
+                    <span className="font-mono text-xs text-slate-700 bg-slate-100 px-2 py-1 rounded inline-block mt-1">{viewTeam.id}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-400 uppercase">Parent Organization</span>
+                    <span className="font-semibold text-slate-800 mt-1 block">{viewTeam.branch?.organization?.name || "IT Software"}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-400 uppercase">Description</span>
+                    <span className="font-semibold text-slate-800 mt-1 block">{viewTeam.description || "N/A"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Team Members List */}
+              {viewTeam.users?.length > 0 && (
+                <div>
+                  <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-indigo-600" />
+                    Team Roster ({viewTeam.users.length})
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {viewTeam.users.map((u) => (
+                      <div key={u.id} className="p-3 rounded-xl border border-slate-200 bg-white flex items-center justify-between shadow-xs">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+                            {u.firstName?.[0]}{u.lastName?.[0]}
+                          </div>
+                          <div>
+                            <span className="font-semibold text-slate-800 text-sm">{u.firstName} {u.lastName}</span>
+                            <span className="block text-xs text-slate-500">{u.email}</span>
+                          </div>
+                        </div>
+                        <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                          {u.roles?.[0]?.role?.name || "Executive"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200/80 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setViewTeam(null)}
+                className="px-6 py-2.5 rounded-xl bg-slate-800 text-white font-medium text-sm hover:bg-slate-900 transition"
+              >
+                Close Details
+              </button>
             </div>
           </div>
         </div>

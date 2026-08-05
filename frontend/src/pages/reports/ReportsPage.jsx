@@ -55,10 +55,10 @@ export default function ReportsPage() {
   const taskCompletionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
   const visitCoverageRate = visits.length > 0 ? Math.round((completedVisits / visits.length) * 100) : 0;
 
-  const totalRevenue = analytics?.totalRevenue || 710000;
-  const yearlyRevenue = analytics?.yearlyRevenue || 1200000;
-  const orderSummary = analytics?.orderSummary || { totalOrders: 21, approvedOrders: 15, pendingOrders: 4, cancelledOrders: 2 };
-  const customerSummary = analytics?.customerSummary || { totalCustomers: 45, activeCustomers: 36 };
+  const totalRevenue = analytics?.totalRevenue ?? 0;
+  const yearlyRevenue = analytics?.yearlyRevenue ?? totalRevenue;
+  const orderSummary = analytics?.orderSummary || { totalOrders: 0, approvedOrders: 0, pendingOrders: 0, cancelledOrders: 0 };
+  const customerSummary = analytics?.customerSummary || { totalCustomers: 0, activeCustomers: 0 };
   const topProducts = analytics?.topSellingProducts || [];
   const topEmployees = analytics?.topPerformingEmployees || [];
 

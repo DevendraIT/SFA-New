@@ -93,6 +93,16 @@ export default function SuperAdminDashboard() {
     return `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
   }, [user]);
 
+  const organizationName = useMemo(() => {
+    return (
+      user?.organization?.name ||
+      user?.organizationName ||
+      dashboard?.organizationInfo?.name ||
+      dashboard?.recentOrganizations?.[0]?.name ||
+      "Acme Corporation"
+    );
+  }, [user, dashboard]);
+
   if (loading) {
     return <DashboardGridSkeleton />;
   }
@@ -204,25 +214,46 @@ export default function SuperAdminDashboard() {
       transition={{ duration: 0.3 }}
       className="space-y-8"
     >
-      {/* Header */}
-      <DashboardHeader
-        welcomeText={`Welcome back 👋, ${fullName || "Admin"}`}
-        title="Super Admin Executive Dashboard"
-        subtitle="Enterprise Sales Force Automation Platform — System-Wide Control Center"
-        onRefresh={refresh}
-      />
+      {/* Super Admin Banner Header with Organization Name */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 p-6 rounded-2xl text-white shadow-lg border border-indigo-700/50">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+              <Building2 className="w-3.5 h-3.5 text-indigo-300" />
+              {organizationName}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+              Super Admin Control Center
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            Super Admin Executive Dashboard
+          </h1>
+          <p className="text-sm text-indigo-200/90">
+            Welcome back 👋, <span className="font-semibold text-white">{fullName || "Admin"}</span> — Live enterprise metrics for <span className="font-bold text-amber-300">{organizationName}</span>
+          </p>
+        </div>
+
+        <button
+          onClick={refresh}
+          className="self-start md:self-center inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition border border-white/20 backdrop-blur-sm shadow-sm cursor-pointer"
+        >
+          <Sparkles className="w-4 h-4 text-amber-300" />
+          Refresh Data
+        </button>
+      </div>
 
       {/* Read-Only Organization Overview Card with Vibrant Styling */}
       <SectionCard
         title="Organization Overview & Hierarchy"
-        subtitle="Live organization structure, organizations, branches, departments, and user totals"
+        subtitle="Live organization structure, branches, departments, and user totals"
         icon={Building2}
         iconColor="text-blue-600"
       >
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
             { label: "Organizations", value: orgOverview.organizations ?? 0, icon: Building2, color: "from-blue-500/10 to-indigo-500/10 text-blue-600 border-blue-200" },
-            { label: "Organizations", value: orgOverview.organizations ?? 0, icon: Building, color: "from-purple-500/10 to-violet-500/10 text-purple-600 border-purple-200" },
+            // { label: "Organizations", value: orgOverview.organizations ?? 0, icon: Building, color: "from-purple-500/10 to-violet-500/10 text-purple-600 border-purple-200" },
             { label: "Branches", value: orgOverview.branches ?? 0, icon: GitBranch, color: "from-cyan-500/10 to-blue-500/10 text-cyan-600 border-cyan-200" },
             { label: "Departments", value: orgOverview.departments ?? 0, icon: Layers, color: "from-amber-500/10 to-orange-500/10 text-amber-600 border-amber-200" },
             { label: "Teams", value: orgOverview.teams ?? 0, icon: Briefcase, color: "from-emerald-500/10 to-teal-500/10 text-emerald-600 border-emerald-200" },
@@ -248,30 +279,30 @@ export default function SuperAdminDashboard() {
 
       {/* KPI Stats Grid */}
       <StatsGrid>
-        <StatCard
+        {/* <StatCard
           title="Total Users"
           value={totalUsers}
           icon={Users}
           color="bg-indigo-500"
-        />
+        /> */}
         <StatCard
           title="Assigned Customers"
           value={totalCustomers}
           icon={UserCheck}
           color="bg-blue-500"
         />
-        <StatCard
+        {/* <StatCard
           title="Total Organizations"
           value={totalOrganizations}
           icon={Building2}
           color="bg-purple-500"
-        />
-        <StatCard
+        /> */}
+        {/* <StatCard
           title="Total Branches"
           value={totalBranches}
           icon={Building}
           color="bg-sky-500"
-        />
+        /> */}
         <StatCard
           title="Total Sales Orders"
           value={totalSalesOrders}
@@ -279,17 +310,24 @@ export default function SuperAdminDashboard() {
           color="bg-cyan-500"
         />
         <StatCard
+          title="Today's Revenue"
+          value={revenue}
+          icon={IndianRupee}
+          color="bg-amber-500"
+          format="currency"
+        />
+        {/* <StatCard
           title="Today's Visits"
           value={todayVisits}
           icon={Clock3}
           color="bg-amber-500"
-        />
-        <StatCard
+        /> */}
+        {/* <StatCard
           title="Completed Visits"
           value={completedVisits}
           icon={ClipboardCheck}
           color="bg-teal-500"
-        />
+        /> */}
         <StatCard
           title="Total Revenue"
           value={revenue}
@@ -386,14 +424,14 @@ export default function SuperAdminDashboard() {
       </div>
 
       {/* Performance Section */}
-      <div>
+      {/* <div>
         <PerformanceCard
           title="Field Force Performance Analytics"
           subtitle="Overall team productivity and target achievement metrics"
           icon={Activity}
           metrics={performanceMetrics}
         />
-      </div>
+      </div> */}
 
       {/* Activity & Notifications Row */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -427,7 +465,7 @@ export default function SuperAdminDashboard() {
       </div>
 
       {/* Quick Actions & Pending Approvals Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SectionCard title="Quick Management Actions" subtitle="System administration shortcuts">
           <QuickActions actions={quickActions} />
         </SectionCard>
@@ -456,7 +494,7 @@ export default function SuperAdminDashboard() {
             ))}
           </div>
         </SectionCard>
-      </div>
+      </div> */}
 
       {/* Footer */}
       <footer className="text-center text-slate-500 text-xs py-4 border-t border-slate-200">

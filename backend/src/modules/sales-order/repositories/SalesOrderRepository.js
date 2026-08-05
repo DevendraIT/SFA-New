@@ -52,11 +52,7 @@ export class SalesOrderRepository {
           orderBy,
           skip: isNaN(skip) ? 0 : skip,
           take: isNaN(take) ? 20 : take,
-          include: {
-            customer: true,
-            owner: true,
-            items: true,
-          },
+          include: this.buildIncludeClause(),
         }),
         prisma.order.count({ where }),
       ]);
@@ -314,10 +310,10 @@ export class SalesOrderRepository {
     if (filters.organizationId) where.organizationId = filters.organizationId;
     if (filters.status) where.status = filters.status;
     if (filters.customerId) where.customerId = filters.customerId;
-    if (filters.organizationId) where.organizationId = filters.organizationId;
-    if (filters.branchId) where.branchId = filters.branchId;
-    if (filters.territoryId) where.territoryId = filters.territoryId;
     if (filters.ownerId) where.ownerId = filters.ownerId;
+    if (filters.branchId) {
+      where.owner = { branchId: filters.branchId };
+    }
 
     if (filters.fromDate || filters.toDate) {
       where.createdAt = {};
@@ -326,7 +322,6 @@ export class SalesOrderRepository {
     }
 
     if (searchTerm) {
-      // Very basic search, OrderQueryHelper typically has more robust options
       where.OR = [
         { orderNumber: { contains: searchTerm, mode: 'insensitive' } }
       ];
@@ -340,9 +335,24 @@ export class SalesOrderRepository {
    */
   buildIncludeClause(includeOptions = {}) {
     const include = {
-      items: true,
-      customer: { select: { id: true, name: true, email: true } },
-      owner: { select: { id: true, firstName: true, lastName: true, email: true } },
+      items: {
+        include: {
+          product: { select: { id: true, name: true, sku: true, price: true, description: true } }
+        }
+      },
+      customer: { select: { id: true, name: true, email: true, phone: true, address: true, industry: true } },
+      owner: { 
+        select: { 
+          id: true, 
+          firstName: true, 
+          lastName: true, 
+          email: true, 
+          phoneNumber: true, 
+          branchId: true, 
+          branch: { select: { id: true, name: true } } 
+        } 
+      },
+      organization: { select: { id: true, name: true } }
     };
 
     if (includeOptions.includeActivities) {

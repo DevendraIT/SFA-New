@@ -50,15 +50,8 @@ export default function Login() {
 
       const payload = response.data;
 
-      if (!payload.emailVerified) {
-        toast("Please verify your email.");
-
-        navigate("/verify-email", {
-          state: {
-            email: payload.email,
-          },
-        });
-
+      if (payload?.emailVerified === false && !payload?.tokens?.accessToken && !payload?.user) {
+        toast.error("Please verify your email address.");
         return;
       }
 

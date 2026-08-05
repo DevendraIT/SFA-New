@@ -235,18 +235,21 @@ export class DashboardRepository {
   async getHeadOfSalesPerformanceAnalytics(organizationId) {
     try {
       const orderWhere = { organizationId, isDeleted: false };
-      if (organizationId) {
-        orderWhere.owner = { branch: { organizationId } };
-      }
+
+      const now = new Date();
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
       const [orders, visits, customers] = await Promise.all([
         prisma.order.findMany({
           where: orderWhere,
           select: {
             id: true,
+            orderNumber: true,
+            orderName: true,
             totalAmount: true,
             status: true,
             createdAt: true,
+            customer: { select: { id: true, name: true } },
             owner: {
               select: {
                 id: true,
@@ -254,14 +257,23 @@ export class DashboardRepository {
                 lastName: true,
                 branch: { select: { name: true } },
                 department: { select: { name: true } },
+                territory: { select: { name: true } },
                 manager: { select: { firstName: true, lastName: true } },
                 roles: { select: { role: { select: { name: true } } } },
               }
+            },
+            items: {
+              select: {
+                quantity: true,
+                unitPrice: true,
+                product: { select: { id: true, name: true, sku: true } }
+              }
             }
-          }
+          },
+          orderBy: { createdAt: 'desc' }
         }),
         prisma.visit.findMany({
-          where: organizationId ? { organizationId, user: { branch: { organizationId } } } : { organizationId },
+          where: organizationId ? { organizationId } : {},
           select: {
             id: true,
             userId: true,
@@ -270,7 +282,7 @@ export class DashboardRepository {
           }
         }),
         prisma.customer.findMany({
-          where: organizationId ? { OR: [{ organizationId, organizationId }, { organizationId, createdBy: { branch: { organizationId } } }] } : { organizationId },
+          where: organizationId ? { organizationId } : {},
           select: { id: true, name: true, createdAt: true }
         })
       ]);
@@ -278,23 +290,33 @@ export class DashboardRepository {
       const totalCustomers = customers.length;
       const totalOrders = orders.length;
       let totalRevenue = 0;
+      let monthlyRevenue = 0;
       let approvedOrdersCount = 0;
 
       const branchMap = {};
       const departmentMap = {};
+      const territoryMap = {};
       const managerMap = {};
       const executiveMap = {};
       const monthlyRevenueMap = {};
+      const monthlyOrderCountMap = {};
+      const productMap = {};
+      const customerMap = {};
 
       for (const o of orders) {
         const amt = o.totalAmount || 0;
         totalRevenue += amt;
+        if (new Date(o.createdAt) >= firstDayOfMonth) {
+          monthlyRevenue += amt;
+        }
+
         if (o.status === 'APPROVED' || o.status === 'COMPLETED') {
           approvedOrdersCount++;
         }
 
         const monthKey = new Date(o.createdAt).toLocaleString('default', { month: 'short' });
         monthlyRevenueMap[monthKey] = (monthlyRevenueMap[monthKey] || 0) + amt;
+        monthlyOrderCountMap[monthKey] = (monthlyOrderCountMap[monthKey] || 0) + 1;
 
         const bName = o.owner?.branch?.name || 'Main Branch';
         if (!branchMap[bName]) branchMap[bName] = { revenue: 0, orders: 0, customers: 0 };
@@ -306,6 +328,11 @@ export class DashboardRepository {
         departmentMap[dName].revenue += amt;
         departmentMap[dName].orders += 1;
 
+        const tName = o.owner?.territory?.name || 'Central Territory';
+        if (!territoryMap[tName]) territoryMap[tName] = { revenue: 0, orders: 0 };
+        territoryMap[tName].revenue += amt;
+        territoryMap[tName].orders += 1;
+
         const ownerName = o.owner ? `${o.owner.firstName ?? ''} ${o.owner.lastName ?? ''}`.trim() : 'Sales Rep';
         const mgrName = o.owner?.manager ? `${o.owner.manager.firstName ?? ''} ${o.owner.manager.lastName ?? ''}`.trim() : 'Sales Manager';
 
@@ -316,6 +343,23 @@ export class DashboardRepository {
         if (!executiveMap[ownerName]) executiveMap[ownerName] = { revenue: 0, orders: 0, visits: 0 };
         executiveMap[ownerName].revenue += amt;
         executiveMap[ownerName].orders += 1;
+
+        const cName = o.customer?.name || 'Customer';
+        if (!customerMap[cName]) customerMap[cName] = { revenue: 0, orders: 0 };
+        customerMap[cName].revenue += amt;
+        customerMap[cName].orders += 1;
+
+        // Process order items
+        if (Array.isArray(o.items)) {
+          for (const item of o.items) {
+            const pName = item.product?.name || item.description || 'Product';
+            const qty = item.quantity || 1;
+            const itemRev = item.unitPrice ? item.unitPrice * qty : 0;
+            if (!productMap[pName]) productMap[pName] = { unitsSold: 0, revenue: 0 };
+            productMap[pName].unitsSold += qty;
+            productMap[pName].revenue += itemRev;
+          }
+        }
       }
 
       // Count visits per executive
@@ -346,6 +390,13 @@ export class DashboardRepository {
         growthPercent: totalOrders > 0 ? Math.round((data.orders / totalOrders) * 100) : 0,
       }));
 
+      const territoryPerformance = Object.entries(territoryMap).map(([territory, data]) => ({
+        territory,
+        revenue: data.revenue,
+        orders: data.orders,
+        growthPercent: totalOrders > 0 ? Math.round((data.orders / totalOrders) * 100) : 0,
+      }));
+
       const managerPerformance = Object.entries(managerMap).map(([manager, data]) => ({
         manager,
         revenue: data.revenue,
@@ -368,11 +419,45 @@ export class DashboardRepository {
         target: Math.round(totalRevenue / (Object.keys(monthlyRevenueMap).length || 1))
       }));
 
+      const monthlySalesOrders = Object.entries(monthlyOrderCountMap).map(([period, ordersCount]) => ({
+        period,
+        orders: ordersCount,
+        revenue: monthlyRevenueMap[period] || 0,
+      }));
+
+      const productSalesPerformance = Object.entries(productMap).map(([product, data]) => ({
+        product,
+        unitsSold: data.unitsSold,
+        revenue: data.revenue,
+      }));
+
+      const topCustomers = Object.entries(customerMap)
+        .map(([customerName, data]) => ({
+          customerName,
+          orders: data.orders,
+          revenue: data.revenue,
+        }))
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 10);
+
+      const recentHighValueOrders = [...orders]
+        .sort((a, b) => b.totalAmount - a.totalAmount)
+        .slice(0, 10)
+        .map((o) => ({
+          id: o.id,
+          orderNumber: o.orderName || o.orderNumber,
+          customerName: o.customer?.name || 'Customer',
+          amount: o.totalAmount,
+          status: o.status,
+          createdAt: o.createdAt,
+        }));
+
       const averageOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
       const conversionRate = visits.length > 0 ? Math.round((approvedOrdersCount / visits.length) * 100) : (totalOrders > 0 ? Math.round((approvedOrdersCount / totalOrders) * 100) : 0);
 
       return {
         totalRevenue,
+        monthlyRevenue,
         totalSales: totalRevenue,
         totalOrders,
         totalCustomers,
@@ -382,9 +467,14 @@ export class DashboardRepository {
         conversionRate,
         branchPerformance,
         departmentPerformance,
+        territoryPerformance,
         managerPerformance,
         executivePerformance,
         monthlyRevenueTrend,
+        monthlySalesOrders,
+        productSalesPerformance,
+        topCustomers,
+        recentHighValueOrders,
       };
     } catch (err) {
       console.error("Error in getHeadOfSalesPerformanceAnalytics:", err);
@@ -801,7 +891,7 @@ export class DashboardRepository {
           branch: {
             select: {
               name: true,
-              company: {
+              organization: {
                 select: {
                   name: true,
                 }
@@ -815,7 +905,7 @@ export class DashboardRepository {
       const headOfSalesName = `${dbUser?.firstName ?? ''} ${dbUser?.lastName ?? ''}`.trim() || 'Head of Sales';
 
       return {
-        companyName: dbUser?.branch?.company?.name || 'Assigned Company',
+        companyName: dbUser?.branch?.organization?.name || 'IT Software',
         branchName: dbUser?.branch?.name || 'Assigned Branch',
         departmentName: dbUser?.department?.name || 'Assigned Department',
         companyAdminName: 'Company Admin',
@@ -1006,7 +1096,7 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
-          company: {
+          organization: {
             select: {
               id: true,
               name: true,
@@ -1102,8 +1192,8 @@ export class DashboardRepository {
               id: true,
               name: true,
               code: true,
-              company: {
-                select: { id: true, name: true, code: true }
+              organization: {
+                select: { id: true, name: true }
               }
             }
           },
@@ -1162,7 +1252,7 @@ export class DashboardRepository {
   async getBranchCount(organizationId = null) {
     try {
       return await prisma.branch.count({
-        where: organizationId ? { company: { organizationId } } : {},
+        where: organizationId ? { organizationId } : {},
       });
     } catch {
       return 0;
@@ -1172,7 +1262,7 @@ export class DashboardRepository {
   async getDepartmentCount(organizationId = null) {
     try {
       return await prisma.department.count({
-        where: organizationId ? { branch: { company: { organizationId } } } : {},
+        where: organizationId ? { organizationId } : {},
       });
     } catch {
       return 0;

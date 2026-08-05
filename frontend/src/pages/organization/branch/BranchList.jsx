@@ -14,6 +14,9 @@ import {
   Award,
   IndianRupee,
   ShoppingCart,
+  Mail,
+  Phone,
+  MapPin,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -49,6 +52,15 @@ export default function BranchList() {
     return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
   }, [user]);
 
+  const canManageBranch = useMemo(() => {
+    if (!user) return true;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    // Super Admin oversees high-level analytics & dashboards; creation/editing of branches is for Company Admin
+    return !roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  }, [user]);
+
   const { branches, loading, search, setSearch, reload } = useBranches({
     debounce: true,
   });
@@ -60,7 +72,7 @@ export default function BranchList() {
   const [viewBranch, setViewBranch] = useState(null);
 
   const handleDelete = async (branch) => {
-    if (isHeadOfSales) return;
+    if (!canManageBranch) return;
     const confirmed = window.confirm(`Delete "${branch.name}" ?`);
     if (!confirmed) return;
 
@@ -196,24 +208,192 @@ export default function BranchList() {
           </div>
         </SectionCard>
 
-        {/* View Modal */}
+        {/* Rich Enterprise Branch View Details Modal */}
         {viewBranch && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setViewBranch(null)}>
-            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <button type="button" onClick={() => setViewBranch(null)} className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-                <X size={22} />
-              </button>
-              <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewBranch.name}</h2>
-              <div className="space-y-3 text-sm text-slate-700">
-                <p><strong>Code:</strong> {viewBranch.code || "-"}</p>
-                <p><strong>Organization:</strong> {viewBranch.organization?.name || "-"}</p>
-                <p><strong>Email:</strong> {viewBranch.email || "-"}</p>
-                <p><strong>Phone:</strong> {viewBranch.phone || "-"}</p>
-                <p><strong>Address:</strong> {viewBranch.address || "-"}</p>
-                <p><strong>Department:</strong> {viewBranch.department?.name || "-"}</p>
-                <p><strong>Territory:</strong> {viewBranch.territory?.name || "-"}</p>
-                <p><strong>Teams:</strong> {viewBranch._count?.teams ?? 0}</p>
-                <p><strong>Users:</strong> {viewBranch._count?.users ?? 0}</p>
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setViewBranch(null)}
+          >
+            <div
+              className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl transition-all"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Hero Banner Header */}
+              <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 md:p-8 relative">
+                <button
+                  type="button"
+                  onClick={() => setViewBranch(null)}
+                  className="absolute right-5 top-5 rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition"
+                >
+                  <X size={20} />
+                </button>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-indigo-300">
+                      <GitBranch size={32} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-indigo-300">Branch Details</span>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          Active Branch
+                        </span>
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-bold text-white mt-1">{viewBranch.name}</h2>
+                      <p className="text-sm text-indigo-200 mt-0.5">Code: {viewBranch.code || "N/A"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-indigo-200 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
+                      Org: {viewBranch.organization?.name || "IT Software"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Metrics Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-slate-50 border-b border-slate-100">
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                  <span className="block text-xs font-semibold text-slate-500 uppercase">Department</span>
+                  <span className="block text-base font-bold text-slate-800 mt-1 truncate">{viewBranch.department?.name || "-"}</span>
+                </div>
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                  <span className="block text-xs font-semibold text-slate-500 uppercase">Territory</span>
+                  <span className="block text-base font-bold text-slate-800 mt-1 truncate">{viewBranch.territory?.name || "-"}</span>
+                </div>
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                  <span className="block text-xs font-semibold text-slate-500 uppercase">Active Teams</span>
+                  <span className="block text-base font-bold text-indigo-600 mt-1">{viewBranch._count?.teams ?? viewBranch.teams?.length ?? 0} Teams</span>
+                </div>
+                <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                  <span className="block text-xs font-semibold text-slate-500 uppercase">Total Staff</span>
+                  <span className="block text-base font-bold text-emerald-600 mt-1">{viewBranch._count?.users ?? viewBranch.users?.length ?? 0} Employees</span>
+                </div>
+              </div>
+
+              {/* Scrollable Main Content */}
+              <div className="p-6 md:p-8 space-y-6 max-h-[55vh] overflow-y-auto">
+                {/* General Info */}
+                <div>
+                  <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                    <Building2 className="w-4 h-4 text-indigo-600" />
+                    General Branch Attributes
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm">
+                    <div>
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">Branch ID</span>
+                      <span className="font-mono text-xs text-slate-700 bg-slate-100 px-2 py-1 rounded inline-block mt-1">{viewBranch.id}</span>
+                    </div>
+                    <div>
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">Branch Code</span>
+                      <span className="font-semibold text-slate-800 mt-1 block">{viewBranch.code || "-"}</span>
+                    </div>
+                    <div>
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">Parent Organization</span>
+                      <span className="font-semibold text-slate-800 mt-1 block">{viewBranch.organization?.name || "-"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Location & Contact Info */}
+                <div>
+                  <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-indigo-600" />
+                    Contact & Address Details
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 text-sm">
+                    <div>
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">Email</span>
+                      <span className="font-medium text-slate-800 mt-1 flex items-center gap-1.5">
+                        <Mail className="w-3.5 h-3.5 text-slate-400" />
+                        {viewBranch.email || "N/A"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">Phone</span>
+                      <span className="font-medium text-slate-800 mt-1 flex items-center gap-1.5">
+                        <Phone className="w-3.5 h-3.5 text-slate-400" />
+                        {viewBranch.phone || "N/A"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">City / State</span>
+                      <span className="font-medium text-slate-800 mt-1 block">
+                        {[viewBranch.city, viewBranch.state].filter(Boolean).join(", ") || "N/A"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">Postal Code</span>
+                      <span className="font-medium text-slate-800 mt-1 block">{viewBranch.postalCode || "N/A"}</span>
+                    </div>
+                    <div className="md:col-span-2 lg:col-span-4">
+                      <span className="block text-xs font-semibold text-slate-400 uppercase">Street Address</span>
+                      <span className="font-medium text-slate-800 mt-1 block">{viewBranch.address || "N/A"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Assigned Teams */}
+                {viewBranch.teams?.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                      <Users className="w-4 h-4 text-indigo-600" />
+                      Assigned Teams ({viewBranch.teams.length})
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {viewBranch.teams.map((t) => (
+                        <div key={t.id} className="p-3 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between">
+                          <div>
+                            <span className="font-semibold text-slate-800 text-sm">{t.name}</span>
+                            {t.description && <p className="text-xs text-slate-500 mt-0.5">{t.description}</p>}
+                          </div>
+                          <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+                            {t._count?.users ?? 0} Members
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Assigned Staff */}
+                {viewBranch.users?.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                      <Users className="w-4 h-4 text-indigo-600" />
+                      Branch Staff Members ({viewBranch.users.length})
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {viewBranch.users.map((u) => (
+                        <div key={u.id} className="p-3 rounded-xl border border-slate-200 bg-white flex items-center justify-between shadow-xs">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+                              {u.firstName?.[0]}{u.lastName?.[0]}
+                            </div>
+                            <div>
+                              <span className="font-semibold text-slate-800 text-sm">{u.firstName} {u.lastName}</span>
+                              <span className="block text-xs text-slate-500">{u.email}</span>
+                            </div>
+                          </div>
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                            {u.roles?.[0]?.role?.name || "Staff"}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-4 bg-slate-50 border-t border-slate-200/80 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setViewBranch(null)}
+                  className="px-6 py-2.5 rounded-xl bg-slate-800 text-white font-medium text-sm hover:bg-slate-900 transition"
+                >
+                  Close Details
+                </button>
               </div>
             </div>
           </div>
@@ -236,16 +416,18 @@ export default function BranchList() {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setSelectedBranch(null);
-            setShowModal(true);
-          }}
-          className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700 transition"
-        >
-          <Plus size={18} />
-          Create Branch
-        </button>
+        {canManageBranch && (
+          <button
+            onClick={() => {
+              setSelectedBranch(null);
+              setShowModal(true);
+            }}
+            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700 transition"
+          >
+            <Plus size={18} />
+            Create Branch
+          </button>
+        )}
       </div>
 
       {/* Search */}
@@ -291,12 +473,14 @@ export default function BranchList() {
                     <p className="mt-2 text-slate-500">
                       Create your first branch to get started.
                     </p>
-                    <button
-                      onClick={() => setShowModal(true)}
-                      className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
-                    >
-                      Create Branch
-                    </button>
+                    {canManageBranch && (
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
+                      >
+                        Create Branch
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -338,12 +522,16 @@ export default function BranchList() {
                       <button onClick={() => setViewBranch(branch)} className="rounded-lg border p-2 hover:bg-slate-100" title="View">
                         <Eye size={17} />
                       </button>
-                      <button onClick={() => { setSelectedBranch(branch); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
-                        <Pencil size={17} />
-                      </button>
-                      <button onClick={() => handleDelete(branch)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
-                        <Trash2 size={17} />
-                      </button>
+                      {canManageBranch && (
+                        <>
+                          <button onClick={() => { setSelectedBranch(branch); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
+                            <Pencil size={17} />
+                          </button>
+                          <button onClick={() => handleDelete(branch)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
+                            <Trash2 size={17} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

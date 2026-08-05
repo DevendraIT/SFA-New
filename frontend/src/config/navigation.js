@@ -45,11 +45,6 @@ const navigation = [
         icon: Building,
       },
       {
-        title: "Branch",
-        path: "/organization/branch",
-        icon: GitBranch,
-      },
-      {
         title: "Department",
         path: "/organization/department",
         icon: LayoutGrid,
@@ -58,6 +53,11 @@ const navigation = [
         title: "Territory",
         path: "/organization/territory",
         icon: MapPin,
+      },
+      {
+        title: "Branch",
+        path: "/organization/branch",
+        icon: GitBranch,
       },
       {
         title: "Teams",

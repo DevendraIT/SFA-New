@@ -119,12 +119,37 @@ export const authorize = (requiredPermissions) => {
  */
 export const requireOrganization = (req, res, next) => {
   try {
-    if (!req.user?.organizationId) {
-      throw AppError.forbidden('Organization access required');
+    if (!req.user) {
+      throw AppError.unauthorized('Authentication required');
     }
 
-    // Add organization context to request
-    req.organizationId = req.user.organizationId;
+    if (!req.user.organizationId) {
+      throw AppError.forbidden('User does not belong to any organization');
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Require Super Admin role for sensitive administrative actions
+ */
+export const requireSuperAdmin = (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw AppError.unauthorized('Authentication required');
+    }
+
+    const isSuperAdmin = req.user.roles.some((r) =>
+      r && (r.toLowerCase().includes('super admin') || r.toLowerCase().includes('organization super admin'))
+    );
+
+    if (!isSuperAdmin) {
+      throw AppError.forbidden('Only Super Admin can create, edit, or delete organizations.');
+    }
+
     next();
   } catch (error) {
     next(error);

@@ -35,6 +35,12 @@ import ProfilePage from "../pages/field-force/ProfilePage";
 import TaskExecutionPage from "../pages/field-force/TaskExecutionPage";
 import OrdersPage from "../pages/sales-order/OrdersPage";
 import VisitDetailPage from "../pages/field-force/VisitDetailPage";
+import BeatPlanningPage from "../pages/field-force/BeatPlanningPage";
+import RouteOptimizationPage from "../pages/field-force/RouteOptimizationPage";
+import PhotoUploadPage from "../pages/field-force/PhotoUploadPage";
+import MeetingNotesPage from "../pages/field-force/MeetingNotesPage";
+import ExpensesPage from "../pages/field-force/ExpensesPage";
+import CalendarPage from "../pages/field-force/CalendarPage";
 import ReportsPage from "../pages/reports/ReportsPage";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
 import SettingsPage from "../pages/settings/SettingsPage";
@@ -170,6 +176,12 @@ export default function AppRoutes() {
         <Route path="/field-force/activities" element={<ActivitiesPage />} />
         <Route path="/field-force/dar" element={<DARPage />} />
         <Route path="/field-force/profile" element={<ProfilePage />} />
+        <Route path="/field-force/beat-plans" element={<BeatPlanningPage />} />
+        <Route path="/field-force/route" element={<RouteOptimizationPage />} />
+        <Route path="/field-force/photo-upload" element={<PhotoUploadPage />} />
+        <Route path="/field-force/meeting-notes" element={<MeetingNotesPage />} />
+        <Route path="/field-force/expenses" element={<ExpensesPage />} />
+        <Route path="/field-force/calendar" element={<CalendarPage />} />
       </Route>
 
     </Routes>

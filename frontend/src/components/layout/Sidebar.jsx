@@ -63,14 +63,19 @@ export default function Sidebar({
     const roleNames = Array.isArray(user.roles)
       ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
       : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  }, [user]);
+
+  const isCompanyAdmin = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
     return roleNames.some(
       (r) =>
         r &&
-        (r === "SUPER_ADMIN" ||
-          r === "Super Admin" ||
-          r === "Admin" ||
-          r.toLowerCase().includes("super") ||
-          (r.toLowerCase().includes("admin") && !r.toLowerCase().includes("organization")))
+        (r.toLowerCase().includes("company admin") ||
+          (r.toLowerCase().includes("admin") && !r.toLowerCase().includes("super admin")))
     );
   }, [user]);
 
@@ -117,9 +122,15 @@ export default function Sidebar({
         });
     }
 
+    if (isCompanyAdmin) {
+      return navigation.filter(
+        (item) => !["Field Force", "Target & Performance", "Reports"].includes(item.title)
+      );
+    }
+
     if (isHeadOfSales) {
       return navigation.filter(
-        (item) => !["Field Force", "Team Management"].includes(item.title)
+        (item) => !["Organization", "Field Force", "Team Management"].includes(item.title)
       );
     }
 
@@ -132,7 +143,7 @@ export default function Sidebar({
           if (item.title === "Field Force" && Array.isArray(item.children)) {
             return {
               ...item,
-children: item.children.filter(
+              children: item.children.filter(
                 (child) =>
                   !["Attendance", "Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar"].includes(child.title)
               ),
@@ -160,7 +171,7 @@ children: item.children.filter(
     }
 
     return navigation;
-  }, [isSuperAdmin, isHeadOfSales, isSalesManager, isSalesExecutive]);
+  }, [isSuperAdmin, isCompanyAdmin, isHeadOfSales, isSalesManager, isSalesExecutive]);
 
 
 

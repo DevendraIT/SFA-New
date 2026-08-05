@@ -3,7 +3,13 @@ import { z } from 'zod';
 // --------------------------------------------------
 // Shared Helpers
 // --------------------------------------------------
-const codeSchema = z.string().trim().toUpperCase().max(20, 'Code cannot exceed 20 characters.').optional();
+const codeSchema = z
+  .string()
+  .trim()
+  .toUpperCase()
+  .max(20, 'Code cannot exceed 20 characters.')
+  .optional()
+  .transform((val) => (val === '' ? undefined : val));
 const nameSchema = (label) => z.string().trim().min(1, `${label} is required.`).max(100, `${label} cannot exceed 100 characters.`);
 const uuidSchema = (label) => z.string().uuid({ message: `Invalid ${label} ID.` });
 
@@ -33,11 +39,29 @@ export const listOrganizationsQuerySchema = z.object({
 export const createOrganizationSchema = z.object({
   name: nameSchema('Organization name'),
   isActive: z.boolean().optional().default(true),
+  email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
+  phone: z.string().trim().max(20, "Phone cannot exceed 20 characters.").optional().nullable(),
+  address: z.string().trim().max(255, "Address cannot exceed 255 characters.").optional().nullable(),
+  city: z.string().trim().max(100, "City cannot exceed 100 characters.").optional().nullable(),
+  state: z.string().trim().max(100, "State cannot exceed 100 characters.").optional().nullable(),
+  country: z.string().trim().max(100, "Country cannot exceed 100 characters.").optional().nullable(),
+  postalCode: z.string().trim().max(20, "Postal Code cannot exceed 20 characters.").optional().nullable(),
+  gstNumber: z.string().trim().max(50, "GST Number cannot exceed 50 characters.").optional().nullable(),
+  panNumber: z.string().trim().max(50, "PAN Number cannot exceed 50 characters.").optional().nullable(),
 });
 
 export const updateOrganizationSchema = z.object({
   name: nameSchema('Organization name').optional(),
   isActive: z.boolean().optional(),
+  email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
+  phone: z.string().trim().max(20).optional().nullable(),
+  address: z.string().trim().max(255).optional().nullable(),
+  city: z.string().trim().max(100).optional().nullable(),
+  state: z.string().trim().max(100).optional().nullable(),
+  country: z.string().trim().max(100).optional().nullable(),
+  postalCode: z.string().trim().max(20).optional().nullable(),
+  gstNumber: z.string().trim().max(50).optional().nullable(),
+  panNumber: z.string().trim().max(50).optional().nullable(),
 });
 
 

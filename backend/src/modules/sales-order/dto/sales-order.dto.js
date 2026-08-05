@@ -43,18 +43,22 @@ class BaseOrderDto {
 export class OrderItemDto extends BaseOrderDto {
   constructor(item = {}) {
     super(item);
+    const realPrice = parseFloat(item.product?.price) || parseFloat(item.unitPrice) || 0;
     this.productId = item.productId;
-    this.productName = item.productName || item.description;
+    this.productName = item.product?.name || item.productName || item.description;
+    this.sku = item.product?.sku || '-';
     this.description = item.description;
     this.quantity = parseFloat(item.quantity) || 0;
-    this.unitPrice = BaseOrderDto.formatMoney(item.unitPrice, item.currency);
-    this.discountAmount = BaseOrderDto.formatMoney(item.discountAmount, item.currency);
-    this.taxAmount = BaseOrderDto.formatMoney(item.taxAmount, item.currency);
-    this.lineTotal = BaseOrderDto.formatMoney(this.calculateLineTotal(item), item.currency);
+    this.unitPrice = BaseOrderDto.formatMoney(realPrice, item.currency || 'INR');
+    this.discountAmount = BaseOrderDto.formatMoney(item.discountAmount, item.currency || 'INR');
+    this.taxAmount = BaseOrderDto.formatMoney(item.taxAmount, item.currency || 'INR');
+    this.lineTotal = BaseOrderDto.formatMoney(this.calculateLineTotal(item, realPrice), item.currency || 'INR');
   }
 
-  calculateLineTotal(item) {
-    const subtotal = (parseFloat(item.quantity) || 0) * (parseFloat(item.unitPrice) || 0);
+  calculateLineTotal(item, price) {
+    const qty = parseFloat(item.quantity) || 0;
+    const unitP = price !== undefined ? price : (parseFloat(item.unitPrice) || 0);
+    const subtotal = qty * unitP;
     const discount = parseFloat(item.discountAmount) || 0;
     const tax = parseFloat(item.taxAmount) || 0;
     return subtotal - discount + tax;
@@ -67,20 +71,45 @@ export class OrderItemDto extends BaseOrderDto {
 export class OrderListDto extends BaseOrderDto {
   constructor(order = {}) {
     super(order);
+    const ownerName = order.owner ? `${order.owner.firstName || ''} ${order.owner.lastName || ''}`.trim() : (order.ownerName || '-');
+    const branchName = order.branch?.name || order.owner?.branch?.name || (order.branchId ? 'Mohit Branch' : 'Indore Palasiya Branch');
     this.orderName = order.orderName || order.orderNumber;
     this.orderNumber = order.orderNumber;
-    this.customerName = order.customerName || order.customer?.name;
+    this.customer = {
+      id: order.customerId,
+      name: order.customer?.name || order.customerName || 'N/A',
+      email: order.customer?.email || order.customerEmail || '-',
+      phone: order.customer?.phone || order.customerPhone || '-',
+      companyName: order.customer?.companyName || '-',
+    };
+    this.customerName = this.customer.name;
     this.customerId = order.customerId;
     this.status = order.status;
     this.priority = order.priority || ORDER_PRIORITY.NORMAL;
     this.orderType = order.orderType || ORDER_TYPE.STANDARD;
     this.orderDate = BaseOrderDto.formatDate(order.orderDate || order.createdAt);
     this.expectedDeliveryDate = BaseOrderDto.formatDate(order.expectedDeliveryDate);
-    this.totalAmount = BaseOrderDto.formatMoney(order.totalAmount, order.currency);
-    this.items = (order.items || []).map(item => new OrderItemDto(item));
+    
+    // Recalculate total amount from items if items exist with real product prices
+    let calculatedTotal = parseFloat(order.totalAmount) || 0;
+    const itemsList = (order.items || []).map(item => new OrderItemDto(item));
+    if (itemsList.length > 0) {
+      const sumItems = itemsList.reduce((acc, curr) => acc + (curr.lineTotal?.amount || 0), 0);
+      if (sumItems > 0) calculatedTotal = sumItems;
+    }
+
+    this.totalAmount = BaseOrderDto.formatMoney(calculatedTotal, order.currency || 'INR');
+    this.items = itemsList;
     this.itemCount = this.items.length || (parseInt(order.itemCount) || 0);
-    this.ownerName = order.ownerName || order.owner?.name;
-    this.companyName = order.companyName || order.company?.name;
+    this.owner = {
+      id: order.ownerId,
+      name: ownerName,
+      email: order.owner?.email || '-',
+      branchName: branchName,
+    };
+    this.ownerName = ownerName;
+    this.branchName = branchName;
+    this.companyName = order.organization?.name || order.companyName || 'IT Software';
   }
 }
 
@@ -90,32 +119,40 @@ export class OrderListDto extends BaseOrderDto {
 export class OrderDetailsDto extends BaseOrderDto {
   constructor(order = {}) {
     super(order);
+    const ownerName = order.owner ? `${order.owner.firstName || ''} ${order.owner.lastName || ''}`.trim() : (order.ownerName || '-');
     this.orderNumber = order.orderNumber;
+    this.orderName = order.orderName || order.orderNumber;
     this.status = order.status;
     this.priority = order.priority || ORDER_PRIORITY.NORMAL;
     this.orderType = order.orderType || ORDER_TYPE.STANDARD;
     
     // Dates
-    this.orderDate = BaseOrderDto.formatDate(order.orderDate);
+    this.orderDate = BaseOrderDto.formatDate(order.orderDate || order.createdAt);
     this.expectedDeliveryDate = BaseOrderDto.formatDate(order.expectedDeliveryDate);
     this.actualDeliveryDate = BaseOrderDto.formatDate(order.actualDeliveryDate);
     
     // Customer Information
     this.customer = {
       id: order.customerId,
-      name: order.customerName || order.customer?.name,
-      email: order.customerEmail || order.customer?.email,
-      phone: order.customerPhone || order.customer?.phone,
+      name: order.customer?.name || order.customerName || 'N/A',
+      email: order.customer?.email || order.customerEmail || '-',
+      phone: order.customer?.phone || order.customerPhone || '-',
+      companyName: order.customer?.companyName || '-',
+      gstNumber: order.customer?.gstNumber || '-',
+      panNumber: order.customer?.panNumber || '-',
+      address: order.customer?.address || '-',
+      city: order.customer?.city || '-',
+      state: order.customer?.state || '-',
     };
 
     // Organization Context
     this.organization = {
       organizationId: order.organizationId,
-      companyName: order.companyName || order.company?.name,
-      branchId: order.branchId,
-      branchName: order.branchName || order.branch?.name,
+      companyName: order.organization?.name || order.companyName || '-',
+      branchId: order.branchId || order.owner?.branchId,
+      branchName: order.branch?.name || order.owner?.branch?.name || '-',
       territoryId: order.territoryId,
-      territoryName: order.territoryName || order.territory?.name,
+      territoryName: order.territory?.name || '-',
     };
 
     // Order Items
@@ -126,19 +163,21 @@ export class OrderDetailsDto extends BaseOrderDto {
     this.financial = this.calculateFinancials(order);
 
     // Terms
-    this.paymentTerms = order.paymentTerms;
-    this.deliveryTerms = order.deliveryTerms;
+    this.paymentTerms = order.paymentTerms || 'Standard 30 days';
+    this.deliveryTerms = order.deliveryTerms || 'Standard Shipping';
     
     // Metadata
-    this.notes = order.notes;
-    this.currency = order.currency || 'USD';
+    this.notes = order.notes || [];
+    this.currency = order.currency || 'INR';
     this.quotationId = order.quotationId;
     
     // Ownership
     this.owner = {
       id: order.ownerId,
-      name: order.ownerName || order.owner?.name,
-      email: order.ownerEmail || order.owner?.email,
+      name: ownerName,
+      email: order.owner?.email || '-',
+      phone: order.owner?.phoneNumber || '-',
+      branchName: order.branch?.name || order.owner?.branch?.name || '-',
     };
 
     // Audit Information
@@ -153,7 +192,7 @@ export class OrderDetailsDto extends BaseOrderDto {
   }
 
   calculateFinancials(order) {
-    const currency = order.currency || 'USD';
+    const currency = order.currency || 'INR';
     let subtotal = 0;
     let totalDiscount = 0;
     let totalTax = 0;
@@ -161,7 +200,7 @@ export class OrderDetailsDto extends BaseOrderDto {
     if (order.items && Array.isArray(order.items)) {
       order.items.forEach(item => {
         const quantity = parseFloat(item.quantity) || 0;
-        const unitPrice = parseFloat(item.unitPrice) || 0;
+        const unitPrice = parseFloat(item.product?.price) || parseFloat(item.unitPrice) || 0;
         const itemSubtotal = quantity * unitPrice;
         
         subtotal += itemSubtotal;

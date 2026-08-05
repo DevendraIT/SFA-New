@@ -1,5 +1,6 @@
 import { AppError } from '../../../shared/response.js';
 import { logAudit } from '../../../utils/audit.js';
+import { prisma } from '../../../config/database.js';
 import { BranchRepository } from '../repositories/BranchRepository.js';
 import { DepartmentRepository } from '../repositories/DepartmentRepository.js';
 import { TerritoryRepository } from '../repositories/TerritoryRepository.js';
@@ -20,23 +21,27 @@ export class OrganizationService {
   // Shared
   // --------------------------------------------------
 
-  _buildPaginationMeta(total, page, limit) {
-    const totalPages = Math.ceil(total / limit);
+  _buildPaginationMeta(total, page = 1, limit = 20) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 20;
+    const totalPages = Math.ceil(total / limitNum);
     return {
       total,
-      page,
-      limit,
+      page: pageNum,
+      limit: limitNum,
       totalPages,
-      hasNextPage: page < totalPages,
-      hasPreviousPage: page > 1,
+      hasNextPage: pageNum < totalPages,
+      hasPreviousPage: pageNum > 1,
     };
   }
 
-  _buildListOptions({ page, limit, search, sortBy, sortOrder }) {
-    const skip = (page - 1) * limit;
+  _buildListOptions({ page = 1, limit = 20, search, sortBy, sortOrder } = {}) {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 20;
+    const skip = (pageNum - 1) * limitNum;
     const allowedSortFields = ['name', 'createdAt', 'updatedAt', 'slug', 'isActive'];
     const resolvedSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
-    return { skip, take: limit, search, sortBy: resolvedSortBy, sortOrder };
+    return { skip, take: limitNum, search, sortBy: resolvedSortBy, sortOrder };
   }
 
   async _rejectSoftDelete(entityName, entityId, organizationId, req) {
@@ -71,12 +76,33 @@ export class OrganizationService {
   }
 
   async getOrganization(organizationId) {
-    const org = await this.repo.findById(organizationId);
+    let org = organizationId ? await this.repo.findById(organizationId) : null;
+    if (!org) {
+      org = (await prisma.organization.findFirst({ where: { isActive: true } })) || (await prisma.organization.findFirst());
+    }
     if (!org) throw AppError.notFound('Organization not found.');
     return org;
   }
 
   async createOrganization(data, req) {
+    // 1. Super Admin Role Enforcement
+    const userRoles = Array.isArray(req.user?.roles) ? req.user.roles : [];
+    const isSuperAdmin = userRoles.some(
+      (r) => typeof r === 'string' && (r.toLowerCase().includes('super') || r.toLowerCase().includes('admin'))
+    );
+
+    if (!isSuperAdmin) {
+      throw AppError.forbidden('Only Super Admin is authorized to create an organization.');
+    }
+
+    // 2. Strict Single Organization Limit (Max 1 Organization in system)
+    const existingCount = await prisma.organization.count();
+    if (existingCount >= 1) {
+      throw AppError.badRequest(
+        'System limit reached: Only a single organization can be created. An organization already exists.'
+      );
+    }
+
     if (await this.repo.existsByName(data.name)) {
       throw AppError.badRequest(`Organization name '${data.name}' is already in use.`);
     }
@@ -212,17 +238,11 @@ export class OrganizationService {
     const org = await this.repo.findById(organizationId);
     if (!org) throw AppError.notFound('Organization not found.');
 
-    // Business Rule: Cannot delete if active companies exist
-    const statistics = await this.repo.getStatistics(organizationId);
-    if (statistics.companies > 0) {
-      throw AppError.conflict('Cannot delete organization while companies exist. Please delete all companies first.');
-    }
-
     const deleted = await this.repo.delete(organizationId);
 
     await logAudit({
-      organizationId,
-      userId: req.user.id,
+      organizationId: null,
+      userId: req.user?.id || null,
       action: 'organization.delete',
       moduleName: 'organization',
       details: { organizationId, name: org.name },

@@ -5,15 +5,13 @@ import { AppError, ApiResponse } from '../shared/response.js';
  * Catches all errors and returns standardized error response
  */
 export const errorHandler = (err, req, res, next) => {
-  // Log error
-  if (process.env.NODE_ENV === 'development') {
-    console.error('❌ Error:', {
-      message: err.message,
-      stack: err.stack,
-      path: req.path,
-      method: req.method,
-    });
-  }
+  // Always log error details in console for diagnostic visibility
+  console.error('❌ HTTP Error:', {
+    message: err.message,
+    stack: err.stack,
+    path: req.path,
+    method: req.method,
+  });
 
   // Handle Zod validation errors
   if (err.name === 'ZodError') {

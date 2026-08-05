@@ -1,6 +1,5 @@
 import express from 'express';
-import { authenticate, requireOrganization } from '../../../middlewares/auth.middleware.js';
-import { authorize } from '../../../middlewares/auth.middleware.js';
+import { authenticate, requireOrganization, requireSuperAdmin, authorize } from '../../../middlewares/auth.middleware.js';
 import validate from '../../../middlewares/validation.middleware.js';
 import { OrganizationRepository } from '../repositories/OrganizationRepository.js';
 import { OrganizationService } from '../services/organization.service.js';
@@ -41,9 +40,10 @@ router.get(
   organizationController.getOrganization
 );
 
-// Update current organization - only org admins
+// Update current organization - ONLY Super Admin
 router.put(
   '/current',
+  requireSuperAdmin,
   authorize(P.UPDATE_ORGANIZATION),
   validate(updateOrganizationSchema, 'body'),
   organizationController.updateOrganization
@@ -80,9 +80,10 @@ router.get(
 );
 
 
-// Create new organization
+// Create new organization - ONLY Super Admin
 router.post(
   '/',
+  requireSuperAdmin,
   authorize(P.CREATE_ORGANIZATION),
   validate(createOrganizationSchema, 'body'),
   organizationController.createOrganization
@@ -103,22 +104,28 @@ router.get(
   organizationController.getStatistics
 );
 
+// Activate organization - ONLY Super Admin
 router.patch(
   '/:id/activate',
+  requireSuperAdmin,
   authorize(P.UPDATE_ORGANIZATION),
   validate(idParamSchema, 'params'),
   organizationController.activateOrganization
 );
 
+// Deactivate organization - ONLY Super Admin
 router.patch(
   '/:id/deactivate',
+  requireSuperAdmin,
   authorize(P.UPDATE_ORGANIZATION),
   validate(idParamSchema, 'params'),
   organizationController.deactivateOrganization
 );
 
+// Delete organization - ONLY Super Admin
 router.delete(
   '/:id',
+  requireSuperAdmin,
   authorize(P.DELETE_ORGANIZATION),
   validate(idParamSchema, 'params'),
   organizationController.deleteOrganization

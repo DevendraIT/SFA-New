@@ -48,26 +48,45 @@ export default function UserForm({ user, onClose, onSuccess }) {
   const [loadingDeps, setLoadingDeps] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
 
+  const isCurrentSuperAdmin = useMemo(() => {
+    if (!currentUser) return false;
+    const roleNames = Array.isArray(currentUser.roles)
+      ? currentUser.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [currentUser.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  }, [currentUser]);
+
   const filteredRoles = useMemo(() => {
     if (!roles) return [];
-    if (isSalesManager) {
-      return roles.filter((role) => role.name && role.name.toLowerCase() === "sales executive");
+    let list = roles;
+    if (!isCurrentSuperAdmin) {
+      list = list.filter((role) => !role.name?.toLowerCase().includes("super admin"));
     }
-    return roles;
-  }, [roles, isSalesManager]);
+    if (isSalesManager) {
+      list = list.filter((role) => role.name && role.name.toLowerCase() === "sales executive");
+    }
+    return list;
+  }, [roles, isSalesManager, isCurrentSuperAdmin]);
 
   // Fetch lookup data on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [rolesRes, branchesRes, usersRes] = await Promise.all([
+        const [rolesRes, branchesRes, deptsRes, usersRes] = await Promise.all([
           roleService.getRoles({ limit: 100 }),
           branchService.getBranches({ limit: 100 }),
+          departmentService.getDepartments({ limit: 100 }),
           userService.getUsers({ limit: 100 }),
         ]);
-        setRoles(rolesRes?.data?.roles || []);
-        setBranches(branchesRes?.data?.branches || []);
-        setUsers(usersRes?.data?.users || []);
+        // roleService.getRoles returns res.data = { success, data: { roles }, meta }
+        const rolesData = rolesRes?.data?.roles ?? rolesRes?.roles ?? [];
+        const branchesData = branchesRes?.data?.branches ?? branchesRes?.branches ?? [];
+        const deptsData = deptsRes?.data?.departments ?? deptsRes?.departments ?? [];
+        const usersData = usersRes?.data?.users ?? usersRes?.users ?? [];
+        setRoles(rolesData);
+        setBranches(branchesData);
+        setDepartments(deptsData);
+        setUsers(usersData);
       } catch (err) {
         console.error("Failed to load lookup data:", err);
       }
@@ -310,6 +329,24 @@ export default function UserForm({ user, onClose, onSuccess }) {
 
       {/* Structural Assignments */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Department */}
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Department</label>
+          <select
+            name="departmentId"
+            value={form.departmentId}
+            onChange={handleChange}
+            className={inputClass}
+          >
+            <option value="">Select Department</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Branch */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
@@ -328,27 +365,6 @@ export default function UserForm({ user, onClose, onSuccess }) {
           </select>
         </div>
 
-        {/* Department */}
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Department</label>
-          <select
-            name="departmentId"
-            value={form.departmentId}
-            onChange={handleChange}
-            className={inputClass}
-            disabled={!form.branchId || loadingDeps}
-          >
-            <option value="">
-              {loadingDeps ? "Loading..." : !form.branchId ? "Select branch first" : "Select Department"}
-            </option>
-            {departments.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
         {/* Team */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-700">Team</label>
@@ -357,11 +373,8 @@ export default function UserForm({ user, onClose, onSuccess }) {
             value={form.teamId}
             onChange={handleChange}
             className={inputClass}
-            disabled={!form.branchId || loadingTeams}
           >
-            <option value="">
-              {loadingTeams ? "Loading..." : !form.branchId ? "Select branch first" : "Select Team"}
-            </option>
+            <option value="">Select Team</option>
             {teams.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}

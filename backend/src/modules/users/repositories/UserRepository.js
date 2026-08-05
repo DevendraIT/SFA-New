@@ -234,7 +234,7 @@ export class UserRepository {
 
   async branchBelongsToOrg(branchId, organizationId) {
     const branch = await prisma.branch.findFirst({
-      where: { id: branchId, company: { organizationId } },
+      where: { id: branchId, organizationId },
       select: { id: true },
     });
     return !!branch;
@@ -242,7 +242,7 @@ export class UserRepository {
 
   async departmentBelongsToOrg(departmentId, organizationId) {
     const department = await prisma.department.findFirst({
-      where: { id: departmentId, branch: { company: { organizationId } } },
+      where: { id: departmentId, organizationId },
       select: { id: true },
     });
     return !!department;

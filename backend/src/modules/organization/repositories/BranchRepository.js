@@ -69,11 +69,32 @@ export class BranchRepository {
           organization: { 
             select: { 
               id: true, 
-              name: true 
+              name: true,
+              slug: true
             } 
           },
-          department: { select: { id: true, name: true } },
-          territory: { select: { id: true, name: true } },
+          department: { select: { id: true, name: true, code: true } },
+          territory: { select: { id: true, name: true, code: true } },
+          teams: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              _count: { select: { users: true } }
+            }
+          },
+          users: {
+            where: { deletedAt: null },
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              phoneNumber: true,
+              isActive: true,
+              roles: { include: { role: { select: { name: true } } } }
+            }
+          },
           _count: { 
             select: { 
               users: true, 

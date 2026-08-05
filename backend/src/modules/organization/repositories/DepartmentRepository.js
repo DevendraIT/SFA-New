@@ -68,10 +68,25 @@ export class DepartmentRepository {
             select: {
               id: true,
               name: true,
+              slug: true,
             },
+          },
+          branches: {
+            select: { id: true, name: true, code: true, city: true }
+          },
+          territories: {
+            select: { id: true, name: true, code: true }
+          },
+          teams: {
+            select: { id: true, name: true, description: true }
+          },
+          users: {
+            where: { deletedAt: null },
+            select: { id: true, firstName: true, lastName: true, email: true, phoneNumber: true, isActive: true }
           },
           _count: { 
             select: { 
+              branches: true,
               users: true, 
               teams: true 
             } 

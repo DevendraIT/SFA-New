@@ -25,7 +25,7 @@ export const securityMiddleware = [
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   }),
   cors({
-    origin: config.CORS_ORIGIN,
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

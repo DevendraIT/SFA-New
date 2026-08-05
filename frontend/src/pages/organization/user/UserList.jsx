@@ -53,6 +53,14 @@ export default function UserList() {
     return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
   }, [user]);
 
+  const isCurrentSuperAdmin = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  }, [user]);
+
   const { users, loading, search, setSearch, reload } = useUsers({
     debounce: true,
   });
@@ -63,8 +71,27 @@ export default function UserList() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [viewUser, setViewUser] = useState(null);
 
+  const isTargetSuperAdmin = (userItem) => {
+    if (!userItem) return false;
+    const roleNames = Array.isArray(userItem.roles)
+      ? userItem.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [userItem.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  };
+
+  const canManageUserItem = (userItem) => {
+    if (isHeadOfSales) return false;
+    if (isTargetSuperAdmin(userItem) && !isCurrentSuperAdmin) {
+      return false;
+    }
+    return true;
+  };
+
   const handleDelete = async (userItem) => {
-    if (isHeadOfSales) return;
+    if (!canManageUserItem(userItem)) {
+      toast.error("Company Admin cannot delete Super Admin accounts");
+      return;
+    }
     const confirmed = window.confirm(
       `Delete "${userItem.firstName} ${userItem.lastName}" ?`
     );
@@ -81,7 +108,10 @@ export default function UserList() {
   };
 
   const handleToggleStatus = async (userItem) => {
-    if (isHeadOfSales) return;
+    if (!canManageUserItem(userItem)) {
+      toast.error("Company Admin cannot modify Super Admin status");
+      return;
+    }
     try {
       if (userItem.isActive) {
         await userService.deactivateUser(userItem.id);
@@ -364,12 +394,16 @@ export default function UserList() {
                       <button onClick={() => setViewUser(userItem)} className="rounded-lg border p-2 hover:bg-slate-100" title="View">
                         <Eye size={17} />
                       </button>
-                      <button onClick={() => { setSelectedUser(userItem); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
-                        <Pencil size={17} />
-                      </button>
-                      <button onClick={() => handleDelete(userItem)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
-                        <Trash2 size={17} />
-                      </button>
+                      {canManageUserItem(userItem) && (
+                        <>
+                          <button onClick={() => { setSelectedUser(userItem); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
+                            <Pencil size={17} />
+                          </button>
+                          <button onClick={() => handleDelete(userItem)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
+                            <Trash2 size={17} />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -10,7 +10,8 @@ export default function useOrganizations() {
     try {
       setLoading(true);
       const response = await organizationService.getCurrentOrganization();
-      setOrganization(response?.data?.organization || null);
+      const orgData = response?.data?.organization || (response?.data && typeof response.data === 'object' && response.data.id ? response.data : null);
+      setOrganization(orgData);
     } catch (err) {
       console.error(err);
       if (err?.response?.status !== 404) {

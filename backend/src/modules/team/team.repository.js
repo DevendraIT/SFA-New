@@ -26,11 +26,24 @@ export class TeamRepository {
             select: {
               id: true,
               name: true,
-              company: { select: { id: true, name: true } },
+              code: true,
+              organization: { select: { id: true, name: true, slug: true } },
             },
           },
-          department: { select: { id: true, name: true } },
-          territory: { select: { id: true, name: true } },
+          department: { select: { id: true, name: true, code: true } },
+          territory: { select: { id: true, name: true, code: true } },
+          users: {
+            where: { deletedAt: null, isActive: true },
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              phoneNumber: true,
+              isActive: true,
+              roles: { include: { role: { select: { name: true } } } }
+            }
+          },
           _count: { select: { users: true } },
         },
       }),
@@ -48,7 +61,7 @@ export class TeamRepository {
           select: {
             id: true,
             name: true,
-            company: { select: { id: true, name: true } },
+            organization: { select: { id: true, name: true } },
           },
         },
         department: { select: { id: true, name: true } },
@@ -69,17 +82,38 @@ export class TeamRepository {
   }
 
   async createTeam(data) {
-    return prisma.team.create({ data });
+    return prisma.team.create({
+      data,
+      include: {
+        branch: { select: { id: true, name: true } },
+        department: { select: { id: true, name: true } },
+        territory: { select: { id: true, name: true } },
+      },
+    });
   }
 
   async updateTeam(id, data) {
-    return prisma.team.update({ where: { id }, data });
+    return prisma.team.update({
+      where: { id },
+      data,
+      include: {
+        branch: { select: { id: true, name: true } },
+        department: { select: { id: true, name: true } },
+        territory: { select: { id: true, name: true } },
+      },
+    });
+  }
+
+  async deleteTeam(id) {
+    return prisma.team.delete({
+      where: { id },
+    });
   }
 
   // Existence checks
   async branchBelongsToOrg(branchId, organizationId) {
     const branch = await prisma.branch.findFirst({
-      where: { id: branchId, company: { organizationId } },
+      where: { id: branchId, organizationId },
       select: { id: true },
     });
     return !!branch;
@@ -87,7 +121,7 @@ export class TeamRepository {
 
   async departmentBelongsToOrg(departmentId, organizationId) {
     const department = await prisma.department.findFirst({
-      where: { id: departmentId, branch: { company: { organizationId } } },
+      where: { id: departmentId, organizationId },
       select: { id: true },
     });
     return !!department;

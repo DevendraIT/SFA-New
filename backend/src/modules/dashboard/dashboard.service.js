@@ -250,7 +250,7 @@ export class DashboardService {
   }
 
   async getHeadOfSalesDashboard(user) {
-    const { organizationId, branchId, departmentId } = user;
+    const { organizationId } = user;
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
@@ -279,25 +279,25 @@ export class DashboardService {
       recentVisitsList,
       recentOrdersList,
     ] = await Promise.all([
-      this.repo.getSalesManagerCount(organizationId, branchId, departmentId),
-      this.repo.getPresentSalesManagerCount(organizationId, branchId, departmentId, now),
-      this.repo.getManagerUserCount(organizationId, branchId, departmentId),
-      this.repo.getManagerTeamCount(organizationId, branchId, departmentId),
+      this.repo.getSalesManagerCount(organizationId, null, null),
+      this.repo.getPresentSalesManagerCount(organizationId, null, null, now),
+      this.repo.getManagerUserCount(organizationId, null, null),
+      this.repo.getManagerTeamCount(organizationId, null, null),
       this.repo.getManagerCustomerCount(organizationId),
-      this.repo.getManagerOrderMetrics(organizationId, branchId, departmentId, firstDayOfMonth, now),
-      this.repo.getManagerVisitMetrics(organizationId, branchId, departmentId, todayStart, todayEnd),
-      this.repo.getManagerVisitMetrics(organizationId, branchId, departmentId, null, null),
-      this.repo.getManagerAttendanceMetrics(organizationId, branchId, departmentId, now),
+      this.repo.getManagerOrderMetrics(organizationId, null, null, firstDayOfMonth, now),
+      this.repo.getManagerVisitMetrics(organizationId, null, null, todayStart, todayEnd),
+      this.repo.getManagerVisitMetrics(organizationId, null, null, null, null),
+      this.repo.getManagerAttendanceMetrics(organizationId, null, null, now),
       this.repo.getCompanyTargetMetrics(organizationId),
       this.repo.getHeadOfSalesTargetAnalytics(organizationId),
       this.repo.getHeadOfSalesPerformanceAnalytics(organizationId),
-      this.repo.getManagerOrganizationInfo(branchId, departmentId),
+      this.repo.getManagerOrganizationInfo(null, null),
       this.repo.getHeadOfSalesReportingInfo(user),
-      this.repo.getHeadOfSalesSalesManagers(organizationId, branchId, departmentId),
-      this.repo.getHeadOfSalesSalesExecutives(organizationId, branchId, departmentId),
-      this.repo.getHeadOfSalesTeams(organizationId, branchId, departmentId),
+      this.repo.getHeadOfSalesSalesManagers(organizationId, null, null),
+      this.repo.getHeadOfSalesSalesExecutives(organizationId, null, null),
+      this.repo.getHeadOfSalesTeams(organizationId, null, null),
       this.repo.getHeadOfSalesCustomers(organizationId),
-      this.repo.getHeadOfSalesVisits(organizationId, branchId, departmentId),
+      this.repo.getHeadOfSalesVisits(organizationId, null, null),
       this.repo.getRecentOrders(organizationId),
     ]);
 

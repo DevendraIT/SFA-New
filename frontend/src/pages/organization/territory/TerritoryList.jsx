@@ -17,16 +17,16 @@ export default function TerritoryList() {
   const [selectedTerritory, setSelectedTerritory] = useState(null);
   const [viewTerritory, setViewTerritory] = useState(null);
 
-  const isHeadOfSales = useMemo(() => {
-    if (!user) return false;
+  const canManageTerritory = useMemo(() => {
+    if (!user) return true;
     const roleNames = Array.isArray(user.roles)
       ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
       : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
+    return !roleNames.some((r) => r && (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("head of sales")));
   }, [user]);
 
   const handleDelete = async (territory) => {
-    if (isHeadOfSales) return;
+    if (!canManageTerritory) return;
     const confirmed = window.confirm(`Delete "${territory.name}" ?`);
     if (!confirmed) return;
 
@@ -52,7 +52,7 @@ export default function TerritoryList() {
           </p>
         </div>
 
-        {!isHeadOfSales && (
+        {canManageTerritory && (
           <button
             onClick={() => {
               setSelectedTerritory(null);
@@ -82,6 +82,7 @@ export default function TerritoryList() {
             <tr>
               <th className="px-6 py-4 text-left">Territory</th>
               <th className="px-6 py-4 text-left">Code</th>
+              <th className="px-6 py-4 text-left">Organization</th>
               <th className="px-6 py-4 text-left">Department</th>
               <th className="px-6 py-4 text-center">Branches</th>
               <th className="px-6 py-4 text-center">Actions</th>
@@ -90,13 +91,13 @@ export default function TerritoryList() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="py-16 text-center text-slate-500">
+                <td colSpan={6} className="py-16 text-center text-slate-500">
                   Loading territories...
                 </td>
               </tr>
             ) : territories.length === 0 ? (
               <tr>
-                <td colSpan={5}>
+                <td colSpan={6}>
                   <div className="flex flex-col items-center justify-center py-16">
                     <MapPin size={60} className="text-slate-300" />
                     <h3 className="mt-5 text-xl font-semibold text-slate-700">
@@ -135,17 +136,28 @@ export default function TerritoryList() {
                   <td className="px-6 py-5 text-slate-600">{territory.code || "-"}</td>
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-2">
+                      <Building size={15} className="text-slate-400" />
+                      <span className="text-slate-700 font-medium">{territory.organization?.name || "-"}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-2">
                       <LayoutGrid size={15} className="text-slate-400" />
                       <span className="text-slate-700">{territory.department?.name || "-"}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-5 text-center">{territory._count?.branches ?? 0}</td>
+                  <td className="px-6 py-5 text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <GitBranch size={15} className="text-slate-400" />
+                      <span className="font-semibold text-slate-800">{territory._count?.branches ?? territory.branches?.length ?? 0}</span>
+                    </div>
+                  </td>
                   <td className="px-6 py-5">
                     <div className="flex items-center justify-center gap-2">
                       <button onClick={() => setViewTerritory(territory)} className="rounded-lg border p-2 hover:bg-slate-100" title="View">
                         <Eye size={17} />
                       </button>
-                      {!isHeadOfSales && (
+                      {canManageTerritory && (
                         <>
                           <button onClick={() => { setSelectedTerritory(territory); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
                             <Pencil size={17} />
@@ -182,18 +194,144 @@ export default function TerritoryList() {
         </div>
       )}
 
+      {/* Rich Enterprise Territory View Details Modal */}
       {viewTerritory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setViewTerritory(null)}>
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <button type="button" onClick={() => setViewTerritory(null)} className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-              <X size={22} />
-            </button>
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewTerritory.name}</h2>
-            <div className="space-y-3 text-sm text-slate-700">
-              <p><strong>Code:</strong> {viewTerritory.code || "-"}</p>
-              <p><strong>Department:</strong> {viewTerritory.department?.name || "-"}</p>
-              <p><strong>Description:</strong> {viewTerritory.description || "-"}</p>
-              <p><strong>Branches:</strong> {viewTerritory._count?.branches ?? 0}</p>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={() => setViewTerritory(null)}
+        >
+          <div
+            className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Hero Banner Header */}
+            <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-6 md:p-8 relative">
+              <button
+                type="button"
+                onClick={() => setViewTerritory(null)}
+                className="absolute right-5 top-5 rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition"
+              >
+                <X size={20} />
+              </button>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3.5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-indigo-300">
+                    <MapPin size={32} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-indigo-300">Territory Details</span>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        {viewTerritory.isActive !== false ? "Active Territory" : "Inactive"}
+                      </span>
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mt-1">{viewTerritory.name}</h2>
+                    <p className="text-sm text-indigo-200 mt-0.5">Code: {viewTerritory.code || "N/A"}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-indigo-200 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
+                    Org: {viewTerritory.organization?.name || "IT Software"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Metrics Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-slate-50 border-b border-slate-100">
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Department</span>
+                <span className="block text-base font-bold text-slate-800 mt-1 truncate">{viewTerritory.department?.name || "-"}</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Operating Branches</span>
+                <span className="block text-base font-bold text-slate-800 mt-1">{viewTerritory._count?.branches ?? viewTerritory.branches?.length ?? 0} Branches</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Active Teams</span>
+                <span className="block text-base font-bold text-indigo-600 mt-1">{viewTerritory._count?.teams ?? viewTerritory.teams?.length ?? 0} Teams</span>
+              </div>
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="block text-xs font-semibold text-slate-500 uppercase">Field Strength</span>
+                <span className="block text-base font-bold text-emerald-600 mt-1">{viewTerritory._count?.users ?? viewTerritory.users?.length ?? 0} Personnel</span>
+              </div>
+            </div>
+
+            {/* Scrollable Main Content */}
+            <div className="p-6 md:p-8 space-y-6 max-h-[55vh] overflow-y-auto">
+              {/* General Info */}
+              <div>
+                <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-indigo-600" />
+                  General Territory Attributes
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm">
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-400 uppercase">Territory ID</span>
+                    <span className="font-mono text-xs text-slate-700 bg-slate-100 px-2 py-1 rounded inline-block mt-1">{viewTerritory.id}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-400 uppercase">Territory Code</span>
+                    <span className="font-semibold text-slate-800 mt-1 block">{viewTerritory.code || "-"}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs font-semibold text-slate-400 uppercase">Description</span>
+                    <span className="font-semibold text-slate-800 mt-1 block">{viewTerritory.description || "N/A"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Connected Branches */}
+              {viewTerritory.branches?.length > 0 && (
+                <div>
+                  <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                    <GitBranch className="w-4 h-4 text-indigo-600" />
+                    Covered Branches ({viewTerritory.branches.length})
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {viewTerritory.branches.map((b) => (
+                      <div key={b.id} className="p-3 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between">
+                        <div>
+                          <span className="font-semibold text-slate-800 text-sm block">{b.name}</span>
+                          <span className="text-xs text-slate-500">Code: {b.code || "-"}</span>
+                        </div>
+                        {b.city && <span className="text-xs text-slate-600 bg-white px-2 py-0.5 rounded border">{b.city}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Connected Teams */}
+              {viewTerritory.teams?.length > 0 && (
+                <div>
+                  <h3 className="text-base font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-indigo-600" />
+                    Territory Teams ({viewTerritory.teams.length})
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {viewTerritory.teams.map((t) => (
+                      <div key={t.id} className="p-3 rounded-xl border border-slate-200 bg-white flex items-center justify-between shadow-xs">
+                        <div>
+                          <span className="font-semibold text-slate-800 text-sm">{t.name}</span>
+                          {t.description && <p className="text-xs text-slate-500 mt-0.5">{t.description}</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200/80 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setViewTerritory(null)}
+                className="px-6 py-2.5 rounded-xl bg-slate-800 text-white font-medium text-sm hover:bg-slate-900 transition"
+              >
+                Close Details
+              </button>
             </div>
           </div>
         </div>
