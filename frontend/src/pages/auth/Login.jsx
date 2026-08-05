@@ -357,7 +357,7 @@ export default function Login() {
 
             <span className="ml-2 font-semibold text-indigo-600">
 
-              360 Degree IT Solutions
+              ITSoftLab Consultancy Services Pvt.Ltd.
 
             </span>
 

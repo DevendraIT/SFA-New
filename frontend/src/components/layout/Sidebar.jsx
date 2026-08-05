@@ -132,9 +132,9 @@ export default function Sidebar({
           if (item.title === "Field Force" && Array.isArray(item.children)) {
             return {
               ...item,
-              children: item.children.filter(
+children: item.children.filter(
                 (child) =>
-                  !["Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar"].includes(child.title)
+                  !["Attendance", "Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar"].includes(child.title)
               ),
             };
           }

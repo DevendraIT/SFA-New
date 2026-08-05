@@ -19,16 +19,10 @@ import dayjs from "dayjs";
 
 const WORKFLOW_STEPS = [
   { status: "PENDING", label: "Assigned", icon: Clock },
-  { status: "ACCEPTED", label: "Accepted", icon: CheckCircle2 },
-  { status: "IN_PROGRESS", label: "Started", icon: Clock },
-  { status: "NAVIGATING", label: "Navigating", icon: Navigation },
-  { status: "ARRIVED", label: "Arrived", icon: MapPin },
+  { status: "IN_PROGRESS", label: "Navigating", icon: Navigation },
   { status: "CHECKED_IN", label: "Checked In", icon: ShieldCheck },
-  { status: "DELIVERY_IN_PROGRESS", label: "Delivering", icon: Package },
-  { status: "PAYMENT_COLLECTED", label: "Payment", icon: DollarSign },
-  { status: "PHOTO_UPLOADED", label: "Photo", icon: Camera },
-  { status: "VISIT_NOTES_COMPLETED", label: "Notes", icon: FileText },
-  { status: "CHECKED_OUT", label: "Checked Out", icon: FileSignature },
+  { status: "PHOTO_UPLOADED", label: "Photos & Notes", icon: Camera },
+  { status: "PAYMENT_COLLECTED", label: "Payment (Optional)", icon: DollarSign },
   { status: "COMPLETED", label: "Completed", icon: CheckCircle2 },
 ];
 
@@ -150,11 +144,7 @@ export default function TaskExecutionPage() {
     }
   };
 
-  const handleUploadAndSavePhoto = async () => {
-    if (!selectedFile && !photoUrl) {
-      toast.error("Please select a photo file from your device");
-      return;
-    }
+  const handleUploadAndSavePhotoAndNotes = async () => {
     try {
       setUploadingPhoto(true);
       let finalUrl = photoUrl;
@@ -162,9 +152,13 @@ export default function TaskExecutionPage() {
         const res = await fieldForceApi.uploadPhoto(selectedFile);
         finalUrl = res.data?.data?.url || res.data?.url || photoUrl;
       }
-      await handleStatusTransition("PHOTO_UPLOADED", { photoUrl: finalUrl });
+      await handleStatusTransition("PHOTO_UPLOADED", {
+        photoUrl: finalUrl,
+        notes: visitNotes || undefined,
+      });
+      toast.success("Photos & Visit Notes saved successfully!");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to upload photo file");
+      toast.error(err?.response?.data?.message || "Failed to save photo and visit notes");
     } finally {
       setUploadingPhoto(false);
     }
@@ -293,104 +287,103 @@ export default function TaskExecutionPage() {
         </div>
 
         {/* Step Action Controls */}
-        {task.status === "PENDING" || task.status === "ASSIGNED" ? (
+        {task.status === "PENDING" || task.status === "ASSIGNED" || task.status === "ACCEPTED" ? (
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center space-y-4">
-            <h4 className="font-bold text-blue-900 text-base">Accept Task Mission</h4>
+            <h4 className="font-bold text-blue-900 text-base">Start Task & Navigation</h4>
             <p className="text-xs text-blue-700 max-w-md mx-auto">
-              Review mission details and accept to signal your manager that you are ready to execute.
-            </p>
-            <button
-              onClick={() => handleStatusTransition("ACCEPTED")}
-              disabled={actionLoading}
-              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
-            >
-              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <CheckCircle2 size={16} className="inline mr-2" />}
-              Accept Task
-            </button>
-          </div>
-        ) : task.status === "ACCEPTED" ? (
-          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 text-center space-y-4">
-            <h4 className="font-bold text-indigo-900 text-base">Start Field Mission</h4>
-            <p className="text-xs text-indigo-700 max-w-md mx-auto">
-              Click start when you are preparing to head to the customer location.
+              Click Start Task to begin your field route navigation towards the customer location.
             </p>
             <button
               onClick={() => handleStatusTransition("IN_PROGRESS")}
               disabled={actionLoading}
-              className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
-            >
-              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <Clock size={16} className="inline mr-2" />}
-              Start Mission
-            </button>
-          </div>
-        ) : task.status === "IN_PROGRESS" ? (
-          <div className="bg-cyan-50 border border-cyan-200 rounded-2xl p-6 text-center space-y-4">
-            <h4 className="font-bold text-cyan-900 text-base">Begin Route Navigation</h4>
-            <p className="text-xs text-cyan-700 max-w-md mx-auto">
-              Start turn-by-turn navigation towards the customer coordinates.
-            </p>
-            <button
-              onClick={() => handleStatusTransition("NAVIGATING")}
-              disabled={actionLoading}
-              className="px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
+              className="px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-sm shadow-lg shadow-blue-500/20 transition disabled:opacity-50 cursor-pointer"
             >
               {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <Navigation size={16} className="inline mr-2" />}
-              Start Navigation
+              Start Task
             </button>
           </div>
-        ) : task.status === "NAVIGATING" ? (
-          <div className="bg-purple-50 border border-purple-200 rounded-2xl p-6 text-center space-y-4">
-            <h4 className="font-bold text-purple-900 text-base">Confirm Arrival at Customer Location</h4>
-            <p className="text-xs text-purple-700 max-w-md mx-auto">
-              {testingMode
-                ? "Confirm your arrival at customer location. (Testing Mode: Arrived & Check-In enabled from any location)"
-                : "Confirm your arrival once you have reached within 100 meters of the destination."}
-            </p>
-            <button
-              onClick={() => handleStatusTransition("ARRIVED")}
-              disabled={actionLoading || (!testingMode && !isWithinGeoFence)}
-              className="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
-            >
-              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <MapPin size={16} className="inline mr-2" />}
-              Mark Arrived
-            </button>
-            {!testingMode && !isWithinGeoFence && (
-              <p className="text-xs text-red-600 font-medium">Arrival requires being within 100 meters of customer coordinates.</p>
-            )}
-          </div>
-        ) : task.status === "ARRIVED" ? (
+        ) : task.status === "IN_PROGRESS" || task.status === "NAVIGATING" || task.status === "ARRIVED" ? (
           <div className="bg-teal-50 border border-teal-200 rounded-2xl p-6 text-center space-y-4">
-            <h4 className="font-bold text-teal-900 text-base">Perform Geo Check-In</h4>
+            <h4 className="font-bold text-teal-900 text-base">Arrived & Geo Check-In</h4>
             <p className="text-xs text-teal-700 max-w-md mx-auto">
-              Geo-fence verified. Perform Check-In to log your arrival timestamp and GPS coordinates.
+              {testingMode
+                ? "Perform Check-In to log your GPS arrival coordinates at customer destination."
+                : "Perform Geo Check-In once you are within 100 meters of customer coordinates."}
             </p>
             <button
               onClick={() => handleStatusTransition("CHECKED_IN")}
               disabled={actionLoading || (!testingMode && !isWithinGeoFence)}
-              className="px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
+              className="px-8 py-3.5 rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold text-sm shadow-lg shadow-teal-500/20 transition disabled:opacity-50 cursor-pointer"
             >
               {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <ShieldCheck size={16} className="inline mr-2" />}
-              Check-In Now
+              Geo Check-In
             </button>
+            {!testingMode && !isWithinGeoFence && (
+              <p className="text-xs text-red-600 font-medium">Check-In requires being within 100 meters of customer coordinates.</p>
+            )}
           </div>
-        ) : task.status === "CHECKED_IN" ? (
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center space-y-4">
-            <h4 className="font-bold text-blue-900 text-base">Start Product Delivery / Execution</h4>
-            <p className="text-xs text-blue-700 max-w-md mx-auto">
-              Begin delivery of ordered products or execution of scheduled customer meeting.
-            </p>
+        ) : task.status === "CHECKED_IN" || task.status === "DELIVERY_IN_PROGRESS" ? (
+          <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-6 space-y-5">
+            <div className="flex items-center gap-2 border-b border-blue-100 pb-3">
+              <Camera size={18} className="text-blue-600" />
+              <h4 className="font-bold text-blue-900 text-base">Upload Visit Photos & Visit Notes</h4>
+            </div>
+
+            {/* Combined Photo Upload UI in Application Blue Theme */}
+            <div className="space-y-3 bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Product / Visit Photo Proof</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="block w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
+              />
+
+              {/* Photo Preview rendering for uploaded file or existing image URL */}
+              {(photoPreview || task.photos || photoUrl) && (
+                <div className="mt-3 relative rounded-xl overflow-hidden border border-blue-200 bg-slate-900/5 max-h-48">
+                  <img
+                    src={photoPreview || (Array.isArray(task.photos) ? task.photos[0] : task.photos) || photoUrl}
+                    alt="Delivery Photo Proof"
+                    className="w-full h-48 object-cover rounded-xl"
+                  />
+                  <span className="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1">
+                    <CheckCircle2 size={12} className="text-emerald-400" /> Photo Preview Ready
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Visit Notes Textarea on the same screen */}
+            <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm space-y-2">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Visit Notes & Summary</label>
+              <textarea
+                rows={3}
+                value={visitNotes}
+                onChange={(e) => setVisitNotes(e.target.value)}
+                placeholder="Enter customer feedback, meeting summary, or delivery notes..."
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              />
+            </div>
+
             <button
-              onClick={() => handleStatusTransition("DELIVERY_IN_PROGRESS")}
-              disabled={actionLoading}
-              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
+              onClick={handleUploadAndSavePhotoAndNotes}
+              disabled={actionLoading || uploadingPhoto}
+              className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
             >
-              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <Package size={16} className="inline mr-2" />}
-              Start Delivery
+              {actionLoading || uploadingPhoto ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
+              {uploadingPhoto ? "Uploading Photo..." : "Save Photos & Visit Notes"}
             </button>
           </div>
-        ) : task.status === "DELIVERY_IN_PROGRESS" ? (
+        ) : task.status === "PHOTO_UPLOADED" || task.status === "VISIT_NOTES_COMPLETED" ? (
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-4">
-            <h4 className="font-bold text-emerald-900 text-base">Record Payment Collection</h4>
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-emerald-900 text-base">Payment Collection (Optional)</h4>
+              <span className="text-xs font-semibold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full">Optional</span>
+            </div>
+            <p className="text-xs text-emerald-700">
+              Record customer payment below, or click Skip Payment Collection if payment was already received or not required.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Amount Collected (₹)</label>
@@ -416,103 +409,42 @@ export default function TaskExecutionPage() {
                 </select>
               </div>
             </div>
-            <button
-              onClick={() =>
-                handleStatusTransition("PAYMENT_COLLECTED", {
-                  payment: { amount: parseFloat(paymentAmount) || 0, method: paymentMethod, status: "COLLECTED" },
-                })
-              }
-              disabled={actionLoading || !paymentAmount}
-              className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
-            >
-              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <DollarSign size={16} className="inline mr-2" />}
-              Confirm Payment Collection
-            </button>
-          </div>
-        ) : task.status === "PAYMENT_COLLECTED" ? (
-          <div className="bg-pink-50 border border-pink-200 rounded-2xl p-6 space-y-4">
-            <h4 className="font-bold text-pink-900 text-base">Upload Delivery / Visit Photo Proof</h4>
-            <div className="space-y-3">
-              <label className="block text-xs font-semibold text-slate-700">Select Image File from Device</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileSelect}
-                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600 file:text-white hover:file:bg-pink-700 cursor-pointer"
-              />
 
-              {photoPreview && (
-                <div className="mt-3 relative rounded-2xl overflow-hidden border border-pink-300 max-h-48">
-                  <img src={photoPreview} alt="Preview" className="w-full h-48 object-cover" />
-                  <span className="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-1 rounded-md">
-                    Photo Preview
-                  </span>
-                </div>
-              )}
+            <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+              <button
+                onClick={() =>
+                  handleStatusTransition("PAYMENT_COLLECTED", {
+                    payment: { amount: parseFloat(paymentAmount) || 0, method: paymentMethod, status: "COLLECTED" },
+                  })
+                }
+                disabled={actionLoading || !paymentAmount}
+                className="flex-1 w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50 cursor-pointer"
+              >
+                {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <DollarSign size={16} className="inline mr-2" />}
+                Confirm Payment Collection
+              </button>
+              <button
+                onClick={() => handleStatusTransition("COMPLETED")}
+                disabled={actionLoading}
+                className="flex-1 w-full py-3.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-sm shadow-sm transition disabled:opacity-50 cursor-pointer"
+              >
+                Skip Payment & Complete Task
+              </button>
             </div>
-
-            <button
-              onClick={handleUploadAndSavePhoto}
-              disabled={actionLoading || uploadingPhoto || (!selectedFile && !photoUrl)}
-              className="w-full py-3 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {actionLoading || uploadingPhoto ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
-              {uploadingPhoto ? "Uploading Photo..." : "Upload & Save Photo Proof"}
-            </button>
           </div>
-        ) : task.status === "PHOTO_UPLOADED" ? (
-          <div className="bg-violet-50 border border-violet-200 rounded-2xl p-6 space-y-4">
-            <h4 className="font-bold text-violet-900 text-base">Complete Visit Notes</h4>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Customer Meeting / Visit Summary Notes</label>
-              <textarea
-                rows={3}
-                value={visitNotes}
-                onChange={(e) => setVisitNotes(e.target.value)}
-                placeholder="Enter customer feedback, delivery confirmation details, or follow-up notes..."
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-violet-500"
-              />
-            </div>
-            <button
-              onClick={() => handleStatusTransition("VISIT_NOTES_COMPLETED", { notes: visitNotes })}
-              disabled={actionLoading}
-              className="w-full py-3 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
-            >
-              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <FileText size={16} className="inline mr-2" />}
-              Save Visit Notes
-            </button>
-          </div>
-        ) : task.status === "VISIT_NOTES_COMPLETED" ? (
-          <div className="bg-orange-50 border border-orange-200 rounded-2xl p-6 space-y-4">
-            <h4 className="font-bold text-orange-900 text-base">Capture Customer Signature & Check-Out</h4>
-            <SignaturePad
-              onSave={(dataUrl) => {
-                setSignatureData(dataUrl);
-                toast.success("Signature captured successfully!");
-              }}
-            />
-            <button
-              onClick={() => handleStatusTransition("CHECKED_OUT", { signature: signatureData })}
-              disabled={actionLoading}
-              className="w-full py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50"
-            >
-              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <FileSignature size={16} className="inline mr-2" />}
-              Check-Out & Confirm Signature
-            </button>
-          </div>
-        ) : task.status === "CHECKED_OUT" ? (
+        ) : task.status === "PAYMENT_COLLECTED" || task.status === "CHECKED_OUT" ? (
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center space-y-4">
             <h4 className="font-bold text-emerald-900 text-base">Finalize Mission Completion</h4>
             <p className="text-xs text-emerald-700 max-w-md mx-auto">
-              All delivery requirements, payment, photo proof, and customer signature have been logged. Finalize the task.
+              All task requirements, visit notes, and photo proofs are logged. Finalize mission completion.
             </p>
             <button
               onClick={() => handleStatusTransition("COMPLETED")}
               disabled={actionLoading}
-              className="px-8 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg transition disabled:opacity-50"
+              className="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition disabled:opacity-50 cursor-pointer"
             >
               {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <CheckCircle2 size={16} className="inline mr-2" />}
-              Mark Entire Mission Completed
+              Mark Mission Completed
             </button>
           </div>
         ) : (

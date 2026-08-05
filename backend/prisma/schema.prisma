@@ -369,6 +369,7 @@ model Order {
   id             String  @id @default(uuid()) @db.Uuid
   organizationId String  @db.Uuid
   orderNumber    String  @unique
+  orderName      String?
   customerId     String  @db.Uuid
   ownerId        String  @db.Uuid
   branchId       String? @db.Uuid

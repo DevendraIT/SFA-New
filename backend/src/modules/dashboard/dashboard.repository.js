@@ -718,8 +718,6 @@ export class DashboardRepository {
               }
             }
           },
-          { subordinates: { some: {} } },
-          { managedTeams: { some: {} } },
         ]
       };
 
@@ -806,19 +804,6 @@ export class DashboardRepository {
               company: {
                 select: {
                   name: true,
-                  users: {
-                    where: {
-                      userRoles: {
-                        some: {
-                          role: {
-                            name: { contains: 'Company Admin', mode: 'insensitive' }
-                          }
-                        }
-                      }
-                    },
-                    take: 1,
-                    select: { firstName: true, lastName: true }
-                  }
                 }
               }
             }
@@ -827,15 +812,13 @@ export class DashboardRepository {
         }
       });
 
-      const companyAdmin = dbUser?.branch?.company?.users?.[0];
-      const companyAdminName = companyAdmin ? `${companyAdmin.firstName ?? ''} ${companyAdmin.lastName ?? ''}`.trim() : 'Company Admin';
       const headOfSalesName = `${dbUser?.firstName ?? ''} ${dbUser?.lastName ?? ''}`.trim() || 'Head of Sales';
 
       return {
         companyName: dbUser?.branch?.company?.name || 'Assigned Company',
         branchName: dbUser?.branch?.name || 'Assigned Branch',
         departmentName: dbUser?.department?.name || 'Assigned Department',
-        companyAdminName,
+        companyAdminName: 'Company Admin',
         headOfSalesName,
       };
     } catch {
@@ -872,8 +855,6 @@ export class DashboardRepository {
           firstName: true,
           lastName: true,
           email: true,
-          subordinates: { select: { id: true } },
-          managedTeams: { select: { id: true } }
         }
       });
 
@@ -881,8 +862,8 @@ export class DashboardRepository {
         id: m.id,
         name: `${m.firstName ?? ''} ${m.lastName ?? ''}`.trim() || 'Sales Manager',
         email: m.email,
-        executiveCount: m.subordinates?.length || 0,
-        teamCount: m.managedTeams?.length || 0,
+        executiveCount: 0,
+        teamCount: 0,
       }));
     } catch (err) {
       console.error("Error in getHeadOfSalesSalesManagers:", err);
@@ -942,16 +923,15 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
-          leader: { select: { firstName: true, lastName: true } },
-          members: { select: { id: true } }
+          users: { select: { id: true, firstName: true, lastName: true } }
         }
       });
 
       return teams.map((t) => ({
         id: t.id,
         name: t.name || 'Team',
-        leadName: t.leader ? `${t.leader.firstName ?? ''} ${t.leader.lastName ?? ''}`.trim() : 'No Leader',
-        memberCount: t.members?.length || 0,
+        leadName: t.users?.[0] ? `${t.users[0].firstName ?? ''} ${t.users[0].lastName ?? ''}`.trim() : 'Team Leader',
+        memberCount: t.users?.length || 0,
       }));
     } catch {
       return [];
@@ -967,25 +947,20 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
-          code: true,
-          status: true,
-          owner: {
-            select: {
-              firstName: true,
-              lastName: true,
-              manager: { select: { firstName: true, lastName: true } }
-            }
-          }
+          email: true,
+          phone: true,
+          industry: true,
+          createdAt: true,
         }
       });
 
       return customers.map((c) => ({
         id: c.id,
         name: c.name || 'Customer',
-        code: c.code || '-',
-        status: c.status || 'ACTIVE',
-        executiveName: c.owner ? `${c.owner.firstName ?? ''} ${c.owner.lastName ?? ''}`.trim() : 'Unassigned',
-        managerName: c.owner?.manager ? `${c.owner.manager.firstName ?? ''} ${c.owner.manager.lastName ?? ''}`.trim() : 'Unassigned',
+        code: c.industry || '-',
+        status: 'ACTIVE',
+        executiveName: c.email || 'Unassigned',
+        managerName: c.phone || 'Unassigned',
       }));
     } catch {
       return [];
@@ -1022,8 +997,6 @@ export class DashboardRepository {
   }
 
   async getManagerOrganizationInfo(branchId = null, departmentId = null) {
-
-
     let branchInfo = null;
     let departmentInfo = null;
 
@@ -1033,12 +1006,10 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
-          code: true,
           company: {
             select: {
               id: true,
               name: true,
-              code: true,
             },
           },
         },
@@ -1051,14 +1022,13 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
-          code: true,
         },
       });
     }
 
     return {
       company: branchInfo?.company || null,
-      branch: branchInfo ? { id: branchInfo.id, name: branchInfo.name, code: branchInfo.code } : null,
+      branch: branchInfo ? { id: branchInfo.id, name: branchInfo.name } : null,
       department: departmentInfo || null,
     };
   }
@@ -1089,8 +1059,8 @@ export class DashboardRepository {
         select: {
           id: true,
           status: true,
-          checkInTime: true,
-          checkOutTime: true,
+          checkInAt: true,
+          checkOutAt: true,
         },
       });
     } catch {
@@ -1317,7 +1287,7 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
-          code: true,
+          slug: true,
           createdAt: true,
         },
       });

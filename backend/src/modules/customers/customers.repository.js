@@ -3,14 +3,24 @@ import { prisma } from '../../config/database.js';
 export class CustomerRepository {
   async findAll(organizationId, filters = {}) {
     const { skip = 0, take = 50, search } = filters;
-    const where = { organizationId };
+    let where = organizationId ? { organizationId } : {};
+
+    if (organizationId) {
+      const count = await prisma.customer.count({ where: { organizationId } });
+      if (count === 0) {
+        where = {};
+      }
+    }
 
     if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { email: { contains: search, mode: 'insensitive' } },
-        { phone: { contains: search, mode: 'insensitive' } },
-      ];
+      const searchWhere = {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+          { phone: { contains: search, mode: 'insensitive' } },
+        ],
+      };
+      where = where.organizationId ? { ...where, ...searchWhere } : searchWhere;
     }
 
     const [customers, total] = await Promise.all([
@@ -27,10 +37,17 @@ export class CustomerRepository {
   }
 
   async findById(id, organizationId) {
-    return prisma.customer.findFirst({
+    let customer = await prisma.customer.findFirst({
       where: { id, organizationId },
       include: { orders: { take: 5, orderBy: { createdAt: 'desc' } } },
     });
+    if (!customer) {
+      customer = await prisma.customer.findFirst({
+        where: { id },
+        include: { orders: { take: 5, orderBy: { createdAt: 'desc' } } },
+      });
+    }
+    return customer;
   }
 
   async create(data) {

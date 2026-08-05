@@ -15,13 +15,14 @@ class BaseOrderDto {
     this.updatedAt = data.updatedAt;
   }
 
-  static formatMoney(amount, currency = 'USD') {
+  static formatMoney(amount, currency = 'INR') {
+    const cur = currency || 'INR';
     return {
       amount: parseFloat(amount) || 0,
-      currency: currency,
-      formatted: new Intl.NumberFormat('en-US', {
+      currency: cur,
+      formatted: new Intl.NumberFormat(cur === 'INR' ? 'en-IN' : 'en-US', {
         style: 'currency',
-        currency: currency,
+        currency: cur,
       }).format(amount || 0),
     };
   }
@@ -66,16 +67,18 @@ export class OrderItemDto extends BaseOrderDto {
 export class OrderListDto extends BaseOrderDto {
   constructor(order = {}) {
     super(order);
+    this.orderName = order.orderName || order.orderNumber;
     this.orderNumber = order.orderNumber;
     this.customerName = order.customerName || order.customer?.name;
     this.customerId = order.customerId;
     this.status = order.status;
     this.priority = order.priority || ORDER_PRIORITY.NORMAL;
     this.orderType = order.orderType || ORDER_TYPE.STANDARD;
-    this.orderDate = BaseOrderDto.formatDate(order.orderDate);
+    this.orderDate = BaseOrderDto.formatDate(order.orderDate || order.createdAt);
     this.expectedDeliveryDate = BaseOrderDto.formatDate(order.expectedDeliveryDate);
     this.totalAmount = BaseOrderDto.formatMoney(order.totalAmount, order.currency);
-    this.itemCount = parseInt(order.itemCount) || (order.items ? order.items.length : 0);
+    this.items = (order.items || []).map(item => new OrderItemDto(item));
+    this.itemCount = this.items.length || (parseInt(order.itemCount) || 0);
     this.ownerName = order.ownerName || order.owner?.name;
     this.companyName = order.companyName || order.company?.name;
   }
