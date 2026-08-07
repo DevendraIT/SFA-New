@@ -55,6 +55,9 @@ model Organization {
   products              Product[]
   orders                Order[]
   departments           Department[]
+  warehouses            Warehouse[]
+  stocks                Stock[]
+  stockMovements        StockMovement[]
 }
 
 // --------------------------------------------------
@@ -85,6 +88,7 @@ model Branch {
   territory    Territory    @relation(fields: [territoryId], references: [id], onDelete: Cascade)
   teams        Team[]
   users        User[]
+  warehouses   Warehouse[]
 
   @@unique([organizationId, code])
 }
@@ -260,6 +264,7 @@ model User {
   calendarEvents    CalendarEvent[]
   notificationPrefs NotificationPreference[]
   orders            Order[]
+  stockMovements    StockMovement[]
 
   @@unique([organizationId, email])
 }
@@ -353,16 +358,26 @@ model Product {
   id             String  @id @default(uuid()) @db.Uuid
   organizationId String  @db.Uuid
   sku            String  @unique
+  productCode    String? @unique
   name           String
   description    String?
+  category       String?
+  brand          String?
+  unit           String?
   price          Float
+  costPrice      Float?
+  tax            Float?  @default(0)
+  minimumStock   Int?    @default(0)
+  barcode        String?
   isActive       Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   orderItems   OrderItem[]
+  stocks       Stock[]
+  movements    StockMovement[]
 }
 
 model Order {
@@ -805,4 +820,72 @@ model DailyActivityReport {
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id])
   user           User         @relation(fields: [userId], references: [id])
+}
+
+// ==================================================
+// PHASE 11 — Inventory Management
+// ==================================================
+
+model Warehouse {
+  id             String  @id @default(uuid()) @db.Uuid
+  organizationId String  @db.Uuid
+  name           String
+  code           String?
+  location       String?
+  isActive       Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  stocks       Stock[]
+  movements    StockMovement[]
+  branches     Branch[]
+
+  @@unique([organizationId, code])
+}
+
+model Stock {
+  id               String @id @default(uuid()) @db.Uuid
+  organizationId   String @db.Uuid
+  productId        String @db.Uuid
+  warehouseId      String @db.Uuid
+  quantity         Int    @default(0)
+  reservedQuantity Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouse    Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, warehouseId])
+}
+
+model StockMovement {
+  id             String            @id @default(uuid()) @db.Uuid
+  organizationId String            @db.Uuid
+  productId      String            @db.Uuid
+  warehouseId    String            @db.Uuid
+  type           StockMovementType
+  quantity       Int
+  referenceId    String? // e.g. Order ID
+  performedBy    String?           @db.Uuid
+  notes          String?
+
+  createdAt DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouse    Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [performedBy], references: [id], onDelete: SetNull)
+}
+
+enum StockMovementType {
+  ADD
+  REDUCE
+  TRANSFER
+  RESERVE
+  CONSUME
 }

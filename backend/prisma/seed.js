@@ -134,6 +134,17 @@ async function main() {
     { name: 'Read Expenses', slug: 'expense:read', moduleName: 'field-force' },
     { name: 'Log Expenses', slug: 'expense:write', moduleName: 'field-force' },
     { name: 'Approve Expenses', slug: 'expense:approve', moduleName: 'field-force' },
+    { name: 'Read Products', slug: 'read:products', moduleName: 'inventory' },
+    { name: 'Create Products', slug: 'create:products', moduleName: 'inventory' },
+    { name: 'Update Products', slug: 'update:products', moduleName: 'inventory' },
+    { name: 'Update Basic Products', slug: 'update_basic:products', moduleName: 'inventory' },
+    { name: 'Delete Products', slug: 'delete:products', moduleName: 'inventory' },
+    { name: 'Read Warehouses', slug: 'read:warehouses', moduleName: 'inventory' },
+    { name: 'Create Warehouses', slug: 'create:warehouses', moduleName: 'inventory' },
+    { name: 'Update Warehouses', slug: 'update:warehouses', moduleName: 'inventory' },
+    { name: 'Delete Warehouses', slug: 'delete:warehouses', moduleName: 'inventory' },
+    { name: 'Read Stock', slug: 'read:stock', moduleName: 'inventory' },
+    { name: 'Manage Stock', slug: 'manage:stock', moduleName: 'inventory' },
   ];
 
   const createdPermissions = [];
@@ -195,6 +206,21 @@ async function main() {
     "lead:create",
     "order:create",
     "order:read"
+  ],
+
+  [ENTERPRISE_ROLES.INVENTORY_MANAGER]: [
+    "company:read",
+    "branch:read",
+    "read:products",
+    "create:products",
+    "update:products",
+    "delete:products",
+    "read:warehouses",
+    "create:warehouses",
+    "update:warehouses",
+    "delete:warehouses",
+    "read:stock",
+    "manage:stock"
   ]
 };
 
@@ -305,57 +331,81 @@ console.log(`🔒 Seeded ${createdPermissions.length} permissions successfully`)
       firstName: 'Sales',
       lastName: 'Executive',
       role: rolesMap[ENTERPRISE_ROLES.SALES_EXECUTIVE],
+    },
+    {
+      email: 'inventory.manager@example.com',
+      firstName: 'Inventory',
+      lastName: 'Manager',
+      role: rolesMap[ENTERPRISE_ROLES.INVENTORY_MANAGER],
     }
   ];
 
   let managerId = null;
 
   for (const u of usersToCreate) {
-    const user = await prisma.user.upsert({
+    let user = await prisma.user.findFirst({
       where: {
-        organizationId_email: {
-          organizationId: org.id,
-          email: u.email,
-        },
-      },
-      update: {
-        passwordHash,
-        managerId,
-      },
-      create: {
         organizationId: org.id,
         email: u.email,
-        firstName: u.firstName,
-        lastName: u.lastName,
-        isActive: true,
-        passwordHash,
-        emailVerifiedAt: new Date(),
-        managerId, // Create simple reporting hierarchy based on array order
       },
     });
 
-    console.log(`👤 User created: ${user.email} with Role: ${u.role.name}`);
-
-    await prisma.userRole.upsert({
-      where: {
-        userId_roleId: {
-          userId: user.id,
-          roleId: u.role.id,
+    if (user) {
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { passwordHash, managerId },
+      });
+    } else {
+      user = await prisma.user.create({
+        data: {
+          organizationId: org.id,
+          email: u.email,
+          firstName: u.firstName,
+          lastName: u.lastName,
+          isActive: true,
+          passwordHash,
+          emailVerifiedAt: new Date(),
+          managerId,
         },
-      },
-      update: {},
-      create: {
+      });
+    }
+
+    console.log(`👤 User processed: ${user.email} with Role: ${u.role.name}`);
+
+    const existingUserRole = await prisma.userRole.findFirst({
+      where: {
         userId: user.id,
         roleId: u.role.id,
       },
     });
 
-    await prisma.passwordHistory.create({
-      data: {
-        userId: user.id,
-        passwordHash,
-      },
+    if (!existingUserRole) {
+      await prisma.userRole.create({
+        data: {
+          userId: user.id,
+          roleId: u.role.id,
+        },
+      });
+    }
+
+    // Only create password history if we created a new user to prevent spamming
+    if (!user.managerId && user.email === 'devendradangi9174@gmail.com') { // simple check to avoid too many entries
+        // just add it for all for now but don't error
+    }
+    
+    // We'll skip password history creation here to avoid duplicate errors since we are re-running seed
+    // Or we can just check if it exists
+    const existingHist = await prisma.passwordHistory.findFirst({
+        where: { userId: user.id }
     });
+    if (!existingHist) {
+        await prisma.passwordHistory.create({
+          data: {
+            userId: user.id,
+            passwordHash,
+          },
+        });
+    }
 
     managerId = user.id; // Next user reports to this user
   }

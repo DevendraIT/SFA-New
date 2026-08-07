@@ -47,6 +47,10 @@ router.use("/users", usersRouter);
 import customerRouter from "../modules/customers/index.js";
 router.use("/customers", customerRouter);
 
+// Inventory
+import inventoryRouter from "../modules/inventory/index.js";
+router.use("/inventory", inventoryRouter);
+
 // Sales Orders
 import salesOrderRouter from "../modules/sales-order/index.js";
 router.use("/orders", salesOrderRouter);

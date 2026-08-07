@@ -303,9 +303,17 @@ exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   sku: 'sku',
+  productCode: 'productCode',
   name: 'name',
   description: 'description',
+  category: 'category',
+  brand: 'brand',
+  unit: 'unit',
   price: 'price',
+  costPrice: 'costPrice',
+  tax: 'tax',
+  minimumStock: 'minimumStock',
+  barcode: 'barcode',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -315,6 +323,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   orderNumber: 'orderNumber',
+  orderName: 'orderName',
   customerId: 'customerId',
   ownerId: 'ownerId',
   branchId: 'branchId',
@@ -541,6 +550,41 @@ exports.Prisma.DailyActivityReportScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WarehouseScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  code: 'code',
+  location: 'location',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StockScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  productId: 'productId',
+  warehouseId: 'warehouseId',
+  quantity: 'quantity',
+  reservedQuantity: 'reservedQuantity',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StockMovementScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  productId: 'productId',
+  warehouseId: 'warehouseId',
+  type: 'type',
+  quantity: 'quantity',
+  referenceId: 'referenceId',
+  performedBy: 'performedBy',
+  notes: 'notes',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -643,6 +687,14 @@ exports.TaskPriority = exports.$Enums.TaskPriority = {
   URGENT: 'URGENT'
 };
 
+exports.StockMovementType = exports.$Enums.StockMovementType = {
+  ADD: 'ADD',
+  REDUCE: 'REDUCE',
+  TRANSFER: 'TRANSFER',
+  RESERVE: 'RESERVE',
+  CONSUME: 'CONSUME'
+};
+
 exports.Prisma.ModelName = {
   Organization: 'Organization',
   Branch: 'Branch',
@@ -674,7 +726,10 @@ exports.Prisma.ModelName = {
   NotificationPreference: 'NotificationPreference',
   BusinessRuleConfig: 'BusinessRuleConfig',
   Expense: 'Expense',
-  DailyActivityReport: 'DailyActivityReport'
+  DailyActivityReport: 'DailyActivityReport',
+  Warehouse: 'Warehouse',
+  Stock: 'Stock',
+  StockMovement: 'StockMovement'
 };
 
 /**

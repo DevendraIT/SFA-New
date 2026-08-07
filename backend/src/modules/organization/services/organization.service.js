@@ -3,6 +3,7 @@ import { logAudit } from '../../../utils/audit.js';
 import { BranchRepository } from '../repositories/BranchRepository.js';
 import { DepartmentRepository } from '../repositories/DepartmentRepository.js';
 import { TerritoryRepository } from '../repositories/TerritoryRepository.js';
+import { prisma } from '../../../config/database.js';
 
 /**
  * Organization Service
@@ -64,9 +65,9 @@ export class OrganizationService {
       ...options,
       isActive: query.isActive,
     });
-    return { 
-      organizations, 
-      meta: this._buildPaginationMeta(total, query.page, query.limit) 
+    return {
+      organizations,
+      meta: this._buildPaginationMeta(total, query.page, query.limit)
     };
   }
 
@@ -84,7 +85,7 @@ export class OrganizationService {
     const slug = this._generateSlug(data.name);
     let uniqueSlug = slug;
     let counter = 1;
-    
+
     while (await this.repo.existsBySlug(uniqueSlug)) {
       uniqueSlug = `${slug}-${counter}`;
       counter++;
@@ -103,10 +104,10 @@ export class OrganizationService {
       userId: req.user?.id || null,
       action: 'organization.create',
       moduleName: 'organization',
-      details: { 
-        organizationId: organization.id, 
+      details: {
+        organizationId: organization.id,
         name: organization.name,
-        slug: organization.slug 
+        slug: organization.slug
       },
       req,
     });
@@ -131,16 +132,16 @@ export class OrganizationService {
       if (await this.repo.existsByName(data.name, organizationId)) {
         throw AppError.badRequest(`Organization name '${data.name}' is already in use.`);
       }
-      
+
       const slug = this._generateSlug(data.name);
       let uniqueSlug = slug;
       let counter = 1;
-      
+
       while (await this.repo.existsBySlug(uniqueSlug, organizationId)) {
         uniqueSlug = `${slug}-${counter}`;
         counter++;
       }
-      
+
       data.slug = uniqueSlug;
     }
 
@@ -161,7 +162,7 @@ export class OrganizationService {
   async activateOrganization(organizationId, req) {
     const org = await this.repo.findById(organizationId);
     if (!org) throw AppError.notFound('Organization not found.');
-    
+
     if (org.isActive) {
       throw AppError.badRequest('Organization is already active.');
     }
@@ -183,7 +184,7 @@ export class OrganizationService {
   async deactivateOrganization(organizationId, req) {
     const org = await this.repo.findById(organizationId);
     if (!org) throw AppError.notFound('Organization not found.');
-    
+
     if (!org.isActive) {
       throw AppError.badRequest('Organization is already inactive.');
     }
@@ -266,7 +267,7 @@ export class OrganizationService {
     const options = this._buildListOptions(query);
     const { branches, total } = await this.branchRepo.findAll(organizationId, {
       ...options,
-      
+
     });
     return { branches, meta: this._buildPaginationMeta(total, query.page, query.limit) };
   }
@@ -288,7 +289,19 @@ export class OrganizationService {
     const department = await this.departmentRepo.findById(data.departmentId, organizationId);
     if (!department) throw AppError.badRequest('Department not found within your organization.');
 
-    const branch = await this.branchRepo.create({
+    if (data.warehouseIds && data.warehouseIds.length > 0) {
+      const validWarehouses = await prisma.warehouse.count({
+        where: {
+          id: { in: data.warehouseIds },
+          organizationId
+        }
+      });
+      if (validWarehouses !== data.warehouseIds.length) {
+        throw AppError.badRequest('One or more selected warehouses do not exist or do not belong to your organization.');
+      }
+    }
+
+    const branchData = {
       organizationId,
       departmentId: data.departmentId,
       territoryId: data.territoryId,
@@ -301,7 +314,15 @@ export class OrganizationService {
       state: data.state,
       country: data.country,
       postalCode: data.postalCode,
-    });
+    };
+
+    if (data.warehouseIds && data.warehouseIds.length > 0) {
+      branchData.warehouses = {
+        connect: data.warehouseIds.map(id => ({ id }))
+      };
+    }
+
+    const branch = await this.branchRepo.create(branchData);
 
     await logAudit({
       organizationId,
@@ -324,7 +345,19 @@ export class OrganizationService {
       if (existing) throw AppError.badRequest(`Branch code '${data.code}' is already in use within this company.`);
     }
 
-    const updated = await this.branchRepo.update(id, {
+    if (data.warehouseIds !== undefined && data.warehouseIds.length > 0) {
+      const validWarehouses = await prisma.warehouse.count({
+        where: {
+          id: { in: data.warehouseIds },
+          organizationId
+        }
+      });
+      if (validWarehouses !== data.warehouseIds.length) {
+        throw AppError.badRequest('One or more selected warehouses do not exist or do not belong to your organization.');
+      }
+    }
+
+    const updateData = {
       ...(data.departmentId !== undefined && { departmentId: data.departmentId }),
       ...(data.territoryId !== undefined && { territoryId: data.territoryId }),
       ...(data.name !== undefined && { name: data.name }),
@@ -338,7 +371,15 @@ export class OrganizationService {
       ...(data.state !== undefined && { state: data.state }),
       ...(data.country !== undefined && { country: data.country }),
       ...(data.postalCode !== undefined && { postalCode: data.postalCode }),
-    });
+    };
+
+    if (data.warehouseIds !== undefined) {
+      updateData.warehouses = {
+        set: data.warehouseIds.map(id => ({ id }))
+      };
+    }
+
+    const updated = await this.branchRepo.update(id, updateData);
     await logAudit({
       organizationId,
       userId: req.user.id,
@@ -474,7 +515,7 @@ export class OrganizationService {
     const options = this._buildListOptions(query);
     const { territories, total } = await this.territoryRepo.findAll(organizationId, {
       ...options,
-      
+
     });
     return { territories, meta: this._buildPaginationMeta(total, query.page, query.limit) };
   }
@@ -541,7 +582,7 @@ export class OrganizationService {
 
     await this._rejectSoftDelete('Territory', id, organizationId, req);
   }
-  
+
   async restoreTerritory(id, organizationId, req) {
     const territory = await this.territoryRepo.findById(id, organizationId);
     if (!territory) throw AppError.notFound('Territory not found.');

@@ -23,8 +23,9 @@ import { ORDER_STATUS, ACTIVITY_TYPE } from '../constants/sales-order.constants.
 import { AppError } from '../../../shared/response.js';
 
 export class SalesOrderService {
-  constructor(salesOrderRepository) {
+  constructor(salesOrderRepository, inventoryService = null) {
     this.salesOrderRepository = salesOrderRepository;
+    this.inventoryService = inventoryService;
   }
 
   /**
@@ -115,6 +116,34 @@ export class SalesOrderService {
         });
       }
 
+      // Check and Reserve Inventory
+      const reservations = [];
+      if (this.inventoryService && createDto.items?.length > 0) {
+        for (const item of createDto.items) {
+          if (!item.productId) continue;
+          
+          // Get product and its stock
+          const prodRes = await this.inventoryService.getProductById(item.productId, userContext);
+          const product = prodRes.data;
+          
+          if (!product || !product.isActive) {
+            throw AppError.badRequest(`Product ${item.productId} is not available or inactive`);
+          }
+          
+          // Find a warehouse with enough stock
+          const availableStock = product.warehouses?.find(w => w.available >= item.quantity);
+          if (!availableStock) {
+            throw AppError.badRequest(`Insufficient stock for product ${product.name}`);
+          }
+          
+          reservations.push({
+            productId: item.productId,
+            warehouseId: availableStock.warehouseId,
+            quantity: item.quantity
+          });
+        }
+      }
+
       // Generate order number
       const orderNumber = await this.generateOrderNumber(createDto.organizationId);
 
@@ -134,6 +163,19 @@ export class SalesOrderService {
 
       // Create order in database
       const createdOrder = await this.salesOrderRepository.create(orderToCreate);
+
+      // Finalize Reservations
+      if (this.inventoryService && reservations.length > 0) {
+        for (const res of reservations) {
+          await this.inventoryService.reserveStock(
+            res.productId, 
+            res.warehouseId, 
+            res.quantity, 
+            createdOrder.id, 
+            userContext
+          );
+        }
+      }
 
       // Log activity
       await this.logActivity(createdOrder.id, ACTIVITY_TYPE.CREATED, 'Order created', userContext.userId);
@@ -245,6 +287,62 @@ export class SalesOrderService {
           `Invalid status transition from '${currentStatus}' to '${newStatus}'. ` +
           `Allowed transitions: ${allowedTransitions.join(', ')}`
         );
+      }
+
+      // Handle Inventory adjustments
+      if (this.inventoryService) {
+        // If Approved or Completed (depending on when we commit stock)
+        // We'll commit stock when order is COMPLETED or APPROVED
+        if (newStatus === ORDER_STATUS.APPROVED || newStatus === ORDER_STATUS.COMPLETED) {
+          // If moving from DRAFT/PENDING to APPROVED/COMPLETED, commit stock
+          if (currentStatus === ORDER_STATUS.DRAFT || currentStatus === ORDER_STATUS.PENDING) {
+            const orderWithItems = await this.salesOrderRepository.findById(orderId, { includeItems: true });
+            for (const item of orderWithItems.items) {
+              if (!item.productId) continue;
+              // Need to find which warehouse was reserved. For simplicity, we get the stock history or just find a warehouse.
+              const prodRes = await this.inventoryService.getProductById(item.productId, userContext);
+              const product = prodRes.data;
+              if (product && product.warehouses && product.warehouses.length > 0) {
+                // In a perfect system, we'd store the reserved warehouse per item. 
+                // For now, commit from the first warehouse that has reserved stock
+                const reservedStock = product.warehouses.find(w => w.reservedQuantity >= item.quantity) || product.warehouses[0];
+                if (reservedStock) {
+                  await this.inventoryService.commitStock(
+                    item.productId,
+                    reservedStock.warehouseId,
+                    item.quantity,
+                    orderId,
+                    userContext
+                  );
+                }
+              }
+            }
+          }
+        }
+        
+        // If Cancelled or Rejected, release reserved stock
+        if (newStatus === ORDER_STATUS.CANCELLED || newStatus === ORDER_STATUS.REJECTED) {
+          if (currentStatus === ORDER_STATUS.DRAFT || currentStatus === ORDER_STATUS.PENDING) {
+             const orderWithItems = await this.salesOrderRepository.findById(orderId, { includeItems: true });
+             for (const item of orderWithItems.items) {
+               if (!item.productId) continue;
+               const prodRes = await this.inventoryService.getProductById(item.productId, userContext);
+               const product = prodRes.data;
+               if (product && product.warehouses && product.warehouses.length > 0) {
+                 const reservedStock = product.warehouses.find(w => w.reservedQuantity >= item.quantity) || product.warehouses[0];
+                 if (reservedStock) {
+                   await this.inventoryService.releaseStock(
+                     item.productId,
+                     reservedStock.warehouseId,
+                     item.quantity,
+                     orderId,
+                     userContext
+                   );
+                 }
+               }
+             }
+          }
+        }
       }
 
       // Update status in database

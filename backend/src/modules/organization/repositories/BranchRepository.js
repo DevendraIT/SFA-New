@@ -29,6 +29,9 @@ export class BranchRepository {
         teams: true 
       } 
     },
+    warehouses: {
+      select: { id: true, name: true, code: true }
+    }
   };
 
   // Build where clause for branch queries
@@ -80,6 +83,9 @@ export class BranchRepository {
               teams: true 
             } 
           },
+          warehouses: {
+            select: { id: true, name: true, code: true }
+          }
         },
       }),
       prisma.branch.count({ where }),
@@ -127,6 +133,9 @@ export class BranchRepository {
             teams: true 
           } 
         },
+        warehouses: {
+          select: { id: true, name: true, code: true }
+        }
       },
     });
   }
@@ -150,6 +159,9 @@ export class BranchRepository {
             teams: true 
           } 
         },
+        warehouses: {
+          select: { id: true, name: true, code: true }
+        }
       },
     });
   }
