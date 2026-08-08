@@ -183,6 +183,11 @@ export type Stock = $Result.DefaultSelection<Prisma.$StockPayload>
  * 
  */
 export type StockMovement = $Result.DefaultSelection<Prisma.$StockMovementPayload>
+/**
+ * Model ProductIssue
+ * 
+ */
+export type ProductIssue = $Result.DefaultSelection<Prisma.$ProductIssuePayload>
 
 /**
  * Enums
@@ -333,6 +338,16 @@ export const StockMovementType: {
 
 export type StockMovementType = (typeof StockMovementType)[keyof typeof StockMovementType]
 
+
+export const ProductIssueStatus: {
+  PENDING: 'PENDING',
+  ISSUED: 'ISSUED',
+  RETURNED: 'RETURNED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type ProductIssueStatus = (typeof ProductIssueStatus)[keyof typeof ProductIssueStatus]
+
 }
 
 export type AttendanceStatus = $Enums.AttendanceStatus
@@ -390,6 +405,10 @@ export const TaskPriority: typeof $Enums.TaskPriority
 export type StockMovementType = $Enums.StockMovementType
 
 export const StockMovementType: typeof $Enums.StockMovementType
+
+export type ProductIssueStatus = $Enums.ProductIssueStatus
+
+export const ProductIssueStatus: typeof $Enums.ProductIssueStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -851,6 +870,16 @@ export class PrismaClient<
     * ```
     */
   get stockMovement(): Prisma.StockMovementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.productIssue`: Exposes CRUD operations for the **ProductIssue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductIssues
+    * const productIssues = await prisma.productIssue.findMany()
+    * ```
+    */
+  get productIssue(): Prisma.ProductIssueDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1318,7 +1347,8 @@ export namespace Prisma {
     DailyActivityReport: 'DailyActivityReport',
     Warehouse: 'Warehouse',
     Stock: 'Stock',
-    StockMovement: 'StockMovement'
+    StockMovement: 'StockMovement',
+    ProductIssue: 'ProductIssue'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1334,7 +1364,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "orderNote" | "attendance" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement"
+      modelProps: "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "orderNote" | "attendance" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement" | "productIssue"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3854,6 +3884,80 @@ export namespace Prisma {
           }
         }
       }
+      ProductIssue: {
+        payload: Prisma.$ProductIssuePayload<ExtArgs>
+        fields: Prisma.ProductIssueFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProductIssueFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProductIssueFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>
+          }
+          findFirst: {
+            args: Prisma.ProductIssueFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProductIssueFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>
+          }
+          findMany: {
+            args: Prisma.ProductIssueFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>[]
+          }
+          create: {
+            args: Prisma.ProductIssueCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>
+          }
+          createMany: {
+            args: Prisma.ProductIssueCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProductIssueCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>[]
+          }
+          delete: {
+            args: Prisma.ProductIssueDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>
+          }
+          update: {
+            args: Prisma.ProductIssueUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>
+          }
+          deleteMany: {
+            args: Prisma.ProductIssueDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProductIssueUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProductIssueUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>[]
+          }
+          upsert: {
+            args: Prisma.ProductIssueUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductIssuePayload>
+          }
+          aggregate: {
+            args: Prisma.ProductIssueAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProductIssue>
+          }
+          groupBy: {
+            args: Prisma.ProductIssueGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductIssueGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProductIssueCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductIssueCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3996,6 +4100,7 @@ export namespace Prisma {
     warehouse?: WarehouseOmit
     stock?: StockOmit
     stockMovement?: StockMovementOmit
+    productIssue?: ProductIssueOmit
   }
 
   /* Types for Logging */
@@ -4102,6 +4207,7 @@ export namespace Prisma {
     warehouses: number
     stocks: number
     stockMovements: number
+    productIssues: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4131,6 +4237,7 @@ export namespace Prisma {
     warehouses?: boolean | OrganizationCountOutputTypeCountWarehousesArgs
     stocks?: boolean | OrganizationCountOutputTypeCountStocksArgs
     stockMovements?: boolean | OrganizationCountOutputTypeCountStockMovementsArgs
+    productIssues?: boolean | OrganizationCountOutputTypeCountProductIssuesArgs
   }
 
   // Custom InputTypes
@@ -4324,6 +4431,13 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountStockMovementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StockMovementWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountProductIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductIssueWhereInput
   }
 
 
@@ -4627,6 +4741,8 @@ export namespace Prisma {
     notificationPrefs: number
     orders: number
     stockMovements: number
+    productIssuesWarehouseManaged: number
+    productIssuesReceived: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4649,6 +4765,8 @@ export namespace Prisma {
     notificationPrefs?: boolean | UserCountOutputTypeCountNotificationPrefsArgs
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
+    productIssuesWarehouseManaged?: boolean | UserCountOutputTypeCountProductIssuesWarehouseManagedArgs
+    productIssuesReceived?: boolean | UserCountOutputTypeCountProductIssuesReceivedArgs
   }
 
   // Custom InputTypes
@@ -4795,6 +4913,20 @@ export namespace Prisma {
     where?: StockMovementWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProductIssuesWarehouseManagedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductIssueWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProductIssuesReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductIssueWhereInput
+  }
+
 
   /**
    * Count Type CustomerCountOutputType
@@ -4844,12 +4976,14 @@ export namespace Prisma {
     orderItems: number
     stocks: number
     movements: number
+    issues: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | ProductCountOutputTypeCountOrderItemsArgs
     stocks?: boolean | ProductCountOutputTypeCountStocksArgs
     movements?: boolean | ProductCountOutputTypeCountMovementsArgs
+    issues?: boolean | ProductCountOutputTypeCountIssuesArgs
   }
 
   // Custom InputTypes
@@ -4884,6 +5018,13 @@ export namespace Prisma {
     where?: StockMovementWhereInput
   }
 
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductIssueWhereInput
+  }
+
 
   /**
    * Count Type OrderCountOutputType
@@ -4893,12 +5034,14 @@ export namespace Prisma {
     items: number
     activities: number
     notes: number
+    productIssues: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | OrderCountOutputTypeCountItemsArgs
     activities?: boolean | OrderCountOutputTypeCountActivitiesArgs
     notes?: boolean | OrderCountOutputTypeCountNotesArgs
+    productIssues?: boolean | OrderCountOutputTypeCountProductIssuesArgs
   }
 
   // Custom InputTypes
@@ -4933,6 +5076,13 @@ export namespace Prisma {
     where?: OrderNoteWhereInput
   }
 
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountProductIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductIssueWhereInput
+  }
+
 
   /**
    * Count Type WarehouseCountOutputType
@@ -4942,12 +5092,14 @@ export namespace Prisma {
     stocks: number
     movements: number
     branches: number
+    productIssues: number
   }
 
   export type WarehouseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stocks?: boolean | WarehouseCountOutputTypeCountStocksArgs
     movements?: boolean | WarehouseCountOutputTypeCountMovementsArgs
     branches?: boolean | WarehouseCountOutputTypeCountBranchesArgs
+    productIssues?: boolean | WarehouseCountOutputTypeCountProductIssuesArgs
   }
 
   // Custom InputTypes
@@ -4980,6 +5132,13 @@ export namespace Prisma {
    */
   export type WarehouseCountOutputTypeCountBranchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BranchWhereInput
+  }
+
+  /**
+   * WarehouseCountOutputType without action
+   */
+  export type WarehouseCountOutputTypeCountProductIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductIssueWhereInput
   }
 
 
@@ -5257,6 +5416,7 @@ export namespace Prisma {
     warehouses?: boolean | Organization$warehousesArgs<ExtArgs>
     stocks?: boolean | Organization$stocksArgs<ExtArgs>
     stockMovements?: boolean | Organization$stockMovementsArgs<ExtArgs>
+    productIssues?: boolean | Organization$productIssuesArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -5342,6 +5502,7 @@ export namespace Prisma {
     warehouses?: boolean | Organization$warehousesArgs<ExtArgs>
     stocks?: boolean | Organization$stocksArgs<ExtArgs>
     stockMovements?: boolean | Organization$stockMovementsArgs<ExtArgs>
+    productIssues?: boolean | Organization$productIssuesArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5376,6 +5537,7 @@ export namespace Prisma {
       warehouses: Prisma.$WarehousePayload<ExtArgs>[]
       stocks: Prisma.$StockPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+      productIssues: Prisma.$ProductIssuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5813,6 +5975,7 @@ export namespace Prisma {
     warehouses<T extends Organization$warehousesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$warehousesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stocks<T extends Organization$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Organization$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends Organization$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    productIssues<T extends Organization$productIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$productIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6871,6 +7034,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.productIssues
+   */
+  export type Organization$productIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    where?: ProductIssueWhereInput
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    cursor?: ProductIssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
   }
 
   /**
@@ -15657,6 +15844,9 @@ export namespace Prisma {
     notificationPrefs?: boolean | User$notificationPrefsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    managedWarehouse?: boolean | User$managedWarehouseArgs<ExtArgs>
+    productIssuesWarehouseManaged?: boolean | User$productIssuesWarehouseManagedArgs<ExtArgs>
+    productIssuesReceived?: boolean | User$productIssuesReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -15783,6 +15973,9 @@ export namespace Prisma {
     notificationPrefs?: boolean | User$notificationPrefsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    managedWarehouse?: boolean | User$managedWarehouseArgs<ExtArgs>
+    productIssuesWarehouseManaged?: boolean | User$productIssuesWarehouseManagedArgs<ExtArgs>
+    productIssuesReceived?: boolean | User$productIssuesReceivedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15830,6 +16023,9 @@ export namespace Prisma {
       notificationPrefs: Prisma.$NotificationPreferencePayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+      managedWarehouse: Prisma.$WarehousePayload<ExtArgs> | null
+      productIssuesWarehouseManaged: Prisma.$ProductIssuePayload<ExtArgs>[]
+      productIssuesReceived: Prisma.$ProductIssuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16276,6 +16472,9 @@ export namespace Prisma {
     notificationPrefs<T extends User$notificationPrefsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationPrefsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    managedWarehouse<T extends User$managedWarehouseArgs<ExtArgs> = {}>(args?: Subset<T, User$managedWarehouseArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    productIssuesWarehouseManaged<T extends User$productIssuesWarehouseManagedArgs<ExtArgs> = {}>(args?: Subset<T, User$productIssuesWarehouseManagedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    productIssuesReceived<T extends User$productIssuesReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$productIssuesReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17279,6 +17478,73 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * User.managedWarehouse
+   */
+  export type User$managedWarehouseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Warehouse
+     */
+    select?: WarehouseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Warehouse
+     */
+    omit?: WarehouseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WarehouseInclude<ExtArgs> | null
+    where?: WarehouseWhereInput
+  }
+
+  /**
+   * User.productIssuesWarehouseManaged
+   */
+  export type User$productIssuesWarehouseManagedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    where?: ProductIssueWhereInput
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    cursor?: ProductIssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
+  }
+
+  /**
+   * User.productIssuesReceived
+   */
+  export type User$productIssuesReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    where?: ProductIssueWhereInput
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    cursor?: ProductIssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
   }
 
   /**
@@ -23174,6 +23440,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     movements?: boolean | Product$movementsArgs<ExtArgs>
+    issues?: boolean | Product$issuesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -23245,6 +23512,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     movements?: boolean | Product$movementsArgs<ExtArgs>
+    issues?: boolean | Product$issuesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23261,6 +23529,7 @@ export namespace Prisma {
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       stocks: Prisma.$StockPayload<ExtArgs>[]
       movements: Prisma.$StockMovementPayload<ExtArgs>[]
+      issues: Prisma.$ProductIssuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -23678,6 +23947,7 @@ export namespace Prisma {
     orderItems<T extends Product$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stocks<T extends Product$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Product$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movements<T extends Product$movementsArgs<ExtArgs> = {}>(args?: Subset<T, Product$movementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    issues<T extends Product$issuesArgs<ExtArgs> = {}>(args?: Subset<T, Product$issuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24197,6 +24467,30 @@ export namespace Prisma {
   }
 
   /**
+   * Product.issues
+   */
+  export type Product$issuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    where?: ProductIssueWhereInput
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    cursor?: ProductIssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
+  }
+
+  /**
    * Product without action
    */
   export type ProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24531,6 +24825,7 @@ export namespace Prisma {
     items?: boolean | Order$itemsArgs<ExtArgs>
     activities?: boolean | Order$activitiesArgs<ExtArgs>
     notes?: boolean | Order$notesArgs<ExtArgs>
+    productIssues?: boolean | Order$productIssuesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -24614,6 +24909,7 @@ export namespace Prisma {
     items?: boolean | Order$itemsArgs<ExtArgs>
     activities?: boolean | Order$activitiesArgs<ExtArgs>
     notes?: boolean | Order$notesArgs<ExtArgs>
+    productIssues?: boolean | Order$productIssuesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24636,6 +24932,7 @@ export namespace Prisma {
       items: Prisma.$OrderItemPayload<ExtArgs>[]
       activities: Prisma.$OrderActivityPayload<ExtArgs>[]
       notes: Prisma.$OrderNotePayload<ExtArgs>[]
+      productIssues: Prisma.$ProductIssuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -25057,6 +25354,7 @@ export namespace Prisma {
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activities<T extends Order$activitiesArgs<ExtArgs> = {}>(args?: Subset<T, Order$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notes<T extends Order$notesArgs<ExtArgs> = {}>(args?: Subset<T, Order$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    productIssues<T extends Order$productIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Order$productIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -25575,6 +25873,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderNoteScalarFieldEnum | OrderNoteScalarFieldEnum[]
+  }
+
+  /**
+   * Order.productIssues
+   */
+  export type Order$productIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    where?: ProductIssueWhereInput
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    cursor?: ProductIssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
   }
 
   /**
@@ -43072,6 +43394,7 @@ export namespace Prisma {
     code: string | null
     location: string | null
     isActive: boolean | null
+    warehouseManagerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -43083,6 +43406,7 @@ export namespace Prisma {
     code: string | null
     location: string | null
     isActive: boolean | null
+    warehouseManagerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -43094,6 +43418,7 @@ export namespace Prisma {
     code: number
     location: number
     isActive: number
+    warehouseManagerId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -43107,6 +43432,7 @@ export namespace Prisma {
     code?: true
     location?: true
     isActive?: true
+    warehouseManagerId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -43118,6 +43444,7 @@ export namespace Prisma {
     code?: true
     location?: true
     isActive?: true
+    warehouseManagerId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -43129,6 +43456,7 @@ export namespace Prisma {
     code?: true
     location?: true
     isActive?: true
+    warehouseManagerId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -43213,6 +43541,7 @@ export namespace Prisma {
     code: string | null
     location: string | null
     isActive: boolean
+    warehouseManagerId: string | null
     createdAt: Date
     updatedAt: Date
     _count: WarehouseCountAggregateOutputType | null
@@ -43241,12 +43570,15 @@ export namespace Prisma {
     code?: boolean
     location?: boolean
     isActive?: boolean
+    warehouseManagerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | Warehouse$warehouseManagerArgs<ExtArgs>
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     movements?: boolean | Warehouse$movementsArgs<ExtArgs>
     branches?: boolean | Warehouse$branchesArgs<ExtArgs>
+    productIssues?: boolean | Warehouse$productIssuesArgs<ExtArgs>
     _count?: boolean | WarehouseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["warehouse"]>
 
@@ -43257,9 +43589,11 @@ export namespace Prisma {
     code?: boolean
     location?: boolean
     isActive?: boolean
+    warehouseManagerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | Warehouse$warehouseManagerArgs<ExtArgs>
   }, ExtArgs["result"]["warehouse"]>
 
   export type WarehouseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -43269,9 +43603,11 @@ export namespace Prisma {
     code?: boolean
     location?: boolean
     isActive?: boolean
+    warehouseManagerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | Warehouse$warehouseManagerArgs<ExtArgs>
   }, ExtArgs["result"]["warehouse"]>
 
   export type WarehouseSelectScalar = {
@@ -43281,32 +43617,39 @@ export namespace Prisma {
     code?: boolean
     location?: boolean
     isActive?: boolean
+    warehouseManagerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "code" | "location" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["warehouse"]>
+  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "code" | "location" | "isActive" | "warehouseManagerId" | "createdAt" | "updatedAt", ExtArgs["result"]["warehouse"]>
   export type WarehouseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | Warehouse$warehouseManagerArgs<ExtArgs>
     stocks?: boolean | Warehouse$stocksArgs<ExtArgs>
     movements?: boolean | Warehouse$movementsArgs<ExtArgs>
     branches?: boolean | Warehouse$branchesArgs<ExtArgs>
+    productIssues?: boolean | Warehouse$productIssuesArgs<ExtArgs>
     _count?: boolean | WarehouseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WarehouseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | Warehouse$warehouseManagerArgs<ExtArgs>
   }
   export type WarehouseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | Warehouse$warehouseManagerArgs<ExtArgs>
   }
 
   export type $WarehousePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Warehouse"
     objects: {
       organization: Prisma.$OrganizationPayload<ExtArgs>
+      warehouseManager: Prisma.$UserPayload<ExtArgs> | null
       stocks: Prisma.$StockPayload<ExtArgs>[]
       movements: Prisma.$StockMovementPayload<ExtArgs>[]
       branches: Prisma.$BranchPayload<ExtArgs>[]
+      productIssues: Prisma.$ProductIssuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -43315,6 +43658,7 @@ export namespace Prisma {
       code: string | null
       location: string | null
       isActive: boolean
+      warehouseManagerId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["warehouse"]>
@@ -43712,9 +44056,11 @@ export namespace Prisma {
   export interface Prisma__WarehouseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    warehouseManager<T extends Warehouse$warehouseManagerArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$warehouseManagerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     stocks<T extends Warehouse$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movements<T extends Warehouse$movementsArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$movementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     branches<T extends Warehouse$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    productIssues<T extends Warehouse$productIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Warehouse$productIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -43750,6 +44096,7 @@ export namespace Prisma {
     readonly code: FieldRef<"Warehouse", 'String'>
     readonly location: FieldRef<"Warehouse", 'String'>
     readonly isActive: FieldRef<"Warehouse", 'Boolean'>
+    readonly warehouseManagerId: FieldRef<"Warehouse", 'String'>
     readonly createdAt: FieldRef<"Warehouse", 'DateTime'>
     readonly updatedAt: FieldRef<"Warehouse", 'DateTime'>
   }
@@ -44153,6 +44500,25 @@ export namespace Prisma {
   }
 
   /**
+   * Warehouse.warehouseManager
+   */
+  export type Warehouse$warehouseManagerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * Warehouse.stocks
    */
   export type Warehouse$stocksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -44222,6 +44588,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BranchScalarFieldEnum | BranchScalarFieldEnum[]
+  }
+
+  /**
+   * Warehouse.productIssues
+   */
+  export type Warehouse$productIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    where?: ProductIssueWhereInput
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    cursor?: ProductIssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
   }
 
   /**
@@ -46605,6 +46995,1272 @@ export namespace Prisma {
 
 
   /**
+   * Model ProductIssue
+   */
+
+  export type AggregateProductIssue = {
+    _count: ProductIssueCountAggregateOutputType | null
+    _avg: ProductIssueAvgAggregateOutputType | null
+    _sum: ProductIssueSumAggregateOutputType | null
+    _min: ProductIssueMinAggregateOutputType | null
+    _max: ProductIssueMaxAggregateOutputType | null
+  }
+
+  export type ProductIssueAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type ProductIssueSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type ProductIssueMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    productId: string | null
+    warehouseId: string | null
+    warehouseManagerId: string | null
+    salesExecutiveId: string | null
+    salesOrderId: string | null
+    quantity: number | null
+    status: $Enums.ProductIssueStatus | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductIssueMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    productId: string | null
+    warehouseId: string | null
+    warehouseManagerId: string | null
+    salesExecutiveId: string | null
+    salesOrderId: string | null
+    quantity: number | null
+    status: $Enums.ProductIssueStatus | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProductIssueCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    productId: number
+    warehouseId: number
+    warehouseManagerId: number
+    salesExecutiveId: number
+    salesOrderId: number
+    quantity: number
+    status: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProductIssueAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type ProductIssueSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type ProductIssueMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    productId?: true
+    warehouseId?: true
+    warehouseManagerId?: true
+    salesExecutiveId?: true
+    salesOrderId?: true
+    quantity?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductIssueMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    productId?: true
+    warehouseId?: true
+    warehouseManagerId?: true
+    salesExecutiveId?: true
+    salesOrderId?: true
+    quantity?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProductIssueCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    productId?: true
+    warehouseId?: true
+    warehouseManagerId?: true
+    salesExecutiveId?: true
+    salesOrderId?: true
+    quantity?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProductIssueAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductIssue to aggregate.
+     */
+    where?: ProductIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductIssues to fetch.
+     */
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProductIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProductIssues
+    **/
+    _count?: true | ProductIssueCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductIssueAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductIssueSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductIssueMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductIssueMaxAggregateInputType
+  }
+
+  export type GetProductIssueAggregateType<T extends ProductIssueAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductIssue]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProductIssue[P]>
+      : GetScalarType<T[P], AggregateProductIssue[P]>
+  }
+
+
+
+
+  export type ProductIssueGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductIssueWhereInput
+    orderBy?: ProductIssueOrderByWithAggregationInput | ProductIssueOrderByWithAggregationInput[]
+    by: ProductIssueScalarFieldEnum[] | ProductIssueScalarFieldEnum
+    having?: ProductIssueScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductIssueCountAggregateInputType | true
+    _avg?: ProductIssueAvgAggregateInputType
+    _sum?: ProductIssueSumAggregateInputType
+    _min?: ProductIssueMinAggregateInputType
+    _max?: ProductIssueMaxAggregateInputType
+  }
+
+  export type ProductIssueGroupByOutputType = {
+    id: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId: string | null
+    salesExecutiveId: string
+    salesOrderId: string | null
+    quantity: number
+    status: $Enums.ProductIssueStatus
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ProductIssueCountAggregateOutputType | null
+    _avg: ProductIssueAvgAggregateOutputType | null
+    _sum: ProductIssueSumAggregateOutputType | null
+    _min: ProductIssueMinAggregateOutputType | null
+    _max: ProductIssueMaxAggregateOutputType | null
+  }
+
+  type GetProductIssueGroupByPayload<T extends ProductIssueGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProductIssueGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductIssueGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductIssueGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductIssueGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductIssueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    productId?: boolean
+    warehouseId?: boolean
+    warehouseManagerId?: boolean
+    salesExecutiveId?: boolean
+    salesOrderId?: boolean
+    quantity?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | ProductIssue$warehouseManagerArgs<ExtArgs>
+    salesExecutive?: boolean | UserDefaultArgs<ExtArgs>
+    salesOrder?: boolean | ProductIssue$salesOrderArgs<ExtArgs>
+  }, ExtArgs["result"]["productIssue"]>
+
+  export type ProductIssueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    productId?: boolean
+    warehouseId?: boolean
+    warehouseManagerId?: boolean
+    salesExecutiveId?: boolean
+    salesOrderId?: boolean
+    quantity?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | ProductIssue$warehouseManagerArgs<ExtArgs>
+    salesExecutive?: boolean | UserDefaultArgs<ExtArgs>
+    salesOrder?: boolean | ProductIssue$salesOrderArgs<ExtArgs>
+  }, ExtArgs["result"]["productIssue"]>
+
+  export type ProductIssueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    productId?: boolean
+    warehouseId?: boolean
+    warehouseManagerId?: boolean
+    salesExecutiveId?: boolean
+    salesOrderId?: boolean
+    quantity?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | ProductIssue$warehouseManagerArgs<ExtArgs>
+    salesExecutive?: boolean | UserDefaultArgs<ExtArgs>
+    salesOrder?: boolean | ProductIssue$salesOrderArgs<ExtArgs>
+  }, ExtArgs["result"]["productIssue"]>
+
+  export type ProductIssueSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    productId?: boolean
+    warehouseId?: boolean
+    warehouseManagerId?: boolean
+    salesExecutiveId?: boolean
+    salesOrderId?: boolean
+    quantity?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProductIssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "productId" | "warehouseId" | "warehouseManagerId" | "salesExecutiveId" | "salesOrderId" | "quantity" | "status" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["productIssue"]>
+  export type ProductIssueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | ProductIssue$warehouseManagerArgs<ExtArgs>
+    salesExecutive?: boolean | UserDefaultArgs<ExtArgs>
+    salesOrder?: boolean | ProductIssue$salesOrderArgs<ExtArgs>
+  }
+  export type ProductIssueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | ProductIssue$warehouseManagerArgs<ExtArgs>
+    salesExecutive?: boolean | UserDefaultArgs<ExtArgs>
+    salesOrder?: boolean | ProductIssue$salesOrderArgs<ExtArgs>
+  }
+  export type ProductIssueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    warehouse?: boolean | WarehouseDefaultArgs<ExtArgs>
+    warehouseManager?: boolean | ProductIssue$warehouseManagerArgs<ExtArgs>
+    salesExecutive?: boolean | UserDefaultArgs<ExtArgs>
+    salesOrder?: boolean | ProductIssue$salesOrderArgs<ExtArgs>
+  }
+
+  export type $ProductIssuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProductIssue"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs>
+      warehouse: Prisma.$WarehousePayload<ExtArgs>
+      warehouseManager: Prisma.$UserPayload<ExtArgs> | null
+      salesExecutive: Prisma.$UserPayload<ExtArgs>
+      salesOrder: Prisma.$OrderPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      productId: string
+      warehouseId: string
+      warehouseManagerId: string | null
+      salesExecutiveId: string
+      salesOrderId: string | null
+      quantity: number
+      status: $Enums.ProductIssueStatus
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["productIssue"]>
+    composites: {}
+  }
+
+  type ProductIssueGetPayload<S extends boolean | null | undefined | ProductIssueDefaultArgs> = $Result.GetResult<Prisma.$ProductIssuePayload, S>
+
+  type ProductIssueCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProductIssueFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProductIssueCountAggregateInputType | true
+    }
+
+  export interface ProductIssueDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProductIssue'], meta: { name: 'ProductIssue' } }
+    /**
+     * Find zero or one ProductIssue that matches the filter.
+     * @param {ProductIssueFindUniqueArgs} args - Arguments to find a ProductIssue
+     * @example
+     * // Get one ProductIssue
+     * const productIssue = await prisma.productIssue.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProductIssueFindUniqueArgs>(args: SelectSubset<T, ProductIssueFindUniqueArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProductIssue that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProductIssueFindUniqueOrThrowArgs} args - Arguments to find a ProductIssue
+     * @example
+     * // Get one ProductIssue
+     * const productIssue = await prisma.productIssue.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProductIssueFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductIssueFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductIssue that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductIssueFindFirstArgs} args - Arguments to find a ProductIssue
+     * @example
+     * // Get one ProductIssue
+     * const productIssue = await prisma.productIssue.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProductIssueFindFirstArgs>(args?: SelectSubset<T, ProductIssueFindFirstArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProductIssue that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductIssueFindFirstOrThrowArgs} args - Arguments to find a ProductIssue
+     * @example
+     * // Get one ProductIssue
+     * const productIssue = await prisma.productIssue.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProductIssueFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductIssueFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProductIssues that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductIssueFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProductIssues
+     * const productIssues = await prisma.productIssue.findMany()
+     * 
+     * // Get first 10 ProductIssues
+     * const productIssues = await prisma.productIssue.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productIssueWithIdOnly = await prisma.productIssue.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProductIssueFindManyArgs>(args?: SelectSubset<T, ProductIssueFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProductIssue.
+     * @param {ProductIssueCreateArgs} args - Arguments to create a ProductIssue.
+     * @example
+     * // Create one ProductIssue
+     * const ProductIssue = await prisma.productIssue.create({
+     *   data: {
+     *     // ... data to create a ProductIssue
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProductIssueCreateArgs>(args: SelectSubset<T, ProductIssueCreateArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProductIssues.
+     * @param {ProductIssueCreateManyArgs} args - Arguments to create many ProductIssues.
+     * @example
+     * // Create many ProductIssues
+     * const productIssue = await prisma.productIssue.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProductIssueCreateManyArgs>(args?: SelectSubset<T, ProductIssueCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProductIssues and returns the data saved in the database.
+     * @param {ProductIssueCreateManyAndReturnArgs} args - Arguments to create many ProductIssues.
+     * @example
+     * // Create many ProductIssues
+     * const productIssue = await prisma.productIssue.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProductIssues and only return the `id`
+     * const productIssueWithIdOnly = await prisma.productIssue.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProductIssueCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductIssueCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProductIssue.
+     * @param {ProductIssueDeleteArgs} args - Arguments to delete one ProductIssue.
+     * @example
+     * // Delete one ProductIssue
+     * const ProductIssue = await prisma.productIssue.delete({
+     *   where: {
+     *     // ... filter to delete one ProductIssue
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProductIssueDeleteArgs>(args: SelectSubset<T, ProductIssueDeleteArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProductIssue.
+     * @param {ProductIssueUpdateArgs} args - Arguments to update one ProductIssue.
+     * @example
+     * // Update one ProductIssue
+     * const productIssue = await prisma.productIssue.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProductIssueUpdateArgs>(args: SelectSubset<T, ProductIssueUpdateArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProductIssues.
+     * @param {ProductIssueDeleteManyArgs} args - Arguments to filter ProductIssues to delete.
+     * @example
+     * // Delete a few ProductIssues
+     * const { count } = await prisma.productIssue.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProductIssueDeleteManyArgs>(args?: SelectSubset<T, ProductIssueDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductIssues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductIssueUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProductIssues
+     * const productIssue = await prisma.productIssue.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProductIssueUpdateManyArgs>(args: SelectSubset<T, ProductIssueUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductIssues and returns the data updated in the database.
+     * @param {ProductIssueUpdateManyAndReturnArgs} args - Arguments to update many ProductIssues.
+     * @example
+     * // Update many ProductIssues
+     * const productIssue = await prisma.productIssue.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProductIssues and only return the `id`
+     * const productIssueWithIdOnly = await prisma.productIssue.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProductIssueUpdateManyAndReturnArgs>(args: SelectSubset<T, ProductIssueUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProductIssue.
+     * @param {ProductIssueUpsertArgs} args - Arguments to update or create a ProductIssue.
+     * @example
+     * // Update or create a ProductIssue
+     * const productIssue = await prisma.productIssue.upsert({
+     *   create: {
+     *     // ... data to create a ProductIssue
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProductIssue we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProductIssueUpsertArgs>(args: SelectSubset<T, ProductIssueUpsertArgs<ExtArgs>>): Prisma__ProductIssueClient<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProductIssues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductIssueCountArgs} args - Arguments to filter ProductIssues to count.
+     * @example
+     * // Count the number of ProductIssues
+     * const count = await prisma.productIssue.count({
+     *   where: {
+     *     // ... the filter for the ProductIssues we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductIssueCountArgs>(
+      args?: Subset<T, ProductIssueCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductIssueCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProductIssue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductIssueAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductIssueAggregateArgs>(args: Subset<T, ProductIssueAggregateArgs>): Prisma.PrismaPromise<GetProductIssueAggregateType<T>>
+
+    /**
+     * Group by ProductIssue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductIssueGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductIssueGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductIssueGroupByArgs['orderBy'] }
+        : { orderBy?: ProductIssueGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductIssueGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductIssueGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProductIssue model
+   */
+  readonly fields: ProductIssueFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProductIssue.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProductIssueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    warehouse<T extends WarehouseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WarehouseDefaultArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    warehouseManager<T extends ProductIssue$warehouseManagerArgs<ExtArgs> = {}>(args?: Subset<T, ProductIssue$warehouseManagerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    salesExecutive<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    salesOrder<T extends ProductIssue$salesOrderArgs<ExtArgs> = {}>(args?: Subset<T, ProductIssue$salesOrderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProductIssue model
+   */
+  interface ProductIssueFieldRefs {
+    readonly id: FieldRef<"ProductIssue", 'String'>
+    readonly organizationId: FieldRef<"ProductIssue", 'String'>
+    readonly productId: FieldRef<"ProductIssue", 'String'>
+    readonly warehouseId: FieldRef<"ProductIssue", 'String'>
+    readonly warehouseManagerId: FieldRef<"ProductIssue", 'String'>
+    readonly salesExecutiveId: FieldRef<"ProductIssue", 'String'>
+    readonly salesOrderId: FieldRef<"ProductIssue", 'String'>
+    readonly quantity: FieldRef<"ProductIssue", 'Int'>
+    readonly status: FieldRef<"ProductIssue", 'ProductIssueStatus'>
+    readonly notes: FieldRef<"ProductIssue", 'String'>
+    readonly createdAt: FieldRef<"ProductIssue", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProductIssue", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProductIssue findUnique
+   */
+  export type ProductIssueFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductIssue to fetch.
+     */
+    where: ProductIssueWhereUniqueInput
+  }
+
+  /**
+   * ProductIssue findUniqueOrThrow
+   */
+  export type ProductIssueFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductIssue to fetch.
+     */
+    where: ProductIssueWhereUniqueInput
+  }
+
+  /**
+   * ProductIssue findFirst
+   */
+  export type ProductIssueFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductIssue to fetch.
+     */
+    where?: ProductIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductIssues to fetch.
+     */
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductIssues.
+     */
+    cursor?: ProductIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductIssues.
+     */
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
+  }
+
+  /**
+   * ProductIssue findFirstOrThrow
+   */
+  export type ProductIssueFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductIssue to fetch.
+     */
+    where?: ProductIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductIssues to fetch.
+     */
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductIssues.
+     */
+    cursor?: ProductIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductIssues.
+     */
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
+  }
+
+  /**
+   * ProductIssue findMany
+   */
+  export type ProductIssueFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * Filter, which ProductIssues to fetch.
+     */
+    where?: ProductIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductIssues to fetch.
+     */
+    orderBy?: ProductIssueOrderByWithRelationInput | ProductIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProductIssues.
+     */
+    cursor?: ProductIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductIssues.
+     */
+    distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
+  }
+
+  /**
+   * ProductIssue create
+   */
+  export type ProductIssueCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProductIssue.
+     */
+    data: XOR<ProductIssueCreateInput, ProductIssueUncheckedCreateInput>
+  }
+
+  /**
+   * ProductIssue createMany
+   */
+  export type ProductIssueCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProductIssues.
+     */
+    data: ProductIssueCreateManyInput | ProductIssueCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProductIssue createManyAndReturn
+   */
+  export type ProductIssueCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProductIssues.
+     */
+    data: ProductIssueCreateManyInput | ProductIssueCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductIssue update
+   */
+  export type ProductIssueUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProductIssue.
+     */
+    data: XOR<ProductIssueUpdateInput, ProductIssueUncheckedUpdateInput>
+    /**
+     * Choose, which ProductIssue to update.
+     */
+    where: ProductIssueWhereUniqueInput
+  }
+
+  /**
+   * ProductIssue updateMany
+   */
+  export type ProductIssueUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProductIssues.
+     */
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductIssues to update
+     */
+    where?: ProductIssueWhereInput
+    /**
+     * Limit how many ProductIssues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductIssue updateManyAndReturn
+   */
+  export type ProductIssueUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * The data used to update ProductIssues.
+     */
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductIssues to update
+     */
+    where?: ProductIssueWhereInput
+    /**
+     * Limit how many ProductIssues to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProductIssue upsert
+   */
+  export type ProductIssueUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProductIssue to update in case it exists.
+     */
+    where: ProductIssueWhereUniqueInput
+    /**
+     * In case the ProductIssue found by the `where` argument doesn't exist, create a new ProductIssue with this data.
+     */
+    create: XOR<ProductIssueCreateInput, ProductIssueUncheckedCreateInput>
+    /**
+     * In case the ProductIssue was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProductIssueUpdateInput, ProductIssueUncheckedUpdateInput>
+  }
+
+  /**
+   * ProductIssue delete
+   */
+  export type ProductIssueDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+    /**
+     * Filter which ProductIssue to delete.
+     */
+    where: ProductIssueWhereUniqueInput
+  }
+
+  /**
+   * ProductIssue deleteMany
+   */
+  export type ProductIssueDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProductIssues to delete
+     */
+    where?: ProductIssueWhereInput
+    /**
+     * Limit how many ProductIssues to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProductIssue.warehouseManager
+   */
+  export type ProductIssue$warehouseManagerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ProductIssue.salesOrder
+   */
+  export type ProductIssue$salesOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+  }
+
+  /**
+   * ProductIssue without action
+   */
+  export type ProductIssueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProductIssue
+     */
+    select?: ProductIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProductIssue
+     */
+    omit?: ProductIssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductIssueInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -47148,6 +48804,7 @@ export namespace Prisma {
     code: 'code',
     location: 'location',
     isActive: 'isActive',
+    warehouseManagerId: 'warehouseManagerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -47183,6 +48840,24 @@ export namespace Prisma {
   };
 
   export type StockMovementScalarFieldEnum = (typeof StockMovementScalarFieldEnum)[keyof typeof StockMovementScalarFieldEnum]
+
+
+  export const ProductIssueScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    productId: 'productId',
+    warehouseId: 'warehouseId',
+    warehouseManagerId: 'warehouseManagerId',
+    salesExecutiveId: 'salesExecutiveId',
+    salesOrderId: 'salesOrderId',
+    quantity: 'quantity',
+    status: 'status',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProductIssueScalarFieldEnum = (typeof ProductIssueScalarFieldEnum)[keyof typeof ProductIssueScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -47460,6 +49135,20 @@ export namespace Prisma {
    */
   export type ListEnumStockMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockMovementType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ProductIssueStatus'
+   */
+  export type EnumProductIssueStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductIssueStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProductIssueStatus[]'
+   */
+  export type ListEnumProductIssueStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductIssueStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -47510,6 +49199,7 @@ export namespace Prisma {
     warehouses?: WarehouseListRelationFilter
     stocks?: StockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    productIssues?: ProductIssueListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -47554,6 +49244,7 @@ export namespace Prisma {
     warehouses?: WarehouseOrderByRelationAggregateInput
     stocks?: StockOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
+    productIssues?: ProductIssueOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -47601,6 +49292,7 @@ export namespace Prisma {
     warehouses?: WarehouseListRelationFilter
     stocks?: StockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    productIssues?: ProductIssueListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -48285,6 +49977,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceListRelationFilter
     orders?: OrderListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    managedWarehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+    productIssuesWarehouseManaged?: ProductIssueListRelationFilter
+    productIssuesReceived?: ProductIssueListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -48338,6 +50033,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
+    managedWarehouse?: WarehouseOrderByWithRelationInput
+    productIssuesWarehouseManaged?: ProductIssueOrderByRelationAggregateInput
+    productIssuesReceived?: ProductIssueOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -48395,6 +50093,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceListRelationFilter
     orders?: OrderListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    managedWarehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
+    productIssuesWarehouseManaged?: ProductIssueListRelationFilter
+    productIssuesReceived?: ProductIssueListRelationFilter
   }, "id" | "organizationId_email">
 
   export type UserOrderByWithAggregationInput = {
@@ -48837,6 +50538,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     stocks?: StockListRelationFilter
     movements?: StockMovementListRelationFilter
+    issues?: ProductIssueListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -48861,6 +50563,7 @@ export namespace Prisma {
     orderItems?: OrderItemOrderByRelationAggregateInput
     stocks?: StockOrderByRelationAggregateInput
     movements?: StockMovementOrderByRelationAggregateInput
+    issues?: ProductIssueOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -48888,6 +50591,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     stocks?: StockListRelationFilter
     movements?: StockMovementListRelationFilter
+    issues?: ProductIssueListRelationFilter
   }, "id" | "sku" | "productCode">
 
   export type ProductOrderByWithAggregationInput = {
@@ -48967,6 +50671,7 @@ export namespace Prisma {
     items?: OrderItemListRelationFilter
     activities?: OrderActivityListRelationFilter
     notes?: OrderNoteListRelationFilter
+    productIssues?: ProductIssueListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -48995,6 +50700,7 @@ export namespace Prisma {
     items?: OrderItemOrderByRelationAggregateInput
     activities?: OrderActivityOrderByRelationAggregateInput
     notes?: OrderNoteOrderByRelationAggregateInput
+    productIssues?: ProductIssueOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -49026,6 +50732,7 @@ export namespace Prisma {
     items?: OrderItemListRelationFilter
     activities?: OrderActivityListRelationFilter
     notes?: OrderNoteListRelationFilter
+    productIssues?: ProductIssueListRelationFilter
   }, "id" | "orderNumber">
 
   export type OrderOrderByWithAggregationInput = {
@@ -50417,12 +52124,15 @@ export namespace Prisma {
     code?: StringNullableFilter<"Warehouse"> | string | null
     location?: StringNullableFilter<"Warehouse"> | string | null
     isActive?: BoolFilter<"Warehouse"> | boolean
+    warehouseManagerId?: UuidNullableFilter<"Warehouse"> | string | null
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    warehouseManager?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     stocks?: StockListRelationFilter
     movements?: StockMovementListRelationFilter
     branches?: BranchListRelationFilter
+    productIssues?: ProductIssueListRelationFilter
   }
 
   export type WarehouseOrderByWithRelationInput = {
@@ -50432,16 +52142,20 @@ export namespace Prisma {
     code?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    warehouseManagerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
+    warehouseManager?: UserOrderByWithRelationInput
     stocks?: StockOrderByRelationAggregateInput
     movements?: StockMovementOrderByRelationAggregateInput
     branches?: BranchOrderByRelationAggregateInput
+    productIssues?: ProductIssueOrderByRelationAggregateInput
   }
 
   export type WarehouseWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    warehouseManagerId?: string
     organizationId_code?: WarehouseOrganizationIdCodeCompoundUniqueInput
     AND?: WarehouseWhereInput | WarehouseWhereInput[]
     OR?: WarehouseWhereInput[]
@@ -50454,10 +52168,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    warehouseManager?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     stocks?: StockListRelationFilter
     movements?: StockMovementListRelationFilter
     branches?: BranchListRelationFilter
-  }, "id" | "organizationId_code">
+    productIssues?: ProductIssueListRelationFilter
+  }, "id" | "warehouseManagerId" | "organizationId_code">
 
   export type WarehouseOrderByWithAggregationInput = {
     id?: SortOrder
@@ -50466,6 +52182,7 @@ export namespace Prisma {
     code?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    warehouseManagerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: WarehouseCountOrderByAggregateInput
@@ -50483,6 +52200,7 @@ export namespace Prisma {
     code?: StringNullableWithAggregatesFilter<"Warehouse"> | string | null
     location?: StringNullableWithAggregatesFilter<"Warehouse"> | string | null
     isActive?: BoolWithAggregatesFilter<"Warehouse"> | boolean
+    warehouseManagerId?: UuidNullableWithAggregatesFilter<"Warehouse"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Warehouse"> | Date | string
   }
@@ -50657,6 +52375,113 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"StockMovement"> | Date | string
   }
 
+  export type ProductIssueWhereInput = {
+    AND?: ProductIssueWhereInput | ProductIssueWhereInput[]
+    OR?: ProductIssueWhereInput[]
+    NOT?: ProductIssueWhereInput | ProductIssueWhereInput[]
+    id?: UuidFilter<"ProductIssue"> | string
+    organizationId?: UuidFilter<"ProductIssue"> | string
+    productId?: UuidFilter<"ProductIssue"> | string
+    warehouseId?: UuidFilter<"ProductIssue"> | string
+    warehouseManagerId?: UuidNullableFilter<"ProductIssue"> | string | null
+    salesExecutiveId?: UuidFilter<"ProductIssue"> | string
+    salesOrderId?: UuidNullableFilter<"ProductIssue"> | string | null
+    quantity?: IntFilter<"ProductIssue"> | number
+    status?: EnumProductIssueStatusFilter<"ProductIssue"> | $Enums.ProductIssueStatus
+    notes?: StringNullableFilter<"ProductIssue"> | string | null
+    createdAt?: DateTimeFilter<"ProductIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductIssue"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    warehouse?: XOR<WarehouseScalarRelationFilter, WarehouseWhereInput>
+    warehouseManager?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    salesExecutive?: XOR<UserScalarRelationFilter, UserWhereInput>
+    salesOrder?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+  }
+
+  export type ProductIssueOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    productId?: SortOrder
+    warehouseId?: SortOrder
+    warehouseManagerId?: SortOrderInput | SortOrder
+    salesExecutiveId?: SortOrder
+    salesOrderId?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+    warehouse?: WarehouseOrderByWithRelationInput
+    warehouseManager?: UserOrderByWithRelationInput
+    salesExecutive?: UserOrderByWithRelationInput
+    salesOrder?: OrderOrderByWithRelationInput
+  }
+
+  export type ProductIssueWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProductIssueWhereInput | ProductIssueWhereInput[]
+    OR?: ProductIssueWhereInput[]
+    NOT?: ProductIssueWhereInput | ProductIssueWhereInput[]
+    organizationId?: UuidFilter<"ProductIssue"> | string
+    productId?: UuidFilter<"ProductIssue"> | string
+    warehouseId?: UuidFilter<"ProductIssue"> | string
+    warehouseManagerId?: UuidNullableFilter<"ProductIssue"> | string | null
+    salesExecutiveId?: UuidFilter<"ProductIssue"> | string
+    salesOrderId?: UuidNullableFilter<"ProductIssue"> | string | null
+    quantity?: IntFilter<"ProductIssue"> | number
+    status?: EnumProductIssueStatusFilter<"ProductIssue"> | $Enums.ProductIssueStatus
+    notes?: StringNullableFilter<"ProductIssue"> | string | null
+    createdAt?: DateTimeFilter<"ProductIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductIssue"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    warehouse?: XOR<WarehouseScalarRelationFilter, WarehouseWhereInput>
+    warehouseManager?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    salesExecutive?: XOR<UserScalarRelationFilter, UserWhereInput>
+    salesOrder?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+  }, "id">
+
+  export type ProductIssueOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    productId?: SortOrder
+    warehouseId?: SortOrder
+    warehouseManagerId?: SortOrderInput | SortOrder
+    salesExecutiveId?: SortOrder
+    salesOrderId?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProductIssueCountOrderByAggregateInput
+    _avg?: ProductIssueAvgOrderByAggregateInput
+    _max?: ProductIssueMaxOrderByAggregateInput
+    _min?: ProductIssueMinOrderByAggregateInput
+    _sum?: ProductIssueSumOrderByAggregateInput
+  }
+
+  export type ProductIssueScalarWhereWithAggregatesInput = {
+    AND?: ProductIssueScalarWhereWithAggregatesInput | ProductIssueScalarWhereWithAggregatesInput[]
+    OR?: ProductIssueScalarWhereWithAggregatesInput[]
+    NOT?: ProductIssueScalarWhereWithAggregatesInput | ProductIssueScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"ProductIssue"> | string
+    organizationId?: UuidWithAggregatesFilter<"ProductIssue"> | string
+    productId?: UuidWithAggregatesFilter<"ProductIssue"> | string
+    warehouseId?: UuidWithAggregatesFilter<"ProductIssue"> | string
+    warehouseManagerId?: UuidNullableWithAggregatesFilter<"ProductIssue"> | string | null
+    salesExecutiveId?: UuidWithAggregatesFilter<"ProductIssue"> | string
+    salesOrderId?: UuidNullableWithAggregatesFilter<"ProductIssue"> | string | null
+    quantity?: IntWithAggregatesFilter<"ProductIssue"> | number
+    status?: EnumProductIssueStatusWithAggregatesFilter<"ProductIssue"> | $Enums.ProductIssueStatus
+    notes?: StringNullableWithAggregatesFilter<"ProductIssue"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ProductIssue"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProductIssue"> | Date | string
+  }
+
   export type OrganizationCreateInput = {
     id?: string
     name: string
@@ -50699,6 +52524,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -50743,6 +52569,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -50787,6 +52614,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -50831,6 +52659,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -51549,6 +53378,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -51596,6 +53428,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUpdateInput = {
@@ -51643,6 +53478,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -51690,6 +53528,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -52155,6 +53996,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     stocks?: StockCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
+    issues?: ProductIssueCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -52178,6 +54020,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -52201,6 +54044,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     stocks?: StockUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -52224,6 +54068,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -52308,6 +54153,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
     notes?: OrderNoteCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -52333,6 +54179,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
     notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -52358,6 +54205,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -52383,6 +54231,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -53890,9 +55739,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutWarehousesInput
+    warehouseManager?: UserCreateNestedOneWithoutManagedWarehouseInput
     stocks?: StockCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
     branches?: BranchCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateInput = {
@@ -53902,11 +55753,13 @@ export namespace Prisma {
     code?: string | null
     location?: string | null
     isActive?: boolean
+    warehouseManagerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: StockUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
     branches?: BranchUncheckedCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUpdateInput = {
@@ -53918,9 +55771,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutWarehousesNestedInput
+    warehouseManager?: UserUpdateOneWithoutManagedWarehouseNestedInput
     stocks?: StockUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateInput = {
@@ -53930,11 +55785,13 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: StockUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUncheckedUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseCreateManyInput = {
@@ -53944,6 +55801,7 @@ export namespace Prisma {
     code?: string | null
     location?: string | null
     isActive?: boolean
+    warehouseManagerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -53965,6 +55823,7 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -54128,6 +55987,105 @@ export namespace Prisma {
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueCreateInput = {
+    id?: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductIssuesInput
+    product: ProductCreateNestedOneWithoutIssuesInput
+    warehouse: WarehouseCreateNestedOneWithoutProductIssuesInput
+    warehouseManager?: UserCreateNestedOneWithoutProductIssuesWarehouseManagedInput
+    salesExecutive: UserCreateNestedOneWithoutProductIssuesReceivedInput
+    salesOrder?: OrderCreateNestedOneWithoutProductIssuesInput
+  }
+
+  export type ProductIssueUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductIssuesNestedInput
+    product?: ProductUpdateOneRequiredWithoutIssuesNestedInput
+    warehouse?: WarehouseUpdateOneRequiredWithoutProductIssuesNestedInput
+    warehouseManager?: UserUpdateOneWithoutProductIssuesWarehouseManagedNestedInput
+    salesExecutive?: UserUpdateOneRequiredWithoutProductIssuesReceivedNestedInput
+    salesOrder?: OrderUpdateOneWithoutProductIssuesNestedInput
+  }
+
+  export type ProductIssueUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueCreateManyInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UuidFilter<$PrismaModel = never> = {
@@ -54344,6 +56302,12 @@ export namespace Prisma {
     none?: StockMovementWhereInput
   }
 
+  export type ProductIssueListRelationFilter = {
+    every?: ProductIssueWhereInput
+    some?: ProductIssueWhereInput
+    none?: ProductIssueWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -54450,6 +56414,10 @@ export namespace Prisma {
   }
 
   export type StockMovementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProductIssueOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -55021,6 +56989,11 @@ export namespace Prisma {
     every?: PasswordHistoryWhereInput
     some?: PasswordHistoryWhereInput
     none?: PasswordHistoryWhereInput
+  }
+
+  export type WarehouseNullableScalarRelationFilter = {
+    is?: WarehouseWhereInput | null
+    isNot?: WarehouseWhereInput | null
   }
 
   export type PasswordHistoryOrderByRelationAggregateInput = {
@@ -56462,6 +58435,7 @@ export namespace Prisma {
     code?: SortOrder
     location?: SortOrder
     isActive?: SortOrder
+    warehouseManagerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -56473,6 +58447,7 @@ export namespace Prisma {
     code?: SortOrder
     location?: SortOrder
     isActive?: SortOrder
+    warehouseManagerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -56484,6 +58459,7 @@ export namespace Prisma {
     code?: SortOrder
     location?: SortOrder
     isActive?: SortOrder
+    warehouseManagerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -56608,6 +58584,81 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumStockMovementTypeFilter<$PrismaModel>
     _max?: NestedEnumStockMovementTypeFilter<$PrismaModel>
+  }
+
+  export type EnumProductIssueStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductIssueStatus | EnumProductIssueStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductIssueStatusFilter<$PrismaModel> | $Enums.ProductIssueStatus
+  }
+
+  export type OrderNullableScalarRelationFilter = {
+    is?: OrderWhereInput | null
+    isNot?: OrderWhereInput | null
+  }
+
+  export type ProductIssueCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    productId?: SortOrder
+    warehouseId?: SortOrder
+    warehouseManagerId?: SortOrder
+    salesExecutiveId?: SortOrder
+    salesOrderId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductIssueAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type ProductIssueMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    productId?: SortOrder
+    warehouseId?: SortOrder
+    warehouseManagerId?: SortOrder
+    salesExecutiveId?: SortOrder
+    salesOrderId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductIssueMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    productId?: SortOrder
+    warehouseId?: SortOrder
+    warehouseManagerId?: SortOrder
+    salesExecutiveId?: SortOrder
+    salesOrderId?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProductIssueSumOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type EnumProductIssueStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductIssueStatus | EnumProductIssueStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductIssueStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProductIssueStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProductIssueStatusFilter<$PrismaModel>
+    _max?: NestedEnumProductIssueStatusFilter<$PrismaModel>
   }
 
   export type BranchCreateNestedManyWithoutOrganizationInput = {
@@ -56792,6 +58843,13 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type ProductIssueCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ProductIssueCreateWithoutOrganizationInput, ProductIssueUncheckedCreateWithoutOrganizationInput> | ProductIssueCreateWithoutOrganizationInput[] | ProductIssueUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutOrganizationInput | ProductIssueCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ProductIssueCreateManyOrganizationInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
   export type BranchUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<BranchCreateWithoutOrganizationInput, BranchUncheckedCreateWithoutOrganizationInput> | BranchCreateWithoutOrganizationInput[] | BranchUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutOrganizationInput | BranchCreateOrConnectWithoutOrganizationInput[]
@@ -56972,6 +59030,13 @@ export namespace Prisma {
     connectOrCreate?: StockMovementCreateOrConnectWithoutOrganizationInput | StockMovementCreateOrConnectWithoutOrganizationInput[]
     createMany?: StockMovementCreateManyOrganizationInputEnvelope
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ProductIssueCreateWithoutOrganizationInput, ProductIssueUncheckedCreateWithoutOrganizationInput> | ProductIssueCreateWithoutOrganizationInput[] | ProductIssueUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutOrganizationInput | ProductIssueCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ProductIssueCreateManyOrganizationInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -57354,6 +59419,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type ProductIssueUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutOrganizationInput, ProductIssueUncheckedCreateWithoutOrganizationInput> | ProductIssueCreateWithoutOrganizationInput[] | ProductIssueUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutOrganizationInput | ProductIssueCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutOrganizationInput | ProductIssueUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ProductIssueCreateManyOrganizationInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutOrganizationInput | ProductIssueUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutOrganizationInput | ProductIssueUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
   export type BranchUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<BranchCreateWithoutOrganizationInput, BranchUncheckedCreateWithoutOrganizationInput> | BranchCreateWithoutOrganizationInput[] | BranchUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutOrganizationInput | BranchCreateOrConnectWithoutOrganizationInput[]
@@ -57716,6 +59795,20 @@ export namespace Prisma {
     update?: StockMovementUpdateWithWhereUniqueWithoutOrganizationInput | StockMovementUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: StockMovementUpdateManyWithWhereWithoutOrganizationInput | StockMovementUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutOrganizationInput, ProductIssueUncheckedCreateWithoutOrganizationInput> | ProductIssueCreateWithoutOrganizationInput[] | ProductIssueUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutOrganizationInput | ProductIssueCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutOrganizationInput | ProductIssueUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ProductIssueCreateManyOrganizationInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutOrganizationInput | ProductIssueUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutOrganizationInput | ProductIssueUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutBranchesInput = {
@@ -58767,6 +60860,26 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type WarehouseCreateNestedOneWithoutWarehouseManagerInput = {
+    create?: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWarehouseManagerInput
+    connect?: WarehouseWhereUniqueInput
+  }
+
+  export type ProductIssueCreateNestedManyWithoutWarehouseManagerInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseManagerInput, ProductIssueUncheckedCreateWithoutWarehouseManagerInput> | ProductIssueCreateWithoutWarehouseManagerInput[] | ProductIssueUncheckedCreateWithoutWarehouseManagerInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseManagerInput | ProductIssueCreateOrConnectWithoutWarehouseManagerInput[]
+    createMany?: ProductIssueCreateManyWarehouseManagerInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
+  export type ProductIssueCreateNestedManyWithoutSalesExecutiveInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesExecutiveInput, ProductIssueUncheckedCreateWithoutSalesExecutiveInput> | ProductIssueCreateWithoutSalesExecutiveInput[] | ProductIssueUncheckedCreateWithoutSalesExecutiveInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesExecutiveInput | ProductIssueCreateOrConnectWithoutSalesExecutiveInput[]
+    createMany?: ProductIssueCreateManySalesExecutiveInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutManagerInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -58898,6 +61011,26 @@ export namespace Prisma {
     connectOrCreate?: StockMovementCreateOrConnectWithoutUserInput | StockMovementCreateOrConnectWithoutUserInput[]
     createMany?: StockMovementCreateManyUserInputEnvelope
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput = {
+    create?: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWarehouseManagerInput
+    connect?: WarehouseWhereUniqueInput
+  }
+
+  export type ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseManagerInput, ProductIssueUncheckedCreateWithoutWarehouseManagerInput> | ProductIssueCreateWithoutWarehouseManagerInput[] | ProductIssueUncheckedCreateWithoutWarehouseManagerInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseManagerInput | ProductIssueCreateOrConnectWithoutWarehouseManagerInput[]
+    createMany?: ProductIssueCreateManyWarehouseManagerInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
+  export type ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesExecutiveInput, ProductIssueUncheckedCreateWithoutSalesExecutiveInput> | ProductIssueCreateWithoutSalesExecutiveInput[] | ProductIssueUncheckedCreateWithoutSalesExecutiveInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesExecutiveInput | ProductIssueCreateOrConnectWithoutSalesExecutiveInput[]
+    createMany?: ProductIssueCreateManySalesExecutiveInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -59236,6 +61369,44 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type WarehouseUpdateOneWithoutWarehouseManagerNestedInput = {
+    create?: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWarehouseManagerInput
+    upsert?: WarehouseUpsertWithoutWarehouseManagerInput
+    disconnect?: WarehouseWhereInput | boolean
+    delete?: WarehouseWhereInput | boolean
+    connect?: WarehouseWhereUniqueInput
+    update?: XOR<XOR<WarehouseUpdateToOneWithWhereWithoutWarehouseManagerInput, WarehouseUpdateWithoutWarehouseManagerInput>, WarehouseUncheckedUpdateWithoutWarehouseManagerInput>
+  }
+
+  export type ProductIssueUpdateManyWithoutWarehouseManagerNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseManagerInput, ProductIssueUncheckedCreateWithoutWarehouseManagerInput> | ProductIssueCreateWithoutWarehouseManagerInput[] | ProductIssueUncheckedCreateWithoutWarehouseManagerInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseManagerInput | ProductIssueCreateOrConnectWithoutWarehouseManagerInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutWarehouseManagerInput | ProductIssueUpsertWithWhereUniqueWithoutWarehouseManagerInput[]
+    createMany?: ProductIssueCreateManyWarehouseManagerInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutWarehouseManagerInput | ProductIssueUpdateWithWhereUniqueWithoutWarehouseManagerInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutWarehouseManagerInput | ProductIssueUpdateManyWithWhereWithoutWarehouseManagerInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
+  export type ProductIssueUpdateManyWithoutSalesExecutiveNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesExecutiveInput, ProductIssueUncheckedCreateWithoutSalesExecutiveInput> | ProductIssueCreateWithoutSalesExecutiveInput[] | ProductIssueUncheckedCreateWithoutSalesExecutiveInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesExecutiveInput | ProductIssueCreateOrConnectWithoutSalesExecutiveInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutSalesExecutiveInput | ProductIssueUpsertWithWhereUniqueWithoutSalesExecutiveInput[]
+    createMany?: ProductIssueCreateManySalesExecutiveInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutSalesExecutiveInput | ProductIssueUpdateWithWhereUniqueWithoutSalesExecutiveInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutSalesExecutiveInput | ProductIssueUpdateManyWithWhereWithoutSalesExecutiveInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutManagerNestedInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -59502,6 +61673,44 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput = {
+    create?: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutWarehouseManagerInput
+    upsert?: WarehouseUpsertWithoutWarehouseManagerInput
+    disconnect?: WarehouseWhereInput | boolean
+    delete?: WarehouseWhereInput | boolean
+    connect?: WarehouseWhereUniqueInput
+    update?: XOR<XOR<WarehouseUpdateToOneWithWhereWithoutWarehouseManagerInput, WarehouseUpdateWithoutWarehouseManagerInput>, WarehouseUncheckedUpdateWithoutWarehouseManagerInput>
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseManagerInput, ProductIssueUncheckedCreateWithoutWarehouseManagerInput> | ProductIssueCreateWithoutWarehouseManagerInput[] | ProductIssueUncheckedCreateWithoutWarehouseManagerInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseManagerInput | ProductIssueCreateOrConnectWithoutWarehouseManagerInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutWarehouseManagerInput | ProductIssueUpsertWithWhereUniqueWithoutWarehouseManagerInput[]
+    createMany?: ProductIssueCreateManyWarehouseManagerInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutWarehouseManagerInput | ProductIssueUpdateWithWhereUniqueWithoutWarehouseManagerInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutWarehouseManagerInput | ProductIssueUpdateManyWithWhereWithoutWarehouseManagerInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesExecutiveInput, ProductIssueUncheckedCreateWithoutSalesExecutiveInput> | ProductIssueCreateWithoutSalesExecutiveInput[] | ProductIssueUncheckedCreateWithoutSalesExecutiveInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesExecutiveInput | ProductIssueCreateOrConnectWithoutSalesExecutiveInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutSalesExecutiveInput | ProductIssueUpsertWithWhereUniqueWithoutSalesExecutiveInput[]
+    createMany?: ProductIssueCreateManySalesExecutiveInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutSalesExecutiveInput | ProductIssueUpdateWithWhereUniqueWithoutSalesExecutiveInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutSalesExecutiveInput | ProductIssueUpdateManyWithWhereWithoutSalesExecutiveInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutRolesInput = {
     create?: XOR<UserCreateWithoutRolesInput, UserUncheckedCreateWithoutRolesInput>
     connectOrCreate?: UserCreateOrConnectWithoutRolesInput
@@ -59727,6 +61936,13 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type ProductIssueCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProductIssueCreateWithoutProductInput, ProductIssueUncheckedCreateWithoutProductInput> | ProductIssueCreateWithoutProductInput[] | ProductIssueUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutProductInput | ProductIssueCreateOrConnectWithoutProductInput[]
+    createMany?: ProductIssueCreateManyProductInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -59746,6 +61962,13 @@ export namespace Prisma {
     connectOrCreate?: StockMovementCreateOrConnectWithoutProductInput | StockMovementCreateOrConnectWithoutProductInput[]
     createMany?: StockMovementCreateManyProductInputEnvelope
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type ProductIssueUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<ProductIssueCreateWithoutProductInput, ProductIssueUncheckedCreateWithoutProductInput> | ProductIssueCreateWithoutProductInput[] | ProductIssueUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutProductInput | ProductIssueCreateOrConnectWithoutProductInput[]
+    createMany?: ProductIssueCreateManyProductInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -59814,6 +62037,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type ProductIssueUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutProductInput, ProductIssueUncheckedCreateWithoutProductInput> | ProductIssueCreateWithoutProductInput[] | ProductIssueUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutProductInput | ProductIssueCreateOrConnectWithoutProductInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutProductInput | ProductIssueUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProductIssueCreateManyProductInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutProductInput | ProductIssueUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutProductInput | ProductIssueUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -59856,6 +62093,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type ProductIssueUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutProductInput, ProductIssueUncheckedCreateWithoutProductInput> | ProductIssueCreateWithoutProductInput[] | ProductIssueUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutProductInput | ProductIssueCreateOrConnectWithoutProductInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutProductInput | ProductIssueUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: ProductIssueCreateManyProductInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutProductInput | ProductIssueUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutProductInput | ProductIssueUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
   export type OrganizationCreateNestedOneWithoutOrdersInput = {
     create?: XOR<OrganizationCreateWithoutOrdersInput, OrganizationUncheckedCreateWithoutOrdersInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutOrdersInput
@@ -59895,6 +62146,13 @@ export namespace Prisma {
     connect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
   }
 
+  export type ProductIssueCreateNestedManyWithoutSalesOrderInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput> | ProductIssueCreateWithoutSalesOrderInput[] | ProductIssueUncheckedCreateWithoutSalesOrderInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesOrderInput | ProductIssueCreateOrConnectWithoutSalesOrderInput[]
+    createMany?: ProductIssueCreateManySalesOrderInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
@@ -59914,6 +62172,13 @@ export namespace Prisma {
     connectOrCreate?: OrderNoteCreateOrConnectWithoutOrderInput | OrderNoteCreateOrConnectWithoutOrderInput[]
     createMany?: OrderNoteCreateManyOrderInputEnvelope
     connect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
+  }
+
+  export type ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput> | ProductIssueCreateWithoutSalesOrderInput[] | ProductIssueUncheckedCreateWithoutSalesOrderInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesOrderInput | ProductIssueCreateOrConnectWithoutSalesOrderInput[]
+    createMany?: ProductIssueCreateManySalesOrderInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutOrdersNestedInput = {
@@ -59982,6 +62247,20 @@ export namespace Prisma {
     deleteMany?: OrderNoteScalarWhereInput | OrderNoteScalarWhereInput[]
   }
 
+  export type ProductIssueUpdateManyWithoutSalesOrderNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput> | ProductIssueCreateWithoutSalesOrderInput[] | ProductIssueUncheckedCreateWithoutSalesOrderInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesOrderInput | ProductIssueCreateOrConnectWithoutSalesOrderInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutSalesOrderInput | ProductIssueUpsertWithWhereUniqueWithoutSalesOrderInput[]
+    createMany?: ProductIssueCreateManySalesOrderInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutSalesOrderInput | ProductIssueUpdateWithWhereUniqueWithoutSalesOrderInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutSalesOrderInput | ProductIssueUpdateManyWithWhereWithoutSalesOrderInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
@@ -60022,6 +62301,20 @@ export namespace Prisma {
     update?: OrderNoteUpdateWithWhereUniqueWithoutOrderInput | OrderNoteUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderNoteUpdateManyWithWhereWithoutOrderInput | OrderNoteUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderNoteScalarWhereInput | OrderNoteScalarWhereInput[]
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput> | ProductIssueCreateWithoutSalesOrderInput[] | ProductIssueUncheckedCreateWithoutSalesOrderInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesOrderInput | ProductIssueCreateOrConnectWithoutSalesOrderInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutSalesOrderInput | ProductIssueUpsertWithWhereUniqueWithoutSalesOrderInput[]
+    createMany?: ProductIssueCreateManySalesOrderInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutSalesOrderInput | ProductIssueUpdateWithWhereUniqueWithoutSalesOrderInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutSalesOrderInput | ProductIssueUpdateManyWithWhereWithoutSalesOrderInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
   }
 
   export type OrderCreateNestedOneWithoutItemsInput = {
@@ -60500,6 +62793,12 @@ export namespace Prisma {
     connect?: OrganizationWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutManagedWarehouseInput = {
+    create?: XOR<UserCreateWithoutManagedWarehouseInput, UserUncheckedCreateWithoutManagedWarehouseInput>
+    connectOrCreate?: UserCreateOrConnectWithoutManagedWarehouseInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type StockCreateNestedManyWithoutWarehouseInput = {
     create?: XOR<StockCreateWithoutWarehouseInput, StockUncheckedCreateWithoutWarehouseInput> | StockCreateWithoutWarehouseInput[] | StockUncheckedCreateWithoutWarehouseInput[]
     connectOrCreate?: StockCreateOrConnectWithoutWarehouseInput | StockCreateOrConnectWithoutWarehouseInput[]
@@ -60518,6 +62817,13 @@ export namespace Prisma {
     create?: XOR<BranchCreateWithoutWarehousesInput, BranchUncheckedCreateWithoutWarehousesInput> | BranchCreateWithoutWarehousesInput[] | BranchUncheckedCreateWithoutWarehousesInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutWarehousesInput | BranchCreateOrConnectWithoutWarehousesInput[]
     connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
+  }
+
+  export type ProductIssueCreateNestedManyWithoutWarehouseInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseInput, ProductIssueUncheckedCreateWithoutWarehouseInput> | ProductIssueCreateWithoutWarehouseInput[] | ProductIssueUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseInput | ProductIssueCreateOrConnectWithoutWarehouseInput[]
+    createMany?: ProductIssueCreateManyWarehouseInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
   export type StockUncheckedCreateNestedManyWithoutWarehouseInput = {
@@ -60540,12 +62846,29 @@ export namespace Prisma {
     connect?: BranchWhereUniqueInput | BranchWhereUniqueInput[]
   }
 
+  export type ProductIssueUncheckedCreateNestedManyWithoutWarehouseInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseInput, ProductIssueUncheckedCreateWithoutWarehouseInput> | ProductIssueCreateWithoutWarehouseInput[] | ProductIssueUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseInput | ProductIssueCreateOrConnectWithoutWarehouseInput[]
+    createMany?: ProductIssueCreateManyWarehouseInputEnvelope
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
   export type OrganizationUpdateOneRequiredWithoutWarehousesNestedInput = {
     create?: XOR<OrganizationCreateWithoutWarehousesInput, OrganizationUncheckedCreateWithoutWarehousesInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutWarehousesInput
     upsert?: OrganizationUpsertWithoutWarehousesInput
     connect?: OrganizationWhereUniqueInput
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutWarehousesInput, OrganizationUpdateWithoutWarehousesInput>, OrganizationUncheckedUpdateWithoutWarehousesInput>
+  }
+
+  export type UserUpdateOneWithoutManagedWarehouseNestedInput = {
+    create?: XOR<UserCreateWithoutManagedWarehouseInput, UserUncheckedCreateWithoutManagedWarehouseInput>
+    connectOrCreate?: UserCreateOrConnectWithoutManagedWarehouseInput
+    upsert?: UserUpsertWithoutManagedWarehouseInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutManagedWarehouseInput, UserUpdateWithoutManagedWarehouseInput>, UserUncheckedUpdateWithoutManagedWarehouseInput>
   }
 
   export type StockUpdateManyWithoutWarehouseNestedInput = {
@@ -60589,6 +62912,20 @@ export namespace Prisma {
     deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
   }
 
+  export type ProductIssueUpdateManyWithoutWarehouseNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseInput, ProductIssueUncheckedCreateWithoutWarehouseInput> | ProductIssueCreateWithoutWarehouseInput[] | ProductIssueUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseInput | ProductIssueCreateOrConnectWithoutWarehouseInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutWarehouseInput | ProductIssueUpsertWithWhereUniqueWithoutWarehouseInput[]
+    createMany?: ProductIssueCreateManyWarehouseInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutWarehouseInput | ProductIssueUpdateWithWhereUniqueWithoutWarehouseInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutWarehouseInput | ProductIssueUpdateManyWithWhereWithoutWarehouseInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
   export type StockUncheckedUpdateManyWithoutWarehouseNestedInput = {
     create?: XOR<StockCreateWithoutWarehouseInput, StockUncheckedCreateWithoutWarehouseInput> | StockCreateWithoutWarehouseInput[] | StockUncheckedCreateWithoutWarehouseInput[]
     connectOrCreate?: StockCreateOrConnectWithoutWarehouseInput | StockCreateOrConnectWithoutWarehouseInput[]
@@ -60628,6 +62965,20 @@ export namespace Prisma {
     update?: BranchUpdateWithWhereUniqueWithoutWarehousesInput | BranchUpdateWithWhereUniqueWithoutWarehousesInput[]
     updateMany?: BranchUpdateManyWithWhereWithoutWarehousesInput | BranchUpdateManyWithWhereWithoutWarehousesInput[]
     deleteMany?: BranchScalarWhereInput | BranchScalarWhereInput[]
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutWarehouseNestedInput = {
+    create?: XOR<ProductIssueCreateWithoutWarehouseInput, ProductIssueUncheckedCreateWithoutWarehouseInput> | ProductIssueCreateWithoutWarehouseInput[] | ProductIssueUncheckedCreateWithoutWarehouseInput[]
+    connectOrCreate?: ProductIssueCreateOrConnectWithoutWarehouseInput | ProductIssueCreateOrConnectWithoutWarehouseInput[]
+    upsert?: ProductIssueUpsertWithWhereUniqueWithoutWarehouseInput | ProductIssueUpsertWithWhereUniqueWithoutWarehouseInput[]
+    createMany?: ProductIssueCreateManyWarehouseInputEnvelope
+    set?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    disconnect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    delete?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+    update?: ProductIssueUpdateWithWhereUniqueWithoutWarehouseInput | ProductIssueUpdateWithWhereUniqueWithoutWarehouseInput[]
+    updateMany?: ProductIssueUpdateManyWithWhereWithoutWarehouseInput | ProductIssueUpdateManyWithWhereWithoutWarehouseInput[]
+    deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutStocksInput = {
@@ -60732,6 +63083,98 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStockMovementsInput, UserUpdateWithoutStockMovementsInput>, UserUncheckedUpdateWithoutStockMovementsInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutProductIssuesInput = {
+    create?: XOR<OrganizationCreateWithoutProductIssuesInput, OrganizationUncheckedCreateWithoutProductIssuesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutProductIssuesInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutIssuesInput = {
+    create?: XOR<ProductCreateWithoutIssuesInput, ProductUncheckedCreateWithoutIssuesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutIssuesInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type WarehouseCreateNestedOneWithoutProductIssuesInput = {
+    create?: XOR<WarehouseCreateWithoutProductIssuesInput, WarehouseUncheckedCreateWithoutProductIssuesInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutProductIssuesInput
+    connect?: WarehouseWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutProductIssuesWarehouseManagedInput = {
+    create?: XOR<UserCreateWithoutProductIssuesWarehouseManagedInput, UserUncheckedCreateWithoutProductIssuesWarehouseManagedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductIssuesWarehouseManagedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutProductIssuesReceivedInput = {
+    create?: XOR<UserCreateWithoutProductIssuesReceivedInput, UserUncheckedCreateWithoutProductIssuesReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductIssuesReceivedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutProductIssuesInput = {
+    create?: XOR<OrderCreateWithoutProductIssuesInput, OrderUncheckedCreateWithoutProductIssuesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutProductIssuesInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type EnumProductIssueStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ProductIssueStatus
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutProductIssuesNestedInput = {
+    create?: XOR<OrganizationCreateWithoutProductIssuesInput, OrganizationUncheckedCreateWithoutProductIssuesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutProductIssuesInput
+    upsert?: OrganizationUpsertWithoutProductIssuesInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutProductIssuesInput, OrganizationUpdateWithoutProductIssuesInput>, OrganizationUncheckedUpdateWithoutProductIssuesInput>
+  }
+
+  export type ProductUpdateOneRequiredWithoutIssuesNestedInput = {
+    create?: XOR<ProductCreateWithoutIssuesInput, ProductUncheckedCreateWithoutIssuesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutIssuesInput
+    upsert?: ProductUpsertWithoutIssuesInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutIssuesInput, ProductUpdateWithoutIssuesInput>, ProductUncheckedUpdateWithoutIssuesInput>
+  }
+
+  export type WarehouseUpdateOneRequiredWithoutProductIssuesNestedInput = {
+    create?: XOR<WarehouseCreateWithoutProductIssuesInput, WarehouseUncheckedCreateWithoutProductIssuesInput>
+    connectOrCreate?: WarehouseCreateOrConnectWithoutProductIssuesInput
+    upsert?: WarehouseUpsertWithoutProductIssuesInput
+    connect?: WarehouseWhereUniqueInput
+    update?: XOR<XOR<WarehouseUpdateToOneWithWhereWithoutProductIssuesInput, WarehouseUpdateWithoutProductIssuesInput>, WarehouseUncheckedUpdateWithoutProductIssuesInput>
+  }
+
+  export type UserUpdateOneWithoutProductIssuesWarehouseManagedNestedInput = {
+    create?: XOR<UserCreateWithoutProductIssuesWarehouseManagedInput, UserUncheckedCreateWithoutProductIssuesWarehouseManagedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductIssuesWarehouseManagedInput
+    upsert?: UserUpsertWithoutProductIssuesWarehouseManagedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProductIssuesWarehouseManagedInput, UserUpdateWithoutProductIssuesWarehouseManagedInput>, UserUncheckedUpdateWithoutProductIssuesWarehouseManagedInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutProductIssuesReceivedNestedInput = {
+    create?: XOR<UserCreateWithoutProductIssuesReceivedInput, UserUncheckedCreateWithoutProductIssuesReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProductIssuesReceivedInput
+    upsert?: UserUpsertWithoutProductIssuesReceivedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProductIssuesReceivedInput, UserUpdateWithoutProductIssuesReceivedInput>, UserUncheckedUpdateWithoutProductIssuesReceivedInput>
+  }
+
+  export type OrderUpdateOneWithoutProductIssuesNestedInput = {
+    create?: XOR<OrderCreateWithoutProductIssuesInput, OrderUncheckedCreateWithoutProductIssuesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutProductIssuesInput
+    upsert?: OrderUpsertWithoutProductIssuesInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutProductIssuesInput, OrderUpdateWithoutProductIssuesInput>, OrderUncheckedUpdateWithoutProductIssuesInput>
   }
 
   export type NestedUuidFilter<$PrismaModel = never> = {
@@ -61227,6 +63670,23 @@ export namespace Prisma {
     _max?: NestedEnumStockMovementTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumProductIssueStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductIssueStatus | EnumProductIssueStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductIssueStatusFilter<$PrismaModel> | $Enums.ProductIssueStatus
+  }
+
+  export type NestedEnumProductIssueStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductIssueStatus | EnumProductIssueStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductIssueStatus[] | ListEnumProductIssueStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductIssueStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProductIssueStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProductIssueStatusFilter<$PrismaModel>
+    _max?: NestedEnumProductIssueStatusFilter<$PrismaModel>
+  }
+
   export type BranchCreateWithoutOrganizationInput = {
     id?: string
     name: string
@@ -61433,6 +63893,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -61479,6 +63942,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -62073,6 +64539,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     stocks?: StockCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
+    issues?: ProductIssueCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrganizationInput = {
@@ -62095,6 +64562,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrganizationInput = {
@@ -62129,6 +64597,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
     notes?: OrderNoteCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUncheckedCreateWithoutOrganizationInput = {
@@ -62153,6 +64622,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
     notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderCreateOrConnectWithoutOrganizationInput = {
@@ -62211,9 +64681,11 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    warehouseManager?: UserCreateNestedOneWithoutManagedWarehouseInput
     stocks?: StockCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
     branches?: BranchCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateWithoutOrganizationInput = {
@@ -62222,11 +64694,13 @@ export namespace Prisma {
     code?: string | null
     location?: string | null
     isActive?: boolean
+    warehouseManagerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: StockUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
     branches?: BranchUncheckedCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseCreateOrConnectWithoutOrganizationInput = {
@@ -62300,6 +64774,44 @@ export namespace Prisma {
 
   export type StockMovementCreateManyOrganizationInputEnvelope = {
     data: StockMovementCreateManyOrganizationInput | StockMovementCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductIssueCreateWithoutOrganizationInput = {
+    id?: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutIssuesInput
+    warehouse: WarehouseCreateNestedOneWithoutProductIssuesInput
+    warehouseManager?: UserCreateNestedOneWithoutProductIssuesWarehouseManagedInput
+    salesExecutive: UserCreateNestedOneWithoutProductIssuesReceivedInput
+    salesOrder?: OrderCreateNestedOneWithoutProductIssuesInput
+  }
+
+  export type ProductIssueUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueCreateOrConnectWithoutOrganizationInput = {
+    where: ProductIssueWhereUniqueInput
+    create: XOR<ProductIssueCreateWithoutOrganizationInput, ProductIssueUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ProductIssueCreateManyOrganizationInputEnvelope = {
+    data: ProductIssueCreateManyOrganizationInput | ProductIssueCreateManyOrganizationInput[]
     skipDuplicates?: boolean
   }
 
@@ -63120,6 +65632,7 @@ export namespace Prisma {
     code?: StringNullableFilter<"Warehouse"> | string | null
     location?: StringNullableFilter<"Warehouse"> | string | null
     isActive?: BoolFilter<"Warehouse"> | boolean
+    warehouseManagerId?: UuidNullableFilter<"Warehouse"> | string | null
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
   }
@@ -63186,6 +65699,40 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"StockMovement"> | Date | string
   }
 
+  export type ProductIssueUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: ProductIssueWhereUniqueInput
+    update: XOR<ProductIssueUpdateWithoutOrganizationInput, ProductIssueUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<ProductIssueCreateWithoutOrganizationInput, ProductIssueUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ProductIssueUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: ProductIssueWhereUniqueInput
+    data: XOR<ProductIssueUpdateWithoutOrganizationInput, ProductIssueUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ProductIssueUpdateManyWithWhereWithoutOrganizationInput = {
+    where: ProductIssueScalarWhereInput
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type ProductIssueScalarWhereInput = {
+    AND?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+    OR?: ProductIssueScalarWhereInput[]
+    NOT?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+    id?: UuidFilter<"ProductIssue"> | string
+    organizationId?: UuidFilter<"ProductIssue"> | string
+    productId?: UuidFilter<"ProductIssue"> | string
+    warehouseId?: UuidFilter<"ProductIssue"> | string
+    warehouseManagerId?: UuidNullableFilter<"ProductIssue"> | string | null
+    salesExecutiveId?: UuidFilter<"ProductIssue"> | string
+    salesOrderId?: UuidNullableFilter<"ProductIssue"> | string | null
+    quantity?: IntFilter<"ProductIssue"> | number
+    status?: EnumProductIssueStatusFilter<"ProductIssue"> | $Enums.ProductIssueStatus
+    notes?: StringNullableFilter<"ProductIssue"> | string | null
+    createdAt?: DateTimeFilter<"ProductIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"ProductIssue"> | Date | string
+  }
+
   export type OrganizationCreateWithoutBranchesInput = {
     id?: string
     name: string
@@ -63227,6 +65774,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutBranchesInput = {
@@ -63270,6 +65818,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutBranchesInput = {
@@ -63423,6 +65972,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutBranchInput = {
@@ -63469,6 +66021,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutBranchInput = {
@@ -63490,8 +66045,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutWarehousesInput
+    warehouseManager?: UserCreateNestedOneWithoutManagedWarehouseInput
     stocks?: StockCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    productIssues?: ProductIssueCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateWithoutBranchesInput = {
@@ -63501,10 +66058,12 @@ export namespace Prisma {
     code?: string | null
     location?: string | null
     isActive?: boolean
+    warehouseManagerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: StockUncheckedCreateNestedManyWithoutWarehouseInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseCreateOrConnectWithoutBranchesInput = {
@@ -63564,6 +66123,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutBranchesInput = {
@@ -63607,6 +66167,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type DepartmentUpsertWithoutBranchesInput = {
@@ -63776,6 +66337,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutDepartmentsInput = {
@@ -63819,6 +66381,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutDepartmentsInput = {
@@ -63994,6 +66557,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutDepartmentInput = {
@@ -64040,6 +66606,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutDepartmentInput = {
@@ -64104,6 +66673,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutDepartmentsInput = {
@@ -64147,6 +66717,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type TerritoryUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -64254,6 +66825,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTerritoriesInput = {
@@ -64297,6 +66869,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTerritoriesInput = {
@@ -64467,6 +67040,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutTerritoryInput = {
@@ -64513,6 +67089,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutTerritoryInput = {
@@ -64577,6 +67156,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTerritoriesInput = {
@@ -64620,6 +67200,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type DepartmentUpsertWithoutTerritoriesInput = {
@@ -64750,6 +67331,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTeamsInput = {
@@ -64793,6 +67375,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTeamsInput = {
@@ -64955,6 +67538,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutTeamInput = {
@@ -65001,6 +67587,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutTeamInput = {
@@ -65105,6 +67694,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTeamsInput = {
@@ -65148,6 +67738,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type BranchUpsertWithoutTeamsInput = {
@@ -65352,6 +67943,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutRolesInput = {
@@ -65395,6 +67987,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutRolesInput = {
@@ -65565,6 +68158,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutRolesInput = {
@@ -65608,6 +68202,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type RoleUpsertWithoutChildRolesInput = {
@@ -65920,6 +68515,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -65963,6 +68559,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -66156,6 +68753,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutSubordinatesInput = {
@@ -66202,6 +68802,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutSubordinatesInput = {
@@ -66253,6 +68856,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutManagerInput = {
@@ -66299,6 +68905,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutManagerInput = {
@@ -66959,6 +69568,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
     notes?: OrderNoteCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUncheckedCreateWithoutOwnerInput = {
@@ -66983,6 +69593,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
     notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderCreateOrConnectWithoutOwnerInput = {
@@ -67026,6 +69637,117 @@ export namespace Prisma {
 
   export type StockMovementCreateManyUserInputEnvelope = {
     data: StockMovementCreateManyUserInput | StockMovementCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WarehouseCreateWithoutWarehouseManagerInput = {
+    id?: string
+    name: string
+    code?: string | null
+    location?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutWarehousesInput
+    stocks?: StockCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    branches?: BranchCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseUncheckedCreateWithoutWarehouseManagerInput = {
+    id?: string
+    organizationId: string
+    name: string
+    code?: string | null
+    location?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stocks?: StockUncheckedCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    branches?: BranchUncheckedCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseInput
+  }
+
+  export type WarehouseCreateOrConnectWithoutWarehouseManagerInput = {
+    where: WarehouseWhereUniqueInput
+    create: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
+  }
+
+  export type ProductIssueCreateWithoutWarehouseManagerInput = {
+    id?: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductIssuesInput
+    product: ProductCreateNestedOneWithoutIssuesInput
+    warehouse: WarehouseCreateNestedOneWithoutProductIssuesInput
+    salesExecutive: UserCreateNestedOneWithoutProductIssuesReceivedInput
+    salesOrder?: OrderCreateNestedOneWithoutProductIssuesInput
+  }
+
+  export type ProductIssueUncheckedCreateWithoutWarehouseManagerInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueCreateOrConnectWithoutWarehouseManagerInput = {
+    where: ProductIssueWhereUniqueInput
+    create: XOR<ProductIssueCreateWithoutWarehouseManagerInput, ProductIssueUncheckedCreateWithoutWarehouseManagerInput>
+  }
+
+  export type ProductIssueCreateManyWarehouseManagerInputEnvelope = {
+    data: ProductIssueCreateManyWarehouseManagerInput | ProductIssueCreateManyWarehouseManagerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductIssueCreateWithoutSalesExecutiveInput = {
+    id?: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductIssuesInput
+    product: ProductCreateNestedOneWithoutIssuesInput
+    warehouse: WarehouseCreateNestedOneWithoutProductIssuesInput
+    warehouseManager?: UserCreateNestedOneWithoutProductIssuesWarehouseManagedInput
+    salesOrder?: OrderCreateNestedOneWithoutProductIssuesInput
+  }
+
+  export type ProductIssueUncheckedCreateWithoutSalesExecutiveInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueCreateOrConnectWithoutSalesExecutiveInput = {
+    where: ProductIssueWhereUniqueInput
+    create: XOR<ProductIssueCreateWithoutSalesExecutiveInput, ProductIssueUncheckedCreateWithoutSalesExecutiveInput>
+  }
+
+  export type ProductIssueCreateManySalesExecutiveInputEnvelope = {
+    data: ProductIssueCreateManySalesExecutiveInput | ProductIssueCreateManySalesExecutiveInput[]
     skipDuplicates?: boolean
   }
 
@@ -67081,6 +69803,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -67124,6 +69847,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type BranchUpsertWithoutUsersInput = {
@@ -67347,6 +70071,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubordinatesInput = {
@@ -67393,6 +70120,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutManagerInput = {
@@ -67709,6 +70439,79 @@ export namespace Prisma {
     data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type WarehouseUpsertWithoutWarehouseManagerInput = {
+    update: XOR<WarehouseUpdateWithoutWarehouseManagerInput, WarehouseUncheckedUpdateWithoutWarehouseManagerInput>
+    create: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
+    where?: WarehouseWhereInput
+  }
+
+  export type WarehouseUpdateToOneWithWhereWithoutWarehouseManagerInput = {
+    where?: WarehouseWhereInput
+    data: XOR<WarehouseUpdateWithoutWarehouseManagerInput, WarehouseUncheckedUpdateWithoutWarehouseManagerInput>
+  }
+
+  export type WarehouseUpdateWithoutWarehouseManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutWarehousesNestedInput
+    stocks?: StockUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    branches?: BranchUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type WarehouseUncheckedUpdateWithoutWarehouseManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stocks?: StockUncheckedUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutWarehouseNestedInput
+  }
+
+  export type ProductIssueUpsertWithWhereUniqueWithoutWarehouseManagerInput = {
+    where: ProductIssueWhereUniqueInput
+    update: XOR<ProductIssueUpdateWithoutWarehouseManagerInput, ProductIssueUncheckedUpdateWithoutWarehouseManagerInput>
+    create: XOR<ProductIssueCreateWithoutWarehouseManagerInput, ProductIssueUncheckedCreateWithoutWarehouseManagerInput>
+  }
+
+  export type ProductIssueUpdateWithWhereUniqueWithoutWarehouseManagerInput = {
+    where: ProductIssueWhereUniqueInput
+    data: XOR<ProductIssueUpdateWithoutWarehouseManagerInput, ProductIssueUncheckedUpdateWithoutWarehouseManagerInput>
+  }
+
+  export type ProductIssueUpdateManyWithWhereWithoutWarehouseManagerInput = {
+    where: ProductIssueScalarWhereInput
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyWithoutWarehouseManagerInput>
+  }
+
+  export type ProductIssueUpsertWithWhereUniqueWithoutSalesExecutiveInput = {
+    where: ProductIssueWhereUniqueInput
+    update: XOR<ProductIssueUpdateWithoutSalesExecutiveInput, ProductIssueUncheckedUpdateWithoutSalesExecutiveInput>
+    create: XOR<ProductIssueCreateWithoutSalesExecutiveInput, ProductIssueUncheckedCreateWithoutSalesExecutiveInput>
+  }
+
+  export type ProductIssueUpdateWithWhereUniqueWithoutSalesExecutiveInput = {
+    where: ProductIssueWhereUniqueInput
+    data: XOR<ProductIssueUpdateWithoutSalesExecutiveInput, ProductIssueUncheckedUpdateWithoutSalesExecutiveInput>
+  }
+
+  export type ProductIssueUpdateManyWithWhereWithoutSalesExecutiveInput = {
+    where: ProductIssueScalarWhereInput
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyWithoutSalesExecutiveInput>
+  }
+
   export type UserCreateWithoutRolesInput = {
     id?: string
     email: string
@@ -67753,6 +70556,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutRolesInput = {
@@ -67799,6 +70605,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutRolesInput = {
@@ -67894,6 +70703,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRolesInput = {
@@ -67940,6 +70752,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type RoleUpsertWithoutUsersInput = {
@@ -68022,6 +70837,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSessionsInput = {
@@ -68065,6 +70881,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSessionsInput = {
@@ -68116,6 +70933,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -68162,6 +70982,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -68221,6 +71044,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSessionsInput = {
@@ -68264,6 +71088,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutSessionsInput = {
@@ -68321,6 +71146,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -68367,6 +71195,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutAuditLogsInput = {
@@ -68410,6 +71241,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAuditLogsInput = {
@@ -68453,6 +71285,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAuditLogsInput = {
@@ -68504,6 +71337,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -68550,6 +71386,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -68609,6 +71448,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAuditLogsInput = {
@@ -68652,6 +71492,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAuditLogsInput = {
@@ -68709,6 +71550,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -68755,6 +71599,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserCreateWithoutPasswordHistoriesInput = {
@@ -68801,6 +71648,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutPasswordHistoriesInput = {
@@ -68847,6 +71697,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutPasswordHistoriesInput = {
@@ -68909,6 +71762,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordHistoriesInput = {
@@ -68955,6 +71811,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutCustomersInput = {
@@ -68998,6 +71857,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutCustomersInput = {
@@ -69041,6 +71901,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutCustomersInput = {
@@ -69070,6 +71931,7 @@ export namespace Prisma {
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
     notes?: OrderNoteCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -69094,6 +71956,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
     notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -69200,6 +72063,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutCustomersInput = {
@@ -69243,6 +72107,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -69318,6 +72183,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProductsInput = {
@@ -69361,6 +72227,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProductsInput = {
@@ -69462,6 +72329,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductIssueCreateWithoutProductInput = {
+    id?: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductIssuesInput
+    warehouse: WarehouseCreateNestedOneWithoutProductIssuesInput
+    warehouseManager?: UserCreateNestedOneWithoutProductIssuesWarehouseManagedInput
+    salesExecutive: UserCreateNestedOneWithoutProductIssuesReceivedInput
+    salesOrder?: OrderCreateNestedOneWithoutProductIssuesInput
+  }
+
+  export type ProductIssueUncheckedCreateWithoutProductInput = {
+    id?: string
+    organizationId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueCreateOrConnectWithoutProductInput = {
+    where: ProductIssueWhereUniqueInput
+    create: XOR<ProductIssueCreateWithoutProductInput, ProductIssueUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductIssueCreateManyProductInputEnvelope = {
+    data: ProductIssueCreateManyProductInput | ProductIssueCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutProductsInput = {
     update: XOR<OrganizationUpdateWithoutProductsInput, OrganizationUncheckedUpdateWithoutProductsInput>
     create: XOR<OrganizationCreateWithoutProductsInput, OrganizationUncheckedCreateWithoutProductsInput>
@@ -69514,6 +72419,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProductsInput = {
@@ -69557,6 +72463,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
@@ -69621,6 +72528,22 @@ export namespace Prisma {
     data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type ProductIssueUpsertWithWhereUniqueWithoutProductInput = {
+    where: ProductIssueWhereUniqueInput
+    update: XOR<ProductIssueUpdateWithoutProductInput, ProductIssueUncheckedUpdateWithoutProductInput>
+    create: XOR<ProductIssueCreateWithoutProductInput, ProductIssueUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductIssueUpdateWithWhereUniqueWithoutProductInput = {
+    where: ProductIssueWhereUniqueInput
+    data: XOR<ProductIssueUpdateWithoutProductInput, ProductIssueUncheckedUpdateWithoutProductInput>
+  }
+
+  export type ProductIssueUpdateManyWithWhereWithoutProductInput = {
+    where: ProductIssueScalarWhereInput
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type OrganizationCreateWithoutOrdersInput = {
     id?: string
     name: string
@@ -69662,6 +72585,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutOrdersInput = {
@@ -69705,6 +72629,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutOrdersInput = {
@@ -69787,6 +72712,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -69833,6 +72761,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -69922,6 +72853,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductIssueCreateWithoutSalesOrderInput = {
+    id?: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductIssuesInput
+    product: ProductCreateNestedOneWithoutIssuesInput
+    warehouse: WarehouseCreateNestedOneWithoutProductIssuesInput
+    warehouseManager?: UserCreateNestedOneWithoutProductIssuesWarehouseManagedInput
+    salesExecutive: UserCreateNestedOneWithoutProductIssuesReceivedInput
+  }
+
+  export type ProductIssueUncheckedCreateWithoutSalesOrderInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueCreateOrConnectWithoutSalesOrderInput = {
+    where: ProductIssueWhereUniqueInput
+    create: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput>
+  }
+
+  export type ProductIssueCreateManySalesOrderInputEnvelope = {
+    data: ProductIssueCreateManySalesOrderInput | ProductIssueCreateManySalesOrderInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutOrdersInput = {
     update: XOR<OrganizationUpdateWithoutOrdersInput, OrganizationUncheckedUpdateWithoutOrdersInput>
     create: XOR<OrganizationCreateWithoutOrdersInput, OrganizationUncheckedCreateWithoutOrdersInput>
@@ -69974,6 +72943,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutOrdersInput = {
@@ -70017,6 +72987,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type CustomerUpsertWithoutOrdersInput = {
@@ -70111,6 +73082,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -70157,6 +73131,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -70231,6 +73208,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OrderNote"> | Date | string
   }
 
+  export type ProductIssueUpsertWithWhereUniqueWithoutSalesOrderInput = {
+    where: ProductIssueWhereUniqueInput
+    update: XOR<ProductIssueUpdateWithoutSalesOrderInput, ProductIssueUncheckedUpdateWithoutSalesOrderInput>
+    create: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput>
+  }
+
+  export type ProductIssueUpdateWithWhereUniqueWithoutSalesOrderInput = {
+    where: ProductIssueWhereUniqueInput
+    data: XOR<ProductIssueUpdateWithoutSalesOrderInput, ProductIssueUncheckedUpdateWithoutSalesOrderInput>
+  }
+
+  export type ProductIssueUpdateManyWithWhereWithoutSalesOrderInput = {
+    where: ProductIssueScalarWhereInput
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyWithoutSalesOrderInput>
+  }
+
   export type OrderCreateWithoutItemsInput = {
     id?: string
     orderNumber: string
@@ -70253,6 +73246,7 @@ export namespace Prisma {
     owner: UserCreateNestedOneWithoutOrdersInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
     notes?: OrderNoteCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUncheckedCreateWithoutItemsInput = {
@@ -70277,6 +73271,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
     notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderCreateOrConnectWithoutItemsInput = {
@@ -70304,6 +73299,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutProductsInput
     stocks?: StockCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
+    issues?: ProductIssueCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -70326,6 +73322,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -70366,6 +73363,7 @@ export namespace Prisma {
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -70390,6 +73388,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type ProductUpsertWithoutOrderItemsInput = {
@@ -70423,6 +73422,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutProductsNestedInput
     stocks?: StockUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -70445,6 +73445,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutActivitiesInput = {
@@ -70469,6 +73470,7 @@ export namespace Prisma {
     owner: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     notes?: OrderNoteCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUncheckedCreateWithoutActivitiesInput = {
@@ -70493,6 +73495,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderCreateOrConnectWithoutActivitiesInput = {
@@ -70533,6 +73536,7 @@ export namespace Prisma {
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutActivitiesInput = {
@@ -70557,6 +73561,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderCreateWithoutNotesInput = {
@@ -70581,6 +73586,7 @@ export namespace Prisma {
     owner: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderUncheckedCreateWithoutNotesInput = {
@@ -70605,6 +73611,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
   export type OrderCreateOrConnectWithoutNotesInput = {
@@ -70645,6 +73652,7 @@ export namespace Prisma {
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutNotesInput = {
@@ -70669,6 +73677,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrganizationCreateWithoutAttendancesInput = {
@@ -70712,6 +73721,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAttendancesInput = {
@@ -70755,6 +73765,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAttendancesInput = {
@@ -70806,6 +73817,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutAttendancesInput = {
@@ -70852,6 +73866,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutAttendancesInput = {
@@ -70911,6 +73928,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAttendancesInput = {
@@ -70954,6 +73972,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAttendancesInput = {
@@ -71011,6 +74030,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAttendancesInput = {
@@ -71057,6 +74079,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutVisitsInput = {
@@ -71100,6 +74125,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutVisitsInput = {
@@ -71143,6 +74169,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutVisitsInput = {
@@ -71194,6 +74221,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutVisitsInput = {
@@ -71240,6 +74270,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutVisitsInput = {
@@ -71330,6 +74363,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutVisitsInput = {
@@ -71373,6 +74407,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutVisitsInput = {
@@ -71430,6 +74465,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVisitsInput = {
@@ -71476,6 +74514,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type CustomerUpsertWithoutVisitsInput = {
@@ -71556,6 +74597,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTargetsInput = {
@@ -71599,6 +74641,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTargetsInput = {
@@ -71650,6 +74693,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutTargetsInput = {
@@ -71696,6 +74742,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutTargetsInput = {
@@ -71786,6 +74835,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTargetsInput = {
@@ -71829,6 +74879,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutTargetsInput = {
@@ -71886,6 +74937,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTargetsInput = {
@@ -71932,6 +74986,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type TeamUpsertWithoutTargetsInput = {
@@ -72012,6 +75069,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutNotificationsInput = {
@@ -72055,6 +75113,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutNotificationsInput = {
@@ -72106,6 +75165,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -72152,6 +75214,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -72211,6 +75276,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutNotificationsInput = {
@@ -72254,6 +75320,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutNotificationsInput = {
@@ -72311,6 +75378,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -72357,6 +75427,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutNotificationTemplatesInput = {
@@ -72400,6 +75473,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutNotificationTemplatesInput = {
@@ -72443,6 +75517,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutNotificationTemplatesInput = {
@@ -72502,6 +75577,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutNotificationTemplatesInput = {
@@ -72545,6 +75621,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutTasksInput = {
@@ -72588,6 +75665,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTasksInput = {
@@ -72631,6 +75709,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTasksInput = {
@@ -72682,6 +75761,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -72728,6 +75810,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -72779,6 +75864,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutTasksReceivedInput = {
@@ -72825,6 +75913,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutTasksReceivedInput = {
@@ -72884,6 +75975,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTasksInput = {
@@ -72927,6 +76019,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutTasksAssignedInput = {
@@ -72984,6 +76077,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -73030,6 +76126,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUpsertWithoutTasksReceivedInput = {
@@ -73087,6 +76186,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksReceivedInput = {
@@ -73133,6 +76235,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutBeatPlansInput = {
@@ -73176,6 +76281,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutBeatPlansInput = {
@@ -73219,6 +76325,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutBeatPlansInput = {
@@ -73270,6 +76377,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutBeatPlansInput = {
@@ -73316,6 +76426,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutBeatPlansInput = {
@@ -73375,6 +76488,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutBeatPlansInput = {
@@ -73418,6 +76532,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutBeatPlansInput = {
@@ -73475,6 +76590,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBeatPlansInput = {
@@ -73521,6 +76639,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutCalendarEventsInput = {
@@ -73564,6 +76685,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutCalendarEventsInput = {
@@ -73607,6 +76729,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutCalendarEventsInput = {
@@ -73658,6 +76781,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutCalendarEventsInput = {
@@ -73704,6 +76830,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutCalendarEventsInput = {
@@ -73763,6 +76892,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutCalendarEventsInput = {
@@ -73806,6 +76936,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutCalendarEventsInput = {
@@ -73863,6 +76994,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCalendarEventsInput = {
@@ -73909,6 +77043,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutNotificationPrefsInput = {
@@ -73952,6 +77089,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutNotificationPrefsInput = {
@@ -73995,6 +77133,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutNotificationPrefsInput = {
@@ -74046,6 +77185,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutNotificationPrefsInput = {
@@ -74092,6 +77234,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutNotificationPrefsInput = {
@@ -74151,6 +77296,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutNotificationPrefsInput = {
@@ -74194,6 +77340,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutNotificationPrefsInput = {
@@ -74251,6 +77398,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationPrefsInput = {
@@ -74297,6 +77447,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutBusinessRulesInput = {
@@ -74340,6 +77493,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutBusinessRulesInput = {
@@ -74383,6 +77537,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutBusinessRulesInput = {
@@ -74442,6 +77597,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutBusinessRulesInput = {
@@ -74485,6 +77641,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutExpensesInput = {
@@ -74528,6 +77685,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutExpensesInput = {
@@ -74571,6 +77729,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutExpensesInput = {
@@ -74622,6 +77781,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutExpensesInput = {
@@ -74668,6 +77830,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutExpensesInput = {
@@ -74719,6 +77884,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutExpensesApprovedInput = {
@@ -74765,6 +77933,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutExpensesApprovedInput = {
@@ -74824,6 +77995,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutExpensesInput = {
@@ -74867,6 +78039,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutExpensesInput = {
@@ -74924,6 +78097,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExpensesInput = {
@@ -74970,6 +78146,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUpsertWithoutExpensesApprovedInput = {
@@ -75027,6 +78206,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExpensesApprovedInput = {
@@ -75073,6 +78255,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutDailyActivitiesInput = {
@@ -75116,6 +78301,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutDailyActivitiesInput = {
@@ -75159,6 +78345,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutDailyActivitiesInput = {
@@ -75210,6 +78397,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutDailyActivitiesInput = {
@@ -75256,6 +78446,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutDailyActivitiesInput = {
@@ -75315,6 +78508,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutDailyActivitiesInput = {
@@ -75358,6 +78552,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutDailyActivitiesInput = {
@@ -75415,6 +78610,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDailyActivitiesInput = {
@@ -75461,6 +78659,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutWarehousesInput = {
@@ -75504,6 +78705,7 @@ export namespace Prisma {
     departments?: DepartmentCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWarehousesInput = {
@@ -75547,11 +78749,115 @@ export namespace Prisma {
     departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWarehousesInput = {
     where: OrganizationWhereUniqueInput
     create: XOR<OrganizationCreateWithoutWarehousesInput, OrganizationUncheckedCreateWithoutWarehousesInput>
+  }
+
+  export type UserCreateWithoutManagedWarehouseInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutUsersInput
+    branch?: BranchCreateNestedOneWithoutUsersInput
+    department?: DepartmentCreateNestedOneWithoutUsersInput
+    team?: TeamCreateNestedOneWithoutUsersInput
+    territory?: TerritoryCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutManagerInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    visits?: VisitCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
+    targets?: TargetCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
+  }
+
+  export type UserUncheckedCreateWithoutManagedWarehouseInput = {
+    id?: string
+    organizationId: string
+    branchId?: string | null
+    departmentId?: string | null
+    teamId?: string | null
+    territoryId?: string | null
+    managerId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutManagerInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    visits?: VisitUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
+    targets?: TargetUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseUncheckedCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskUncheckedCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
+  }
+
+  export type UserCreateOrConnectWithoutManagedWarehouseInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutManagedWarehouseInput, UserUncheckedCreateWithoutManagedWarehouseInput>
   }
 
   export type StockCreateWithoutWarehouseInput = {
@@ -75663,6 +78969,44 @@ export namespace Prisma {
     create: XOR<BranchCreateWithoutWarehousesInput, BranchUncheckedCreateWithoutWarehousesInput>
   }
 
+  export type ProductIssueCreateWithoutWarehouseInput = {
+    id?: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductIssuesInput
+    product: ProductCreateNestedOneWithoutIssuesInput
+    warehouseManager?: UserCreateNestedOneWithoutProductIssuesWarehouseManagedInput
+    salesExecutive: UserCreateNestedOneWithoutProductIssuesReceivedInput
+    salesOrder?: OrderCreateNestedOneWithoutProductIssuesInput
+  }
+
+  export type ProductIssueUncheckedCreateWithoutWarehouseInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueCreateOrConnectWithoutWarehouseInput = {
+    where: ProductIssueWhereUniqueInput
+    create: XOR<ProductIssueCreateWithoutWarehouseInput, ProductIssueUncheckedCreateWithoutWarehouseInput>
+  }
+
+  export type ProductIssueCreateManyWarehouseInputEnvelope = {
+    data: ProductIssueCreateManyWarehouseInput | ProductIssueCreateManyWarehouseInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutWarehousesInput = {
     update: XOR<OrganizationUpdateWithoutWarehousesInput, OrganizationUncheckedUpdateWithoutWarehousesInput>
     create: XOR<OrganizationCreateWithoutWarehousesInput, OrganizationUncheckedCreateWithoutWarehousesInput>
@@ -75715,6 +79059,7 @@ export namespace Prisma {
     departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWarehousesInput = {
@@ -75758,6 +79103,116 @@ export namespace Prisma {
     departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type UserUpsertWithoutManagedWarehouseInput = {
+    update: XOR<UserUpdateWithoutManagedWarehouseInput, UserUncheckedUpdateWithoutManagedWarehouseInput>
+    create: XOR<UserCreateWithoutManagedWarehouseInput, UserUncheckedCreateWithoutManagedWarehouseInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutManagedWarehouseInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutManagedWarehouseInput, UserUncheckedUpdateWithoutManagedWarehouseInput>
+  }
+
+  export type UserUpdateWithoutManagedWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneWithoutUsersNestedInput
+    department?: DepartmentUpdateOneWithoutUsersNestedInput
+    team?: TeamUpdateOneWithoutUsersNestedInput
+    territory?: TerritoryUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    visits?: VisitUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
+    targets?: TargetUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutManagedWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
+    targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUncheckedUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUncheckedUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type StockUpsertWithWhereUniqueWithoutWarehouseInput = {
@@ -75808,6 +79263,22 @@ export namespace Prisma {
     data: XOR<BranchUpdateManyMutationInput, BranchUncheckedUpdateManyWithoutWarehousesInput>
   }
 
+  export type ProductIssueUpsertWithWhereUniqueWithoutWarehouseInput = {
+    where: ProductIssueWhereUniqueInput
+    update: XOR<ProductIssueUpdateWithoutWarehouseInput, ProductIssueUncheckedUpdateWithoutWarehouseInput>
+    create: XOR<ProductIssueCreateWithoutWarehouseInput, ProductIssueUncheckedCreateWithoutWarehouseInput>
+  }
+
+  export type ProductIssueUpdateWithWhereUniqueWithoutWarehouseInput = {
+    where: ProductIssueWhereUniqueInput
+    data: XOR<ProductIssueUpdateWithoutWarehouseInput, ProductIssueUncheckedUpdateWithoutWarehouseInput>
+  }
+
+  export type ProductIssueUpdateManyWithWhereWithoutWarehouseInput = {
+    where: ProductIssueScalarWhereInput
+    data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyWithoutWarehouseInput>
+  }
+
   export type OrganizationCreateWithoutStocksInput = {
     id?: string
     name: string
@@ -75849,6 +79320,7 @@ export namespace Prisma {
     departments?: DepartmentCreateNestedManyWithoutOrganizationInput
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutStocksInput = {
@@ -75892,6 +79364,7 @@ export namespace Prisma {
     departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutStocksInput = {
@@ -75919,6 +79392,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
+    issues?: ProductIssueCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStocksInput = {
@@ -75941,6 +79415,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStocksInput = {
@@ -75957,8 +79432,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutWarehousesInput
+    warehouseManager?: UserCreateNestedOneWithoutManagedWarehouseInput
     movements?: StockMovementCreateNestedManyWithoutWarehouseInput
     branches?: BranchCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateWithoutStocksInput = {
@@ -75968,10 +79445,12 @@ export namespace Prisma {
     code?: string | null
     location?: string | null
     isActive?: boolean
+    warehouseManagerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
     branches?: BranchUncheckedCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseCreateOrConnectWithoutStocksInput = {
@@ -76031,6 +79510,7 @@ export namespace Prisma {
     departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutStocksInput = {
@@ -76074,6 +79554,7 @@ export namespace Prisma {
     departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProductUpsertWithoutStocksInput = {
@@ -76107,6 +79588,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStocksInput = {
@@ -76129,6 +79611,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutStocksInput = {
@@ -76151,8 +79634,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutWarehousesNestedInput
+    warehouseManager?: UserUpdateOneWithoutManagedWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateWithoutStocksInput = {
@@ -76162,10 +79647,12 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUncheckedUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type OrganizationCreateWithoutStockMovementsInput = {
@@ -76209,6 +79696,7 @@ export namespace Prisma {
     departments?: DepartmentCreateNestedManyWithoutOrganizationInput
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutStockMovementsInput = {
@@ -76252,6 +79740,7 @@ export namespace Prisma {
     departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutStockMovementsInput = {
@@ -76279,6 +79768,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     stocks?: StockCreateNestedManyWithoutProductInput
+    issues?: ProductIssueCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutMovementsInput = {
@@ -76301,6 +79791,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
+    issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutMovementsInput = {
@@ -76317,8 +79808,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutWarehousesInput
+    warehouseManager?: UserCreateNestedOneWithoutManagedWarehouseInput
     stocks?: StockCreateNestedManyWithoutWarehouseInput
     branches?: BranchCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseUncheckedCreateWithoutMovementsInput = {
@@ -76328,10 +79821,12 @@ export namespace Prisma {
     code?: string | null
     location?: string | null
     isActive?: boolean
+    warehouseManagerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     stocks?: StockUncheckedCreateNestedManyWithoutWarehouseInput
     branches?: BranchUncheckedCreateNestedManyWithoutWarehousesInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseInput
   }
 
   export type WarehouseCreateOrConnectWithoutMovementsInput = {
@@ -76383,6 +79878,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserUncheckedCreateWithoutStockMovementsInput = {
@@ -76429,6 +79927,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
 
   export type UserCreateOrConnectWithoutStockMovementsInput = {
@@ -76488,6 +79989,7 @@ export namespace Prisma {
     departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutStockMovementsInput = {
@@ -76531,6 +80033,7 @@ export namespace Prisma {
     departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProductUpsertWithoutMovementsInput = {
@@ -76564,6 +80067,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     stocks?: StockUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutMovementsInput = {
@@ -76586,6 +80090,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutMovementsInput = {
@@ -76608,8 +80113,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutWarehousesNestedInput
+    warehouseManager?: UserUpdateOneWithoutManagedWarehouseNestedInput
     stocks?: StockUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateWithoutMovementsInput = {
@@ -76619,10 +80126,12 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: StockUncheckedUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUncheckedUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type UserUpsertWithoutStockMovementsInput = {
@@ -76680,6 +80189,9 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStockMovementsInput = {
@@ -76726,6 +80238,925 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
+  }
+
+  export type OrganizationCreateWithoutProductIssuesInput = {
+    id?: string
+    name: string
+    slug: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    gstNumber?: string | null
+    panNumber?: string | null
+    branches?: BranchCreateNestedManyWithoutOrganizationInput
+    territories?: TerritoryCreateNestedManyWithoutOrganizationInput
+    teams?: TeamCreateNestedManyWithoutOrganizationInput
+    roles?: RoleCreateNestedManyWithoutOrganizationInput
+    users?: UserCreateNestedManyWithoutOrganizationInput
+    sessions?: SessionCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
+    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
+    visits?: VisitCreateNestedManyWithoutOrganizationInput
+    expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
+    dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
+    targets?: TargetCreateNestedManyWithoutOrganizationInput
+    notifications?: NotificationCreateNestedManyWithoutOrganizationInput
+    notificationTemplates?: NotificationTemplateCreateNestedManyWithoutOrganizationInput
+    tasks?: TaskCreateNestedManyWithoutOrganizationInput
+    beatPlans?: BeatPlanCreateNestedManyWithoutOrganizationInput
+    calendarEvents?: CalendarEventCreateNestedManyWithoutOrganizationInput
+    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+    businessRules?: BusinessRuleConfigCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerCreateNestedManyWithoutOrganizationInput
+    products?: ProductCreateNestedManyWithoutOrganizationInput
+    orders?: OrderCreateNestedManyWithoutOrganizationInput
+    departments?: DepartmentCreateNestedManyWithoutOrganizationInput
+    warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
+    stocks?: StockCreateNestedManyWithoutOrganizationInput
+    stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutProductIssuesInput = {
+    id?: string
+    name: string
+    slug: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    gstNumber?: string | null
+    panNumber?: string | null
+    branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
+    territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
+    teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
+    roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
+    users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
+    visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
+    targets?: TargetUncheckedCreateNestedManyWithoutOrganizationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+    notificationTemplates?: NotificationTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutOrganizationInput
+    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutOrganizationInput
+    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+    businessRules?: BusinessRuleConfigUncheckedCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+    products?: ProductUncheckedCreateNestedManyWithoutOrganizationInput
+    orders?: OrderUncheckedCreateNestedManyWithoutOrganizationInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
+    warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
+    stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutProductIssuesInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutProductIssuesInput, OrganizationUncheckedCreateWithoutProductIssuesInput>
+  }
+
+  export type ProductCreateWithoutIssuesInput = {
+    id?: string
+    sku: string
+    productCode?: string | null
+    name: string
+    description?: string | null
+    category?: string | null
+    brand?: string | null
+    unit?: string | null
+    price: number
+    costPrice?: number | null
+    tax?: number | null
+    minimumStock?: number | null
+    barcode?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductsInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    stocks?: StockCreateNestedManyWithoutProductInput
+    movements?: StockMovementCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutIssuesInput = {
+    id?: string
+    organizationId: string
+    sku: string
+    productCode?: string | null
+    name: string
+    description?: string | null
+    category?: string | null
+    brand?: string | null
+    unit?: string | null
+    price: number
+    costPrice?: number | null
+    tax?: number | null
+    minimumStock?: number | null
+    barcode?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    stocks?: StockUncheckedCreateNestedManyWithoutProductInput
+    movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutIssuesInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutIssuesInput, ProductUncheckedCreateWithoutIssuesInput>
+  }
+
+  export type WarehouseCreateWithoutProductIssuesInput = {
+    id?: string
+    name: string
+    code?: string | null
+    location?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutWarehousesInput
+    warehouseManager?: UserCreateNestedOneWithoutManagedWarehouseInput
+    stocks?: StockCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementCreateNestedManyWithoutWarehouseInput
+    branches?: BranchCreateNestedManyWithoutWarehousesInput
+  }
+
+  export type WarehouseUncheckedCreateWithoutProductIssuesInput = {
+    id?: string
+    organizationId: string
+    name: string
+    code?: string | null
+    location?: string | null
+    isActive?: boolean
+    warehouseManagerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stocks?: StockUncheckedCreateNestedManyWithoutWarehouseInput
+    movements?: StockMovementUncheckedCreateNestedManyWithoutWarehouseInput
+    branches?: BranchUncheckedCreateNestedManyWithoutWarehousesInput
+  }
+
+  export type WarehouseCreateOrConnectWithoutProductIssuesInput = {
+    where: WarehouseWhereUniqueInput
+    create: XOR<WarehouseCreateWithoutProductIssuesInput, WarehouseUncheckedCreateWithoutProductIssuesInput>
+  }
+
+  export type UserCreateWithoutProductIssuesWarehouseManagedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutUsersInput
+    branch?: BranchCreateNestedOneWithoutUsersInput
+    department?: DepartmentCreateNestedOneWithoutUsersInput
+    team?: TeamCreateNestedOneWithoutUsersInput
+    territory?: TerritoryCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutManagerInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    visits?: VisitCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
+    targets?: TargetCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
+  }
+
+  export type UserUncheckedCreateWithoutProductIssuesWarehouseManagedInput = {
+    id?: string
+    organizationId: string
+    branchId?: string | null
+    departmentId?: string | null
+    teamId?: string | null
+    territoryId?: string | null
+    managerId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutManagerInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    visits?: VisitUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
+    targets?: TargetUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseUncheckedCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskUncheckedCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
+  }
+
+  export type UserCreateOrConnectWithoutProductIssuesWarehouseManagedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProductIssuesWarehouseManagedInput, UserUncheckedCreateWithoutProductIssuesWarehouseManagedInput>
+  }
+
+  export type UserCreateWithoutProductIssuesReceivedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutUsersInput
+    branch?: BranchCreateNestedOneWithoutUsersInput
+    department?: DepartmentCreateNestedOneWithoutUsersInput
+    team?: TeamCreateNestedOneWithoutUsersInput
+    territory?: TerritoryCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutManagerInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    visits?: VisitCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
+    targets?: TargetCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+  }
+
+  export type UserUncheckedCreateWithoutProductIssuesReceivedInput = {
+    id?: string
+    organizationId: string
+    branchId?: string | null
+    departmentId?: string | null
+    teamId?: string | null
+    territoryId?: string | null
+    managerId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutManagerInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    visits?: VisitUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
+    targets?: TargetUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseUncheckedCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskUncheckedCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+  }
+
+  export type UserCreateOrConnectWithoutProductIssuesReceivedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProductIssuesReceivedInput, UserUncheckedCreateWithoutProductIssuesReceivedInput>
+  }
+
+  export type OrderCreateWithoutProductIssuesInput = {
+    id?: string
+    orderNumber: string
+    orderName?: string | null
+    branchId?: string | null
+    territoryId?: string | null
+    status?: string
+    totalAmount?: number
+    currency?: string
+    statusChangedAt?: Date | string | null
+    statusChangedBy?: string | null
+    statusChangeReason?: string | null
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutOrdersInput
+    customer: CustomerCreateNestedOneWithoutOrdersInput
+    owner: UserCreateNestedOneWithoutOrdersInput
+    items?: OrderItemCreateNestedManyWithoutOrderInput
+    activities?: OrderActivityCreateNestedManyWithoutOrderInput
+    notes?: OrderNoteCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutProductIssuesInput = {
+    id?: string
+    organizationId: string
+    orderNumber: string
+    orderName?: string | null
+    customerId: string
+    ownerId: string
+    branchId?: string | null
+    territoryId?: string | null
+    status?: string
+    totalAmount?: number
+    currency?: string
+    statusChangedAt?: Date | string | null
+    statusChangedBy?: string | null
+    statusChangeReason?: string | null
+    isDeleted?: boolean
+    deletedAt?: Date | string | null
+    deletedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
+    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutProductIssuesInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutProductIssuesInput, OrderUncheckedCreateWithoutProductIssuesInput>
+  }
+
+  export type OrganizationUpsertWithoutProductIssuesInput = {
+    update: XOR<OrganizationUpdateWithoutProductIssuesInput, OrganizationUncheckedUpdateWithoutProductIssuesInput>
+    create: XOR<OrganizationCreateWithoutProductIssuesInput, OrganizationUncheckedCreateWithoutProductIssuesInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutProductIssuesInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutProductIssuesInput, OrganizationUncheckedUpdateWithoutProductIssuesInput>
+  }
+
+  export type OrganizationUpdateWithoutProductIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    branches?: BranchUpdateManyWithoutOrganizationNestedInput
+    territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
+    teams?: TeamUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUpdateManyWithoutOrganizationNestedInput
+    users?: UserUpdateManyWithoutOrganizationNestedInput
+    sessions?: SessionUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
+    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
+    visits?: VisitUpdateManyWithoutOrganizationNestedInput
+    expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
+    dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
+    targets?: TargetUpdateManyWithoutOrganizationNestedInput
+    notifications?: NotificationUpdateManyWithoutOrganizationNestedInput
+    notificationTemplates?: NotificationTemplateUpdateManyWithoutOrganizationNestedInput
+    tasks?: TaskUpdateManyWithoutOrganizationNestedInput
+    beatPlans?: BeatPlanUpdateManyWithoutOrganizationNestedInput
+    calendarEvents?: CalendarEventUpdateManyWithoutOrganizationNestedInput
+    notificationPrefs?: NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+    businessRules?: BusinessRuleConfigUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUpdateManyWithoutOrganizationNestedInput
+    orders?: OrderUpdateManyWithoutOrganizationNestedInput
+    departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
+    warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
+    stocks?: StockUpdateManyWithoutOrganizationNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutProductIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
+    territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
+    teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+    users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
+    targets?: TargetUncheckedUpdateManyWithoutOrganizationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+    notificationTemplates?: NotificationTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+    beatPlans?: BeatPlanUncheckedUpdateManyWithoutOrganizationNestedInput
+    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+    businessRules?: BusinessRuleConfigUncheckedUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
+    warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type ProductUpsertWithoutIssuesInput = {
+    update: XOR<ProductUpdateWithoutIssuesInput, ProductUncheckedUpdateWithoutIssuesInput>
+    create: XOR<ProductCreateWithoutIssuesInput, ProductUncheckedCreateWithoutIssuesInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutIssuesInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutIssuesInput, ProductUncheckedUpdateWithoutIssuesInput>
+  }
+
+  export type ProductUpdateWithoutIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    tax?: NullableFloatFieldUpdateOperationsInput | number | null
+    minimumStock?: NullableIntFieldUpdateOperationsInput | number | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    stocks?: StockUpdateManyWithoutProductNestedInput
+    movements?: StockMovementUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    tax?: NullableFloatFieldUpdateOperationsInput | number | null
+    minimumStock?: NullableIntFieldUpdateOperationsInput | number | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
+    movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type WarehouseUpsertWithoutProductIssuesInput = {
+    update: XOR<WarehouseUpdateWithoutProductIssuesInput, WarehouseUncheckedUpdateWithoutProductIssuesInput>
+    create: XOR<WarehouseCreateWithoutProductIssuesInput, WarehouseUncheckedCreateWithoutProductIssuesInput>
+    where?: WarehouseWhereInput
+  }
+
+  export type WarehouseUpdateToOneWithWhereWithoutProductIssuesInput = {
+    where?: WarehouseWhereInput
+    data: XOR<WarehouseUpdateWithoutProductIssuesInput, WarehouseUncheckedUpdateWithoutProductIssuesInput>
+  }
+
+  export type WarehouseUpdateWithoutProductIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutWarehousesNestedInput
+    warehouseManager?: UserUpdateOneWithoutManagedWarehouseNestedInput
+    stocks?: StockUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    branches?: BranchUpdateManyWithoutWarehousesNestedInput
+  }
+
+  export type WarehouseUncheckedUpdateWithoutProductIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stocks?: StockUncheckedUpdateManyWithoutWarehouseNestedInput
+    movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    branches?: BranchUncheckedUpdateManyWithoutWarehousesNestedInput
+  }
+
+  export type UserUpsertWithoutProductIssuesWarehouseManagedInput = {
+    update: XOR<UserUpdateWithoutProductIssuesWarehouseManagedInput, UserUncheckedUpdateWithoutProductIssuesWarehouseManagedInput>
+    create: XOR<UserCreateWithoutProductIssuesWarehouseManagedInput, UserUncheckedCreateWithoutProductIssuesWarehouseManagedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProductIssuesWarehouseManagedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProductIssuesWarehouseManagedInput, UserUncheckedUpdateWithoutProductIssuesWarehouseManagedInput>
+  }
+
+  export type UserUpdateWithoutProductIssuesWarehouseManagedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneWithoutUsersNestedInput
+    department?: DepartmentUpdateOneWithoutUsersNestedInput
+    team?: TeamUpdateOneWithoutUsersNestedInput
+    territory?: TerritoryUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    visits?: VisitUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
+    targets?: TargetUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProductIssuesWarehouseManagedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
+    targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUncheckedUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUncheckedUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
+  }
+
+  export type UserUpsertWithoutProductIssuesReceivedInput = {
+    update: XOR<UserUpdateWithoutProductIssuesReceivedInput, UserUncheckedUpdateWithoutProductIssuesReceivedInput>
+    create: XOR<UserCreateWithoutProductIssuesReceivedInput, UserUncheckedCreateWithoutProductIssuesReceivedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProductIssuesReceivedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProductIssuesReceivedInput, UserUncheckedUpdateWithoutProductIssuesReceivedInput>
+  }
+
+  export type UserUpdateWithoutProductIssuesReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneWithoutUsersNestedInput
+    department?: DepartmentUpdateOneWithoutUsersNestedInput
+    team?: TeamUpdateOneWithoutUsersNestedInput
+    territory?: TerritoryUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    visits?: VisitUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
+    targets?: TargetUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProductIssuesReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
+    targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUncheckedUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUncheckedUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+  }
+
+  export type OrderUpsertWithoutProductIssuesInput = {
+    update: XOR<OrderUpdateWithoutProductIssuesInput, OrderUncheckedUpdateWithoutProductIssuesInput>
+    create: XOR<OrderCreateWithoutProductIssuesInput, OrderUncheckedCreateWithoutProductIssuesInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutProductIssuesInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutProductIssuesInput, OrderUncheckedUpdateWithoutProductIssuesInput>
+  }
+
+  export type OrderUpdateWithoutProductIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    statusChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusChangedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    statusChangeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutOrdersNestedInput
+    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
+    owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    items?: OrderItemUpdateManyWithoutOrderNestedInput
+    activities?: OrderActivityUpdateManyWithoutOrderNestedInput
+    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutProductIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    statusChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statusChangedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    statusChangeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
+    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type BranchCreateManyOrganizationInput = {
@@ -77065,6 +81496,7 @@ export namespace Prisma {
     code?: string | null
     location?: string | null
     isActive?: boolean
+    warehouseManagerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -77089,6 +81521,20 @@ export namespace Prisma {
     performedBy?: string | null
     notes?: string | null
     createdAt?: Date | string
+  }
+
+  export type ProductIssueCreateManyOrganizationInput = {
+    id?: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BranchUpdateWithoutOrganizationInput = {
@@ -77307,6 +81753,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -77353,6 +81802,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutOrganizationInput = {
@@ -78018,6 +82470,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     stocks?: StockUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrganizationInput = {
@@ -78040,6 +82493,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutOrganizationInput = {
@@ -78083,6 +82537,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutOrganizationInput = {
@@ -78107,6 +82562,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutOrganizationInput = {
@@ -78176,9 +82632,11 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    warehouseManager?: UserUpdateOneWithoutManagedWarehouseNestedInput
     stocks?: StockUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateWithoutOrganizationInput = {
@@ -78187,11 +82645,13 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: StockUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
     branches?: BranchUncheckedUpdateManyWithoutWarehousesNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateManyWithoutOrganizationInput = {
@@ -78200,6 +82660,7 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78268,6 +82729,48 @@ export namespace Prisma {
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutIssuesNestedInput
+    warehouse?: WarehouseUpdateOneRequiredWithoutProductIssuesNestedInput
+    warehouseManager?: UserUpdateOneWithoutProductIssuesWarehouseManagedNestedInput
+    salesExecutive?: UserUpdateOneRequiredWithoutProductIssuesReceivedNestedInput
+    salesOrder?: OrderUpdateOneWithoutProductIssuesNestedInput
+  }
+
+  export type ProductIssueUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeamCreateManyBranchInput = {
@@ -78389,6 +82892,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBranchInput = {
@@ -78435,6 +82941,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -78473,8 +82982,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutWarehousesNestedInput
+    warehouseManager?: UserUpdateOneWithoutManagedWarehouseNestedInput
     stocks?: StockUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUpdateManyWithoutWarehouseNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateWithoutBranchesInput = {
@@ -78484,10 +82995,12 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     stocks?: StockUncheckedUpdateManyWithoutWarehouseNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutWarehouseNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutWarehouseNestedInput
   }
 
   export type WarehouseUncheckedUpdateManyWithoutBranchesInput = {
@@ -78497,6 +83010,7 @@ export namespace Prisma {
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78744,6 +83258,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepartmentInput = {
@@ -78790,6 +83307,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutDepartmentInput = {
@@ -79012,6 +83532,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTerritoryInput = {
@@ -79058,6 +83581,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutTerritoryInput = {
@@ -79173,6 +83699,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeamInput = {
@@ -79219,6 +83748,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutTeamInput = {
@@ -79696,6 +84228,34 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type ProductIssueCreateManyWarehouseManagerInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProductIssueCreateManySalesExecutiveInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutManagerInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -79740,6 +84300,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateWithoutManagerInput = {
@@ -79786,6 +84349,9 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutManagerInput = {
@@ -80536,6 +85102,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutOwnerInput = {
@@ -80560,6 +85127,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutOwnerInput = {
@@ -80617,6 +85185,90 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUpdateWithoutWarehouseManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductIssuesNestedInput
+    product?: ProductUpdateOneRequiredWithoutIssuesNestedInput
+    warehouse?: WarehouseUpdateOneRequiredWithoutProductIssuesNestedInput
+    salesExecutive?: UserUpdateOneRequiredWithoutProductIssuesReceivedNestedInput
+    salesOrder?: OrderUpdateOneWithoutProductIssuesNestedInput
+  }
+
+  export type ProductIssueUncheckedUpdateWithoutWarehouseManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutWarehouseManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUpdateWithoutSalesExecutiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductIssuesNestedInput
+    product?: ProductUpdateOneRequiredWithoutIssuesNestedInput
+    warehouse?: WarehouseUpdateOneRequiredWithoutProductIssuesNestedInput
+    warehouseManager?: UserUpdateOneWithoutProductIssuesWarehouseManagedNestedInput
+    salesOrder?: OrderUpdateOneWithoutProductIssuesNestedInput
+  }
+
+  export type ProductIssueUncheckedUpdateWithoutSalesExecutiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutSalesExecutiveInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderCreateManyCustomerInput = {
@@ -80678,6 +85330,7 @@ export namespace Prisma {
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -80702,6 +85355,7 @@ export namespace Prisma {
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -80805,6 +85459,20 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type ProductIssueCreateManyProductInput = {
+    id?: string
+    organizationId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type OrderItemUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -80901,6 +85569,48 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProductIssueUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductIssuesNestedInput
+    warehouse?: WarehouseUpdateOneRequiredWithoutProductIssuesNestedInput
+    warehouseManager?: UserUpdateOneWithoutProductIssuesWarehouseManagedNestedInput
+    salesExecutive?: UserUpdateOneRequiredWithoutProductIssuesReceivedNestedInput
+    salesOrder?: OrderUpdateOneWithoutProductIssuesNestedInput
+  }
+
+  export type ProductIssueUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrderItemCreateManyOrderInput = {
     id?: string
     productId?: string | null
@@ -80925,6 +85635,20 @@ export namespace Prisma {
     text: string
     createdBy?: string | null
     createdAt?: Date | string
+  }
+
+  export type ProductIssueCreateManySalesOrderInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type OrderItemUpdateWithoutOrderInput = {
@@ -81005,6 +85729,48 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProductIssueUpdateWithoutSalesOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductIssuesNestedInput
+    product?: ProductUpdateOneRequiredWithoutIssuesNestedInput
+    warehouse?: WarehouseUpdateOneRequiredWithoutProductIssuesNestedInput
+    warehouseManager?: UserUpdateOneWithoutProductIssuesWarehouseManagedNestedInput
+    salesExecutive?: UserUpdateOneRequiredWithoutProductIssuesReceivedNestedInput
+  }
+
+  export type ProductIssueUncheckedUpdateWithoutSalesOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutSalesOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StockCreateManyWarehouseInput = {
     id?: string
     organizationId: string
@@ -81025,6 +85791,20 @@ export namespace Prisma {
     performedBy?: string | null
     notes?: string | null
     createdAt?: Date | string
+  }
+
+  export type ProductIssueCreateManyWarehouseInput = {
+    id?: string
+    organizationId: string
+    productId: string
+    warehouseManagerId?: string | null
+    salesExecutiveId: string
+    salesOrderId?: string | null
+    quantity: number
+    status?: $Enums.ProductIssueStatus
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type StockUpdateWithoutWarehouseInput = {
@@ -81147,6 +85927,48 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUpdateWithoutWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductIssuesNestedInput
+    product?: ProductUpdateOneRequiredWithoutIssuesNestedInput
+    warehouseManager?: UserUpdateOneWithoutProductIssuesWarehouseManagedNestedInput
+    salesExecutive?: UserUpdateOneRequiredWithoutProductIssuesReceivedNestedInput
+    salesOrder?: OrderUpdateOneWithoutProductIssuesNestedInput
+  }
+
+  export type ProductIssueUncheckedUpdateWithoutWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductIssueUncheckedUpdateManyWithoutWarehouseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    salesExecutiveId?: StringFieldUpdateOperationsInput | string
+    salesOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

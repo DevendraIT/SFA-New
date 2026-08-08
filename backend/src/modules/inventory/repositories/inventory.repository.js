@@ -278,4 +278,227 @@ export class InventoryRepository {
       return true;
     });
   }
+
+  // ==========================================
+  // WAREHOUSE MANAGERS
+  // ==========================================
+
+  async getWarehouseManagers(organizationId) {
+    return await prisma.user.findMany({
+      where: {
+        organizationId,
+        roles: {
+          some: {
+            role: {
+              name: {
+                equals: 'Warehouse Manager',
+                mode: 'insensitive'
+              }
+            }
+          }
+        }
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phoneNumber: true,
+        isActive: true,
+        managedWarehouse: {
+          select: {
+            id: true,
+            name: true,
+            code: true,
+            location: true,
+            isActive: true,
+          }
+        }
+      }
+    });
+  }
+
+  async getWarehouseManagerById(userId, organizationId) {
+    return await prisma.user.findUnique({
+      where: { id: userId, organizationId },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phoneNumber: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+        managedWarehouse: {
+          select: {
+            id: true,
+            name: true,
+            code: true,
+            location: true,
+            isActive: true,
+          }
+        }
+      }
+    });
+  }
+
+  async findWarehouseByManagerId(userId, organizationId) {
+    return await prisma.warehouse.findFirst({
+      where: { warehouseManagerId: userId, organizationId }
+    });
+  }
+
+  async findManagerByWarehouseId(warehouseId, organizationId) {
+    const warehouse = await prisma.warehouse.findUnique({
+      where: { id: warehouseId, organizationId },
+      include: {
+        warehouseManager: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            phoneNumber: true,
+          }
+        }
+      }
+    });
+    return warehouse ? warehouse.warehouseManager : null;
+  }
+
+  async findWarehouseManagerRole(organizationId) {
+    return await prisma.role.findFirst({
+      where: {
+        organizationId,
+        name: {
+          equals: 'Warehouse Manager',
+          mode: 'insensitive'
+        }
+      }
+    });
+  }
+
+  async assignWarehouseManager(warehouseId, warehouseManagerId, organizationId) {
+    return await prisma.warehouse.update({
+      where: { id: warehouseId, organizationId },
+      data: { warehouseManagerId }
+    });
+  }
+
+  async removeWarehouseManager(warehouseId, organizationId) {
+    return await prisma.warehouse.update({
+      where: { id: warehouseId, organizationId },
+      data: { warehouseManagerId: null }
+    });
+  }
+
+
+  // ==========================================
+  // PRODUCT ISSUES
+  // ==========================================
+
+  async createProductIssue(data) {
+    const userSelect = {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phoneNumber: true,
+      isActive: true,
+    };
+
+    return await prisma.productIssue.create({
+      data,
+      include: {
+        product: true,
+        warehouse: true,
+        warehouseManager: { select: userSelect },
+        salesExecutive: { select: userSelect },
+      }
+    });
+  }
+
+  async getProductIssues(filters, pagination, sorting) {
+    const where = {
+      organizationId: filters.organizationId,
+      ...(filters.warehouseId && { warehouseId: filters.warehouseId }),
+      ...(filters.productId && { productId: filters.productId }),
+      ...(filters.warehouseManagerId && { warehouseManagerId: filters.warehouseManagerId }),
+      ...(filters.salesExecutiveId && { salesExecutiveId: filters.salesExecutiveId }),
+      ...(filters.salesOrderId && { salesOrderId: filters.salesOrderId }),
+      ...(filters.status && { status: filters.status }),
+    };
+
+    if (filters.startDate && filters.endDate) {
+      where.createdAt = {
+        gte: new Date(filters.startDate),
+        lte: new Date(filters.endDate),
+      };
+    }
+
+    const [productIssues, total] = await Promise.all([
+      prisma.productIssue.findMany({
+        where,
+        skip: (pagination.page - 1) * pagination.limit,
+        take: pagination.limit,
+        orderBy: { [sorting.sortBy]: sorting.sortOrder },
+        include: {
+          product: { select: { name: true, sku: true } },
+          warehouse: { select: { name: true } },
+          warehouseManager: { select: { id: true, firstName: true, lastName: true, email: true } },
+          salesExecutive: { select: { id: true, firstName: true, lastName: true, email: true } },
+          salesOrder: { select: { orderNumber: true } },
+        }
+      }),
+      prisma.productIssue.count({ where }),
+    ]);
+
+    return { productIssues, total };
+  }
+
+  async getProductIssueById(issueId, organizationId) {
+    const userSelect = {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phoneNumber: true,
+      isActive: true,
+    };
+
+    return await prisma.productIssue.findUnique({
+      where: { id: issueId, organizationId },
+      include: {
+        product: true,
+        warehouse: true,
+        warehouseManager: { select: userSelect },
+        salesExecutive: { select: userSelect },
+        salesOrder: true,
+      }
+    });
+  }
+
+  async updateProductIssueStatus(issueId, organizationId, status, notes) {
+    const userSelect = {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phoneNumber: true,
+      isActive: true,
+    };
+
+    return await prisma.productIssue.update({
+      where: { id: issueId, organizationId },
+      data: { status, ...(notes && { notes }) },
+      include: {
+        product: true,
+        warehouse: true,
+        warehouseManager: { select: userSelect },
+        salesExecutive: { select: userSelect },
+        salesOrder: true,
+      }
+    });
+  }
 }

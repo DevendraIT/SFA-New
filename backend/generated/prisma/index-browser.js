@@ -557,6 +557,7 @@ exports.Prisma.WarehouseScalarFieldEnum = {
   code: 'code',
   location: 'location',
   isActive: 'isActive',
+  warehouseManagerId: 'warehouseManagerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -583,6 +584,21 @@ exports.Prisma.StockMovementScalarFieldEnum = {
   performedBy: 'performedBy',
   notes: 'notes',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.ProductIssueScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  productId: 'productId',
+  warehouseId: 'warehouseId',
+  warehouseManagerId: 'warehouseManagerId',
+  salesExecutiveId: 'salesExecutiveId',
+  salesOrderId: 'salesOrderId',
+  quantity: 'quantity',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -695,6 +711,13 @@ exports.StockMovementType = exports.$Enums.StockMovementType = {
   CONSUME: 'CONSUME'
 };
 
+exports.ProductIssueStatus = exports.$Enums.ProductIssueStatus = {
+  PENDING: 'PENDING',
+  ISSUED: 'ISSUED',
+  RETURNED: 'RETURNED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   Organization: 'Organization',
   Branch: 'Branch',
@@ -729,7 +752,8 @@ exports.Prisma.ModelName = {
   DailyActivityReport: 'DailyActivityReport',
   Warehouse: 'Warehouse',
   Stock: 'Stock',
-  StockMovement: 'StockMovement'
+  StockMovement: 'StockMovement',
+  ProductIssue: 'ProductIssue'
 };
 
 /**

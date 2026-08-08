@@ -13,7 +13,12 @@ import {
   updateWarehouseSchema,
   addStockSchema,
   reduceStockSchema,
-  transferStockSchema
+  transferStockSchema,
+  assignWarehouseManagerSchema,
+  createWarehouseManagerSchema,
+  updateWarehouseManagerSchema,
+  createProductIssueSchema,
+  updateProductIssueSchema
 } from '../validators/inventory.validation.js';
 
 const router = Router();
@@ -99,6 +104,79 @@ router.post(
   authorize([INVENTORY_PERMISSIONS.MANAGE_STOCK]),
   validate(transferStockSchema),
   controller.transferStock
+);
+
+// ===== WAREHOUSE MANAGERS =====
+router.post(
+  '/warehouse-managers',
+  authorize([INVENTORY_PERMISSIONS.MANAGE_WAREHOUSE_MANAGERS]),
+  validate(createWarehouseManagerSchema),
+  controller.createWarehouseManager
+);
+
+router.get(
+  '/warehouse-managers',
+  authorize([INVENTORY_PERMISSIONS.MANAGE_WAREHOUSE_MANAGERS]),
+  controller.getWarehouseManagers
+);
+
+router.get(
+  '/warehouse-managers/:id',
+  authorize([INVENTORY_PERMISSIONS.MANAGE_WAREHOUSE_MANAGERS]),
+  controller.getWarehouseManagerById
+);
+
+router.get(
+  '/warehouse-managers/:id/warehouse',
+  authorize([INVENTORY_PERMISSIONS.MANAGE_WAREHOUSE_MANAGERS, INVENTORY_PERMISSIONS.READ_WAREHOUSES]),
+  controller.getWarehouseForManager
+);
+
+router.post(
+  ['/warehouses/:warehouseId/manager', '/warehouses/:id/manager'],
+  authorize([INVENTORY_PERMISSIONS.MANAGE_WAREHOUSE_MANAGERS]),
+  validate(assignWarehouseManagerSchema),
+  controller.assignWarehouseManager
+);
+
+router.patch(
+  ['/warehouses/:warehouseId/manager', '/warehouses/:id/manager'],
+  authorize([INVENTORY_PERMISSIONS.MANAGE_WAREHOUSE_MANAGERS]),
+  validate(updateWarehouseManagerSchema),
+  controller.updateWarehouseManager
+);
+
+router.get(
+  ['/warehouses/:warehouseId/manager', '/warehouses/:id/manager'],
+  authorize([INVENTORY_PERMISSIONS.MANAGE_WAREHOUSE_MANAGERS, INVENTORY_PERMISSIONS.READ_WAREHOUSES]),
+  controller.getManagerForWarehouse
+);
+
+// ===== PRODUCT ISSUES =====
+router.post(
+  ['/product-issues', '/product-issue'],
+  authorize([INVENTORY_PERMISSIONS.MANAGE_PRODUCT_ISSUES]),
+  validate(createProductIssueSchema),
+  controller.createProductIssue
+);
+
+router.get(
+  ['/product-issues', '/product-issue'],
+  authorize([INVENTORY_PERMISSIONS.READ_PRODUCT_ISSUES]),
+  controller.getProductIssues
+);
+
+router.get(
+  ['/product-issues/:id', '/product-issue/:id'],
+  authorize([INVENTORY_PERMISSIONS.READ_PRODUCT_ISSUES]),
+  controller.getProductIssueById
+);
+
+router.patch(
+  ['/product-issues/:id/status', '/product-issue/:id/status'],
+  authorize([INVENTORY_PERMISSIONS.MANAGE_PRODUCT_ISSUES]),
+  validate(updateProductIssueSchema),
+  controller.updateProductIssueStatus
 );
 
 export default router;

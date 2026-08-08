@@ -277,4 +277,264 @@ export class InventoryService {
       throw AppError.badRequest(error.message);
     }
   }
+
+  // ==========================================
+  // WAREHOUSE MANAGERS
+  // ==========================================
+
+  async getWarehouseManagers(userContext) {
+    const managers = await this.inventoryRepository.getWarehouseManagers(userContext.organizationId);
+    return { success: true, data: managers };
+  }
+
+  async getWarehouseManagerById(userId, userContext) {
+    const manager = await this.inventoryRepository.getWarehouseManagerById(userId, userContext.organizationId);
+    if (!manager) throw AppError.notFound('Warehouse Manager not found');
+    return { success: true, data: manager };
+  }
+
+  async getWarehouseForManager(managerId, userContext) {
+    const warehouse = await this.inventoryRepository.findWarehouseByManagerId(managerId, userContext.organizationId);
+    if (!warehouse) throw AppError.notFound('No warehouse assigned to this Warehouse Manager');
+    return { success: true, data: warehouse };
+  }
+
+  async getManagerForWarehouse(warehouseId, userContext) {
+    const warehouse = await this.inventoryRepository.findWarehouseById(warehouseId, userContext.organizationId);
+    if (!warehouse) throw AppError.notFound('Warehouse not found');
+
+    const manager = await this.inventoryRepository.findManagerByWarehouseId(warehouseId, userContext.organizationId);
+    return { success: true, data: manager };
+  }
+
+  async createWarehouseManager(data, userContext) {
+    let targetUserId = data.userId;
+
+    const { prisma } = await import('../../../config/database.js');
+
+    // 1. If email is provided, check if user already exists in organization
+    if (!targetUserId && data.email) {
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          organizationId: userContext.organizationId,
+          email: data.email.toLowerCase().trim()
+        }
+      });
+      if (existingUser) {
+        targetUserId = existingUser.id;
+      }
+    }
+
+    // 2. If user exists (either via userId or existing email), ensure WAREHOUSE_MANAGER role is assigned
+    if (targetUserId) {
+      const existingUser = await this.inventoryRepository.getWarehouseManagerById(targetUserId, userContext.organizationId);
+      if (!existingUser) {
+        throw AppError.notFound('User not found in this organization');
+      }
+
+      // Check if user already has WAREHOUSE_MANAGER role; if not, assign it
+      const hasRole = existingUser.roles?.some(r => r.role?.name?.toLowerCase() === 'warehouse manager');
+      if (!hasRole) {
+        const wmRole = await this.inventoryRepository.findWarehouseManagerRole(userContext.organizationId);
+        if (wmRole) {
+          await prisma.userRole.upsert({
+            where: {
+              userId_roleId: {
+                userId: targetUserId,
+                roleId: wmRole.id
+              }
+            },
+            create: {
+              userId: targetUserId,
+              roleId: wmRole.id
+            },
+            update: {}
+          });
+        }
+      }
+    } else {
+      // Create new user using bcrypt & prisma
+      const existingRole = await this.inventoryRepository.findWarehouseManagerRole(userContext.organizationId);
+      const roleId = existingRole ? existingRole.id : undefined;
+
+      let passwordHash = data.password;
+      try {
+        const bcrypt = await import('bcryptjs');
+        passwordHash = await bcrypt.hash(data.password, 10);
+      } catch (err) {
+        // Fallback
+      }
+
+      const newUser = await prisma.user.create({
+        data: {
+          organizationId: userContext.organizationId,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email.toLowerCase().trim(),
+          passwordHash,
+          phoneNumber: data.phoneNumber || null,
+          ...(roleId && {
+            roles: {
+              create: {
+                roleId
+              }
+            }
+          })
+        }
+      });
+      targetUserId = newUser.id;
+    }
+
+    // 2. Assign warehouse if warehouseId is provided
+    let assignedWarehouse = null;
+    if (data.warehouseId) {
+      const warehouse = await this.inventoryRepository.findWarehouseById(data.warehouseId, userContext.organizationId);
+      if (!warehouse) throw AppError.notFound('Warehouse not found in this organization');
+
+      // Check if manager is already assigned to another warehouse
+      const existingAssignment = await this.inventoryRepository.findWarehouseByManagerId(targetUserId, userContext.organizationId);
+      if (existingAssignment && existingAssignment.id !== data.warehouseId) {
+        throw AppError.badRequest('This Warehouse Manager is already assigned to another warehouse. A manager can manage only ONE warehouse.');
+      }
+
+      assignedWarehouse = await this.inventoryRepository.assignWarehouseManager(data.warehouseId, targetUserId, userContext.organizationId);
+    }
+
+    const updatedUser = await this.inventoryRepository.getWarehouseManagerById(targetUserId, userContext.organizationId);
+
+    // Format clean response without sensitive fields or managedWarehouses array
+    const manager = updatedUser ? {
+      id: updatedUser.id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      phoneNumber: updatedUser.phoneNumber,
+      isActive: updatedUser.isActive,
+    } : null;
+
+    const warehouse = (assignedWarehouse || updatedUser?.managedWarehouse) ? {
+      id: (assignedWarehouse || updatedUser.managedWarehouse).id,
+      name: (assignedWarehouse || updatedUser.managedWarehouse).name,
+      code: (assignedWarehouse || updatedUser.managedWarehouse).code,
+      location: (assignedWarehouse || updatedUser.managedWarehouse).location,
+      isActive: (assignedWarehouse || updatedUser.managedWarehouse).isActive,
+    } : null;
+
+    return {
+      success: true,
+      data: {
+        manager,
+        warehouse
+      },
+      message: 'Warehouse Manager created/assigned successfully'
+    };
+  }
+
+  async assignWarehouseManager(warehouseId, warehouseManagerId, userContext) {
+    // Validate warehouse exists
+    const warehouse = await this.inventoryRepository.findWarehouseById(warehouseId, userContext.organizationId);
+    if (!warehouse) throw AppError.notFound('Warehouse not found');
+
+    // Validate manager exists in organization and not managing another warehouse
+    if (warehouseManagerId) {
+      const manager = await this.inventoryRepository.getWarehouseManagerById(warehouseManagerId, userContext.organizationId);
+      if (!manager) throw AppError.notFound('Manager user not found in this organization');
+
+      const existingAssignment = await this.inventoryRepository.findWarehouseByManagerId(warehouseManagerId, userContext.organizationId);
+      if (existingAssignment && existingAssignment.id !== warehouseId) {
+        throw AppError.badRequest('This Warehouse Manager is already assigned to another warehouse. A manager can manage only ONE warehouse.');
+      }
+    }
+
+    const updated = await this.inventoryRepository.assignWarehouseManager(warehouseId, warehouseManagerId, userContext.organizationId);
+    return { success: true, data: updated, message: 'Warehouse manager assigned successfully' };
+  }
+
+  // ==========================================
+  // PRODUCT ISSUES
+  // ==========================================
+
+  async createProductIssue(data, userContext) {
+    // Verify product exists in organization
+    const product = await this.inventoryRepository.findProductById(data.productId, userContext.organizationId);
+    if (!product) throw AppError.notFound('Product not found in this organization');
+
+    // Verify warehouse exists in organization
+    const warehouse = await this.inventoryRepository.findWarehouseById(data.warehouseId, userContext.organizationId);
+    if (!warehouse) throw AppError.notFound('Warehouse not found in this organization');
+
+    // Security Check: If user is a Warehouse Manager, ensure they can only issue from their assigned warehouse
+    const userRoles = userContext.roles || [];
+    const isWarehouseManagerOnly = userRoles.includes('Warehouse Manager') || userRoles.includes('WAREHOUSE_MANAGER');
+    if (isWarehouseManagerOnly && warehouse.warehouseManagerId !== userContext.userId) {
+      throw AppError.forbidden('You are only authorized to issue products from your assigned warehouse');
+    }
+    
+    // Check stock availability
+    const available = await this.checkAvailability(data.productId, data.warehouseId, data.quantity, userContext.organizationId);
+    if (!available) throw AppError.badRequest('Insufficient available stock for this issue request');
+
+    // Automatically resolve warehouse manager ID from request body, warehouse assigned manager, or logged in user
+    const assignedManagerId = data.warehouseManagerId || warehouse.warehouseManagerId || userContext.userId;
+
+    const issue = await this.inventoryRepository.createProductIssue({
+      ...data,
+      warehouseManagerId: assignedManagerId,
+      organizationId: userContext.organizationId,
+      status: 'PENDING',
+    });
+    return { success: true, data: issue, message: 'Product issue created successfully' };
+  }
+
+  async getProductIssues(queryParams, userContext) {
+    const pagination = {
+      page: parseInt(queryParams.page) || 1,
+      limit: parseInt(queryParams.limit) || 20,
+    };
+    const sorting = {
+      sortBy: queryParams.sortBy || 'createdAt',
+      sortOrder: queryParams.sortOrder || 'desc',
+    };
+    const filters = {
+      organizationId: userContext.organizationId,
+      ...queryParams
+    };
+    
+    const result = await this.inventoryRepository.getProductIssues(filters, pagination, sorting);
+    return { success: true, data: result };
+  }
+
+  async getProductIssueById(issueId, userContext) {
+    const issue = await this.inventoryRepository.getProductIssueById(issueId, userContext.organizationId);
+    if (!issue) throw AppError.notFound('Product issue not found');
+    return { success: true, data: issue };
+  }
+
+  async updateProductIssueStatus(issueId, updateData, userContext) {
+    const issue = await this.inventoryRepository.getProductIssueById(issueId, userContext.organizationId);
+    if (!issue) throw AppError.notFound('Product issue not found');
+
+    if (updateData.status === 'ISSUED' && issue.status !== 'ISSUED') {
+      // Must reduce stock
+      await this.reduceStock({
+        productId: issue.productId,
+        warehouseId: issue.warehouseId,
+        quantity: issue.quantity,
+        referenceId: issue.id,
+        notes: `Product issued to sales executive ${issue.salesExecutiveId}`
+      }, userContext);
+    } else if (updateData.status === 'RETURNED' && issue.status === 'ISSUED') {
+      // Add stock back
+      await this.addStock({
+        productId: issue.productId,
+        warehouseId: issue.warehouseId,
+        quantity: issue.quantity,
+        referenceId: issue.id,
+        notes: `Product returned by sales executive ${issue.salesExecutiveId}`
+      }, userContext);
+    }
+
+    const updated = await this.inventoryRepository.updateProductIssueStatus(issueId, userContext.organizationId, updateData.status, updateData.notes);
+    return { success: true, data: updated, message: 'Product issue status updated' };
+  }
 }

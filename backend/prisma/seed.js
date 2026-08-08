@@ -194,7 +194,9 @@ async function main() {
     "department:read",
     "territory:read",
     "lead:read",
-    "order:read"
+    "order:read",
+    "read:product_issues",
+    "manage:product_issues"
   ],
 
   [ENTERPRISE_ROLES.SALES_EXECUTIVE]: [

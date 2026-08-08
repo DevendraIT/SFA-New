@@ -73,3 +73,38 @@ export const transferStockSchema = z.object({
   quantity: z.number().int().positive('Quantity must be positive'),
   notes: z.string().optional(),
 });
+
+export const assignWarehouseManagerSchema = z.object({
+  userId: z.string().uuid('Invalid User ID'),
+});
+
+export const createWarehouseManagerSchema = z.object({
+  userId: z.string().uuid('Invalid User ID').optional(),
+  firstName: z.string().min(1, 'First name is required').optional(),
+  lastName: z.string().min(1, 'Last name is required').optional(),
+  email: z.string().email('Invalid email address').optional(),
+  password: z.string().min(8, 'Password must be at least 8 characters').optional(),
+  phoneNumber: z.string().optional(),
+  warehouseId: z.string().uuid('Invalid Warehouse ID').optional(),
+}).refine(data => data.userId || (data.firstName && data.lastName && data.email && data.password), {
+  message: 'Either userId of existing user OR full new user details (firstName, lastName, email, password) must be provided.',
+});
+
+export const updateWarehouseManagerSchema = z.object({
+  userId: z.string().uuid('Invalid User ID').optional().nullable(),
+});
+
+export const createProductIssueSchema = z.object({
+  productId: z.string().uuid('Invalid Product ID'),
+  warehouseId: z.string().uuid('Invalid Warehouse ID'),
+  salesExecutiveId: z.string().uuid('Invalid Sales Executive ID'),
+  salesOrderId: z.string().uuid('Invalid Sales Order ID').optional(),
+  quantity: z.number().int().positive('Quantity must be positive'),
+  notes: z.string().optional(),
+});
+
+export const updateProductIssueSchema = z.object({
+  status: z.enum(['PENDING', 'ISSUED', 'RETURNED', 'CANCELLED']),
+  notes: z.string().optional(),
+});
+
