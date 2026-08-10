@@ -2,6 +2,8 @@ import express from "express";
 import { SalesOrderRepository } from "../repositories/SalesOrderRepository.js";
 import { SalesOrderService } from "../services/SalesOrderService.js";
 import { SalesOrderController } from "../controllers/SalesOrderController.js";
+import { InventoryRepository } from "../../inventory/repositories/inventory.repository.js";
+import { InventoryService } from "../../inventory/services/inventory.service.js";
 import { validate } from "../../../middlewares/validation.middleware.js";
 import { authenticate, requireOrganization } from "../../../middlewares/auth.middleware.js";
 import { 
@@ -36,7 +38,9 @@ const router = express.Router();
 
 // Initialize dependencies
 const salesOrderRepository = new SalesOrderRepository();
-const salesOrderService = new SalesOrderService(salesOrderRepository);
+const inventoryRepository = new InventoryRepository();
+const inventoryService = new InventoryService(inventoryRepository);
+const salesOrderService = new SalesOrderService(salesOrderRepository, inventoryService);
 const salesOrderController = new SalesOrderController(salesOrderService);
 
 // Apply authentication middleware

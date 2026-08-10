@@ -1,0 +1,12 @@
+export const STOCK_MOVEMENT_TYPE = {
+  ADD: 'ADD',
+  REDUCE: 'REDUCE',
+  TRANSFER: 'TRANSFER',
+  RESERVE: 'RESERVE',
+  CONSUME: 'CONSUME',
+};
+
+export const PRODUCT_STATUS = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+};

@@ -81,6 +81,7 @@ export const createBranchSchema = z.object({
   state: z.string().trim().max(100, "State cannot exceed 100 characters.").optional(),
   country: z.string().trim().max(100, "Country cannot exceed 100 characters.").optional(),
   postalCode: z.string().trim().max(20, "Postal Code cannot exceed 20 characters.").optional(),
+  warehouseIds: z.array(uuidSchema('Warehouse')).optional(),
 });
 
 export const updateBranchSchema = z.object({
@@ -96,6 +97,7 @@ export const updateBranchSchema = z.object({
   state: z.string().trim().max(100).optional(),
   country: z.string().trim().max(100).optional(),
   postalCode: z.string().trim().max(20).optional(),
+  warehouseIds: z.array(uuidSchema('Warehouse')).optional(),
 });
 
 // --------------------------------------------------
