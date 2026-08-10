@@ -57764,17 +57764,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type OrderItemListRelationFilter = {
     every?: OrderItemWhereInput
     some?: OrderItemWhereInput
@@ -57873,22 +57862,6 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type CustomerScalarRelationFilter = {
@@ -60304,19 +60277,18 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
-<<<<<<< HEAD
+  export type WarehouseUncheckedCreateNestedManyWithoutBranchesInput = {
+    create?: XOR<WarehouseCreateWithoutBranchesInput, WarehouseUncheckedCreateWithoutBranchesInput> | WarehouseCreateWithoutBranchesInput[] | WarehouseUncheckedCreateWithoutBranchesInput[]
+    connectOrCreate?: WarehouseCreateOrConnectWithoutBranchesInput | WarehouseCreateOrConnectWithoutBranchesInput[]
+    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+  }
+
   export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
-=======
-  export type WarehouseUncheckedCreateNestedManyWithoutBranchesInput = {
-    create?: XOR<WarehouseCreateWithoutBranchesInput, WarehouseUncheckedCreateWithoutBranchesInput> | WarehouseCreateWithoutBranchesInput[] | WarehouseUncheckedCreateWithoutBranchesInput[]
-    connectOrCreate?: WarehouseCreateOrConnectWithoutBranchesInput | WarehouseCreateOrConnectWithoutBranchesInput[]
-    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
->>>>>>> origin/adarsh
   }
 
   export type OrganizationUpdateOneRequiredWithoutBranchesNestedInput = {
@@ -62429,14 +62401,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type OrganizationUpdateOneRequiredWithoutProductsNestedInput = {
     create?: XOR<OrganizationCreateWithoutProductsInput, OrganizationUncheckedCreateWithoutProductsInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutProductsInput
@@ -63933,22 +63897,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type NestedEnumAttendanceStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
     in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
@@ -64119,8 +64067,6 @@ export namespace Prisma {
     _max?: NestedEnumTaskPriorityFilter<$PrismaModel>
   }
 
-<<<<<<< HEAD
-=======
   export type NestedEnumStockMovementTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.StockMovementType | EnumStockMovementTypeFieldRefInput<$PrismaModel>
     in?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
@@ -64155,7 +64101,6 @@ export namespace Prisma {
     _max?: NestedEnumProductIssueStatusFilter<$PrismaModel>
   }
 
->>>>>>> origin/adarsh
   export type BranchCreateWithoutOrganizationInput = {
     id?: string
     name: string
@@ -79498,6 +79443,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutBranchesInput
@@ -79521,6 +79468,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
@@ -86551,6 +86500,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
@@ -86574,6 +86525,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
@@ -86594,6 +86547,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
