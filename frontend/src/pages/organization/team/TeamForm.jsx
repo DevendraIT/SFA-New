@@ -1,12 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import teamService from "../../../services/team.service";
 import branchService from "../../../services/branch.service";
 import departmentService from "../../../services/department.service";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function TeamForm({ team, onClose, onSuccess }) {
+  const { user: currentUser } = useAuth();
   const isEdit = !!team;
+
+  const isSalesManager = useMemo(() => {
+    if (!currentUser) return false;
+    const roleNames = Array.isArray(currentUser.roles)
+      ? currentUser.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [currentUser.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+  }, [currentUser]);
 
   const [form, setForm] = useState({
     branchId: "",
@@ -20,6 +30,8 @@ export default function TeamForm({ team, onClose, onSuccess }) {
   const [submitting, setSubmitting] = useState(false);
   const [loadingBranches, setLoadingBranches] = useState(true);
   const [loadingDepartments, setLoadingDepartments] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [formErrorMessage, setFormErrorMessage] = useState("");
 
   useEffect(() => {
     loadBranches();
@@ -41,7 +53,16 @@ export default function TeamForm({ team, onClose, onSuccess }) {
     try {
       setLoadingBranches(true);
       const res = await branchService.getBranches({ limit: 100 });
-      setBranches(res?.data?.branches || []);
+      let list = res?.data?.branches || [];
+      if (isSalesManager && currentUser?.branchId) {
+        list = list.filter((b) => b.id === currentUser.branchId || b.id === currentUser.branch?.id);
+        if (!team) {
+          const userBranchId = currentUser.branchId || currentUser.branch?.id;
+          setForm((prev) => ({ ...prev, branchId: userBranchId }));
+          loadDepartments(userBranchId);
+        }
+      }
+      setBranches(list);
     } catch (err) {
       console.error("Failed to load branches:", err);
       toast.error("Failed to load branches");
@@ -82,14 +103,20 @@ export default function TeamForm({ team, onClose, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.branchId) {
-      toast.error("Please select a branch");
+    const errors = {};
+    if (!form.branchId) errors.branchId = "Branch selection is required to create a team.";
+    if (!form.name.trim()) errors.name = "Team Name is required.";
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      const firstMsg = Object.values(errors)[0];
+      setFormErrorMessage(firstMsg);
+      toast.error(firstMsg);
       return;
     }
-    if (!form.name.trim()) {
-      toast.error("Team name is required");
-      return;
-    }
+
+    setFieldErrors({});
+    setFormErrorMessage("");
 
     try {
       setSubmitting(true);
@@ -112,7 +139,9 @@ export default function TeamForm({ team, onClose, onSuccess }) {
       onClose?.();
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Failed to save team");
+      const msg = err?.response?.data?.message || err?.response?.data?.errors?.[0]?.message || "Failed to save team";
+      setFormErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
@@ -135,7 +164,7 @@ export default function TeamForm({ team, onClose, onSuccess }) {
             name="branchId"
             value={form.branchId}
             onChange={handleChange}
-            disabled={isEdit}
+            disabled={isEdit || isSalesManager}
             className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-slate-100 disabled:cursor-not-allowed"
           >
             <option value="">Select a branch</option>
@@ -146,7 +175,12 @@ export default function TeamForm({ team, onClose, onSuccess }) {
             ))}
           </select>
         )}
-        {isEdit && (
+        {isSalesManager && (
+          <p className="mt-1 text-xs text-indigo-600 font-semibold">
+            Locked to your assigned operating branch.
+          </p>
+        )}
+        {isEdit && !isSalesManager && (
           <p className="mt-1 text-xs text-slate-400">
             Branch cannot be changed after creation.
           </p>
@@ -169,8 +203,13 @@ export default function TeamForm({ team, onClose, onSuccess }) {
               value={form.name}
               onChange={handleChange}
               placeholder="Enter team name"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={`w-full rounded-xl border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${fieldErrors.name ? "border-red-500 ring-1 ring-red-200" : "border-slate-300"}`}
             />
+            {fieldErrors.name && (
+              <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
+                <AlertCircle size={12} /> {fieldErrors.name}
+              </p>
+            )}
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-medium text-slate-700">
@@ -212,6 +251,17 @@ export default function TeamForm({ team, onClose, onSuccess }) {
           </div>
         </div>
       </div>
+
+      {/* Validation Error Banner at End of Form */}
+      {formErrorMessage && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700 flex items-start gap-2.5 shadow-sm">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block text-sm text-red-800 mb-0.5">Validation Alert:</span>
+            {formErrorMessage}
+          </div>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex justify-end gap-3">

@@ -44,7 +44,6 @@ const SECTIONS = [
   { id: "customer", label: "Customer Details", icon: Building2 },
   { id: "order", label: "Sales Order", icon: ShoppingCart },
   { id: "products", label: "Products", icon: Package },
-  { id: "route", label: "Route Assignment", icon: Route },
   { id: "requirements", label: "Execution Requirements", icon: Settings },
   { id: "summary", label: "Summary", icon: Check },
 ];
@@ -326,10 +325,20 @@ function CustomerSection({ data, onChange, customers }) {
 // =====================================================
 // SECTION 4: Sales Order
 // =====================================================
-function OrderSection({ data, onChange, customerOrders, loadingOrders }) {
+function OrderSection({ data, onChange, customerOrders, allOrders = [], loadingOrders }) {
   const [orderDetailsMap, setOrderDetailsMap] = useState({});
 
-  const rawSelected = customerOrders.find((o) => o.id === data.orderId);
+  const combinedOrders = (customerOrders && customerOrders.length > 0) ? customerOrders : (allOrders || []);
+
+  const availableOrders = combinedOrders.filter((o) => {
+    if (!data.customerId) return true;
+    const cid = o.customerId || o.customer?.id || (typeof o.customer === 'string' ? o.customer : undefined);
+    return cid === data.customerId;
+  });
+
+  const displayOrders = availableOrders.length > 0 ? availableOrders : combinedOrders;
+
+  const rawSelected = combinedOrders.find((o) => o.id === data.orderId);
   const selectedOrder = rawSelected ? { ...rawSelected, ...orderDetailsMap[data.orderId] } : null;
 
   useEffect(() => {
@@ -380,13 +389,9 @@ function OrderSection({ data, onChange, customerOrders, loadingOrders }) {
         <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
           <ShoppingCart size={14} className="text-blue-500" /> Select Linked Sales Order
         </label>
-        {!data.customerId ? (
-          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-3">
-            Please select a Customer in the previous step to view their Sales Orders.
-          </p>
-        ) : loadingOrders ? (
+        {loadingOrders ? (
           <div className="flex items-center gap-2 text-sm text-slate-500 py-2">
-            <Loader2 size={16} className="animate-spin text-blue-600" /> Loading customer orders...
+            <Loader2 size={16} className="animate-spin text-blue-600" /> Loading sales orders...
           </div>
         ) : (
           <select
@@ -400,9 +405,9 @@ function OrderSection({ data, onChange, customerOrders, loadingOrders }) {
             className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 font-medium"
           >
             <option value="">No Order Linked</option>
-            {customerOrders.map((o) => (
+            {displayOrders.map((o) => (
               <option key={o.id} value={o.id}>
-                {getOptionLabel(o)}
+                {getOptionLabel(o)} ({formatPriceValue(o.totalAmount || o.total)}) {o.customer?.name ? `- ${o.customer.name}` : ''}
               </option>
             ))}
           </select>
@@ -590,28 +595,6 @@ function ProductsSection({ data, onChange }) {
 }
 
 // =====================================================
-// SECTION 6: Route Assignment
-// =====================================================
-function RouteSection({ data, onChange }) {
-  return (
-    <div className="space-y-5">
-      <div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1.5">
-          <Globe size={14} className="text-blue-500" /> Start Location
-        </label>
-        <input
-          type="text"
-          value={data.startLocation}
-          onChange={(e) => onChange({ ...data, startLocation: e.target.value })}
-          placeholder="e.g. Office, Branch, Home"
-          className="w-full px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-        />
-      </div>
-    </div>
-  );
-}
-
-// =====================================================
 // SECTION 7: Execution Requirements
 // =====================================================
 function RequirementsSection({ data, onChange, requirementsList, onAddRequirement }) {
@@ -769,14 +752,6 @@ function SummarySection({ data, executives, customers, customerOrders, categorie
       ],
     },
     {
-      label: "Route",
-      icon: Route,
-      show: !!data.startLocation,
-      items: [
-        { label: "Start Location", value: data.startLocation || "Not set" },
-      ],
-    },
-    {
       label: "Requirements",
       icon: Settings,
       items: [
@@ -832,6 +807,7 @@ export default function AssignTaskModal({
   const [currentSection, setCurrentSection] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [customers, setCustomers] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
   const [customerOrders, setCustomerOrders] = useState([]);
   const [loadingCustomers, setLoadingCustomers] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
@@ -913,25 +889,30 @@ export default function AssignTaskModal({
     }
   }, [isOpen, loadAllCustomers]);
 
-  // 2. Sales Orders: Fetch only orders belonging to selected customer via existing backend API
+  // 2. Sales Orders: Fetch sales orders (filtered by customer if selected, else fetch all branch/available sales orders)
   useEffect(() => {
-    if (!formData.customerId) {
-      setCustomerOrders([]);
-      return;
-    }
+    if (!isOpen) return;
     setLoadingOrders(true);
-    salesApi.listOrders({ customerId: formData.customerId, limit: 100 })
+    const params = { limit: 100 };
+    if (formData.customerId) {
+      params.customerId = formData.customerId;
+    }
+    salesApi.listOrders(params)
       .then((res) => {
         const resp = res?.data;
-        setCustomerOrders(extractArray(resp, "orders"));
+        const list = extractArray(resp, "orders");
+        setCustomerOrders(list);
+        if (!formData.customerId || allOrders.length === 0) {
+          setAllOrders(list);
+        }
       })
       .catch((err) => {
-        console.error("Failed to load sales orders for customer:", err);
+        console.error("Failed to load sales orders:", err);
       })
       .finally(() => {
         setLoadingOrders(false);
       });
-  }, [formData.customerId]);
+  }, [isOpen, formData.customerId]);
 
   const handleAddCategory = (catName) => {
     const val = catName.toUpperCase().replace(/\s+/g, "_");
@@ -1007,18 +988,23 @@ export default function AssignTaskModal({
           ? {
               id: selectedOrder.id,
               orderNumber: selectedOrder.orderNumber,
+              orderName: selectedOrder.orderName || selectedOrder.orderNumber,
               status: selectedOrder.status,
               total: selectedOrder.totalAmount,
+              totalAmount: selectedOrder.totalAmount,
+              items: selectedOrder.items || [],
             }
           : undefined,
-        products: formData.products?.length > 0 ? formData.products : undefined,
-        route: formData.startLocation
-          ? {
-              startLocation: formData.startLocation,
-              beatPlanId: null,
-              travelMode: "DRIVING",
-            }
-          : undefined,
+        orderId: formData.orderId || selectedOrder?.id || undefined,
+        products: (formData.products?.length > 0)
+          ? formData.products
+          : (selectedOrder?.items?.map(i => ({
+              id: i.id || i.productId,
+              name: i.description || i.product?.name || 'Product',
+              sku: i.product?.sku || '',
+              quantity: i.quantity || 1,
+              unitPrice: i.unitPrice || 0
+            })) || undefined),
         requirements: {
           activeRequirements,
           gps: formData.requireGps,
@@ -1032,14 +1018,18 @@ export default function AssignTaskModal({
         },
       };
 
+      const resolvedCustomerId = formData.customerId || selectedOrder?.customerId || selectedOrder?.customer?.id || undefined;
+
       const payload = {
         assignedToId: formData.assignedToId,
         title: formData.title.trim(),
         description: formData.description.trim() || undefined,
         priority: formData.priority,
         dueDate: dueDateValue,
-        referenceType: formData.orderId ? "ORDER" : (formData.customerId ? "CUSTOMER" : undefined),
-        referenceId: formData.orderId || formData.customerId || undefined,
+        customerId: resolvedCustomerId,
+        branchId: formData.branchId || undefined,
+        referenceType: formData.orderId ? "ORDER" : (resolvedCustomerId ? "CUSTOMER" : undefined),
+        referenceId: formData.orderId || resolvedCustomerId || undefined,
         metadata,
       };
 
@@ -1117,14 +1107,13 @@ export default function AssignTaskModal({
             data={formData}
             onChange={setFormData}
             customerOrders={customerOrders}
+            allOrders={allOrders}
             loadingOrders={loadingOrders}
           />
         );
       case 4:
         return <ProductsSection data={formData} onChange={setFormData} />;
       case 5:
-        return <RouteSection data={formData} onChange={setFormData} />;
-      case 6:
         return (
           <RequirementsSection
             data={formData}
@@ -1133,7 +1122,7 @@ export default function AssignTaskModal({
             onAddRequirement={handleAddRequirement}
           />
         );
-      case 7:
+      case 6:
         return (
           <SummarySection
             data={formData}

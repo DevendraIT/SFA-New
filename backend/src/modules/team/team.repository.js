@@ -53,9 +53,12 @@ export class TeamRepository {
     return { teams, total };
   }
 
-  async findTeamById(id, organizationId) {
+  async findTeamById(id, organizationId, branchId = null) {
+    const where = { id, organizationId };
+    if (branchId) where.branchId = branchId;
+
     return prisma.team.findFirst({
-      where: { id, organizationId },
+      where,
       include: {
         branch: {
           select: {

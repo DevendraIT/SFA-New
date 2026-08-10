@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import userService from "../../../services/user.service";
 import roleService from "../../../services/role.service";
@@ -103,6 +103,17 @@ export default function UserForm({ user, onClose, onSuccess }) {
     }
   }, [filteredRoles, isSalesManager, isEditMode, form.roleIds.length]);
 
+  // Auto-set Branch & Manager for Sales Manager (Department chosen by Sales Manager)
+  useEffect(() => {
+    if (!isEditMode && isSalesManager && currentUser) {
+      setForm((prev) => ({
+        ...prev,
+        branchId: currentUser.branchId || currentUser.branch?.id || prev.branchId,
+        managerId: currentUser.id || prev.managerId,
+      }));
+    }
+  }, [isSalesManager, isEditMode, currentUser]);
+
   // Fetch departments when branch changes
   useEffect(() => {
     if (!form.branchId) {
@@ -187,17 +198,57 @@ export default function UserForm({ user, onClose, onSuccess }) {
     }));
   };
 
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [formErrorMessage, setFormErrorMessage] = useState("");
+
+  const validatePasswordRequirements = (pwd) => {
+    if (!pwd) return "Password is required.";
+    const missing = [];
+    if (pwd.length < 8) missing.push(`minimum 8 characters (currently ${pwd.length})`);
+    if (!/[A-Z]/.test(pwd)) missing.push("at least one uppercase letter (A-Z)");
+    if (!/[a-z]/.test(pwd)) missing.push("at least one lowercase letter (a-z)");
+    if (!/[0-9]/.test(pwd)) missing.push("at least one number (0-9)");
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) missing.push("at least one special character (e.g. @$!%*?&#)");
+
+    if (missing.length > 0) {
+      return `Password requirement failed! Missing: ${missing.join(", ")}.`;
+    }
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!form.firstName.trim()) return toast.error("First name is required");
-    if (!form.lastName.trim()) return toast.error("Last name is required");
-    if (!form.email.trim()) return toast.error("Email is required");
-    if (!isEditMode && !form.password) return toast.error("Password is required");
-    if (form.roleIds.length === 0) return toast.error("At least one role must be assigned");
+    const errors = {};
+    if (!form.firstName.trim()) errors.firstName = "First name is required.";
+    if (!form.lastName.trim()) errors.lastName = "Last name is required.";
+    if (!form.email.trim()) {
+      errors.email = "Email address is required.";
+    } else if (!/\S+@\S+\.\S+/.test(form.email.trim())) {
+      errors.email = "Please enter a valid email address (e.g. user@example.com).";
+    }
 
+    if (!isEditMode) {
+      const pwdErr = validatePasswordRequirements(form.password);
+      if (pwdErr) errors.password = pwdErr;
+    }
+
+    if (form.roleIds.length === 0) {
+      errors.roles = "At least one role must be assigned to the user.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      const firstMsg = Object.values(errors)[0];
+      setFormErrorMessage(firstMsg);
+      toast.error(firstMsg);
+      return;
+    }
+
+    setFieldErrors({});
+    setFormErrorMessage("");
     setSubmitting(true);
+
     try {
       const payload = {
         firstName: form.firstName.trim(),
@@ -228,10 +279,15 @@ export default function UserForm({ user, onClose, onSuccess }) {
       onSuccess?.();
       onClose?.();
     } catch (err) {
-      const msg =
+      console.error(err);
+      let msg =
         err?.response?.data?.message ||
         err?.response?.data?.errors?.[0]?.message ||
         "Failed to save user";
+      if (err?.response?.data?.details) {
+        msg += ": " + JSON.stringify(err.response.data.details);
+      }
+      setFormErrorMessage(msg);
       toast.error(msg);
     } finally {
       setSubmitting(false);
@@ -253,9 +309,14 @@ export default function UserForm({ user, onClose, onSuccess }) {
             name="firstName"
             value={form.firstName}
             onChange={handleChange}
-            className={inputClass}
+            className={inputClass + (fieldErrors.firstName ? " border-red-500 ring-1 ring-red-200" : "")}
             placeholder="John"
           />
+          {fieldErrors.firstName && (
+            <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
+              <AlertCircle size={12} /> {fieldErrors.firstName}
+            </p>
+          )}
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-slate-700">
@@ -265,9 +326,14 @@ export default function UserForm({ user, onClose, onSuccess }) {
             name="lastName"
             value={form.lastName}
             onChange={handleChange}
-            className={inputClass}
+            className={inputClass + (fieldErrors.lastName ? " border-red-500 ring-1 ring-red-200" : "")}
             placeholder="Doe"
           />
+          {fieldErrors.lastName && (
+            <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
+              <AlertCircle size={12} /> {fieldErrors.lastName}
+            </p>
+          )}
         </div>
       </div>
 
@@ -281,9 +347,14 @@ export default function UserForm({ user, onClose, onSuccess }) {
           type="email"
           value={form.email}
           onChange={handleChange}
-          className={inputClass}
+          className={inputClass + (fieldErrors.email ? " border-red-500 ring-1 ring-red-200" : "")}
           placeholder="john@example.com"
         />
+        {fieldErrors.email && (
+          <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
+            <AlertCircle size={12} /> {fieldErrors.email}
+          </p>
+        )}
       </div>
 
       {/* Password (only for create) */}
@@ -298,7 +369,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
               type={showPassword ? "text" : "password"}
               value={form.password}
               onChange={handleChange}
-              className={inputClass + " pr-10"}
+              className={inputClass + " pr-10" + (fieldErrors.password ? " border-red-500 ring-1 ring-red-200" : "")}
               placeholder="Min 8 chars, upper, lower, number, special"
             />
             <button
@@ -309,9 +380,16 @@ export default function UserForm({ user, onClose, onSuccess }) {
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
-          <p className="mt-1 text-xs text-slate-400">
-            Must contain uppercase, lowercase, number & special character
-          </p>
+          {fieldErrors.password ? (
+            <p className="mt-1.5 text-xs font-bold text-red-600 flex items-start gap-1">
+              <AlertCircle size={14} className="shrink-0 mt-0.5" />
+              <span>{fieldErrors.password}</span>
+            </p>
+          ) : (
+            <p className="mt-1 text-xs text-slate-400">
+              Must contain minimum 8 characters, uppercase, lowercase, number & special character
+            </p>
+          )}
         </div>
       )}
 
@@ -354,7 +432,8 @@ export default function UserForm({ user, onClose, onSuccess }) {
             name="branchId"
             value={form.branchId}
             onChange={handleChange}
-            className={inputClass}
+            disabled={isSalesManager}
+            className={inputClass + (isSalesManager ? " bg-slate-100 cursor-not-allowed" : "")}
           >
             <option value="">Select Branch</option>
             {branches.map((b) => (
@@ -387,21 +466,35 @@ export default function UserForm({ user, onClose, onSuccess }) {
       {/* Manager */}
       <div>
         <label className="mb-1.5 block text-sm font-medium text-slate-700">Manager</label>
-        <select
-          name="managerId"
-          value={form.managerId}
-          onChange={handleChange}
-          className={inputClass}
-        >
-          <option value="">No Manager</option>
-          {users
-            .filter((u) => u.id !== user?.id)
-            .map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.firstName} {u.lastName} ({u.email})
-              </option>
-            ))}
-        </select>
+        {isSalesManager ? (
+          <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-3.5 flex items-center justify-between">
+            <div>
+              <span className="block text-xs font-bold uppercase text-indigo-700">Assigned Manager (Default)</span>
+              <span className="text-sm font-bold text-slate-900">
+                {currentUser?.firstName} {currentUser?.lastName} (Sales Manager)
+              </span>
+            </div>
+            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
+              Selected by Default
+            </span>
+          </div>
+        ) : (
+          <select
+            name="managerId"
+            value={form.managerId}
+            onChange={handleChange}
+            className={inputClass}
+          >
+            <option value="">No Manager</option>
+            {users
+              .filter((u) => u.id !== user?.id)
+              .map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.firstName} {u.lastName} ({u.email})
+                </option>
+              ))}
+          </select>
+        )}
       </div>
 
       {/* Roles */}
@@ -409,7 +502,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
         <label className="mb-1.5 block text-sm font-medium text-slate-700">
           Roles <span className="text-red-500">*</span>
         </label>
-        <div className="flex flex-wrap gap-3 rounded-lg border border-slate-200 p-4">
+        <div className={`flex flex-wrap gap-3 rounded-lg border p-4 ${fieldErrors.roles ? "border-red-500 bg-red-50/20" : "border-slate-200"}`}>
           {filteredRoles.length === 0 && (
             <p className="text-sm text-slate-400">No roles available</p>
           )}
@@ -432,6 +525,11 @@ export default function UserForm({ user, onClose, onSuccess }) {
             </label>
           ))}
         </div>
+        {fieldErrors.roles && (
+          <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
+            <AlertCircle size={12} /> {fieldErrors.roles}
+          </p>
+        )}
       </div>
 
       {/* Active Status */}
@@ -445,6 +543,17 @@ export default function UserForm({ user, onClose, onSuccess }) {
         />
         <label className="text-sm font-medium text-slate-700">Active</label>
       </div>
+
+      {/* Validation Error Banner at End of Form */}
+      {formErrorMessage && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700 flex items-start gap-2.5 shadow-sm">
+          <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block text-sm text-red-800 mb-0.5">Validation Alert:</span>
+            {formErrorMessage}
+          </div>
+        </div>
+      )}
 
       {/* Buttons */}
       <div className="flex justify-end gap-3 border-t pt-5">

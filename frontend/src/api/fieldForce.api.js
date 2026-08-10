@@ -98,7 +98,17 @@ const fieldForceApi = {
   getTask(id) {
     return api.get(`${BASE_URL}/tasks/${id}`);
   },
-  getTaskRoute(id, params = {}) {
+  getTaskRoute(id, userLocation = {}) {
+    const params = {};
+    if (userLocation?.lat != null && userLocation?.lng != null) {
+      params.lat = userLocation.lat;
+      params.lng = userLocation.lng;
+    } else if (userLocation?.latitude != null && userLocation?.longitude != null) {
+      params.lat = userLocation.latitude;
+      params.lng = userLocation.longitude;
+    } else if (typeof userLocation === "object") {
+      Object.assign(params, userLocation);
+    }
     return api.get(`${BASE_URL}/tasks/${id}/route`, { params });
   },
   updateTaskStatus(id, data) {

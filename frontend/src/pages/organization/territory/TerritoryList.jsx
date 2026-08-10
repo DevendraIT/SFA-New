@@ -17,13 +17,43 @@ export default function TerritoryList() {
   const [selectedTerritory, setSelectedTerritory] = useState(null);
   const [viewTerritory, setViewTerritory] = useState(null);
 
-  const canManageTerritory = useMemo(() => {
-    if (!user) return true;
+  const isSalesManager = useMemo(() => {
+    if (!user) return false;
     const roleNames = Array.isArray(user.roles)
       ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
       : [user.role?.name || ""];
-    return !roleNames.some((r) => r && (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("head of sales")));
+    return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
   }, [user]);
+
+  const canManageTerritory = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    const isSuperAdmin = roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+    const isCompanyAdmin = roleNames.some((r) => r && (r.toLowerCase() === "admin" || r.toLowerCase().includes("company admin")));
+    return isSuperAdmin || isCompanyAdmin;
+  }, [user]);
+
+  const displayedTerritories = useMemo(() => {
+    if (!territories) return [];
+    if (isSalesManager) {
+      return territories.filter((t) => {
+        if (user?.territoryId && t.id === user.territoryId) return true;
+        if (user?.branchId && Array.isArray(t.branches)) {
+          const match = t.branches.some((b) => b.id === user.branchId || b.branchId === user.branchId || b.name === user.branch?.name);
+          if (match) return true;
+        }
+        if (user?.branch?.territoryId && t.id === user.branch.territoryId) return true;
+        // If branch name is linked
+        if (user?.branch?.name && Array.isArray(t.branches)) {
+          return t.branches.some((b) => b.name === user.branch.name);
+        }
+        return true;
+      });
+    }
+    return territories;
+  }, [territories, isSalesManager, user]);
 
   const handleDelete = async (territory) => {
     if (!canManageTerritory) return;
@@ -95,7 +125,7 @@ export default function TerritoryList() {
                   Loading territories...
                 </td>
               </tr>
-            ) : territories.length === 0 ? (
+            ) : displayedTerritories.length === 0 ? (
               <tr>
                 <td colSpan={6}>
                   <div className="flex flex-col items-center justify-center py-16">
@@ -104,9 +134,9 @@ export default function TerritoryList() {
                       No Territories Found
                     </h3>
                     <p className="mt-2 text-slate-500">
-                      Create your first territory to get started.
+                      No territory records assigned to your branch.
                     </p>
-                    {!isHeadOfSales && (
+                    {canManageTerritory && (
                       <button
                         onClick={() => setShowModal(true)}
                         className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
@@ -118,7 +148,7 @@ export default function TerritoryList() {
                 </td>
               </tr>
             ) : (
-              territories.map((territory) => (
+              displayedTerritories.map((territory) => (
                 <tr key={territory.id} className="border-t hover:bg-slate-50 transition">
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">

@@ -62,18 +62,38 @@ export default function ReportsPage() {
   const topProducts = analytics?.topSellingProducts || [];
   const topEmployees = analytics?.topPerformingEmployees || [];
 
+  const { user } = useAuth();
+
+  const isSalesManager = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+  }, [user]);
+
+  const pageTitle = isSalesManager
+    ? `${user?.branch?.name || "Branch"} Performance & Sales Reports`
+    : "Organization & Sales Reports";
+
+  const pageSubtitle = isSalesManager
+    ? "Branch revenue, sales orders, customer reach, and staff performance analytics"
+    : "System-wide revenue, sales orders, customer, product, and field force reports";
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-4">
         <Loader2 size={40} className="animate-spin text-blue-600" />
-        <p className="text-sm text-slate-500 font-medium">Generating organization reports & field analytics...</p>
+        <p className="text-sm text-slate-500 font-medium">
+          {isSalesManager ? "Generating branch reports & performance analytics..." : "Generating organization reports & field analytics..."}
+        </p>
       </div>
     );
   }
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-      <PageHeader title="Organization & Sales Reports" subtitle="System-wide revenue, sales orders, customer, product, and field force reports">
+      <PageHeader title={pageTitle} subtitle={pageSubtitle}>
         <div className="flex items-center gap-3">
           <button
             onClick={loadReportsData}

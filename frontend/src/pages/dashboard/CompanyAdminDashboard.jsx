@@ -75,7 +75,7 @@ export default function CompanyAdminDashboard() {
             </div>
             <div>
               <span className="block text-xs font-semibold text-indigo-200 uppercase tracking-wider">Active Enterprise</span>
-              <span className="block text-base font-bold text-white">IT Software</span>
+              <span className="block text-base font-bold text-white">{user?.organization?.name || user?.organizationName || "Company Organization"}</span>
             </div>
           </div>
         </div>

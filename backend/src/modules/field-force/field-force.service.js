@@ -70,7 +70,143 @@ export class FieldForceService {
   }
 
   async createTask(organizationId, userId, data) {
-    const task = await this.repo.createTask(organizationId, userId, data);
+    const { prisma } = await import('../../config/database.js');
+    const { locationService } = await import('../../services/location.service.js');
+
+    const taskPayload = { ...data };
+
+    // 1. Populate Pickup Location: Primary = data.pickupAddress (Sales Manager input), Fallback = Branch
+    if (data.pickupAddress && typeof data.pickupAddress === 'string' && data.pickupAddress.trim().length > 0) {
+      const inputPickupAddress = data.pickupAddress.trim();
+      let pLat = data.pickupLatitude ? Number(data.pickupLatitude) : null;
+      let pLng = data.pickupLongitude ? Number(data.pickupLongitude) : null;
+      let formattedAddress = inputPickupAddress;
+
+      if (pLat == null || pLng == null) {
+        try {
+          const geo = await locationService.geocodeAddress(inputPickupAddress);
+          if (geo?.latitude && geo?.longitude) {
+            pLat = geo.latitude;
+            pLng = geo.longitude;
+            if (geo.address) {
+              formattedAddress = geo.address;
+            }
+          }
+        } catch (e) {
+          console.warn('TomTom pickup location geocoding warning:', e.message);
+        }
+
+        // Backup Geocoding Fallback via OpenStreetMap Nominatim
+        if (pLat == null || pLng == null) {
+          try {
+            const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(inputPickupAddress)}&limit=1`, {
+              headers: { 'Accept-Language': 'en', 'User-Agent': 'SFA-FieldForceApp/1.0' }
+            });
+            const geoData = await geoRes.json();
+            if (Array.isArray(geoData) && geoData.length > 0) {
+              pLat = parseFloat(geoData[0].lat);
+              pLng = parseFloat(geoData[0].lon);
+            }
+          } catch (e) {
+            console.warn('Backup Nominatim geocoding failed:', e.message);
+          }
+        }
+      }
+
+      taskPayload.pickupAddress = formattedAddress;
+      taskPayload.pickupLatitude = pLat;
+      taskPayload.pickupLongitude = pLng;
+    } else {
+      // Fallback: Populate Pickup Location from selected/assigned Branch
+      const managerUser = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          branchId: true,
+          branch: {
+            select: { id: true, name: true, address: true, city: true, state: true, country: true, latitude: true, longitude: true }
+          }
+        }
+      });
+
+      const targetBranch = data.branchId
+        ? await prisma.branch.findUnique({ where: { id: data.branchId } })
+        : managerUser?.branch;
+
+      if (targetBranch) {
+        let bLat = targetBranch.latitude;
+        let bLng = targetBranch.longitude;
+        const bAddrStr = [targetBranch.address, targetBranch.city, targetBranch.state, targetBranch.country].filter(Boolean).join(', ');
+
+        if ((!bLat || !bLng) && bAddrStr) {
+          try {
+            const geo = await locationService.geocodeAddress(bAddrStr);
+            bLat = geo.latitude;
+            bLng = geo.longitude;
+            await prisma.branch.update({ where: { id: targetBranch.id }, data: { latitude: bLat, longitude: bLng } });
+          } catch (e) {
+            // Retain address string if geocoding fails
+          }
+        }
+
+        taskPayload.pickupAddress = bAddrStr || targetBranch.name || 'Branch Location';
+        taskPayload.pickupLatitude = bLat;
+        taskPayload.pickupLongitude = bLng;
+      }
+    }
+
+    // 2. Automatically populate Destination Location from Customer
+    let targetCustomerId = data.customerId || (data.referenceType === 'CUSTOMER' ? data.referenceId : null);
+    if (!targetCustomerId && (data.referenceType === 'ORDER' || data.orderId || data.referenceId)) {
+      const orderIdToLookup = data.orderId || data.referenceId;
+      if (orderIdToLookup) {
+        const orderRecord = await prisma.order.findUnique({
+          where: { id: orderIdToLookup },
+          select: { customerId: true }
+        });
+        if (orderRecord?.customerId) {
+          targetCustomerId = orderRecord.customerId;
+        }
+      }
+    }
+
+    if (targetCustomerId) {
+      const customer = await prisma.customer.findUnique({ where: { id: targetCustomerId } });
+      if (customer) {
+        let cLat = customer.latitude;
+        let cLng = customer.longitude;
+
+        let cAddrStr = null;
+        if (typeof customer.address === 'string') {
+          cAddrStr = customer.address;
+        } else if (typeof customer.address === 'object' && customer.address) {
+          const parts = [
+            customer.address.street || customer.address.addressLine1 || customer.address.address,
+            customer.address.city,
+            customer.address.state,
+            customer.address.postalCode || customer.address.zipCode,
+            customer.address.country
+          ].filter(Boolean);
+          cAddrStr = parts.join(', ');
+        }
+
+        if ((!cLat || !cLng) && cAddrStr) {
+          try {
+            const geo = await locationService.geocodeAddress(cAddrStr);
+            cLat = geo.latitude;
+            cLng = geo.longitude;
+            await prisma.customer.update({ where: { id: customer.id }, data: { latitude: cLat, longitude: cLng } });
+          } catch (e) {
+            // Retain address string if geocoding fails
+          }
+        }
+
+        taskPayload.destinationAddress = cAddrStr || customer.name || 'Customer Destination';
+        taskPayload.destinationLatitude = cLat;
+        taskPayload.destinationLongitude = cLng;
+      }
+    }
+
+    const task = await this.repo.createTask(organizationId, userId, taskPayload);
     try {
       const { notificationsService } = await import('../notifications/notifications.routes.js');
       if (task?.assignedToId) {
@@ -327,7 +463,106 @@ export class FieldForceService {
   async getTask(taskId, organizationId) {
     const task = await this.repo.getTask(taskId, organizationId);
     if (!task) throw AppError.notFound('Task not found');
-    return task;
+
+    const metadata = (typeof task.metadata === 'object' && task.metadata !== null) ? { ...task.metadata } : {};
+
+    const orderId = task.referenceId || metadata.orderId || metadata.order?.id;
+    if (orderId) {
+      try {
+        const { prisma } = await import('../../config/database.js');
+        const order = await prisma.order.findUnique({
+          where: { id: orderId },
+          include: {
+            customer: { select: { id: true, name: true, email: true, phone: true, address: true } },
+            items: { include: { product: true } }
+          }
+        });
+        if (order) {
+          metadata.order = {
+            id: order.id,
+            orderNumber: order.orderNumber,
+            orderName: order.orderName || order.orderNumber,
+            status: order.status,
+            totalAmount: order.totalAmount,
+            total: order.totalAmount,
+            createdAt: order.createdAt,
+            customer: order.customer,
+            items: order.items.map(item => ({
+              id: item.id,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+              description: item.description,
+              name: item.product?.name || item.description,
+              sku: item.product?.sku
+            }))
+          };
+          metadata.orderId = order.id;
+
+          if (order.customer && !metadata.customer) {
+            metadata.customer = order.customer;
+          }
+          if (order.items && order.items.length > 0 && (!metadata.products || metadata.products.length === 0)) {
+            metadata.products = order.items.map(item => ({
+              id: item.id,
+              quantity: item.quantity,
+              unitPrice: item.unitPrice,
+              name: item.product?.name || item.description,
+              sku: item.product?.sku
+            }));
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to populate linked order for task:', e);
+      }
+    }
+
+    // Always refresh pickup location from current branch data
+    // so changes to branch address are reflected immediately
+    try {
+      const { prisma } = await import('../../config/database.js');
+      const assignedByUser = await prisma.user.findUnique({
+        where: { id: task.assignedById },
+        select: {
+          branchId: true,
+          branch: {
+            select: { id: true, name: true, address: true, city: true, state: true, country: true, latitude: true, longitude: true }
+          }
+        }
+      });
+
+      const branch = assignedByUser?.branch;
+      if (branch) {
+        const freshAddr = [branch.address, branch.city, branch.state, branch.country].filter(Boolean).join(', ');
+        if (freshAddr || branch.latitude || branch.longitude) {
+          task.pickupAddress = freshAddr || branch.name || task.pickupAddress || 'Branch Location';
+          task.pickupLatitude = branch.latitude ?? task.pickupLatitude;
+          task.pickupLongitude = branch.longitude ?? task.pickupLongitude;
+
+          // Silently persist updated pickup coords back to task row
+          if (
+            task.pickupAddress !== freshAddr ||
+            task.pickupLatitude !== branch.latitude ||
+            task.pickupLongitude !== branch.longitude
+          ) {
+            await prisma.task.update({
+              where: { id: task.id },
+              data: {
+                pickupAddress: task.pickupAddress,
+                pickupLatitude: task.pickupLatitude,
+                pickupLongitude: task.pickupLongitude
+              }
+            }).catch(() => {}); // fire-and-forget, don't block response
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to refresh pickup from branch in getTask:', e.message);
+    }
+
+    return {
+      ...task,
+      metadata
+    };
   }
 
   async listTasks(organizationId, filters = {}) {
@@ -382,7 +617,17 @@ export class FieldForceService {
     }
     if (status === 'PHOTO_UPLOADED') {
       updateFields.photoUploadedAt = now;
-      if (photoUrl) updateFields.photos = photoUrl;
+      if (photoUrl) {
+        // Always store as JSON array so frontend can render multiple photos later
+        const existingPhotos = Array.isArray(task.photos) ? task.photos : (task.photos ? [task.photos] : []);
+        if (!existingPhotos.includes(photoUrl)) existingPhotos.push(photoUrl);
+        updateFields.photos = existingPhotos;
+      }
+      // Also capture visit notes if provided alongside photo upload
+      if (notes) {
+        updateFields.visitNotes = notes;
+        updateFields.visitNotesCompletedAt = now;
+      }
     }
     if (status === 'VISIT_NOTES_COMPLETED') {
       updateFields.visitNotesCompletedAt = now;
@@ -460,9 +705,9 @@ export class FieldForceService {
     const location = metadata.location || {};
     const destination = metadata.destination || {};
 
-    let destLat = customer.lat ?? location.lat ?? destination.lat ?? metadata.latitude;
-    let destLng = customer.lng ?? location.lng ?? destination.lng ?? metadata.longitude;
-    let address = customer.address || location.address || destination.address || metadata.address || customer.name || 'Customer Location';
+    let destLat = task.destinationLatitude ?? customer.lat ?? location.lat ?? destination.lat ?? metadata.latitude;
+    let destLng = task.destinationLongitude ?? customer.lng ?? location.lng ?? destination.lng ?? metadata.longitude;
+    let address = task.destinationAddress || customer.address || location.address || destination.address || metadata.address || customer.name || 'Customer Location';
 
     // If coordinates are missing on legacy tasks, perform real-time geocoding fallback if address exists
     if ((destLat == null || destLng == null) && address && address !== 'Customer Location') {
@@ -483,15 +728,47 @@ export class FieldForceService {
     if (destLat == null) destLat = 22.7196;
     if (destLng == null) destLng = 75.8577;
 
-    const originLat = userLocation?.lat ?? (destLat - 0.008);
-    const originLng = userLocation?.lng ?? (destLng - 0.008);
+    let originLat = userLocation?.lat ?? task.pickupLatitude;
+    let originLng = userLocation?.lng ?? task.pickupLongitude;
+    let pickupAddress = task.pickupAddress || 'Pickup Location';
 
-    const distanceMeters = calculateHaversineDistance(originLat, originLng, destLat, destLng);
+    if ((originLat == null || originLng == null) && pickupAddress && pickupAddress !== 'Pickup Location') {
+      try {
+        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(pickupAddress)}&limit=1`, {
+          headers: { 'Accept-Language': 'en', 'User-Agent': 'SFA-FieldForceApp/1.0' }
+        });
+        const geoData = await geoRes.json();
+        if (Array.isArray(geoData) && geoData.length > 0) {
+          originLat = parseFloat(geoData[0].lat);
+          originLng = parseFloat(geoData[0].lon);
+        }
+      } catch (e) {
+        console.warn('Backend pickup geocoding fallback failed:', e);
+      }
+    }
+
+    if (originLat == null || originLng == null) {
+      originLat = destLat - 0.008;
+      originLng = destLng - 0.008;
+    }
+
+    let pickupLat = task.pickupLatitude;
+    let pickupLng = task.pickupLongitude;
+
+    let distanceMeters = 0;
+    if (userLocation?.lat && userLocation?.lng && pickupLat != null && pickupLng != null) {
+      const execToPickup = calculateHaversineDistance(userLocation.lat, userLocation.lng, pickupLat, pickupLng);
+      const pickupToDest = calculateHaversineDistance(pickupLat, pickupLng, destLat, destLng);
+      distanceMeters = Math.round(execToPickup + pickupToDest);
+    } else {
+      distanceMeters = calculateHaversineDistance(originLat, originLng, destLat, destLng);
+    }
     const estimatedMinutes = Math.max(1, Math.round((distanceMeters / 1000) * 3));
 
     return {
       taskId,
       origin: { lat: originLat, lng: originLng },
+      pickup: { lat: pickupLat ?? originLat, lng: pickupLng ?? originLng, address: pickupAddress },
       destination: { lat: destLat, lng: destLng, address },
       distanceMeters,
       distanceKm: (distanceMeters / 1000).toFixed(2),

@@ -15,6 +15,16 @@ export class AuthUserDto {
     this.teamId = user.teamId || null;
     this.territoryId = user.territoryId || null;
     
+    this.organization = user.organization
+      ? { id: user.organization.id, name: user.organization.name, slug: user.organization.slug }
+      : null;
+    this.branch = user.branch
+      ? { id: user.branch.id, name: user.branch.name, code: user.branch.code }
+      : null;
+    this.department = user.department
+      ? { id: user.department.id, name: user.department.name, code: user.department.code }
+      : null;
+
     this.email = user.email;
     this.firstName = user.firstName;
     this.lastName = user.lastName;

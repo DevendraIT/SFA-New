@@ -93,56 +93,69 @@ export class DashboardService {
     };
   }
 
-  async getExecutiveDashboard(userParam) {
-
-    const organizationId = typeof userParam === 'object' ? userParam.organizationId : userParam;
-    const userId = typeof userParam === 'object' ? userParam.id : null;
-
+  async getExecutiveDashboard(user) {
+    const { organizationId, id: userId, branchId } = user;
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
     const [
       visitMetricsAll,
       visitMetricsToday,
-      targetMetrics,
-      orderMetrics,
+      targetMetricsRaw,
+      orderMetricsRaw,
       taskMetrics,
       todayTaskCount,
       customerCount,
       attendanceRecord,
       recentOrdersList,
-      organizationInfo
+      organizationInfo,
+      branchOrderMetrics,
+      orgTargets,
+      executiveTasks
     ] = await Promise.all([
       this.repo.getVisitMetrics(organizationId, userId, null, null),
       this.repo.getVisitMetrics(organizationId, userId, todayStart, todayEnd),
       this.repo.getTargetMetrics(organizationId, userId),
-      this.repo.getOrderMetrics(organizationId, userId, firstDayOfMonth, now),
+      this.repo.getOrderMetrics(organizationId, userId, null, null),
       this.repo.getTaskMetrics(organizationId, userId),
       this.repo.getTodayTaskCount(organizationId, userId),
       this.repo.getExecutiveCustomerCount(organizationId, userId),
       this.repo.getExecutiveAttendance(organizationId, userId, now),
       this.repo.getExecutiveRecentOrders(organizationId, userId),
       this.repo.getExecutiveOrganizationAndManagerInfo(userId),
+      this.repo.getManagerOrderMetrics(organizationId, null, branchId, null, null, null),
+      this.repo.getTargetMetrics(organizationId, null),
+      this.repo.getManagerTasks(organizationId, userId, branchId, null),
     ]);
 
     const formattedAllVisits = this._formatGroupBy(visitMetricsAll, 'status');
     const formattedTodayVisits = this._formatGroupBy(visitMetricsToday, 'status');
-    const formattedOrders = this._formatOrderGroupBy(orderMetrics, 'status');
+
+    const effectiveOrderMetrics = (orderMetricsRaw && orderMetricsRaw.length > 0) ? orderMetricsRaw : branchOrderMetrics;
+    const formattedOrders = this._formatOrderGroupBy(effectiveOrderMetrics, 'status');
+
+    const effectiveTargets = (targetMetricsRaw && targetMetricsRaw.length > 0) ? targetMetricsRaw : orgTargets;
 
     const completedVisits = (formattedAllVisits['COMPLETED'] || 0) + (formattedTodayVisits['COMPLETED'] || 0);
     const pendingVisits = (formattedAllVisits['PLANNED'] || 0) + (formattedTodayVisits['PLANNED'] || 0) + (formattedTodayVisits['IN_PROGRESS'] || 0);
     const todayVisitsCount = Object.values(formattedTodayVisits).reduce((a, b) => a + b, 0);
 
-    const approvedOrders = formattedOrders['APPROVED']?.count || 0;
+    const approvedOrders = (formattedOrders['APPROVED']?.count || 0) + (formattedOrders['CONFIRMED']?.count || 0) + (formattedOrders['COMPLETED']?.count || 0);
     const pendingOrders = (formattedOrders['PENDING']?.count || 0) + (formattedOrders['DRAFT']?.count || 0);
     const totalOrdersCount = Object.values(formattedOrders).reduce((sum, item) => sum + (item.count || 0), 0);
+
+    const taskSummary = this._formatTaskSummary(taskMetrics, todayTaskCount);
 
     return {
       todayVisits: todayVisitsCount,
       pendingVisits,
       completedVisits,
+      todayTasks: taskSummary.todaysTasks || 0,
+      pendingTasks: taskSummary.pending || 0,
+      completedTasks: taskSummary.completed || 0,
+      inProgressTasks: taskSummary.inProgress || 0,
+      totalTasks: taskSummary.assigned || 0,
       totalAssignedCustomers: customerCount,
       totalSalesOrders: totalOrdersCount,
       approvedOrders,
@@ -152,15 +165,16 @@ export class DashboardService {
       checkOutTime: attendanceRecord?.checkOutTime || null,
       organizationInfo,
       myVisits: formattedTodayVisits,
-      myTargets: targetMetrics,
+      myTargets: effectiveTargets,
       myOrders: formattedOrders,
-      myTasks: this._formatTaskSummary(taskMetrics, todayTaskCount),
+      myTasks: taskSummary,
+      recentTasks: executiveTasks || [],
       recentOrders: recentOrdersList,
 
       recentActivities: [
         { title: "Dashboard Accessed", description: "Personal sales dashboard loaded", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), completed: true },
-        { title: "Today's Schedule", description: `${todayVisitsCount} visit(s) scheduled for today`, time: "Today" },
-        { title: "Order Overview", description: `${approvedOrders} approved order(s) placed`, time: "Today" },
+        { title: "Branch Scope", description: `Active under ${organizationInfo?.branchName || 'Branch'}`, time: "Today" },
+        { title: "Tasks & Orders", description: `${taskSummary.completed || 0} task(s) completed, ${totalOrdersCount} order(s) active`, time: "Today" },
       ],
     };
   }
@@ -361,18 +375,17 @@ export class DashboardService {
 
 
   async getManagerDashboard(user) {
-
-    const { organizationId, id: userId, branchId, departmentId } = user;
+    let { organizationId, id: userId, branchId, departmentId } = user;
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
     const [
       totalSalesExecutives,
       totalTeams,
       totalCustomers,
       orderMetrics,
+      todayOrderMetrics,
       todayVisitMetrics,
       allVisitMetrics,
       attendanceRaw,
@@ -384,20 +397,21 @@ export class DashboardService {
     ] = await Promise.all([
       this.repo.getManagerUserCount(organizationId, null, branchId, departmentId),
       this.repo.getManagerTeamCount(organizationId, branchId, departmentId),
-      this.repo.getManagerCustomerCount(organizationId, null),
-      this.repo.getManagerOrderMetrics(organizationId, null, branchId, departmentId, firstDayOfMonth, now),
+      this.repo.getManagerCustomerCount(organizationId, branchId),
+      this.repo.getManagerOrderMetrics(organizationId, null, branchId, departmentId, null, null),
+      this.repo.getManagerOrderMetrics(organizationId, null, branchId, departmentId, todayStart, todayEnd),
       this.repo.getManagerVisitMetrics(organizationId, null, branchId, departmentId, todayStart, todayEnd),
       this.repo.getManagerVisitMetrics(organizationId, null, branchId, departmentId, null, null),
       this.repo.getManagerAttendanceMetrics(organizationId, null, branchId, departmentId, now),
-      this.repo.getTaskMetrics(organizationId, null, userId),
-      this.repo.getTodayTaskCount(organizationId, null, userId),
+      this.repo.getTaskMetrics(organizationId, null, userId, branchId),
+      this.repo.getTodayTaskCount(organizationId, null, userId, branchId),
       this.repo.getManagerTasks(organizationId, userId, branchId, departmentId),
       this.repo.getTargetMetrics(organizationId),
-      this.repo.getManagerOrganizationInfo(branchId, departmentId),
+      this.repo.getManagerOrganizationInfo(branchId, departmentId, organizationId),
     ]);
 
-
     const formattedOrders = this._formatOrderGroupBy(orderMetrics, 'status');
+    const formattedTodayOrders = this._formatOrderGroupBy(todayOrderMetrics, 'status');
     const todayVisitsFormatted = this._formatGroupBy(todayVisitMetrics, 'status');
     const allVisitsFormatted = this._formatGroupBy(allVisitMetrics, 'status');
     const attendanceFormatted = this._formatAttendance(attendanceRaw, totalSalesExecutives);
@@ -406,10 +420,14 @@ export class DashboardService {
     const pendingVisits = (allVisitsFormatted['PLANNED'] || 0) + (todayVisitsFormatted['PLANNED'] || 0) + (todayVisitsFormatted['IN_PROGRESS'] || 0);
     const todayVisitsCount = Object.values(todayVisitsFormatted).reduce((a, b) => a + b, 0);
 
-    const approvedOrders = formattedOrders['APPROVED']?.count || 0;
-    const pendingOrders = (formattedOrders['PENDING']?.count || 0) + (formattedOrders['DRAFT']?.count || 0);
-    const revenue = (formattedOrders['APPROVED']?.revenue || 0) + (formattedOrders['COMPLETED']?.revenue || 0);
     const totalSalesOrders = Object.values(formattedOrders).reduce((sum, item) => sum + (item.count || 0), 0);
+    const approvedOrders = (formattedOrders['APPROVED']?.count || 0) + (formattedOrders['COMPLETED']?.count || 0) + (formattedOrders['DELIVERED']?.count || 0);
+    const pendingOrders = (formattedOrders['PENDING']?.count || 0) + (formattedOrders['DRAFT']?.count || 0) + (formattedOrders['CONFIRMED']?.count || 0);
+
+    const revenue = Object.values(formattedOrders).reduce((sum, item) => sum + (item.revenue || 0), 0);
+    const todaysRevenue = Object.values(formattedTodayOrders).reduce((sum, item) => sum + (item.revenue || 0), 0);
+
+    const teamTasksSummary = this._formatTaskSummary(taskMetrics, todayTaskCount);
 
     return {
       totalSalesExecutives,
@@ -419,20 +437,25 @@ export class DashboardService {
       todayVisits: todayVisitsCount,
       pendingVisits,
       completedVisits,
+      todayTasks: teamTasksSummary.todaysTasks || 0,
+      pendingTasks: teamTasksSummary.pending || 0,
+      completedTasks: teamTasksSummary.completed || 0,
+      inProgressTasks: teamTasksSummary.inProgress || 0,
+      totalTasks: teamTasksSummary.assigned || 0,
       revenue,
+      todaysRevenue,
       approvedOrders,
       pendingOrders,
       attendance: attendanceFormatted,
       organizationInfo,
       teamVisits: {
-
         COMPLETED: completedVisits,
         PENDING: pendingVisits,
         IN_PROGRESS: todayVisitsFormatted['IN_PROGRESS'] || 0,
       },
       teamTargets: targetMetrics,
       teamOrders: formattedOrders,
-      teamTasks: this._formatTaskSummary(taskMetrics, todayTaskCount),
+      teamTasks: teamTasksSummary,
       recentTasks,
       recentActivities: [
         { title: "Team Dashboard Access", description: `Manager accessed dashboard for scope`, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), completed: true },

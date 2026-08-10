@@ -6414,8 +6414,20 @@ export namespace Prisma {
 
   export type AggregateBranch = {
     _count: BranchCountAggregateOutputType | null
+    _avg: BranchAvgAggregateOutputType | null
+    _sum: BranchSumAggregateOutputType | null
     _min: BranchMinAggregateOutputType | null
     _max: BranchMaxAggregateOutputType | null
+  }
+
+  export type BranchAvgAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type BranchSumAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
   }
 
   export type BranchMinAggregateOutputType = {
@@ -6432,6 +6444,8 @@ export namespace Prisma {
     state: string | null
     country: string | null
     postalCode: string | null
+    latitude: number | null
+    longitude: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6450,6 +6464,8 @@ export namespace Prisma {
     state: string | null
     country: string | null
     postalCode: string | null
+    latitude: number | null
+    longitude: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6468,11 +6484,23 @@ export namespace Prisma {
     state: number
     country: number
     postalCode: number
+    latitude: number
+    longitude: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type BranchAvgAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type BranchSumAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
 
   export type BranchMinAggregateInputType = {
     id?: true
@@ -6488,6 +6516,8 @@ export namespace Prisma {
     state?: true
     country?: true
     postalCode?: true
+    latitude?: true
+    longitude?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6506,6 +6536,8 @@ export namespace Prisma {
     state?: true
     country?: true
     postalCode?: true
+    latitude?: true
+    longitude?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6524,6 +6556,8 @@ export namespace Prisma {
     state?: true
     country?: true
     postalCode?: true
+    latitude?: true
+    longitude?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6567,6 +6601,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: BranchAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BranchSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: BranchMinAggregateInputType
@@ -6597,6 +6643,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: BranchCountAggregateInputType | true
+    _avg?: BranchAvgAggregateInputType
+    _sum?: BranchSumAggregateInputType
     _min?: BranchMinAggregateInputType
     _max?: BranchMaxAggregateInputType
   }
@@ -6615,9 +6663,13 @@ export namespace Prisma {
     state: string | null
     country: string | null
     postalCode: string | null
+    latitude: number | null
+    longitude: number | null
     createdAt: Date
     updatedAt: Date
     _count: BranchCountAggregateOutputType | null
+    _avg: BranchAvgAggregateOutputType | null
+    _sum: BranchSumAggregateOutputType | null
     _min: BranchMinAggregateOutputType | null
     _max: BranchMaxAggregateOutputType | null
   }
@@ -6650,6 +6702,8 @@ export namespace Prisma {
     state?: boolean
     country?: boolean
     postalCode?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -6674,6 +6728,8 @@ export namespace Prisma {
     state?: boolean
     country?: boolean
     postalCode?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -6695,6 +6751,8 @@ export namespace Prisma {
     state?: boolean
     country?: boolean
     postalCode?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -6716,11 +6774,13 @@ export namespace Prisma {
     state?: boolean
     country?: boolean
     postalCode?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "departmentId" | "territoryId" | "name" | "code" | "email" | "phone" | "address" | "city" | "state" | "country" | "postalCode" | "createdAt" | "updatedAt", ExtArgs["result"]["branch"]>
+  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "departmentId" | "territoryId" | "name" | "code" | "email" | "phone" | "address" | "city" | "state" | "country" | "postalCode" | "latitude" | "longitude" | "createdAt" | "updatedAt", ExtArgs["result"]["branch"]>
   export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     department?: boolean | DepartmentDefaultArgs<ExtArgs>
@@ -6763,6 +6823,8 @@ export namespace Prisma {
       state: string | null
       country: string | null
       postalCode: string | null
+      latitude: number | null
+      longitude: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["branch"]>
@@ -7206,6 +7268,8 @@ export namespace Prisma {
     readonly state: FieldRef<"Branch", 'String'>
     readonly country: FieldRef<"Branch", 'String'>
     readonly postalCode: FieldRef<"Branch", 'String'>
+    readonly latitude: FieldRef<"Branch", 'Float'>
+    readonly longitude: FieldRef<"Branch", 'Float'>
     readonly createdAt: FieldRef<"Branch", 'DateTime'>
     readonly updatedAt: FieldRef<"Branch", 'DateTime'>
   }
@@ -21161,8 +21225,20 @@ export namespace Prisma {
 
   export type AggregateCustomer = {
     _count: CustomerCountAggregateOutputType | null
+    _avg: CustomerAvgAggregateOutputType | null
+    _sum: CustomerSumAggregateOutputType | null
     _min: CustomerMinAggregateOutputType | null
     _max: CustomerMaxAggregateOutputType | null
+  }
+
+  export type CustomerAvgAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type CustomerSumAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
   }
 
   export type CustomerMinAggregateOutputType = {
@@ -21172,6 +21248,8 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     industry: string | null
+    latitude: number | null
+    longitude: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21183,6 +21261,8 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     industry: string | null
+    latitude: number | null
+    longitude: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21195,11 +21275,23 @@ export namespace Prisma {
     phone: number
     industry: number
     address: number
+    latitude: number
+    longitude: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type CustomerAvgAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type CustomerSumAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
 
   export type CustomerMinAggregateInputType = {
     id?: true
@@ -21208,6 +21300,8 @@ export namespace Prisma {
     email?: true
     phone?: true
     industry?: true
+    latitude?: true
+    longitude?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21219,6 +21313,8 @@ export namespace Prisma {
     email?: true
     phone?: true
     industry?: true
+    latitude?: true
+    longitude?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21231,6 +21327,8 @@ export namespace Prisma {
     phone?: true
     industry?: true
     address?: true
+    latitude?: true
+    longitude?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -21274,6 +21372,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: CustomerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: CustomerMinAggregateInputType
@@ -21304,6 +21414,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: CustomerCountAggregateInputType | true
+    _avg?: CustomerAvgAggregateInputType
+    _sum?: CustomerSumAggregateInputType
     _min?: CustomerMinAggregateInputType
     _max?: CustomerMaxAggregateInputType
   }
@@ -21316,9 +21428,13 @@ export namespace Prisma {
     phone: string | null
     industry: string | null
     address: JsonValue | null
+    latitude: number | null
+    longitude: number | null
     createdAt: Date
     updatedAt: Date
     _count: CustomerCountAggregateOutputType | null
+    _avg: CustomerAvgAggregateOutputType | null
+    _sum: CustomerSumAggregateOutputType | null
     _min: CustomerMinAggregateOutputType | null
     _max: CustomerMaxAggregateOutputType | null
   }
@@ -21345,6 +21461,8 @@ export namespace Prisma {
     phone?: boolean
     industry?: boolean
     address?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -21361,6 +21479,8 @@ export namespace Prisma {
     phone?: boolean
     industry?: boolean
     address?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -21374,6 +21494,8 @@ export namespace Prisma {
     phone?: boolean
     industry?: boolean
     address?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -21387,11 +21509,13 @@ export namespace Prisma {
     phone?: boolean
     industry?: boolean
     address?: boolean
+    latitude?: boolean
+    longitude?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "email" | "phone" | "industry" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "email" | "phone" | "industry" | "address" | "latitude" | "longitude" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
@@ -21420,6 +21544,8 @@ export namespace Prisma {
       phone: string | null
       industry: string | null
       address: Prisma.JsonValue | null
+      latitude: number | null
+      longitude: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["customer"]>
@@ -21855,6 +21981,8 @@ export namespace Prisma {
     readonly phone: FieldRef<"Customer", 'String'>
     readonly industry: FieldRef<"Customer", 'String'>
     readonly address: FieldRef<"Customer", 'Json'>
+    readonly latitude: FieldRef<"Customer", 'Float'>
+    readonly longitude: FieldRef<"Customer", 'Float'>
     readonly createdAt: FieldRef<"Customer", 'DateTime'>
     readonly updatedAt: FieldRef<"Customer", 'DateTime'>
   }
@@ -23527,6 +23655,7 @@ export namespace Prisma {
     id: string | null
     organizationId: string | null
     orderNumber: string | null
+    orderName: string | null
     customerId: string | null
     ownerId: string | null
     branchId: string | null
@@ -23548,6 +23677,7 @@ export namespace Prisma {
     id: string | null
     organizationId: string | null
     orderNumber: string | null
+    orderName: string | null
     customerId: string | null
     ownerId: string | null
     branchId: string | null
@@ -23569,6 +23699,7 @@ export namespace Prisma {
     id: number
     organizationId: number
     orderNumber: number
+    orderName: number
     customerId: number
     ownerId: number
     branchId: number
@@ -23600,6 +23731,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     orderNumber?: true
+    orderName?: true
     customerId?: true
     ownerId?: true
     branchId?: true
@@ -23621,6 +23753,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     orderNumber?: true
+    orderName?: true
     customerId?: true
     ownerId?: true
     branchId?: true
@@ -23642,6 +23775,7 @@ export namespace Prisma {
     id?: true
     organizationId?: true
     orderNumber?: true
+    orderName?: true
     customerId?: true
     ownerId?: true
     branchId?: true
@@ -23750,6 +23884,7 @@ export namespace Prisma {
     id: string
     organizationId: string
     orderNumber: string
+    orderName: string | null
     customerId: string
     ownerId: string
     branchId: string | null
@@ -23790,6 +23925,7 @@ export namespace Prisma {
     id?: boolean
     organizationId?: boolean
     orderNumber?: boolean
+    orderName?: boolean
     customerId?: boolean
     ownerId?: boolean
     branchId?: boolean
@@ -23818,6 +23954,7 @@ export namespace Prisma {
     id?: boolean
     organizationId?: boolean
     orderNumber?: boolean
+    orderName?: boolean
     customerId?: boolean
     ownerId?: boolean
     branchId?: boolean
@@ -23842,6 +23979,7 @@ export namespace Prisma {
     id?: boolean
     organizationId?: boolean
     orderNumber?: boolean
+    orderName?: boolean
     customerId?: boolean
     ownerId?: boolean
     branchId?: boolean
@@ -23866,6 +24004,7 @@ export namespace Prisma {
     id?: boolean
     organizationId?: boolean
     orderNumber?: boolean
+    orderName?: boolean
     customerId?: boolean
     ownerId?: boolean
     branchId?: boolean
@@ -23883,7 +24022,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "orderNumber" | "customerId" | "ownerId" | "branchId" | "territoryId" | "status" | "totalAmount" | "currency" | "statusChangedAt" | "statusChangedBy" | "statusChangeReason" | "isDeleted" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "orderNumber" | "orderName" | "customerId" | "ownerId" | "branchId" | "territoryId" | "status" | "totalAmount" | "currency" | "statusChangedAt" | "statusChangedBy" | "statusChangeReason" | "isDeleted" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
@@ -23918,6 +24057,7 @@ export namespace Prisma {
       id: string
       organizationId: string
       orderNumber: string
+      orderName: string | null
       customerId: string
       ownerId: string
       branchId: string | null
@@ -24365,6 +24505,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Order", 'String'>
     readonly organizationId: FieldRef<"Order", 'String'>
     readonly orderNumber: FieldRef<"Order", 'String'>
+    readonly orderName: FieldRef<"Order", 'String'>
     readonly customerId: FieldRef<"Order", 'String'>
     readonly ownerId: FieldRef<"Order", 'String'>
     readonly branchId: FieldRef<"Order", 'String'>
@@ -34125,10 +34266,18 @@ export namespace Prisma {
   }
 
   export type TaskAvgAggregateOutputType = {
+    pickupLatitude: number | null
+    pickupLongitude: number | null
+    destinationLatitude: number | null
+    destinationLongitude: number | null
     paymentAmount: number | null
   }
 
   export type TaskSumAggregateOutputType = {
+    pickupLatitude: number | null
+    pickupLongitude: number | null
+    destinationLatitude: number | null
+    destinationLongitude: number | null
     paymentAmount: number | null
   }
 
@@ -34146,6 +34295,12 @@ export namespace Prisma {
     referenceType: string | null
     referenceId: string | null
     completionNotes: string | null
+    pickupAddress: string | null
+    pickupLatitude: number | null
+    pickupLongitude: number | null
+    destinationAddress: string | null
+    destinationLatitude: number | null
+    destinationLongitude: number | null
     acceptedAt: Date | null
     startedAt: Date | null
     navigatingAt: Date | null
@@ -34180,6 +34335,12 @@ export namespace Prisma {
     referenceType: string | null
     referenceId: string | null
     completionNotes: string | null
+    pickupAddress: string | null
+    pickupLatitude: number | null
+    pickupLongitude: number | null
+    destinationAddress: string | null
+    destinationLatitude: number | null
+    destinationLongitude: number | null
     acceptedAt: Date | null
     startedAt: Date | null
     navigatingAt: Date | null
@@ -34214,6 +34375,12 @@ export namespace Prisma {
     referenceType: number
     referenceId: number
     completionNotes: number
+    pickupAddress: number
+    pickupLatitude: number
+    pickupLongitude: number
+    destinationAddress: number
+    destinationLatitude: number
+    destinationLongitude: number
     metadata: number
     acceptedAt: number
     startedAt: number
@@ -34243,10 +34410,18 @@ export namespace Prisma {
 
 
   export type TaskAvgAggregateInputType = {
+    pickupLatitude?: true
+    pickupLongitude?: true
+    destinationLatitude?: true
+    destinationLongitude?: true
     paymentAmount?: true
   }
 
   export type TaskSumAggregateInputType = {
+    pickupLatitude?: true
+    pickupLongitude?: true
+    destinationLatitude?: true
+    destinationLongitude?: true
     paymentAmount?: true
   }
 
@@ -34264,6 +34439,12 @@ export namespace Prisma {
     referenceType?: true
     referenceId?: true
     completionNotes?: true
+    pickupAddress?: true
+    pickupLatitude?: true
+    pickupLongitude?: true
+    destinationAddress?: true
+    destinationLatitude?: true
+    destinationLongitude?: true
     acceptedAt?: true
     startedAt?: true
     navigatingAt?: true
@@ -34298,6 +34479,12 @@ export namespace Prisma {
     referenceType?: true
     referenceId?: true
     completionNotes?: true
+    pickupAddress?: true
+    pickupLatitude?: true
+    pickupLongitude?: true
+    destinationAddress?: true
+    destinationLatitude?: true
+    destinationLongitude?: true
     acceptedAt?: true
     startedAt?: true
     navigatingAt?: true
@@ -34332,6 +34519,12 @@ export namespace Prisma {
     referenceType?: true
     referenceId?: true
     completionNotes?: true
+    pickupAddress?: true
+    pickupLatitude?: true
+    pickupLongitude?: true
+    destinationAddress?: true
+    destinationLatitude?: true
+    destinationLongitude?: true
     metadata?: true
     acceptedAt?: true
     startedAt?: true
@@ -34459,6 +34652,12 @@ export namespace Prisma {
     referenceType: string | null
     referenceId: string | null
     completionNotes: string | null
+    pickupAddress: string | null
+    pickupLatitude: number | null
+    pickupLongitude: number | null
+    destinationAddress: string | null
+    destinationLatitude: number | null
+    destinationLongitude: number | null
     metadata: JsonValue | null
     acceptedAt: Date | null
     startedAt: Date | null
@@ -34518,6 +34717,12 @@ export namespace Prisma {
     referenceType?: boolean
     referenceId?: boolean
     completionNotes?: boolean
+    pickupAddress?: boolean
+    pickupLatitude?: boolean
+    pickupLongitude?: boolean
+    destinationAddress?: boolean
+    destinationLatitude?: boolean
+    destinationLongitude?: boolean
     metadata?: boolean
     acceptedAt?: boolean
     startedAt?: boolean
@@ -34561,6 +34766,12 @@ export namespace Prisma {
     referenceType?: boolean
     referenceId?: boolean
     completionNotes?: boolean
+    pickupAddress?: boolean
+    pickupLatitude?: boolean
+    pickupLongitude?: boolean
+    destinationAddress?: boolean
+    destinationLatitude?: boolean
+    destinationLongitude?: boolean
     metadata?: boolean
     acceptedAt?: boolean
     startedAt?: boolean
@@ -34604,6 +34815,12 @@ export namespace Prisma {
     referenceType?: boolean
     referenceId?: boolean
     completionNotes?: boolean
+    pickupAddress?: boolean
+    pickupLatitude?: boolean
+    pickupLongitude?: boolean
+    destinationAddress?: boolean
+    destinationLatitude?: boolean
+    destinationLongitude?: boolean
     metadata?: boolean
     acceptedAt?: boolean
     startedAt?: boolean
@@ -34647,6 +34864,12 @@ export namespace Prisma {
     referenceType?: boolean
     referenceId?: boolean
     completionNotes?: boolean
+    pickupAddress?: boolean
+    pickupLatitude?: boolean
+    pickupLongitude?: boolean
+    destinationAddress?: boolean
+    destinationLatitude?: boolean
+    destinationLongitude?: boolean
     metadata?: boolean
     acceptedAt?: boolean
     startedAt?: boolean
@@ -34673,7 +34896,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "assignedById" | "assignedToId" | "title" | "description" | "status" | "priority" | "dueDate" | "completedAt" | "referenceType" | "referenceId" | "completionNotes" | "metadata" | "acceptedAt" | "startedAt" | "navigatingAt" | "arrivedAt" | "checkedInAt" | "checkInLocation" | "deliveryStartedAt" | "paymentCollectedAt" | "paymentAmount" | "paymentMethod" | "paymentStatus" | "photoUploadedAt" | "photos" | "visitNotesCompletedAt" | "visitNotes" | "signatureCapturedAt" | "customerSignature" | "checkedOutAt" | "checkOutLocation" | "gpsLogs" | "executionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "assignedById" | "assignedToId" | "title" | "description" | "status" | "priority" | "dueDate" | "completedAt" | "referenceType" | "referenceId" | "completionNotes" | "pickupAddress" | "pickupLatitude" | "pickupLongitude" | "destinationAddress" | "destinationLatitude" | "destinationLongitude" | "metadata" | "acceptedAt" | "startedAt" | "navigatingAt" | "arrivedAt" | "checkedInAt" | "checkInLocation" | "deliveryStartedAt" | "paymentCollectedAt" | "paymentAmount" | "paymentMethod" | "paymentStatus" | "photoUploadedAt" | "photos" | "visitNotesCompletedAt" | "visitNotes" | "signatureCapturedAt" | "customerSignature" | "checkedOutAt" | "checkOutLocation" | "gpsLogs" | "executionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedBy?: boolean | UserDefaultArgs<ExtArgs>
@@ -34711,6 +34934,12 @@ export namespace Prisma {
       referenceType: string | null
       referenceId: string | null
       completionNotes: string | null
+      pickupAddress: string | null
+      pickupLatitude: number | null
+      pickupLongitude: number | null
+      destinationAddress: string | null
+      destinationLatitude: number | null
+      destinationLongitude: number | null
       metadata: Prisma.JsonValue | null
       acceptedAt: Date | null
       startedAt: Date | null
@@ -35174,6 +35403,12 @@ export namespace Prisma {
     readonly referenceType: FieldRef<"Task", 'String'>
     readonly referenceId: FieldRef<"Task", 'String'>
     readonly completionNotes: FieldRef<"Task", 'String'>
+    readonly pickupAddress: FieldRef<"Task", 'String'>
+    readonly pickupLatitude: FieldRef<"Task", 'Float'>
+    readonly pickupLongitude: FieldRef<"Task", 'Float'>
+    readonly destinationAddress: FieldRef<"Task", 'String'>
+    readonly destinationLatitude: FieldRef<"Task", 'Float'>
+    readonly destinationLongitude: FieldRef<"Task", 'Float'>
     readonly metadata: FieldRef<"Task", 'Json'>
     readonly acceptedAt: FieldRef<"Task", 'DateTime'>
     readonly startedAt: FieldRef<"Task", 'DateTime'>
@@ -42379,6 +42614,8 @@ export namespace Prisma {
     state: 'state',
     country: 'country',
     postalCode: 'postalCode',
+    latitude: 'latitude',
+    longitude: 'longitude',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -42558,6 +42795,8 @@ export namespace Prisma {
     phone: 'phone',
     industry: 'industry',
     address: 'address',
+    latitude: 'latitude',
+    longitude: 'longitude',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -42584,6 +42823,7 @@ export namespace Prisma {
     id: 'id',
     organizationId: 'organizationId',
     orderNumber: 'orderNumber',
+    orderName: 'orderName',
     customerId: 'customerId',
     ownerId: 'ownerId',
     branchId: 'branchId',
@@ -42745,6 +42985,12 @@ export namespace Prisma {
     referenceType: 'referenceType',
     referenceId: 'referenceId',
     completionNotes: 'completionNotes',
+    pickupAddress: 'pickupAddress',
+    pickupLatitude: 'pickupLatitude',
+    pickupLongitude: 'pickupLongitude',
+    destinationAddress: 'destinationAddress',
+    destinationLatitude: 'destinationLatitude',
+    destinationLongitude: 'destinationLongitude',
     metadata: 'metadata',
     acceptedAt: 'acceptedAt',
     startedAt: 'startedAt',
@@ -42940,6 +43186,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -42964,20 +43224,6 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -43312,6 +43558,8 @@ export namespace Prisma {
     state?: StringNullableFilter<"Branch"> | string | null
     country?: StringNullableFilter<"Branch"> | string | null
     postalCode?: StringNullableFilter<"Branch"> | string | null
+    latitude?: FloatNullableFilter<"Branch"> | number | null
+    longitude?: FloatNullableFilter<"Branch"> | number | null
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     updatedAt?: DateTimeFilter<"Branch"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -43335,6 +43583,8 @@ export namespace Prisma {
     state?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     postalCode?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
@@ -43362,6 +43612,8 @@ export namespace Prisma {
     state?: StringNullableFilter<"Branch"> | string | null
     country?: StringNullableFilter<"Branch"> | string | null
     postalCode?: StringNullableFilter<"Branch"> | string | null
+    latitude?: FloatNullableFilter<"Branch"> | number | null
+    longitude?: FloatNullableFilter<"Branch"> | number | null
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     updatedAt?: DateTimeFilter<"Branch"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -43385,11 +43637,15 @@ export namespace Prisma {
     state?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     postalCode?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: BranchCountOrderByAggregateInput
+    _avg?: BranchAvgOrderByAggregateInput
     _max?: BranchMaxOrderByAggregateInput
     _min?: BranchMinOrderByAggregateInput
+    _sum?: BranchSumOrderByAggregateInput
   }
 
   export type BranchScalarWhereWithAggregatesInput = {
@@ -43409,6 +43665,8 @@ export namespace Prisma {
     state?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     country?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     postalCode?: StringNullableWithAggregatesFilter<"Branch"> | string | null
+    latitude?: FloatNullableWithAggregatesFilter<"Branch"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"Branch"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Branch"> | Date | string
   }
@@ -44386,6 +44644,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Customer"> | string | null
     industry?: StringNullableFilter<"Customer"> | string | null
     address?: JsonNullableFilter<"Customer">
+    latitude?: FloatNullableFilter<"Customer"> | number | null
+    longitude?: FloatNullableFilter<"Customer"> | number | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -44401,6 +44661,8 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
@@ -44419,6 +44681,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Customer"> | string | null
     industry?: StringNullableFilter<"Customer"> | string | null
     address?: JsonNullableFilter<"Customer">
+    latitude?: FloatNullableFilter<"Customer"> | number | null
+    longitude?: FloatNullableFilter<"Customer"> | number | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -44434,11 +44698,15 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CustomerCountOrderByAggregateInput
+    _avg?: CustomerAvgOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
     _min?: CustomerMinOrderByAggregateInput
+    _sum?: CustomerSumOrderByAggregateInput
   }
 
   export type CustomerScalarWhereWithAggregatesInput = {
@@ -44452,6 +44720,8 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     address?: JsonNullableWithAggregatesFilter<"Customer">
+    latitude?: FloatNullableWithAggregatesFilter<"Customer"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"Customer"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
   }
@@ -44543,6 +44813,7 @@ export namespace Prisma {
     id?: UuidFilter<"Order"> | string
     organizationId?: UuidFilter<"Order"> | string
     orderNumber?: StringFilter<"Order"> | string
+    orderName?: StringNullableFilter<"Order"> | string | null
     customerId?: UuidFilter<"Order"> | string
     ownerId?: UuidFilter<"Order"> | string
     branchId?: UuidNullableFilter<"Order"> | string | null
@@ -44570,6 +44841,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     orderNumber?: SortOrder
+    orderName?: SortOrderInput | SortOrder
     customerId?: SortOrder
     ownerId?: SortOrder
     branchId?: SortOrderInput | SortOrder
@@ -44600,6 +44872,7 @@ export namespace Prisma {
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
     organizationId?: UuidFilter<"Order"> | string
+    orderName?: StringNullableFilter<"Order"> | string | null
     customerId?: UuidFilter<"Order"> | string
     ownerId?: UuidFilter<"Order"> | string
     branchId?: UuidNullableFilter<"Order"> | string | null
@@ -44627,6 +44900,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     orderNumber?: SortOrder
+    orderName?: SortOrderInput | SortOrder
     customerId?: SortOrder
     ownerId?: SortOrder
     branchId?: SortOrderInput | SortOrder
@@ -44656,6 +44930,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"Order"> | string
     organizationId?: UuidWithAggregatesFilter<"Order"> | string
     orderNumber?: StringWithAggregatesFilter<"Order"> | string
+    orderName?: StringNullableWithAggregatesFilter<"Order"> | string | null
     customerId?: UuidWithAggregatesFilter<"Order"> | string
     ownerId?: UuidWithAggregatesFilter<"Order"> | string
     branchId?: UuidNullableWithAggregatesFilter<"Order"> | string | null
@@ -45353,6 +45628,12 @@ export namespace Prisma {
     referenceType?: StringNullableFilter<"Task"> | string | null
     referenceId?: UuidNullableFilter<"Task"> | string | null
     completionNotes?: StringNullableFilter<"Task"> | string | null
+    pickupAddress?: StringNullableFilter<"Task"> | string | null
+    pickupLatitude?: FloatNullableFilter<"Task"> | number | null
+    pickupLongitude?: FloatNullableFilter<"Task"> | number | null
+    destinationAddress?: StringNullableFilter<"Task"> | string | null
+    destinationLatitude?: FloatNullableFilter<"Task"> | number | null
+    destinationLongitude?: FloatNullableFilter<"Task"> | number | null
     metadata?: JsonNullableFilter<"Task">
     acceptedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     startedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -45396,6 +45677,12 @@ export namespace Prisma {
     referenceType?: SortOrderInput | SortOrder
     referenceId?: SortOrderInput | SortOrder
     completionNotes?: SortOrderInput | SortOrder
+    pickupAddress?: SortOrderInput | SortOrder
+    pickupLatitude?: SortOrderInput | SortOrder
+    pickupLongitude?: SortOrderInput | SortOrder
+    destinationAddress?: SortOrderInput | SortOrder
+    destinationLatitude?: SortOrderInput | SortOrder
+    destinationLongitude?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     acceptedAt?: SortOrderInput | SortOrder
     startedAt?: SortOrderInput | SortOrder
@@ -45442,6 +45729,12 @@ export namespace Prisma {
     referenceType?: StringNullableFilter<"Task"> | string | null
     referenceId?: UuidNullableFilter<"Task"> | string | null
     completionNotes?: StringNullableFilter<"Task"> | string | null
+    pickupAddress?: StringNullableFilter<"Task"> | string | null
+    pickupLatitude?: FloatNullableFilter<"Task"> | number | null
+    pickupLongitude?: FloatNullableFilter<"Task"> | number | null
+    destinationAddress?: StringNullableFilter<"Task"> | string | null
+    destinationLatitude?: FloatNullableFilter<"Task"> | number | null
+    destinationLongitude?: FloatNullableFilter<"Task"> | number | null
     metadata?: JsonNullableFilter<"Task">
     acceptedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     startedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -45485,6 +45778,12 @@ export namespace Prisma {
     referenceType?: SortOrderInput | SortOrder
     referenceId?: SortOrderInput | SortOrder
     completionNotes?: SortOrderInput | SortOrder
+    pickupAddress?: SortOrderInput | SortOrder
+    pickupLatitude?: SortOrderInput | SortOrder
+    pickupLongitude?: SortOrderInput | SortOrder
+    destinationAddress?: SortOrderInput | SortOrder
+    destinationLatitude?: SortOrderInput | SortOrder
+    destinationLongitude?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     acceptedAt?: SortOrderInput | SortOrder
     startedAt?: SortOrderInput | SortOrder
@@ -45533,6 +45832,12 @@ export namespace Prisma {
     referenceType?: StringNullableWithAggregatesFilter<"Task"> | string | null
     referenceId?: UuidNullableWithAggregatesFilter<"Task"> | string | null
     completionNotes?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    pickupAddress?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    pickupLatitude?: FloatNullableWithAggregatesFilter<"Task"> | number | null
+    pickupLongitude?: FloatNullableWithAggregatesFilter<"Task"> | number | null
+    destinationAddress?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    destinationLatitude?: FloatNullableWithAggregatesFilter<"Task"> | number | null
+    destinationLongitude?: FloatNullableWithAggregatesFilter<"Task"> | number | null
     metadata?: JsonNullableWithAggregatesFilter<"Task">
     acceptedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     startedAt?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
@@ -46229,6 +46534,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutBranchesInput
@@ -46252,6 +46559,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
@@ -46269,6 +46578,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
@@ -46292,6 +46603,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
@@ -46312,6 +46625,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -46327,6 +46642,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46345,6 +46662,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47373,6 +47692,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutCustomersInput
@@ -47388,6 +47709,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -47401,6 +47724,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutCustomersNestedInput
@@ -47416,6 +47741,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -47430,6 +47757,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -47441,6 +47770,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47453,6 +47784,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47547,6 +47880,7 @@ export namespace Prisma {
   export type OrderCreateInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     branchId?: string | null
     territoryId?: string | null
     status?: string
@@ -47572,6 +47906,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     ownerId: string
     branchId?: string | null
@@ -47595,6 +47930,7 @@ export namespace Prisma {
   export type OrderUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -47620,6 +47956,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47644,6 +47981,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     ownerId: string
     branchId?: string | null
@@ -47664,6 +48002,7 @@ export namespace Prisma {
   export type OrderUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -47683,6 +48022,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48417,6 +48757,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -48460,6 +48806,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -48497,6 +48849,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -48540,6 +48898,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -48580,6 +48944,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -48617,6 +48987,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -48657,6 +49033,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49553,6 +49935,17 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type OrganizationScalarRelationFilter = {
     is?: OrganizationWhereInput
     isNot?: OrganizationWhereInput
@@ -49587,8 +49980,15 @@ export namespace Prisma {
     state?: SortOrder
     country?: SortOrder
     postalCode?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type BranchAvgOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type BranchMaxOrderByAggregateInput = {
@@ -49605,6 +50005,8 @@ export namespace Prisma {
     state?: SortOrder
     country?: SortOrder
     postalCode?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -49623,8 +50025,31 @@ export namespace Prisma {
     state?: SortOrder
     country?: SortOrder
     postalCode?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type BranchSumOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type DepartmentOrganizationIdCodeCompoundUniqueInput = {
@@ -50312,8 +50737,15 @@ export namespace Prisma {
     phone?: SortOrder
     industry?: SortOrder
     address?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type CustomerAvgOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type CustomerMaxOrderByAggregateInput = {
@@ -50323,6 +50755,8 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     industry?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -50334,8 +50768,15 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     industry?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type CustomerSumOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -50448,6 +50889,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     orderNumber?: SortOrder
+    orderName?: SortOrder
     customerId?: SortOrder
     ownerId?: SortOrder
     branchId?: SortOrder
@@ -50473,6 +50915,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     orderNumber?: SortOrder
+    orderName?: SortOrder
     customerId?: SortOrder
     ownerId?: SortOrder
     branchId?: SortOrder
@@ -50494,6 +50937,7 @@ export namespace Prisma {
     id?: SortOrder
     organizationId?: SortOrder
     orderNumber?: SortOrder
+    orderName?: SortOrder
     customerId?: SortOrder
     ownerId?: SortOrder
     branchId?: SortOrder
@@ -51016,17 +51460,6 @@ export namespace Prisma {
     not?: NestedEnumTaskPriorityFilter<$PrismaModel> | $Enums.TaskPriority
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type TaskCountOrderByAggregateInput = {
     id?: SortOrder
     organizationId?: SortOrder
@@ -51041,6 +51474,12 @@ export namespace Prisma {
     referenceType?: SortOrder
     referenceId?: SortOrder
     completionNotes?: SortOrder
+    pickupAddress?: SortOrder
+    pickupLatitude?: SortOrder
+    pickupLongitude?: SortOrder
+    destinationAddress?: SortOrder
+    destinationLatitude?: SortOrder
+    destinationLongitude?: SortOrder
     metadata?: SortOrder
     acceptedAt?: SortOrder
     startedAt?: SortOrder
@@ -51068,6 +51507,10 @@ export namespace Prisma {
   }
 
   export type TaskAvgOrderByAggregateInput = {
+    pickupLatitude?: SortOrder
+    pickupLongitude?: SortOrder
+    destinationLatitude?: SortOrder
+    destinationLongitude?: SortOrder
     paymentAmount?: SortOrder
   }
 
@@ -51085,6 +51528,12 @@ export namespace Prisma {
     referenceType?: SortOrder
     referenceId?: SortOrder
     completionNotes?: SortOrder
+    pickupAddress?: SortOrder
+    pickupLatitude?: SortOrder
+    pickupLongitude?: SortOrder
+    destinationAddress?: SortOrder
+    destinationLatitude?: SortOrder
+    destinationLongitude?: SortOrder
     acceptedAt?: SortOrder
     startedAt?: SortOrder
     navigatingAt?: SortOrder
@@ -51119,6 +51568,12 @@ export namespace Prisma {
     referenceType?: SortOrder
     referenceId?: SortOrder
     completionNotes?: SortOrder
+    pickupAddress?: SortOrder
+    pickupLatitude?: SortOrder
+    pickupLongitude?: SortOrder
+    destinationAddress?: SortOrder
+    destinationLatitude?: SortOrder
+    destinationLongitude?: SortOrder
     acceptedAt?: SortOrder
     startedAt?: SortOrder
     navigatingAt?: SortOrder
@@ -51140,6 +51595,10 @@ export namespace Prisma {
   }
 
   export type TaskSumOrderByAggregateInput = {
+    pickupLatitude?: SortOrder
+    pickupLongitude?: SortOrder
+    destinationLatitude?: SortOrder
+    destinationLongitude?: SortOrder
     paymentAmount?: SortOrder
   }
 
@@ -51161,22 +51620,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTaskPriorityFilter<$PrismaModel>
     _max?: NestedEnumTaskPriorityFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type BeatPlanCountOrderByAggregateInput = {
@@ -52416,6 +52859,14 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
     createMany?: UserCreateManyBranchInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type OrganizationUpdateOneRequiredWithoutBranchesNestedInput = {
@@ -54782,14 +55233,6 @@ export namespace Prisma {
     set?: $Enums.TaskPriority
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type OrganizationUpdateOneRequiredWithoutTasksNestedInput = {
     create?: XOR<OrganizationCreateWithoutTasksInput, OrganizationUncheckedCreateWithoutTasksInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutTasksInput
@@ -55131,6 +55574,33 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type NestedUuidNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -55170,17 +55640,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -55444,22 +55903,6 @@ export namespace Prisma {
     _max?: NestedEnumTaskPriorityFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type BranchCreateWithoutOrganizationInput = {
     id?: string
     name: string
@@ -55471,6 +55914,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     department: DepartmentCreateNestedOneWithoutBranchesInput
@@ -55492,6 +55937,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
@@ -56045,6 +56492,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -56086,6 +56539,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -56253,6 +56712,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -56266,6 +56727,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -56319,6 +56782,7 @@ export namespace Prisma {
   export type OrderCreateWithoutOrganizationInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     branchId?: string | null
     territoryId?: string | null
     status?: string
@@ -56342,6 +56806,7 @@ export namespace Prisma {
   export type OrderUncheckedCreateWithoutOrganizationInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     ownerId: string
     branchId?: string | null
@@ -56443,6 +56908,8 @@ export namespace Prisma {
     state?: StringNullableFilter<"Branch"> | string | null
     country?: StringNullableFilter<"Branch"> | string | null
     postalCode?: StringNullableFilter<"Branch"> | string | null
+    latitude?: FloatNullableFilter<"Branch"> | number | null
+    longitude?: FloatNullableFilter<"Branch"> | number | null
     createdAt?: DateTimeFilter<"Branch"> | Date | string
     updatedAt?: DateTimeFilter<"Branch"> | Date | string
   }
@@ -56912,6 +57379,12 @@ export namespace Prisma {
     referenceType?: StringNullableFilter<"Task"> | string | null
     referenceId?: UuidNullableFilter<"Task"> | string | null
     completionNotes?: StringNullableFilter<"Task"> | string | null
+    pickupAddress?: StringNullableFilter<"Task"> | string | null
+    pickupLatitude?: FloatNullableFilter<"Task"> | number | null
+    pickupLongitude?: FloatNullableFilter<"Task"> | number | null
+    destinationAddress?: StringNullableFilter<"Task"> | string | null
+    destinationLatitude?: FloatNullableFilter<"Task"> | number | null
+    destinationLongitude?: FloatNullableFilter<"Task"> | number | null
     metadata?: JsonNullableFilter<"Task">
     acceptedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
     startedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
@@ -57087,6 +57560,8 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Customer"> | string | null
     industry?: StringNullableFilter<"Customer"> | string | null
     address?: JsonNullableFilter<"Customer">
+    latitude?: FloatNullableFilter<"Customer"> | number | null
+    longitude?: FloatNullableFilter<"Customer"> | number | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
   }
@@ -57145,6 +57620,7 @@ export namespace Prisma {
     id?: UuidFilter<"Order"> | string
     organizationId?: UuidFilter<"Order"> | string
     orderNumber?: StringFilter<"Order"> | string
+    orderName?: StringNullableFilter<"Order"> | string | null
     customerId?: UuidFilter<"Order"> | string
     ownerId?: UuidFilter<"Order"> | string
     branchId?: UuidNullableFilter<"Order"> | string | null
@@ -57814,6 +58290,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutBranchesInput
@@ -57835,6 +58313,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
@@ -58271,6 +58751,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutBranchesInput
@@ -58292,6 +58774,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
@@ -58718,6 +59202,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutBranchesInput
@@ -58740,6 +59226,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutBranchInput
@@ -59069,6 +59557,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
@@ -59091,6 +59581,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutBranchNestedInput
@@ -59858,6 +60350,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutBranchesInput
@@ -59880,6 +60374,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
@@ -60547,6 +61043,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -60588,6 +61090,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -60635,6 +61143,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -60676,6 +61190,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -60811,6 +61331,7 @@ export namespace Prisma {
   export type OrderCreateWithoutOwnerInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     branchId?: string | null
     territoryId?: string | null
     status?: string
@@ -60835,6 +61356,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     branchId?: string | null
     territoryId?: string | null
@@ -60977,6 +61499,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
@@ -60999,6 +61523,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
@@ -62814,6 +63340,7 @@ export namespace Prisma {
   export type OrderCreateWithoutCustomerInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     branchId?: string | null
     territoryId?: string | null
     status?: string
@@ -62838,6 +63365,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     ownerId: string
     branchId?: string | null
     territoryId?: string | null
@@ -63360,6 +63888,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutCustomersInput
@@ -63374,6 +63904,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     visits?: VisitUncheckedCreateNestedManyWithoutCustomerInput
@@ -63670,6 +64202,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutCustomersNestedInput
@@ -63684,6 +64218,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     visits?: VisitUncheckedUpdateManyWithoutCustomerNestedInput
@@ -63865,6 +64401,7 @@ export namespace Prisma {
   export type OrderCreateWithoutItemsInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     branchId?: string | null
     territoryId?: string | null
     status?: string
@@ -63889,6 +64426,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     ownerId: string
     branchId?: string | null
@@ -63956,6 +64494,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -63980,6 +64519,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64037,6 +64577,7 @@ export namespace Prisma {
   export type OrderCreateWithoutActivitiesInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     branchId?: string | null
     territoryId?: string | null
     status?: string
@@ -64061,6 +64602,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     ownerId: string
     branchId?: string | null
@@ -64099,6 +64641,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutActivitiesInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -64123,6 +64666,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64145,6 +64689,7 @@ export namespace Prisma {
   export type OrderCreateWithoutNotesInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     branchId?: string | null
     territoryId?: string | null
     status?: string
@@ -64169,6 +64714,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     ownerId: string
     branchId?: string | null
@@ -64207,6 +64753,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutNotesInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -64231,6 +64778,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64809,6 +65357,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutCustomersInput
@@ -64823,6 +65373,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -65043,6 +65595,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutCustomersNestedInput
@@ -65057,6 +65611,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -68863,6 +69419,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -69052,6 +69610,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -69127,6 +69691,8 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -69145,6 +69711,7 @@ export namespace Prisma {
   export type OrderCreateManyOrganizationInput = {
     id?: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     ownerId: string
     branchId?: string | null
@@ -69183,6 +69750,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneRequiredWithoutBranchesNestedInput
@@ -69204,6 +69773,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
@@ -69223,6 +69794,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -69806,6 +70379,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69847,6 +70426,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69886,6 +70471,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70045,6 +70636,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -70058,6 +70651,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -70071,6 +70666,8 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -70113,6 +70710,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -70136,6 +70734,7 @@ export namespace Prisma {
   export type OrderUncheckedUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70159,6 +70758,7 @@ export namespace Prisma {
   export type OrderUncheckedUpdateManyWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70430,6 +71030,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -70522,6 +71124,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
@@ -70543,6 +71147,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
@@ -70562,6 +71168,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -70733,6 +71341,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -70786,6 +71396,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
@@ -70807,6 +71419,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
@@ -70826,6 +71440,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71460,6 +72076,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -71499,6 +72121,12 @@ export namespace Prisma {
     referenceType?: string | null
     referenceId?: string | null
     completionNotes?: string | null
+    pickupAddress?: string | null
+    pickupLatitude?: number | null
+    pickupLongitude?: number | null
+    destinationAddress?: string | null
+    destinationLatitude?: number | null
+    destinationLongitude?: number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: Date | string | null
     startedAt?: Date | string | null
@@ -71562,6 +72190,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     customerId: string
     branchId?: string | null
     territoryId?: string | null
@@ -72072,6 +72701,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72113,6 +72748,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72152,6 +72793,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72189,6 +72836,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72230,6 +72883,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72269,6 +72928,12 @@ export namespace Prisma {
     referenceType?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     completionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    pickupLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    pickupLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    destinationLatitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    destinationLongitude?: NullableFloatFieldUpdateOperationsInput | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72397,6 +73062,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -72421,6 +73087,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72444,6 +73111,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72464,6 +73132,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     orderNumber: string
+    orderName?: string | null
     ownerId: string
     branchId?: string | null
     territoryId?: string | null
@@ -72499,6 +73168,7 @@ export namespace Prisma {
   export type OrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -72523,6 +73193,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72546,6 +73217,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
+    orderName?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     territoryId?: NullableStringFieldUpdateOperationsInput | string | null

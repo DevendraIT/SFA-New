@@ -22,13 +22,16 @@ export default function GeoFenceBanner({
   accuracy,
   className = "",
   testingMode = true,
+  overrideDistanceMeters,
 }) {
-  const distance = calculateDistanceMeters(
+  const calculatedDist = calculateDistanceMeters(
     userLocation?.lat,
     userLocation?.lng,
     targetLocation?.lat,
     targetLocation?.lng
   );
+
+  const distance = overrideDistanceMeters != null ? Math.round(overrideDistanceMeters) : calculatedDist;
 
   const isInRange = distance !== null && distance <= 100;
   const isDistanceAvailable = distance !== null;

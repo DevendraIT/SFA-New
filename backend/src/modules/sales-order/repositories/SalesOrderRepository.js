@@ -312,7 +312,11 @@ export class SalesOrderRepository {
     if (filters.customerId) where.customerId = filters.customerId;
     if (filters.ownerId) where.ownerId = filters.ownerId;
     if (filters.branchId) {
-      where.owner = { branchId: filters.branchId };
+      where.OR = [
+        { branchId: filters.branchId },
+        { owner: { branchId: filters.branchId } },
+        { ownerId: filters.branchId },
+      ];
     }
 
     if (filters.fromDate || filters.toDate) {

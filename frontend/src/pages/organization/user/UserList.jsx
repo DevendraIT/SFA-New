@@ -53,6 +53,14 @@ export default function UserList() {
     return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
   }, [user]);
 
+  const isSalesManager = useMemo(() => {
+    if (!user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+  }, [user]);
+
   const isCurrentSuperAdmin = useMemo(() => {
     if (!user) return false;
     const roleNames = Array.isArray(user.roles)
@@ -64,6 +72,16 @@ export default function UserList() {
   const { users, loading, search, setSearch, reload } = useUsers({
     debounce: true,
   });
+
+  const displayedUsers = useMemo(() => {
+    if (!users) return [];
+    if (isSalesManager && user?.branchId) {
+      return users.filter(
+        (u) => u.branchId === user.branchId || u.branch?.id === user.branchId || u.managerId === user.id
+      );
+    }
+    return users;
+  }, [users, isSalesManager, user]);
 
   const { dashboard } = useHeadOfSalesDashboard();
 
@@ -82,6 +100,9 @@ export default function UserList() {
   const canManageUserItem = (userItem) => {
     if (isHeadOfSales) return false;
     if (isTargetSuperAdmin(userItem) && !isCurrentSuperAdmin) {
+      return false;
+    }
+    if (isSalesManager && userItem.id === user?.id) {
       return false;
     }
     return true;
@@ -309,7 +330,7 @@ export default function UserList() {
                   Loading users...
                 </td>
               </tr>
-            ) : users.length === 0 ? (
+            ) : displayedUsers.length === 0 ? (
               <tr>
                 <td colSpan={6}>
                   <div className="flex flex-col items-center justify-center py-16">
@@ -318,7 +339,7 @@ export default function UserList() {
                       No Users Found
                     </h3>
                     <p className="mt-2 text-slate-500">
-                      Create your first user to get started.
+                      No user records found in your operating branch.
                     </p>
                     <button
                       onClick={() => setShowModal(true)}
@@ -330,7 +351,7 @@ export default function UserList() {
                 </td>
               </tr>
             ) : (
-              users.map((userItem) => (
+              displayedUsers.map((userItem) => (
                 <tr key={userItem.id} className="border-t hover:bg-slate-50 transition">
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">

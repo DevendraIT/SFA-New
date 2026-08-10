@@ -11,7 +11,7 @@ export class TeamController {
 
   listTeams = async (req, res, next) => {
     try {
-      const { teams, meta } = await this.service.listTeams(req.user.organizationId, req.query);
+      const { teams, meta } = await this.service.listTeams(req.user.organizationId, req.query, req.user);
       res.json(ApiResponse.success('Teams retrieved successfully.', { teams }, meta));
     } catch (error) {
       next(error);
@@ -20,7 +20,7 @@ export class TeamController {
 
   getTeam = async (req, res, next) => {
     try {
-      const team = await this.service.getTeam(req.params.id, req.user.organizationId);
+      const team = await this.service.getTeam(req.params.id, req.user.organizationId, req.user);
       res.json(ApiResponse.success('Team retrieved successfully.', team));
     } catch (error) {
       next(error);

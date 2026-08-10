@@ -131,6 +131,12 @@ export class FieldForceRepository {
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
         referenceType: data.referenceType,
         referenceId: data.referenceId,
+        pickupAddress: data.pickupAddress || null,
+        pickupLatitude: data.pickupLatitude ? parseFloat(data.pickupLatitude) : null,
+        pickupLongitude: data.pickupLongitude ? parseFloat(data.pickupLongitude) : null,
+        destinationAddress: data.destinationAddress || null,
+        destinationLatitude: data.destinationLatitude ? parseFloat(data.destinationLatitude) : null,
+        destinationLongitude: data.destinationLongitude ? parseFloat(data.destinationLongitude) : null,
         metadata: data.metadata || undefined,
       },
       include: {
@@ -209,8 +215,8 @@ export class FieldForceRepository {
     const [attendance, total] = await Promise.all([
       prisma.attendance.findMany({
         where,
-        skip,
-        take,
+        skip: Number(skip) || 0,
+        take: Number(take) || 20,
         include: { user: { select: { id: true, firstName: true, lastName: true, email: true } } },
         orderBy: { date: 'desc' },
       }),
@@ -228,19 +234,25 @@ export class FieldForceRepository {
   }
 
   async listVisits(organizationId, filters = {}) {
-    const { userId, status, customerId, skip = 0, take = 20 } = filters;
+    const { userId, status, customerId, branchId, skip = 0, take = 20 } = filters;
 
     const where = { organizationId };
     if (userId) where.userId = userId;
     if (status) where.status = status;
     if (customerId) where.customerId = customerId;
+    if (branchId) {
+      where.user = { branchId };
+    }
 
     const [visits, total] = await Promise.all([
       prisma.visit.findMany({
         where,
-        skip,
-        take,
-        include: { user: true },
+        skip: Number(skip) || 0,
+        take: Number(take) || 20,
+        include: {
+          user: { select: { id: true, firstName: true, lastName: true, email: true } },
+          customer: { select: { id: true, name: true, phone: true } },
+        },
         orderBy: { scheduledAt: 'desc' },
       }),
       prisma.visit.count({ where }),
@@ -272,8 +284,8 @@ export class FieldForceRepository {
     const [expenses, total] = await Promise.all([
       prisma.expense.findMany({
         where,
-        skip,
-        take,
+        skip: Number(skip) || 0,
+        take: Number(take) || 20,
         include: { user: true, approvedBy: true },
         orderBy: { date: 'desc' },
       }),
@@ -319,8 +331,8 @@ export class FieldForceRepository {
     const [dars, total] = await Promise.all([
       prisma.dailyActivityReport.findMany({
         where,
-        skip,
-        take,
+        skip: Number(skip) || 0,
+        take: Number(take) || 20,
         include: { user: true },
         orderBy: { date: 'desc' },
       }),
@@ -394,8 +406,8 @@ export class FieldForceRepository {
     const [tasks, total] = await Promise.all([
       prisma.task.findMany({
         where,
-        skip,
-        take,
+        skip: Number(skip) || 0,
+        take: Number(take) || 20,
         include: { assignedTo: true, assignedBy: true },
         orderBy: { dueDate: 'asc' },
       }),
@@ -484,8 +496,8 @@ export class FieldForceRepository {
     const [plans, total] = await Promise.all([
       prisma.beatPlan.findMany({
         where,
-        skip,
-        take,
+        skip: Number(skip) || 0,
+        take: Number(take) || 20,
         include: { user: true },
         orderBy: { startDate: 'desc' },
       }),
@@ -517,8 +529,8 @@ export class FieldForceRepository {
     const [events, total] = await Promise.all([
       prisma.calendarEvent.findMany({
         where,
-        skip,
-        take,
+        skip: Number(skip) || 0,
+        take: Number(take) || 20,
         include: { user: true },
         orderBy: { startTime: 'asc' },
       }),
@@ -530,7 +542,7 @@ export class FieldForceRepository {
 
   // Analytics & Aggregations
   async getAttendanceSummary(organizationId, userId, startDate, endDate) {
-    return prisma.attendance.aggregate({
+    const records = await prisma.attendance.findMany({
       where: {
         organizationId,
         userId,
@@ -539,12 +551,20 @@ export class FieldForceRepository {
           lte: new Date(endDate),
         },
       },
-      _count: true,
-      _avg: { durationMins: true },
     });
+
+    const summary = {
+      totalDays: records.length,
+      present: records.filter(r => r.status === 'PRESENT').length,
+      absent: records.filter(r => r.status === 'ABSENT').length,
+      leave: records.filter(r => r.status === 'LEAVE').length,
+      halfday: records.filter(r => r.status === 'HALFDAY').length,
+    };
+
+    return summary;
   }
 
-  async getVisitsSummary(organizationId, userId, startDate, endDate) {
+  async getVisitSummary(organizationId, userId, startDate, endDate) {
     const visits = await prisma.visit.findMany({
       where: {
         organizationId,
@@ -554,7 +574,6 @@ export class FieldForceRepository {
           lte: new Date(endDate),
         },
       },
-      select: { status: true },
     });
 
     const summary = {
@@ -573,7 +592,7 @@ export class FieldForceRepository {
       where: {
         organizationId,
         userId,
-        date: {
+        createdAt: {
           gte: new Date(startDate),
           lte: new Date(endDate),
         },
@@ -582,6 +601,9 @@ export class FieldForceRepository {
       _count: true,
     });
 
-    return expenses;
+    return {
+      totalAmount: expenses._sum.amount || 0,
+      totalCount: expenses._count || 0,
+    };
   }
 }

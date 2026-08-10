@@ -152,6 +152,8 @@ exports.Prisma.BranchScalarFieldEnum = {
   state: 'state',
   country: 'country',
   postalCode: 'postalCode',
+  latitude: 'latitude',
+  longitude: 'longitude',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -295,6 +297,8 @@ exports.Prisma.CustomerScalarFieldEnum = {
   phone: 'phone',
   industry: 'industry',
   address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -315,6 +319,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   orderNumber: 'orderNumber',
+  orderName: 'orderName',
   customerId: 'customerId',
   ownerId: 'ownerId',
   branchId: 'branchId',
@@ -449,6 +454,12 @@ exports.Prisma.TaskScalarFieldEnum = {
   referenceType: 'referenceType',
   referenceId: 'referenceId',
   completionNotes: 'completionNotes',
+  pickupAddress: 'pickupAddress',
+  pickupLatitude: 'pickupLatitude',
+  pickupLongitude: 'pickupLongitude',
+  destinationAddress: 'destinationAddress',
+  destinationLatitude: 'destinationLatitude',
+  destinationLongitude: 'destinationLongitude',
   metadata: 'metadata',
   acceptedAt: 'acceptedAt',
   startedAt: 'startedAt',

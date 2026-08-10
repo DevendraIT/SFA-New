@@ -124,7 +124,7 @@ export default function Sidebar({
 
     if (isCompanyAdmin) {
       return navigation.filter(
-        (item) => !["Field Force", "Target & Performance", "Reports"].includes(item.title)
+        (item) => !["Field Force", "Target & Performance", "Reports", "Team Management"].includes(item.title)
       );
     }
 
@@ -137,7 +137,7 @@ export default function Sidebar({
     if (isSalesExecutive) {
       return navigation
         .filter(
-          (item) => !["Organization", "Team Management", "Sales Orders"].includes(item.title)
+          (item) => !["Organization", "Team Management", "Sales Orders", "Reports"].includes(item.title)
         )
         .map((item) => {
           if (item.title === "Field Force" && Array.isArray(item.children)) {
@@ -145,7 +145,7 @@ export default function Sidebar({
               ...item,
               children: item.children.filter(
                 (child) =>
-                  !["Attendance", "Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar"].includes(child.title)
+                  !["Visits", "Visit", "DAR", "Daily Activity", "Daily Activity Reports", "Attendance", "Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar"].includes(child.title)
               ),
             };
           }

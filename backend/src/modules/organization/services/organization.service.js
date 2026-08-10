@@ -4,6 +4,7 @@ import { prisma } from '../../../config/database.js';
 import { BranchRepository } from '../repositories/BranchRepository.js';
 import { DepartmentRepository } from '../repositories/DepartmentRepository.js';
 import { TerritoryRepository } from '../repositories/TerritoryRepository.js';
+import { locationService } from '../../../services/location.service.js';
 
 /**
  * Organization Service
@@ -308,6 +309,22 @@ export class OrganizationService {
     const department = await this.departmentRepo.findById(data.departmentId, organizationId);
     if (!department) throw AppError.badRequest('Department not found within your organization.');
 
+    let lat = data.latitude ? parseFloat(data.latitude) : null;
+    let lng = data.longitude ? parseFloat(data.longitude) : null;
+    const fullAddress = [data.address, data.city, data.state, data.country].filter(Boolean).join(', ');
+
+    if ((!lat || !lng) && fullAddress) {
+      try {
+        const geo = await locationService.geocodeAddress(fullAddress);
+        if (geo?.latitude && geo?.longitude) {
+          lat = geo.latitude;
+          lng = geo.longitude;
+        }
+      } catch (e) {
+        console.warn('Branch creation geocoding warning:', e.message);
+      }
+    }
+
     const branch = await this.branchRepo.create({
       organizationId,
       departmentId: data.departmentId,
@@ -321,16 +338,20 @@ export class OrganizationService {
       state: data.state,
       country: data.country,
       postalCode: data.postalCode,
+      latitude: lat,
+      longitude: lng,
     });
 
-    await logAudit({
-      organizationId,
-      userId: req.user.id,
-      action: 'branch.create',
-      moduleName: 'organization',
-      details: { branchId: branch.id, name: branch.name, organizationId: data.organizationId },
-      req,
-    });
+    if (req?.user?.id) {
+      await logAudit({
+        organizationId,
+        userId: req.user.id,
+        action: 'branch.create',
+        moduleName: 'organization',
+        details: { branchId: branch.id, name: branch.name, organizationId: data.organizationId },
+        req,
+      }).catch(err => console.warn('Audit log warning:', err.message));
+    }
 
     return branch;
   }
@@ -342,6 +363,27 @@ export class OrganizationService {
     if (data.code && data.code !== branch.code) {
       const existing = await this.branchRepo.findByCode(organizationId, data.code);
       if (existing) throw AppError.badRequest(`Branch code '${data.code}' is already in use within this company.`);
+    }
+
+    let lat = data.latitude !== undefined ? (data.latitude ? parseFloat(data.latitude) : null) : branch.latitude;
+    let lng = data.longitude !== undefined ? (data.longitude ? parseFloat(data.longitude) : null) : branch.longitude;
+
+    const newFullAddress = [
+      data.address !== undefined ? data.address : branch.address,
+      data.city !== undefined ? data.city : branch.city,
+      data.state !== undefined ? data.state : branch.state,
+      data.country !== undefined ? data.country : branch.country,
+    ].filter(Boolean).join(', ');
+
+    const oldFullAddress = [branch.address, branch.city, branch.state, branch.country].filter(Boolean).join(', ');
+
+    const addressChanged = newFullAddress && newFullAddress !== oldFullAddress;
+    const missingCoords = !lat || !lng;
+
+    if ((addressChanged || missingCoords) && newFullAddress) {
+      const geo = await locationService.geocodeAddress(newFullAddress);
+      lat = geo.latitude;
+      lng = geo.longitude;
     }
 
     const updated = await this.branchRepo.update(id, {
@@ -358,6 +400,8 @@ export class OrganizationService {
       ...(data.state !== undefined && { state: data.state }),
       ...(data.country !== undefined && { country: data.country }),
       ...(data.postalCode !== undefined && { postalCode: data.postalCode }),
+      latitude: lat,
+      longitude: lng,
     });
     await logAudit({
       organizationId,
@@ -380,7 +424,20 @@ export class OrganizationService {
       throw AppError.conflict('Cannot delete branch while active users exist.');
     }
 
-    await this._rejectSoftDelete('Branch', id, organizationId, req);
+    const deleted = await this.branchRepo.delete(id);
+
+    if (req?.user?.id) {
+      await logAudit({
+        organizationId,
+        userId: req.user.id,
+        action: 'branch.delete',
+        moduleName: 'organization',
+        details: { branchId: id, name: branch.name },
+        req,
+      }).catch(err => console.warn('Audit log warning:', err.message));
+    }
+
+    return deleted;
   }
 
   async restoreBranch(id, organizationId, req) {
@@ -468,7 +525,20 @@ export class OrganizationService {
       throw AppError.conflict('Cannot delete department while users or teams are assigned.');
     }
 
-    await this._rejectSoftDelete('Department', id, organizationId, req);
+    const deleted = await this.departmentRepo.delete(id);
+
+    if (req?.user?.id) {
+      await logAudit({
+        organizationId,
+        userId: req.user.id,
+        action: 'department.delete',
+        moduleName: 'organization',
+        details: { departmentId: id, name: department.name },
+        req,
+      }).catch(err => console.warn('Audit log warning:', err.message));
+    }
+
+    return deleted;
   }
 
   async restoreDepartment(id, organizationId, req) {
@@ -559,7 +629,20 @@ export class OrganizationService {
       throw AppError.conflict('Cannot delete territory while teams or users are assigned.');
     }
 
-    await this._rejectSoftDelete('Territory', id, organizationId, req);
+    const deleted = await this.territoryRepo.delete(id);
+
+    if (req?.user?.id) {
+      await logAudit({
+        organizationId,
+        userId: req.user.id,
+        action: 'territory.delete',
+        moduleName: 'organization',
+        details: { territoryId: id, name: territory.name },
+        req,
+      }).catch(err => console.warn('Audit log warning:', err.message));
+    }
+
+    return deleted;
   }
   
   async restoreTerritory(id, organizationId, req) {

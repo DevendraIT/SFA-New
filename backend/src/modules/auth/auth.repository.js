@@ -34,6 +34,9 @@ export class AuthRepository {
       deletedAt: null,
     },
     include: {
+      organization: { select: { id: true, name: true, slug: true } },
+      branch: { select: { id: true, name: true, code: true } },
+      department: { select: { id: true, name: true, code: true } },
       roles: {
         include: {
           role: {
@@ -79,6 +82,9 @@ export class AuthRepository {
     return prisma.user.findFirst({
       where: { id: userId, deletedAt: null },
       include: {
+        organization: { select: { id: true, name: true, slug: true } },
+        branch: { select: { id: true, name: true, code: true } },
+        department: { select: { id: true, name: true, code: true } },
         roles: {
           include: {
             role: {

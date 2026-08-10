@@ -29,19 +29,45 @@ export class TeamService {
     return { skip, take: limit, search, sortBy: resolvedSortBy, sortOrder };
   }
 
-  async listTeams(organizationId, query) {
+  async listTeams(organizationId, query, user = null) {
     const options = this._buildListOptions(query);
+
+    let branchId = query.branchId;
+
+    if (user) {
+      const isSalesManager = user.roles?.some(r => {
+        const rName = typeof r === 'string' ? r : r.role?.name || r.name;
+        return rName && (rName.toLowerCase().includes('manager') || rName.toLowerCase().includes('sales manager'));
+      });
+
+      if (isSalesManager && user.branchId) {
+        branchId = user.branchId;
+      }
+    }
+
     const { teams, total } = await this.repo.findTeams(organizationId, {
       ...options,
-      branchId: query.branchId,
+      branchId,
       departmentId: query.departmentId,
       territoryId: query.territoryId,
     });
     return { teams, meta: this._buildPaginationMeta(total, query.page, query.limit) };
   }
 
-  async getTeam(id, organizationId) {
-    const team = await this.repo.findTeamById(id, organizationId);
+  async getTeam(id, organizationId, user = null) {
+    let branchId = null;
+    if (user) {
+      const isSalesManager = user.roles?.some(r => {
+        const rName = typeof r === 'string' ? r : r.role?.name || r.name;
+        return rName && (rName.toLowerCase().includes('manager') || rName.toLowerCase().includes('sales manager'));
+      });
+
+      if (isSalesManager && user.branchId) {
+        branchId = user.branchId;
+      }
+    }
+
+    const team = await this.repo.findTeamById(id, organizationId, branchId);
     if (!team) throw AppError.notFound('Team not found.');
     return team;
   }

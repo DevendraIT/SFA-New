@@ -164,6 +164,7 @@ export default function SettingsPage() {
     try {
       setPasswordSaving(true);
       await authApi.changePassword({
+        oldPassword: passwordData.currentPassword,
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });

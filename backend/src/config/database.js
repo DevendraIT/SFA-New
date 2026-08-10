@@ -1,13 +1,18 @@
-import 'dotenv/config'
+import 'dotenv/config';
+import dns from 'node:dns';
+import pg from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../../generated/prisma/index.js';
-import { neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
-import ws from 'ws';
 
-// Configure WebSocket engine for Neon serverless driver to run in Node.js environment
-neonConfig.webSocketConstructor = ws;
+try {
+  dns.setDefaultResultOrder('ipv4first');
+} catch (e) {
+  // ignore
+}
 
+const { Pool } = pg;
 let prismaInstance;
+let poolInstance;
 
 /**
  * Get Prisma client instance (singleton pattern)
@@ -18,11 +23,17 @@ export const getPrismaClient = () => {
     return prismaInstance;
   }
 
-  console.log("DATABASE_URL:", process.env.DATABASE_URL);
+  const rawUrl = (process.env.DATABASE_URL || process.env.DIRECT_URL || '').replace(/['"]/g, '');
 
-  const adapter = new PrismaNeon({
-    connectionString: process.env.DATABASE_URL,
+  poolInstance = new Pool({
+    connectionString: rawUrl,
+    ssl: { rejectUnauthorized: false },
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
   });
+
+  const adapter = new PrismaPg(poolInstance);
 
   prismaInstance = new PrismaClient({
     adapter,
@@ -32,12 +43,14 @@ export const getPrismaClient = () => {
 
   // Handle disconnection gracefully
   process.on('SIGINT', async () => {
-    await prismaInstance.$disconnect();
+    if (poolInstance) await poolInstance.end();
+    if (prismaInstance) await prismaInstance.$disconnect();
     process.exit(0);
   });
 
   process.on('SIGTERM', async () => {
-    await prismaInstance.$disconnect();
+    if (poolInstance) await poolInstance.end();
+    if (prismaInstance) await prismaInstance.$disconnect();
     process.exit(0);
   });
 

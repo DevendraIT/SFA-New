@@ -134,10 +134,11 @@ export class AuthController extends BaseController {
    * Change password (authenticated)
    */
   changePassword = this.asyncHandler(async (req, res) => {
-    const { oldPassword, newPassword } = req.body;
+    const { oldPassword, currentPassword, newPassword } = req.body;
+    const effectiveOldPassword = oldPassword || currentPassword;
     const user = this.extractUser(req);
     
-    await this.service.changePassword(user.id, oldPassword, newPassword);
+    await this.service.changePassword(user.id, effectiveOldPassword, newPassword);
     
     return this.handleSuccess(res, null, AUTH_CONSTANTS.MESSAGES.PASSWORD_CHANGED);
   });

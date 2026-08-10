@@ -49,13 +49,13 @@ const { user } = useAuth();
   }
 
   // Extract user-specific data from dashboard hook
-  const myVisits = dashboard?.myVisits || {};
+  const myTasks = dashboard?.myTasks || {};
   const myTargets = dashboard?.myTargets || [];
 
-  const todayVisits = dashboard?.todayVisits ?? 0;
-  const completedVisits = dashboard?.completedVisits ?? (myVisits?.COMPLETED || 0);
-  const pendingVisits = dashboard?.pendingVisits ?? (myVisits?.PENDING || 0);
-  const currentVisits = myVisits?.IN_PROGRESS ?? 0;
+  const todayTasks = dashboard?.todayTasks ?? (myTasks?.todaysTasks || 0);
+  const completedTasks = dashboard?.completedTasks ?? (myTasks?.completed || 0);
+  const pendingTasks = dashboard?.pendingTasks ?? (myTasks?.pending || 0);
+  const currentTasks = dashboard?.inProgressTasks ?? (myTasks?.inProgress || 0);
 
   const recentActivitiesList = Array.isArray(dashboard?.recentActivities)
     ? dashboard.recentActivities
@@ -79,7 +79,7 @@ const { user } = useAuth();
       {/* Header */}
       <DashboardHeader
         welcomeText={`Good ${dayjs().hour() < 12 ? "morning" : dayjs().hour() < 17 ? "afternoon" : "evening"}, ${fullName || "Sales Executive"} 👋`}
-        title="Sales Dashboard"
+        title="Sales Executive Dashboard"
         subtitle="Your daily sales activities at a glance"
         onRefresh={refresh}
       />
@@ -94,7 +94,7 @@ const { user } = useAuth();
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Organization</span>
-            <span className="text-sm font-bold text-slate-800">{organizationInfo.organizationName || user?.organization?.name || user?.branch?.organization?.name || "Assigned Organization"}</span>
+            <span className="text-sm font-bold text-slate-800">{organizationInfo.organizationName || organizationInfo.companyName || user?.organization?.name || user?.branch?.organization?.name || "Assigned Organization"}</span>
           </div>
 
           <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
@@ -119,38 +119,52 @@ const { user } = useAuth();
       {/* Stats Grid - Today's overview */}
       <StatsGrid>
         <StatCard
-          title="Today's Visits"
-          value={todayVisits}
+          title="Assigned Customers"
+          value={dashboard?.totalAssignedCustomers ?? 0}
+          icon={Building2}
+          color="bg-purple-600"
+        />
+        <StatCard
+          title="Sales Orders"
+          value={dashboard?.totalSalesOrders ?? 0}
+          icon={ClipboardCheck}
+          color="bg-indigo-600"
+        />
+        <StatCard
+          title="Today's Tasks"
+          value={todayTasks}
           icon={MapPin}
           color="bg-blue-500"
         />
         <StatCard
-          title="Completed Visits"
-          value={completedVisits}
+          title="Completed Tasks"
+          value={completedTasks}
           icon={CheckCircle2}
           color="bg-emerald-500"
         />
         <StatCard
-          title="Pending Visits"
-          value={pendingVisits}
+          title="Pending Tasks"
+          value={pendingTasks}
           icon={CalendarClock}
           color="bg-amber-500"
         />
         <StatCard
-          title="Current Visits"
-          value={currentVisits}
+          title="Current Tasks"
+          value={currentTasks}
           icon={PlayCircle}
           color="bg-cyan-500"
         />
       </StatsGrid>
 
-      {/* My Targets */}
+      {/* My Targets & Tasks */}
       <SectionCard
-        title="My Targets"
-        subtitle="Assigned targets for this period"
+        title="My Targets & Tasks"
+        subtitle="Assigned targets and operational objectives for this period"
         icon={ClipboardCheck}
         action={
-          <span className="text-xs text-slate-500">{myTargets.length} targets</span>
+          <span className="text-xs text-slate-500">
+            {myTargets.length > 0 ? `${myTargets.length} targets` : `${dashboard?.recentTasks?.length || 0} tasks`}
+          </span>
         }
       >
         <RecentTasks
@@ -163,9 +177,16 @@ const { user } = useAuth();
                   status: t.achievedValue >= t.targetValue ? "COMPLETED" : "IN_PROGRESS",
                   dueDate: t.dueDate,
                 }))
+              : Array.isArray(dashboard?.recentTasks) && dashboard.recentTasks.length > 0
+              ? dashboard.recentTasks.map((t) => ({
+                  id: t.id,
+                  title: t.title || "Assigned Task",
+                  description: t.description || "Field task assignment",
+                  status: t.status || "PENDING",
+                }))
               : []
           }
-          emptyMessage="No targets assigned yet."
+          emptyMessage="No targets or tasks assigned yet."
         />
       </SectionCard>
 

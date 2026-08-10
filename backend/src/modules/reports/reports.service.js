@@ -143,8 +143,8 @@ export class ReportsService {
     };
   }
 
-  async getOrganizationAnalytics(organizationId) {
-    const raw = await this.repo.getOrganizationAnalytics(organizationId);
+  async getOrganizationAnalytics(organizationId, branchId = null) {
+    const raw = await this.repo.getOrganizationAnalytics(organizationId, branchId);
     const { orders, products, customers, targets, visits, teams, users } = raw;
 
     let totalRevenue = 0;
@@ -201,9 +201,13 @@ export class ReportsService {
       });
     }
 
-    // Top Performing Employees
+    // Top Performing Employees (excluding Super Admin & Company Admin)
     const employeePerformanceMap = {};
     users.forEach(u => {
+      const roleNames = (u.roles || []).map(r => r.role?.name || r.name || '').map(n => n.toLowerCase());
+      const isSystemAdmin = roleNames.some(n => n.includes('super admin') || n.includes('company admin') || n === 'admin');
+      if (isSystemAdmin) return;
+
       const name = `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.email;
       employeePerformanceMap[u.id] = {
         id: u.id,

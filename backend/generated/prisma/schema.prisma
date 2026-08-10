@@ -76,6 +76,8 @@ model Branch {
   state      String?
   country    String?
   postalCode String?
+  latitude   Float?
+  longitude  Float?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -340,6 +342,8 @@ model Customer {
   phone          String?
   industry       String?
   address        Json?
+  latitude       Float?
+  longitude      Float?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -369,6 +373,7 @@ model Order {
   id             String  @id @default(uuid()) @db.Uuid
   organizationId String  @db.Uuid
   orderNumber    String  @unique
+  orderName      String?
   customerId     String  @db.Uuid
   ownerId        String  @db.Uuid
   branchId       String? @db.Uuid
@@ -644,6 +649,13 @@ model Task {
   referenceId   String? @db.Uuid
 
   completionNotes String?
+
+  pickupAddress        String?
+  pickupLatitude       Float?
+  pickupLongitude      Float?
+  destinationAddress   String?
+  destinationLatitude  Float?
+  destinationLongitude Float?
 
   metadata Json?
 

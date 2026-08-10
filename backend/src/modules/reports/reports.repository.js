@@ -60,12 +60,21 @@ export class ReportsRepository {
     });
   }
 
-  async getOrganizationAnalytics(organizationId) {
+  async getOrganizationAnalytics(organizationId, branchId = null) {
     const [orders, products, customers, targets, visits, teams, users] = await Promise.all([
       prisma.order.findMany({
-        where: { organizationId, isDeleted: false },
+        where: {
+          organizationId,
+          isDeleted: false,
+          ...(branchId && {
+            OR: [
+              { owner: { branchId } },
+              { owner: { id: branchId } }
+            ]
+          }),
+        },
         include: {
-          owner: { select: { id: true, firstName: true, lastName: true, email: true } },
+          owner: { select: { id: true, firstName: true, lastName: true, email: true, branchId: true } },
           customer: { select: { id: true, name: true, industry: true } },
           items: { include: { product: true } },
         },
@@ -84,26 +93,44 @@ export class ReportsRepository {
         },
       }),
       prisma.target.findMany({
-        where: { organizationId },
+        where: {
+          organizationId,
+          ...(branchId && {
+            OR: [
+              { user: { branchId } },
+              { team: { branchId } }
+            ]
+          }),
+        },
         include: {
           user: { select: { id: true, firstName: true, lastName: true } },
           team: { select: { id: true, name: true } },
         },
       }),
       prisma.visit.findMany({
-        where: { organizationId },
+        where: {
+          organizationId,
+          ...(branchId && { user: { branchId } }),
+        },
         include: {
           user: { select: { id: true, firstName: true, lastName: true } },
         },
       }),
       prisma.team.findMany({
-        where: { organizationId },
+        where: {
+          organizationId,
+          ...(branchId && { branchId }),
+        },
         include: {
           users: { select: { id: true, firstName: true, lastName: true } },
         },
       }),
       prisma.user.findMany({
-        where: { organizationId, deletedAt: null },
+        where: {
+          organizationId,
+          deletedAt: null,
+          ...(branchId && { branchId }),
+        },
         include: {
           roles: { include: { role: true } },
           team: { select: { id: true, name: true } },

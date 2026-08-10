@@ -118,37 +118,40 @@ export default function ManagerDashboard() {
   const totalCustomers = dashboard?.totalCustomers ?? 0;
   const totalSalesOrders = dashboard?.totalSalesOrders ?? 0;
 
-  const todayVisits = dashboard?.todayVisits ?? 0;
-  const pendingVisits = dashboard?.pendingVisits ?? 0;
-  const completedVisits = dashboard?.completedVisits ?? 0;
+  const todayTasks = dashboard?.todayTasks ?? dashboard?.teamTasks?.todaysTasks ?? 0;
+  const pendingTasks = dashboard?.pendingTasks ?? dashboard?.teamTasks?.pending ?? 0;
+  const completedTasks = dashboard?.completedTasks ?? dashboard?.teamTasks?.completed ?? 0;
+  const inProgressTasks = dashboard?.inProgressTasks ?? dashboard?.teamTasks?.inProgress ?? 0;
+  const totalTasks = dashboard?.totalTasks ?? dashboard?.teamTasks?.assigned ?? 0;
   const revenue = dashboard?.revenue ?? 0;
+  const todaysRevenue = dashboard?.todaysRevenue ?? revenue;
 
   const approvedOrders = dashboard?.approvedOrders ?? 0;
   const pendingOrders = dashboard?.pendingOrders ?? 0;
   const attendance = dashboard?.attendance || { present: 0, absent: 0, leave: 0, rate: 0 };
 
   const teamTargets = dashboard?.teamTargets || [];
-  const performanceMetrics = teamTargets.slice(0, 3).map((t) => ({
-    label: t.metric || "Target",
-    value: t.targetValue > 0 ? Math.round((t.achievedValue / t.targetValue) * 100) : 0,
-  }));
+  const orderFulfillmentRate = totalSalesOrders > 0 ? Math.round((approvedOrders / totalSalesOrders) * 100) : 100;
+  const taskCompletionRate = totalTasks > 0
+    ? Math.round((completedTasks / totalTasks) * 100)
+    : 100;
 
-  if (performanceMetrics.length < 3) {
-    const totalVisitsCount = todayVisits + pendingVisits + completedVisits;
-    const defaults = [
-      { label: "Visit Completion", value: totalVisitsCount > 0 ? Math.round((completedVisits / totalVisitsCount) * 100) : 0 },
-      { label: "Team Sales Target", value: 0 },
-      { label: "Customer Meetings", value: 0 },
-    ];
-    for (let i = performanceMetrics.length; i < 3; i++) {
-      performanceMetrics.push(defaults[i]);
-    }
-  }
+  const performanceMetrics = teamTargets.length > 0
+    ? teamTargets.slice(0, 3).map((t) => ({
+        label: t.metric || "Target",
+        value: t.targetValue > 0 ? Math.round((t.achievedValue / t.targetValue) * 100) : 0,
+      }))
+    : [
+        { label: "Order Fulfillment Rate", value: orderFulfillmentRate },
+        { label: "Team Task Completion", value: taskCompletionRate },
+        { label: "Task Execution Rate", value: taskCompletionRate },
+      ];
 
   const chartData = [
-    { name: "Completed", visits: completedVisits },
-    { name: "In Progress", visits: todayVisits },
-    { name: "Pending", visits: pendingVisits },
+    { name: "Sales Orders", visits: totalSalesOrders },
+    { name: "Completed Tasks", visits: completedTasks },
+    { name: "In Progress", visits: inProgressTasks },
+    { name: "Pending Tasks", visits: pendingTasks },
   ];
 
   const recentTasksList = (dashboard?.recentTasks && dashboard.recentTasks.length > 0)
@@ -167,7 +170,7 @@ export default function ManagerDashboard() {
 
   const recentActivitiesList = dashboard?.recentActivities || [
     { title: "Team Dashboard Viewed", description: "Manager accessed team overview", time: dayjs().format("h:mm A"), completed: true },
-    { title: "Visits Updated", description: `${completedVisits} visits completed`, time: "Today" },
+    { title: "Tasks Updated", description: `${completedTasks} tasks completed`, time: "Today" },
     { title: "Orders Processed", description: `${approvedOrders} orders approved`, time: dayjs().subtract(2, "hours").format("h:mm A") },
   ];
 
@@ -275,26 +278,26 @@ export default function ManagerDashboard() {
           color="bg-cyan-500"
         />
         <StatCard
-          title="Today's Visits"
-          value={todayVisits}
+          title="Today's Tasks"
+          value={todayTasks}
           icon={MapPin}
           color="bg-blue-500"
         />
         <StatCard
-          title="Pending Visits"
-          value={pendingVisits}
+          title="Pending Tasks"
+          value={pendingTasks}
           icon={Clock3}
           color="bg-amber-500"
         />
         <StatCard
-          title="Completed Visits"
-          value={completedVisits}
+          title="Completed Tasks"
+          value={completedTasks}
           icon={ClipboardCheck}
           color="bg-emerald-500"
         />
         <StatCard
-          title="Team Revenue"
-          value={revenue}
+          title="Today's Revenue"
+          value={todaysRevenue}
           icon={IndianRupee}
           color="bg-green-600"
           format="currency"
@@ -305,8 +308,8 @@ export default function ManagerDashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Team Visit Chart */}
         <ChartCard
-          title="Team Visit Status"
-          subtitle="Today's visit distribution"
+          title="Team Task Status"
+          subtitle="Today's task distribution"
           className="xl:col-span-2"
           delay={0.2}
         >
@@ -330,41 +333,7 @@ export default function ManagerDashboard() {
         />
       </div>
 
-      {/* Attendance & Orders */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AttendanceCard
-          present={attendance.present || 0}
-          absent={attendance.absent || 0}
-          leave={attendance.leave || 0}
-          rate={attendance.rate || 0}
-          title="Team Attendance"
-          subtitle="Today's team attendance"
-        />
 
-        <SectionCard
-          title="Pending Approvals"
-          subtitle="Items requiring your review"
-          icon={AlertTriangle}
-          iconColor="text-orange-500"
-        >
-          <div className="space-y-4">
-            {[
-              { label: `${pendingOrders} Orders Pending Approval`, count: pendingOrders },
-              { label: `${pendingVisits} Visits Pending Review`, count: pendingVisits },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between border-b border-slate-100 pb-3 last:border-0 last:pb-0"
-              >
-                <span className="font-medium text-slate-700 text-sm">{item.label}</span>
-                <span className="px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold">
-                  {item.count} items
-                </span>
-              </div>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
 
       {/* Tasks & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

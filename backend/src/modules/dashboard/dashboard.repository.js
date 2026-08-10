@@ -27,10 +27,16 @@ export class DashboardRepository {
     });
   }
 
-  async getTaskMetrics(organizationId, userId = null, managerId = null) {
-    const where = { organizationId };
-    if (userId) where.assignedToId = userId;
-    if (managerId) where.assignedById = managerId;
+  async getTaskMetrics(organizationId, userId = null, managerId = null, branchId = null) {
+    const where = {};
+    if (organizationId) where.organizationId = organizationId;
+    if (userId) {
+      where.assignedToId = userId;
+    } else if (managerId) {
+      where.OR = [{ assignedById: managerId }, { assignedToId: managerId }];
+    } else if (branchId) {
+      where.assignedTo = { branchId };
+    }
 
     return prisma.task.groupBy({
       by: ['status'],
@@ -39,7 +45,7 @@ export class DashboardRepository {
     });
   }
 
-  async getTodayTaskCount(organizationId, userId = null, managerId = null) {
+  async getTodayTaskCount(organizationId, userId = null, managerId = null, branchId = null) {
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
     const todayEnd = new Date();
@@ -52,8 +58,13 @@ export class DashboardRepository {
         { createdAt: { gte: todayStart, lte: todayEnd } }
       ]
     };
-    if (userId) where.assignedToId = userId;
-    if (managerId) where.assignedById = managerId;
+    if (userId) {
+      where.assignedToId = userId;
+    } else if (managerId) {
+      where.OR = [{ assignedById: managerId }, { assignedToId: managerId }];
+    } else if (branchId) {
+      where.assignedTo = { branchId };
+    }
 
     return prisma.task.count({ where });
   }
@@ -613,144 +624,127 @@ export class DashboardRepository {
     return orderStats;
   }
 
-  async getManagerUserCount(organizationId, branchId = null, departmentId = null) {
-    const roleWhere = {
-      roles: {
-        some: {
-          role: {
-            OR: [
-              { name: { contains: 'Sales Executive', mode: 'insensitive' } },
-              { name: { contains: 'Executive', mode: 'insensitive' } },
-              { name: { contains: 'Sales Person', mode: 'insensitive' } },
-            ]
-          }
-        }
-      }
-    };
-
-    const companyUserFilter = organizationId
-      ? {
-          OR: [
-            { branch: { organizationId } },
-            { department: { branch: { organizationId } } },
-            { team: { branch: { organizationId } } },
-          ]
-        }
-      : {};
-
-    const where = {
-      organizationId,
-      deletedAt: null,
-      isActive: true,
-      ...roleWhere,
-      ...companyUserFilter,
-      ...(branchId && !organizationId && { branchId }),
-      ...(departmentId && !organizationId && { departmentId }),
-    };
-
+  async getManagerUserCount(organizationId, userId = null, branchId = null, departmentId = null) {
     try {
-      let count = await prisma.user.count({ where });
-      if (count === 0 && organizationId) {
-        count = await prisma.user.count({
-          where: {
-            organizationId,
-            deletedAt: null,
-            isActive: true,
-            ...roleWhere,
+      const where = {
+        deletedAt: null,
+        isActive: true,
+        roles: {
+          some: {
+            role: {
+              name: { contains: 'Executive', mode: 'insensitive' }
+            }
           }
-        });
+        }
+      };
+      if (branchId) {
+        where.branchId = branchId;
+      } else if (organizationId) {
+        where.organizationId = organizationId;
       }
-      return count;
-    } catch (err) {
-      console.error("Error in getManagerUserCount:", err);
+      return await prisma.user.count({ where });
+    } catch {
       return 0;
     }
   }
 
   async getManagerTeamCount(organizationId, branchId = null, departmentId = null) {
-    const where = {
-      organizationId,
-      ...(branchId && { branchId }),
-      ...(departmentId && { departmentId }),
-    };
-    return prisma.team.count({ where });
+    try {
+      const where = {};
+      if (branchId) {
+        where.branchId = branchId;
+      } else if (organizationId) {
+        where.organizationId = organizationId;
+      }
+      return await prisma.team.count({ where });
+    } catch {
+      return 0;
+    }
   }
 
-  async getManagerCustomerCount(organizationId) {
-    const where = { organizationId };
-    if (organizationId) {
-      where.OR = [
-        { organizationId },
-        { createdBy: { branch: { organizationId } } }
-      ];
-    }
+  async getManagerCustomerCount(organizationId, branchId = null) {
     try {
+      const where = {};
+      if (branchId) {
+        where.organization = {
+          branches: {
+            some: { id: branchId }
+          }
+        };
+      } else if (organizationId) {
+        where.organizationId = organizationId;
+      }
       return await prisma.customer.count({ where });
     } catch {
-      return await prisma.customer.count({ where: { organizationId } });
+      return 0;
     }
   }
 
-  async getManagerOrderMetrics(organizationId, branchId = null, departmentId = null, startDate = null, endDate = null) {
-    const where = { organizationId, isDeleted: false };
-    if (organizationId) {
-      where.owner = { branch: { organizationId } };
-    } else if (branchId || departmentId) {
-      where.owner = {
-        ...(branchId && { branchId }),
-        ...(departmentId && { departmentId }),
-      };
-    }
-    if (startDate && endDate) {
-      where.createdAt = { gte: startDate, lte: endDate };
-    }
+  async getManagerOrderMetrics(organizationId, userId = null, branchId = null, departmentId = null, startDate = null, endDate = null) {
+    try {
+      const where = { isDeleted: false };
+      if (branchId) {
+        where.OR = [
+          { branchId },
+          { owner: { branchId } }
+        ];
+      } else if (organizationId) {
+        where.organizationId = organizationId;
+      }
 
-    return prisma.order.groupBy({
-      by: ['status'],
-      where,
-      _count: { id: true },
-      _sum: { totalAmount: true },
-    });
+      if (startDate && endDate && startDate instanceof Date && !isNaN(startDate.getTime()) && endDate instanceof Date && !isNaN(endDate.getTime())) {
+        where.createdAt = { gte: startDate, lte: endDate };
+      }
+
+      return await prisma.order.groupBy({
+        by: ['status'],
+        where,
+        _count: { id: true },
+        _sum: { totalAmount: true },
+      });
+    } catch {
+      return [];
+    }
   }
 
-  async getManagerVisitMetrics(organizationId, branchId = null, departmentId = null, startDate = null, endDate = null) {
-    const where = { organizationId };
-    if (organizationId) {
-      where.user = { branch: { organizationId } };
-    } else if (branchId || departmentId) {
-      where.user = {
-        ...(branchId && { branchId }),
-        ...(departmentId && { departmentId }),
-      };
-    }
-    if (startDate && endDate) {
-      where.scheduledAt = { gte: startDate, lte: endDate };
-    }
+  async getManagerVisitMetrics(organizationId, userId = null, branchId = null, departmentId = null, startDate = null, endDate = null) {
+    try {
+      const where = {};
+      if (branchId) {
+        where.user = { branchId };
+      } else if (organizationId) {
+        where.organizationId = organizationId;
+      }
 
-    return prisma.visit.groupBy({
-      by: ['status'],
-      where,
-      _count: { id: true },
-    });
+      if (startDate && endDate && startDate instanceof Date && !isNaN(startDate.getTime()) && endDate instanceof Date && !isNaN(endDate.getTime())) {
+        where.scheduledAt = { gte: startDate, lte: endDate };
+      }
+
+      return await prisma.visit.groupBy({
+        by: ['status'],
+        where,
+        _count: { id: true },
+      });
+    } catch {
+      return [];
+    }
   }
 
-  async getManagerAttendanceMetrics(organizationId, branchId = null, departmentId = null, date = new Date()) {
-    const start = new Date(date);
+  async getManagerAttendanceMetrics(organizationId, userId = null, branchId = null, departmentId = null, date = new Date()) {
+    const validDate = date && date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
+    const start = new Date(validDate);
     start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
+    const end = new Date(validDate);
     end.setHours(23, 59, 59, 999);
 
     const where = {
       organizationId,
       date: { gte: start, lte: end },
     };
-    if (organizationId) {
-      where.user = { branch: { organizationId } };
-    } else if (branchId || departmentId) {
-      where.user = {
-        ...(branchId && { branchId }),
-        ...(departmentId && { departmentId }),
-      };
+    if (userId) {
+      where.userId = userId;
+    } else if (branchId) {
+      where.user = { branchId };
     }
 
     return prisma.attendance.groupBy({
@@ -760,23 +754,17 @@ export class DashboardRepository {
     });
   }
 
-  async getManagerTasks(organizationId, managerId = null, branchId = null, departmentId = null) {
+  async getManagerTasks(organizationId, userId = null, branchId = null, departmentId = null) {
     const where = { organizationId };
-    if (managerId) {
-      where.OR = [
-        { assignedById: managerId },
-        { assignedTo: { ...(branchId && { branchId }), ...(departmentId && { departmentId }) } },
-      ];
-    } else if (branchId || departmentId) {
-      where.assignedTo = {
-        ...(branchId && { branchId }),
-        ...(departmentId && { departmentId }),
-      };
+    if (userId) {
+      where.OR = [{ assignedById: userId }, { assignedToId: userId }];
+    } else if (branchId) {
+      where.assignedTo = { branchId };
     }
 
     return prisma.task.findMany({
       where,
-      take: 5,
+      take: 10,
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
@@ -1086,9 +1074,10 @@ export class DashboardRepository {
     }
   }
 
-  async getManagerOrganizationInfo(branchId = null, departmentId = null) {
+  async getManagerOrganizationInfo(branchId = null, departmentId = null, organizationId = null) {
     let branchInfo = null;
     let departmentInfo = null;
+    let organizationInfo = null;
 
     if (branchId) {
       branchInfo = await prisma.branch.findUnique({
@@ -1096,6 +1085,7 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
+          code: true,
           organization: {
             select: {
               id: true,
@@ -1112,14 +1102,26 @@ export class DashboardRepository {
         select: {
           id: true,
           name: true,
+          code: true,
         },
       });
     }
 
+    const orgIdToFind = branchInfo?.organization?.id || organizationId;
+    if (orgIdToFind) {
+      organizationInfo = await prisma.organization.findUnique({
+        where: { id: orgIdToFind },
+        select: { id: true, name: true },
+      });
+    }
+
+    const resolvedOrg = branchInfo?.organization || organizationInfo;
+
     return {
-      company: branchInfo?.company || null,
-      branch: branchInfo ? { id: branchInfo.id, name: branchInfo.name } : null,
-      department: departmentInfo || null,
+      company: resolvedOrg ? { id: resolvedOrg.id, name: resolvedOrg.name } : null,
+      organization: resolvedOrg ? { id: resolvedOrg.id, name: resolvedOrg.name } : null,
+      branch: branchInfo ? { id: branchInfo.id, name: branchInfo.name, code: branchInfo.code } : null,
+      department: departmentInfo ? { id: departmentInfo.id, name: departmentInfo.name, code: departmentInfo.code } : null,
     };
   }
 
@@ -1187,6 +1189,9 @@ export class DashboardRepository {
         where: { id: userId },
         select: {
           id: true,
+          organization: {
+            select: { id: true, name: true }
+          },
           branch: {
             select: {
               id: true,
@@ -1214,8 +1219,11 @@ export class DashboardRepository {
 
       if (!user) return null;
 
+      const orgName = user.branch?.organization?.name || user.organization?.name || null;
+
       return {
-        companyName: user.branch?.company?.name || null,
+        organizationName: orgName,
+        companyName: orgName,
         branchName: user.branch?.name || null,
         departmentName: user.department?.name || null,
         managerName: user.manager ? `${user.manager.firstName || ''} ${user.manager.lastName || ''}`.trim() : null,

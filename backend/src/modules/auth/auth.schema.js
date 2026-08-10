@@ -108,15 +108,15 @@ export const resendOtpSchema = z.object({
 // -------------------------------
 export const changePasswordSchema = z
   .object({
-    oldPassword: z.string().min(1, {
-      message: "Current password is required.",
+    oldPassword: z.string().optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().min(6, {
+      message: "New password must be at least 6 characters long.",
     }),
-
-    newPassword: strongPasswordSchema,
   })
-  .refine((data) => data.oldPassword !== data.newPassword, {
-    message: "New password must be different from your old password.",
-    path: ["newPassword"],
+  .refine((data) => (data.oldPassword || data.currentPassword), {
+    message: "Current password is required.",
+    path: ["currentPassword"],
   });
 
 // -------------------------------

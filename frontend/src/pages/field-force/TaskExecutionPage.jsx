@@ -17,6 +17,19 @@ import TaskStatusBadge from "../../components/team/TaskStatusBadge";
 import ErrorState from "../../components/dashboard/ErrorState";
 import dayjs from "dayjs";
 
+// Resolve photo URLs — stored as relative paths like /uploads/photos/photo-xxx.jpg
+// Must be prefixed with the backend base URL, not the frontend server.
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5000';
+function getPhotoUrl(photo) {
+  if (!photo) return null;
+  if (typeof photo === 'string') {
+    if (photo.startsWith('http://') || photo.startsWith('https://') || photo.startsWith('blob:')) return photo;
+    return `${API_BASE}${photo.startsWith('/') ? '' : '/'}${photo}`;
+  }
+  if (Array.isArray(photo) && photo.length > 0) return getPhotoUrl(photo[0]);
+  return null;
+}
+
 const WORKFLOW_STEPS = [
   { status: "PENDING", label: "Assigned", icon: Clock },
   { status: "IN_PROGRESS", label: "Navigating", icon: Navigation },
@@ -33,6 +46,7 @@ export default function TaskExecutionPage() {
 
   const [task, setTask] = useState(null);
   const [routeInfo, setRouteInfo] = useState(null);
+  const [liveRouteData, setLiveRouteData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -87,7 +101,7 @@ export default function TaskExecutionPage() {
         console.warn("Route API error:", e);
       }
     } catch (err) {
-      setError(err?.response?.data || err);
+      setError(err?.response?.data?.message || err?.message || "Failed to load field task details");
     } finally {
       setLoading(false);
     }
@@ -97,16 +111,32 @@ export default function TaskExecutionPage() {
     loadTaskData();
   }, [id]);
 
-  const metadata = task?.metadata || {};
-  const customer = metadata.customer || {};
-  const order = metadata.order || {};
-  const products = metadata.products || [];
-  const requirements = metadata.requirements || {};
-  const instructions = metadata.instructions || [];
+  // Re-fetch backend route with live GPS coordinates as soon as browser GPS fix is acquired
+  useEffect(() => {
+    if (id && gpsLocation?.lat && gpsLocation?.lng) {
+      fieldForceApi.getTaskRoute(id, gpsLocation)
+        .then((res) => {
+          const rData = res.data?.data || res.data;
+          if (rData) setRouteInfo(rData);
+        })
+        .catch((err) => console.warn("Failed to update route with live GPS:", err));
+    }
+  }, [id, gpsLocation?.lat, gpsLocation?.lng]);
 
-  const targetLat = customer.lat ?? metadata.location?.lat ?? metadata.destination?.lat ?? routeInfo?.destination?.lat;
-  const targetLng = customer.lng ?? metadata.location?.lng ?? metadata.destination?.lng ?? routeInfo?.destination?.lng;
-  const targetCoords = targetLat != null && targetLng != null ? { lat: Number(targetLat), lng: Number(targetLng) } : null;
+  const metadata = typeof task?.metadata === "object" && task?.metadata !== null
+    ? task.metadata
+    : (typeof task?.metadata === "string"
+        ? (() => { try { return JSON.parse(task.metadata); } catch(e) { return {}; } })()
+        : {});
+  const customer = typeof metadata.customer === "object" && metadata.customer !== null ? metadata.customer : {};
+  const order = typeof metadata.order === "object" && metadata.order !== null ? metadata.order : {};
+  const products = Array.isArray(metadata.products) ? metadata.products : [];
+  const requirements = typeof metadata.requirements === "object" && metadata.requirements !== null ? metadata.requirements : {};
+  const instructions = Array.isArray(metadata.instructions) ? metadata.instructions : [];
+
+  const destLat = task?.destinationLatitude ?? customer.lat ?? metadata.location?.lat ?? metadata.destination?.lat;
+  const destLng = task?.destinationLongitude ?? customer.lng ?? metadata.location?.lng ?? metadata.destination?.lng;
+  const targetCoords = destLat != null && destLng != null ? { lat: Number(destLat), lng: Number(destLng) } : null;
 
   const currentDistance = calculateDistanceMeters(
     gpsLocation?.lat,
@@ -130,7 +160,7 @@ export default function TaskExecutionPage() {
       toast.success(`Task status updated to ${nextStatus.replace(/_/g, " ")}`);
       await loadTaskData();
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to update status");
+      toast.error(err?.response?.data?.message || "Failed to update task status");
     } finally {
       setActionLoading(false);
     }
@@ -174,7 +204,7 @@ export default function TaskExecutionPage() {
   }
 
   if (error || !task) {
-    return <ErrorState message="Failed to load field task details" onRetry={loadTaskData} />;
+    return <ErrorState message={typeof error === "string" ? error : (error?.message || "Failed to load field task details")} onRetry={loadTaskData} />;
   }
 
   const currentStepIndex = WORKFLOW_STEPS.findIndex((s) => s.status === task.status);
@@ -257,15 +287,25 @@ export default function TaskExecutionPage() {
 
       {/* Navigation Route Map */}
       <RouteMap
+        task={task}
         userLocation={gpsLocation}
         destination={{
-          lat: targetCoords?.lat,
-          lng: targetCoords?.lng,
-          address: customer.address || customer.name,
+          lat: task?.destinationLatitude ?? targetCoords?.lat,
+          lng: task?.destinationLongitude ?? targetCoords?.lng,
+          address: task?.destinationAddress || customer.address || customer.name || "Customer Destination",
+        }}
+        pickup={{
+          lat: task?.pickupLatitude,
+          lng: task?.pickupLongitude,
+          address: task?.pickupAddress || "Branch Location",
         }}
         distanceMeters={routeInfo?.distanceMeters || currentDistance}
         estimatedMinutes={routeInfo?.estimatedMinutes}
-        googleMapsUrl={routeInfo?.googleMapsUrl}
+        onRouteCalculated={(data) => {
+          if (data?.distanceMeters) {
+            setLiveRouteData((prev) => (prev?.distanceMeters === data.distanceMeters ? prev : data));
+          }
+        }}
       />
 
       {/* Geo-Fence Banner */}
@@ -274,6 +314,7 @@ export default function TaskExecutionPage() {
         targetLocation={targetCoords}
         accuracy={gpsAccuracy}
         testingMode={testingMode}
+        overrideDistanceMeters={liveRouteData?.distanceMeters ?? routeInfo?.distanceMeters ?? currentDistance}
       />
 
       {/* Primary Execution Control Card */}
@@ -339,16 +380,18 @@ export default function TaskExecutionPage() {
                 className="block w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
               />
 
-              {/* Photo Preview rendering for uploaded file or existing image URL */}
-              {(photoPreview || task.photos || photoUrl) && (
-                <div className="mt-3 relative rounded-xl overflow-hidden border border-blue-200 bg-slate-900/5 max-h-48">
+              {/* Photo Preview rendering: show local preview blob OR saved task photo after save */}
+              {(photoPreview || getPhotoUrl(task.photos) || photoUrl) && (
+                <div className="mt-3 rounded-xl overflow-hidden border border-blue-200 bg-slate-900/5">
                   <img
-                    src={photoPreview || (Array.isArray(task.photos) ? task.photos[0] : task.photos) || photoUrl}
+                    src={photoPreview || getPhotoUrl(task.photos) || photoUrl}
                     alt="Delivery Photo Proof"
-                    className="w-full h-48 object-cover rounded-xl"
+                    className="w-full object-contain max-h-64 rounded-xl"
+                    onError={(e) => { e.target.style.display = 'none'; }}
                   />
-                  <span className="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1">
-                    <CheckCircle2 size={12} className="text-emerald-400" /> Photo Preview Ready
+                  <span className="flex items-center gap-1 text-[10px] font-bold px-3 py-1.5 bg-slate-900/80 text-white">
+                    <CheckCircle2 size={12} className="text-emerald-400" />
+                    {photoPreview ? 'New Photo Selected — Ready to Save' : 'Saved Photo Proof'}
                   </span>
                 </div>
               )}
@@ -475,6 +518,62 @@ export default function TaskExecutionPage() {
             </div>
           )}
 
+          {/* Linked Sales Order */}
+          {(metadata.order || metadata.orderId) && (
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <ShoppingCart size={20} className="text-emerald-600" />
+                  <h3 className="text-base font-bold text-slate-900">Linked Sales Order</h3>
+                </div>
+                {metadata.order?.status && (
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                    {metadata.order.status}
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
+                <div>
+                  <span className="text-slate-500 block font-medium">Order Number</span>
+                  <span className="font-bold text-slate-800">{metadata.order?.orderNumber || metadata.orderId}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block font-medium">Order Name</span>
+                  <span className="font-bold text-slate-800">{metadata.order?.orderName || metadata.order?.orderNumber || "Sales Order"}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block font-medium">Total Amount</span>
+                  <span className="font-bold text-emerald-600">₹{(metadata.order?.totalAmount || metadata.order?.total || 0).toLocaleString()}</span>
+                </div>
+              </div>
+              {Array.isArray(metadata.order?.items) && metadata.order.items.length > 0 && (
+                <div className="border-t border-slate-100 pt-3">
+                  <p className="text-xs font-bold text-slate-700 mb-2">Order Products & Items List:</p>
+                  <div className="overflow-x-auto rounded-xl border border-slate-200">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
+                        <tr>
+                          <th className="px-3 py-2">Item / Product</th>
+                          <th className="px-3 py-2 text-center">Qty</th>
+                          <th className="px-3 py-2 text-right">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {metadata.order.items.map((item, idx) => (
+                          <tr key={idx}>
+                            <td className="px-3 py-2 font-medium text-slate-800">{item.name || item.description || `Item ${idx + 1}`}</td>
+                            <td className="px-3 py-2 text-center font-bold text-slate-700">{item.quantity}</td>
+                            <td className="px-3 py-2 text-right font-semibold text-slate-800">₹{(item.unitPrice || 0).toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Products */}
           {products.length > 0 && (
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
@@ -554,12 +653,39 @@ export default function TaskExecutionPage() {
           {(task.photos || task.customerSignature) && (
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
               <h3 className="text-base font-bold text-slate-900">Captured Artifacts</h3>
-              {task.photos && (
-                <div>
-                  <p className="text-xs font-semibold text-slate-500 mb-2">Delivery Photo</p>
-                  <img src={Array.isArray(task.photos) ? task.photos[0] : task.photos} alt="Proof" className="w-full h-36 object-cover rounded-xl border border-slate-200" />
-                </div>
-              )}
+              {task.photos && (() => {
+                const photoList = Array.isArray(task.photos)
+                  ? task.photos.filter(Boolean)
+                  : (task.photos ? [task.photos] : []);
+                return photoList.length > 0 ? (
+                  <div>
+                    <p className="text-xs font-semibold text-slate-500 mb-2">
+                      Delivery Photos ({photoList.length})
+                    </p>
+                    <div className={`grid gap-2 ${photoList.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                      {photoList.map((photo, idx) => (
+                        <div key={idx} className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+                          <img
+                            src={getPhotoUrl(photo)}
+                            alt={`Photo ${idx + 1}`}
+                            className="w-full object-contain max-h-56"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling && (e.target.nextSibling.style.display = 'flex');
+                            }}
+                          />
+                          <div style={{ display: 'none' }} className="flex items-center justify-center gap-2 h-24 bg-orange-50 text-orange-600 text-xs font-semibold">
+                            <AlertCircle size={16} /> Could not load photo
+                          </div>
+                          <span className="absolute top-1 left-1 bg-slate-900/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                            Photo {idx + 1}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+              })()}
               {task.customerSignature && (
                 <div>
                   <p className="text-xs font-semibold text-slate-500 mb-2">Customer Digital Signature</p>

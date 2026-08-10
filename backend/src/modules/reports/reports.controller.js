@@ -46,8 +46,18 @@ export class ReportsController {
 
   getAnalytics = async (req, res, next) => {
     try {
-      const analytics = await this.service.getOrganizationAnalytics(req.user.organizationId);
-      return successResponse(res, analytics, 'Organization reports analytics retrieved.');
+      const roleNames = Array.isArray(req.user.roles)
+        ? req.user.roles.map((r) => (typeof r === "string" ? r : r.name || r.role?.name || ""))
+        : [];
+      const isSalesManager = roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+      const isSuperOrCompanyAdmin = roleNames.some(
+        (r) => r && (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("company admin") || r.toLowerCase() === "admin")
+      );
+
+      const branchId = (!isSuperOrCompanyAdmin && (isSalesManager || req.user.branchId)) ? req.user.branchId : null;
+
+      const analytics = await this.service.getOrganizationAnalytics(req.user.organizationId, branchId);
+      return successResponse(res, analytics, 'Reports analytics retrieved.');
     } catch (err) {
       next(err);
     }

@@ -69,7 +69,7 @@ export default function FieldForceDashboard() {
   ];
 
   const performanceMetrics = [
-    { label: "Visit Target", value: visitSummary.total > 0 ? Math.round((visitSummary.completed / visitSummary.total) * 100) : 0 },
+    { label: "Task Target", value: visitSummary.total > 0 ? Math.round((visitSummary.completed / visitSummary.total) * 100) : 0 },
     { label: "Task Completion", value: taskSummary.completionRate },
     { label: "DAR Submission", value: darSummary.total > 0 ? Math.round((darSummary.submitted + darSummary.approved) / darSummary.total * 100) : 0 },
   ];
@@ -121,8 +121,8 @@ export default function FieldForceDashboard() {
           <SectionCard title="Today's Summary" icon={BarChart3} iconColor="text-emerald-600">
             <div className="space-y-3">
               {[
-                { label: "Visits Planned", value: visitSummary.planned },
-                { label: "Visits Completed", value: visitSummary.completed },
+                { label: "Tasks Planned", value: visitSummary.planned },
+                { label: "Tasks Completed", value: visitSummary.completed },
                 { label: "Tasks In Progress", value: inProgressTasks.length },
               ].map((item, i) => (
                 <div key={i} className="flex justify-between text-sm">

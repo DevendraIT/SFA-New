@@ -190,12 +190,27 @@ createTask = async (req, res, next) => {
 
   listVisitsData = async (req, res, next) => {
     try {
+      const roleNames = Array.isArray(req.user.roles)
+        ? req.user.roles.map((r) => (typeof r === "string" ? r : r.name || r.role?.name || ""))
+        : [];
+      const isSalesExecutive = roleNames.some((r) => r && r.toLowerCase().includes("sales executive"));
+      const isSalesManager = roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+      const isSuperOrCompanyAdmin = roleNames.some(
+        (r) => r && (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("company admin") || r.toLowerCase() === "admin")
+      );
+
+      let filterUserId = req.query.userId;
+      if (isSalesExecutive) {
+        filterUserId = req.user.id;
+      }
+
       const result = await this.service.listVisits(req.user.organizationId, {
-        userId: req.query.userId,
+        userId: filterUserId,
         status: req.query.status,
         customerId: req.query.customerId,
+        branchId: (!isSuperOrCompanyAdmin && isSalesManager) ? req.user.branchId : req.query.branchId,
         skip: parseInt(req.query.skip) || 0,
-        take: parseInt(req.query.take) || 20,
+        take: parseInt(req.query.take) || 100,
       });
       return successResponse(res, result, 'Visits retrieved.');
     } catch (err) {
@@ -342,9 +357,14 @@ createTask = async (req, res, next) => {
 
   getTaskRoute = async (req, res, next) => {
     try {
-      const userLocation = req.query.lat && req.query.lng ? {
-        lat: parseFloat(req.query.lat),
-        lng: parseFloat(req.query.lng)
+      const rawLat = req.query.lat || req.query.latitude || req.query.userLat;
+      const rawLng = req.query.lng || req.query.longitude || req.query.userLng;
+      const parsedLat = parseFloat(rawLat);
+      const parsedLng = parseFloat(rawLng);
+
+      const userLocation = (!isNaN(parsedLat) && !isNaN(parsedLng)) ? {
+        lat: parsedLat,
+        lng: parsedLng
       } : null;
 
       const result = await this.service.getTaskRoute(
