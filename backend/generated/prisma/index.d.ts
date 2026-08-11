@@ -188,6 +188,16 @@ export type StockMovement = $Result.DefaultSelection<Prisma.$StockMovementPayloa
  * 
  */
 export type ProductIssue = $Result.DefaultSelection<Prisma.$ProductIssuePayload>
+/**
+ * Model CRMImport
+ * 
+ */
+export type CRMImport = $Result.DefaultSelection<Prisma.$CRMImportPayload>
+/**
+ * Model CRMImportRow
+ * 
+ */
+export type CRMImportRow = $Result.DefaultSelection<Prisma.$CRMImportRowPayload>
 
 /**
  * Enums
@@ -880,6 +890,26 @@ export class PrismaClient<
     * ```
     */
   get productIssue(): Prisma.ProductIssueDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.cRMImport`: Exposes CRUD operations for the **CRMImport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CRMImports
+    * const cRMImports = await prisma.cRMImport.findMany()
+    * ```
+    */
+  get cRMImport(): Prisma.CRMImportDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.cRMImportRow`: Exposes CRUD operations for the **CRMImportRow** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CRMImportRows
+    * const cRMImportRows = await prisma.cRMImportRow.findMany()
+    * ```
+    */
+  get cRMImportRow(): Prisma.CRMImportRowDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1348,7 +1378,9 @@ export namespace Prisma {
     Warehouse: 'Warehouse',
     Stock: 'Stock',
     StockMovement: 'StockMovement',
-    ProductIssue: 'ProductIssue'
+    ProductIssue: 'ProductIssue',
+    CRMImport: 'CRMImport',
+    CRMImportRow: 'CRMImportRow'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1364,7 +1396,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "orderNote" | "attendance" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement" | "productIssue"
+      modelProps: "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "orderNote" | "attendance" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement" | "productIssue" | "cRMImport" | "cRMImportRow"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3958,6 +3990,154 @@ export namespace Prisma {
           }
         }
       }
+      CRMImport: {
+        payload: Prisma.$CRMImportPayload<ExtArgs>
+        fields: Prisma.CRMImportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CRMImportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CRMImportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>
+          }
+          findFirst: {
+            args: Prisma.CRMImportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CRMImportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>
+          }
+          findMany: {
+            args: Prisma.CRMImportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>[]
+          }
+          create: {
+            args: Prisma.CRMImportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>
+          }
+          createMany: {
+            args: Prisma.CRMImportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CRMImportCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>[]
+          }
+          delete: {
+            args: Prisma.CRMImportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>
+          }
+          update: {
+            args: Prisma.CRMImportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>
+          }
+          deleteMany: {
+            args: Prisma.CRMImportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CRMImportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CRMImportUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>[]
+          }
+          upsert: {
+            args: Prisma.CRMImportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportPayload>
+          }
+          aggregate: {
+            args: Prisma.CRMImportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCRMImport>
+          }
+          groupBy: {
+            args: Prisma.CRMImportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CRMImportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CRMImportCountArgs<ExtArgs>
+            result: $Utils.Optional<CRMImportCountAggregateOutputType> | number
+          }
+        }
+      }
+      CRMImportRow: {
+        payload: Prisma.$CRMImportRowPayload<ExtArgs>
+        fields: Prisma.CRMImportRowFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CRMImportRowFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CRMImportRowFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>
+          }
+          findFirst: {
+            args: Prisma.CRMImportRowFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CRMImportRowFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>
+          }
+          findMany: {
+            args: Prisma.CRMImportRowFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>[]
+          }
+          create: {
+            args: Prisma.CRMImportRowCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>
+          }
+          createMany: {
+            args: Prisma.CRMImportRowCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CRMImportRowCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>[]
+          }
+          delete: {
+            args: Prisma.CRMImportRowDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>
+          }
+          update: {
+            args: Prisma.CRMImportRowUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>
+          }
+          deleteMany: {
+            args: Prisma.CRMImportRowDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CRMImportRowUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CRMImportRowUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>[]
+          }
+          upsert: {
+            args: Prisma.CRMImportRowUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CRMImportRowPayload>
+          }
+          aggregate: {
+            args: Prisma.CRMImportRowAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCRMImportRow>
+          }
+          groupBy: {
+            args: Prisma.CRMImportRowGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CRMImportRowGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CRMImportRowCountArgs<ExtArgs>
+            result: $Utils.Optional<CRMImportRowCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4101,6 +4281,8 @@ export namespace Prisma {
     stock?: StockOmit
     stockMovement?: StockMovementOmit
     productIssue?: ProductIssueOmit
+    cRMImport?: CRMImportOmit
+    cRMImportRow?: CRMImportRowOmit
   }
 
   /* Types for Logging */
@@ -4208,6 +4390,7 @@ export namespace Prisma {
     stocks: number
     stockMovements: number
     productIssues: number
+    crmImports: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4238,6 +4421,7 @@ export namespace Prisma {
     stocks?: boolean | OrganizationCountOutputTypeCountStocksArgs
     stockMovements?: boolean | OrganizationCountOutputTypeCountStockMovementsArgs
     productIssues?: boolean | OrganizationCountOutputTypeCountProductIssuesArgs
+    crmImports?: boolean | OrganizationCountOutputTypeCountCrmImportsArgs
   }
 
   // Custom InputTypes
@@ -4440,6 +4624,13 @@ export namespace Prisma {
     where?: ProductIssueWhereInput
   }
 
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountCrmImportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportWhereInput
+  }
+
 
   /**
    * Count Type BranchCountOutputType
@@ -4449,12 +4640,14 @@ export namespace Prisma {
     teams: number
     users: number
     warehouses: number
+    crmImportRows: number
   }
 
   export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     teams?: boolean | BranchCountOutputTypeCountTeamsArgs
     users?: boolean | BranchCountOutputTypeCountUsersArgs
     warehouses?: boolean | BranchCountOutputTypeCountWarehousesArgs
+    crmImportRows?: boolean | BranchCountOutputTypeCountCrmImportRowsArgs
   }
 
   // Custom InputTypes
@@ -4487,6 +4680,13 @@ export namespace Prisma {
    */
   export type BranchCountOutputTypeCountWarehousesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WarehouseWhereInput
+  }
+
+  /**
+   * BranchCountOutputType without action
+   */
+  export type BranchCountOutputTypeCountCrmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportRowWhereInput
   }
 
 
@@ -4556,12 +4756,14 @@ export namespace Prisma {
     branches: number
     teams: number
     users: number
+    crmImportRows: number
   }
 
   export type TerritoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     branches?: boolean | TerritoryCountOutputTypeCountBranchesArgs
     teams?: boolean | TerritoryCountOutputTypeCountTeamsArgs
     users?: boolean | TerritoryCountOutputTypeCountUsersArgs
+    crmImportRows?: boolean | TerritoryCountOutputTypeCountCrmImportRowsArgs
   }
 
   // Custom InputTypes
@@ -4594,6 +4796,13 @@ export namespace Prisma {
    */
   export type TerritoryCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * TerritoryCountOutputType without action
+   */
+  export type TerritoryCountOutputTypeCountCrmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportRowWhereInput
   }
 
 
@@ -4741,6 +4950,7 @@ export namespace Prisma {
     notificationPrefs: number
     orders: number
     stockMovements: number
+    crmImports: number
     productIssuesWarehouseManaged: number
     productIssuesReceived: number
   }
@@ -4765,6 +4975,7 @@ export namespace Prisma {
     notificationPrefs?: boolean | UserCountOutputTypeCountNotificationPrefsArgs
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
+    crmImports?: boolean | UserCountOutputTypeCountCrmImportsArgs
     productIssuesWarehouseManaged?: boolean | UserCountOutputTypeCountProductIssuesWarehouseManagedArgs
     productIssuesReceived?: boolean | UserCountOutputTypeCountProductIssuesReceivedArgs
   }
@@ -4916,6 +5127,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountCrmImportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountProductIssuesWarehouseManagedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductIssueWhereInput
   }
@@ -4935,11 +5153,13 @@ export namespace Prisma {
   export type CustomerCountOutputType = {
     orders: number
     visits: number
+    crmImportRows: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
     visits?: boolean | CustomerCountOutputTypeCountVisitsArgs
+    crmImportRows?: boolean | CustomerCountOutputTypeCountCrmImportRowsArgs
   }
 
   // Custom InputTypes
@@ -4967,6 +5187,13 @@ export namespace Prisma {
     where?: VisitWhereInput
   }
 
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountCrmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportRowWhereInput
+  }
+
 
   /**
    * Count Type ProductCountOutputType
@@ -4977,6 +5204,7 @@ export namespace Prisma {
     stocks: number
     movements: number
     issues: number
+    crmImportRows: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4984,6 +5212,7 @@ export namespace Prisma {
     stocks?: boolean | ProductCountOutputTypeCountStocksArgs
     movements?: boolean | ProductCountOutputTypeCountMovementsArgs
     issues?: boolean | ProductCountOutputTypeCountIssuesArgs
+    crmImportRows?: boolean | ProductCountOutputTypeCountCrmImportRowsArgs
   }
 
   // Custom InputTypes
@@ -5023,6 +5252,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductIssueWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountCrmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportRowWhereInput
   }
 
 
@@ -5139,6 +5375,37 @@ export namespace Prisma {
    */
   export type WarehouseCountOutputTypeCountProductIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductIssueWhereInput
+  }
+
+
+  /**
+   * Count Type CRMImportCountOutputType
+   */
+
+  export type CRMImportCountOutputType = {
+    rows: number
+  }
+
+  export type CRMImportCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rows?: boolean | CRMImportCountOutputTypeCountRowsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CRMImportCountOutputType without action
+   */
+  export type CRMImportCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportCountOutputType
+     */
+    select?: CRMImportCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CRMImportCountOutputType without action
+   */
+  export type CRMImportCountOutputTypeCountRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportRowWhereInput
   }
 
 
@@ -5417,6 +5684,7 @@ export namespace Prisma {
     stocks?: boolean | Organization$stocksArgs<ExtArgs>
     stockMovements?: boolean | Organization$stockMovementsArgs<ExtArgs>
     productIssues?: boolean | Organization$productIssuesArgs<ExtArgs>
+    crmImports?: boolean | Organization$crmImportsArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -5503,6 +5771,7 @@ export namespace Prisma {
     stocks?: boolean | Organization$stocksArgs<ExtArgs>
     stockMovements?: boolean | Organization$stockMovementsArgs<ExtArgs>
     productIssues?: boolean | Organization$productIssuesArgs<ExtArgs>
+    crmImports?: boolean | Organization$crmImportsArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5538,6 +5807,7 @@ export namespace Prisma {
       stocks: Prisma.$StockPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
       productIssues: Prisma.$ProductIssuePayload<ExtArgs>[]
+      crmImports: Prisma.$CRMImportPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5976,6 +6246,7 @@ export namespace Prisma {
     stocks<T extends Organization$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Organization$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends Organization$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     productIssues<T extends Organization$productIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$productIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crmImports<T extends Organization$crmImportsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$crmImportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7061,6 +7332,30 @@ export namespace Prisma {
   }
 
   /**
+   * Organization.crmImports
+   */
+  export type Organization$crmImportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    where?: CRMImportWhereInput
+    orderBy?: CRMImportOrderByWithRelationInput | CRMImportOrderByWithRelationInput[]
+    cursor?: CRMImportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CRMImportScalarFieldEnum | CRMImportScalarFieldEnum[]
+  }
+
+  /**
    * Organization without action
    */
   export type OrganizationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7383,6 +7678,7 @@ export namespace Prisma {
     teams?: boolean | Branch$teamsArgs<ExtArgs>
     users?: boolean | Branch$usersArgs<ExtArgs>
     warehouses?: boolean | Branch$warehousesArgs<ExtArgs>
+    crmImportRows?: boolean | Branch$crmImportRowsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
@@ -7460,6 +7756,7 @@ export namespace Prisma {
     teams?: boolean | Branch$teamsArgs<ExtArgs>
     users?: boolean | Branch$usersArgs<ExtArgs>
     warehouses?: boolean | Branch$warehousesArgs<ExtArgs>
+    crmImportRows?: boolean | Branch$crmImportRowsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7482,6 +7779,7 @@ export namespace Prisma {
       teams: Prisma.$TeamPayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
       warehouses: Prisma.$WarehousePayload<ExtArgs>[]
+      crmImportRows: Prisma.$CRMImportRowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7901,6 +8199,7 @@ export namespace Prisma {
     teams<T extends Branch$teamsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     users<T extends Branch$usersArgs<ExtArgs> = {}>(args?: Subset<T, Branch$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     warehouses<T extends Branch$warehousesArgs<ExtArgs> = {}>(args?: Subset<T, Branch$warehousesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crmImportRows<T extends Branch$crmImportRowsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$crmImportRowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8417,6 +8716,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WarehouseScalarFieldEnum | WarehouseScalarFieldEnum[]
+  }
+
+  /**
+   * Branch.crmImportRows
+   */
+  export type Branch$crmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    where?: CRMImportRowWhereInput
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    cursor?: CRMImportRowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
   }
 
   /**
@@ -9855,6 +10178,7 @@ export namespace Prisma {
     branches?: boolean | Territory$branchesArgs<ExtArgs>
     teams?: boolean | Territory$teamsArgs<ExtArgs>
     users?: boolean | Territory$usersArgs<ExtArgs>
+    crmImportRows?: boolean | Territory$crmImportRowsArgs<ExtArgs>
     _count?: boolean | TerritoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["territory"]>
 
@@ -9905,6 +10229,7 @@ export namespace Prisma {
     branches?: boolean | Territory$branchesArgs<ExtArgs>
     teams?: boolean | Territory$teamsArgs<ExtArgs>
     users?: boolean | Territory$usersArgs<ExtArgs>
+    crmImportRows?: boolean | Territory$crmImportRowsArgs<ExtArgs>
     _count?: boolean | TerritoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TerritoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9924,6 +10249,7 @@ export namespace Prisma {
       branches: Prisma.$BranchPayload<ExtArgs>[]
       teams: Prisma.$TeamPayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
+      crmImportRows: Prisma.$CRMImportRowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10334,6 +10660,7 @@ export namespace Prisma {
     branches<T extends Territory$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Territory$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teams<T extends Territory$teamsArgs<ExtArgs> = {}>(args?: Subset<T, Territory$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     users<T extends Territory$usersArgs<ExtArgs> = {}>(args?: Subset<T, Territory$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crmImportRows<T extends Territory$crmImportRowsArgs<ExtArgs> = {}>(args?: Subset<T, Territory$crmImportRowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10842,6 +11169,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Territory.crmImportRows
+   */
+  export type Territory$crmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    where?: CRMImportRowWhereInput
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    cursor?: CRMImportRowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
   }
 
   /**
@@ -15908,6 +16259,7 @@ export namespace Prisma {
     notificationPrefs?: boolean | User$notificationPrefsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    crmImports?: boolean | User$crmImportsArgs<ExtArgs>
     managedWarehouse?: boolean | User$managedWarehouseArgs<ExtArgs>
     productIssuesWarehouseManaged?: boolean | User$productIssuesWarehouseManagedArgs<ExtArgs>
     productIssuesReceived?: boolean | User$productIssuesReceivedArgs<ExtArgs>
@@ -16037,6 +16389,7 @@ export namespace Prisma {
     notificationPrefs?: boolean | User$notificationPrefsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    crmImports?: boolean | User$crmImportsArgs<ExtArgs>
     managedWarehouse?: boolean | User$managedWarehouseArgs<ExtArgs>
     productIssuesWarehouseManaged?: boolean | User$productIssuesWarehouseManagedArgs<ExtArgs>
     productIssuesReceived?: boolean | User$productIssuesReceivedArgs<ExtArgs>
@@ -16087,6 +16440,7 @@ export namespace Prisma {
       notificationPrefs: Prisma.$NotificationPreferencePayload<ExtArgs>[]
       orders: Prisma.$OrderPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+      crmImports: Prisma.$CRMImportPayload<ExtArgs>[]
       managedWarehouse: Prisma.$WarehousePayload<ExtArgs> | null
       productIssuesWarehouseManaged: Prisma.$ProductIssuePayload<ExtArgs>[]
       productIssuesReceived: Prisma.$ProductIssuePayload<ExtArgs>[]
@@ -16536,6 +16890,7 @@ export namespace Prisma {
     notificationPrefs<T extends User$notificationPrefsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationPrefsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crmImports<T extends User$crmImportsArgs<ExtArgs> = {}>(args?: Subset<T, User$crmImportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     managedWarehouse<T extends User$managedWarehouseArgs<ExtArgs> = {}>(args?: Subset<T, User$managedWarehouseArgs<ExtArgs>>): Prisma__WarehouseClient<$Result.GetResult<Prisma.$WarehousePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     productIssuesWarehouseManaged<T extends User$productIssuesWarehouseManagedArgs<ExtArgs> = {}>(args?: Subset<T, User$productIssuesWarehouseManagedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     productIssuesReceived<T extends User$productIssuesReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$productIssuesReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -17542,6 +17897,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * User.crmImports
+   */
+  export type User$crmImportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    where?: CRMImportWhereInput
+    orderBy?: CRMImportOrderByWithRelationInput | CRMImportOrderByWithRelationInput[]
+    cursor?: CRMImportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CRMImportScalarFieldEnum | CRMImportScalarFieldEnum[]
   }
 
   /**
@@ -22056,6 +22435,7 @@ export namespace Prisma {
     industry: string | null
     latitude: number | null
     longitude: number | null
+    crmId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -22069,6 +22449,7 @@ export namespace Prisma {
     industry: string | null
     latitude: number | null
     longitude: number | null
+    crmId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -22083,6 +22464,8 @@ export namespace Prisma {
     address: number
     latitude: number
     longitude: number
+    crmId: number
+    customFields: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -22108,6 +22491,7 @@ export namespace Prisma {
     industry?: true
     latitude?: true
     longitude?: true
+    crmId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -22121,6 +22505,7 @@ export namespace Prisma {
     industry?: true
     latitude?: true
     longitude?: true
+    crmId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -22135,6 +22520,8 @@ export namespace Prisma {
     address?: true
     latitude?: true
     longitude?: true
+    crmId?: true
+    customFields?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -22236,6 +22623,8 @@ export namespace Prisma {
     address: JsonValue | null
     latitude: number | null
     longitude: number | null
+    crmId: string | null
+    customFields: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: CustomerCountAggregateOutputType | null
@@ -22269,11 +22658,14 @@ export namespace Prisma {
     address?: boolean
     latitude?: boolean
     longitude?: boolean
+    crmId?: boolean
+    customFields?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     visits?: boolean | Customer$visitsArgs<ExtArgs>
+    crmImportRows?: boolean | Customer$crmImportRowsArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -22287,6 +22679,8 @@ export namespace Prisma {
     address?: boolean
     latitude?: boolean
     longitude?: boolean
+    crmId?: boolean
+    customFields?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -22302,6 +22696,8 @@ export namespace Prisma {
     address?: boolean
     latitude?: boolean
     longitude?: boolean
+    crmId?: boolean
+    customFields?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -22317,15 +22713,18 @@ export namespace Prisma {
     address?: boolean
     latitude?: boolean
     longitude?: boolean
+    crmId?: boolean
+    customFields?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "email" | "phone" | "industry" | "address" | "latitude" | "longitude" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "email" | "phone" | "industry" | "address" | "latitude" | "longitude" | "crmId" | "customFields" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     visits?: boolean | Customer$visitsArgs<ExtArgs>
+    crmImportRows?: boolean | Customer$crmImportRowsArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -22341,6 +22740,7 @@ export namespace Prisma {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       orders: Prisma.$OrderPayload<ExtArgs>[]
       visits: Prisma.$VisitPayload<ExtArgs>[]
+      crmImportRows: Prisma.$CRMImportRowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22352,6 +22752,8 @@ export namespace Prisma {
       address: Prisma.JsonValue | null
       latitude: number | null
       longitude: number | null
+      crmId: string | null
+      customFields: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["customer"]>
@@ -22751,6 +23153,7 @@ export namespace Prisma {
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     visits<T extends Customer$visitsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crmImportRows<T extends Customer$crmImportRowsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$crmImportRowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22789,6 +23192,8 @@ export namespace Prisma {
     readonly address: FieldRef<"Customer", 'Json'>
     readonly latitude: FieldRef<"Customer", 'Float'>
     readonly longitude: FieldRef<"Customer", 'Float'>
+    readonly crmId: FieldRef<"Customer", 'String'>
+    readonly customFields: FieldRef<"Customer", 'Json'>
     readonly createdAt: FieldRef<"Customer", 'DateTime'>
     readonly updatedAt: FieldRef<"Customer", 'DateTime'>
   }
@@ -23240,6 +23645,30 @@ export namespace Prisma {
   }
 
   /**
+   * Customer.crmImportRows
+   */
+  export type Customer$crmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    where?: CRMImportRowWhereInput
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    cursor?: CRMImportRowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
+  }
+
+  /**
    * Customer without action
    */
   export type CustomerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23569,6 +23998,7 @@ export namespace Prisma {
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     movements?: boolean | Product$movementsArgs<ExtArgs>
     issues?: boolean | Product$issuesArgs<ExtArgs>
+    crmImportRows?: boolean | Product$crmImportRowsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -23641,6 +24071,7 @@ export namespace Prisma {
     stocks?: boolean | Product$stocksArgs<ExtArgs>
     movements?: boolean | Product$movementsArgs<ExtArgs>
     issues?: boolean | Product$issuesArgs<ExtArgs>
+    crmImportRows?: boolean | Product$crmImportRowsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23658,6 +24089,7 @@ export namespace Prisma {
       stocks: Prisma.$StockPayload<ExtArgs>[]
       movements: Prisma.$StockMovementPayload<ExtArgs>[]
       issues: Prisma.$ProductIssuePayload<ExtArgs>[]
+      crmImportRows: Prisma.$CRMImportRowPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -24076,6 +24508,7 @@ export namespace Prisma {
     stocks<T extends Product$stocksArgs<ExtArgs> = {}>(args?: Subset<T, Product$stocksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movements<T extends Product$movementsArgs<ExtArgs> = {}>(args?: Subset<T, Product$movementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     issues<T extends Product$issuesArgs<ExtArgs> = {}>(args?: Subset<T, Product$issuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crmImportRows<T extends Product$crmImportRowsArgs<ExtArgs> = {}>(args?: Subset<T, Product$crmImportRowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24616,6 +25049,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProductIssueScalarFieldEnum | ProductIssueScalarFieldEnum[]
+  }
+
+  /**
+   * Product.crmImportRows
+   */
+  export type Product$crmImportRowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    where?: CRMImportRowWhereInput
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    cursor?: CRMImportRowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
   }
 
   /**
@@ -48483,6 +48940,2727 @@ export namespace Prisma {
 
 
   /**
+   * Model CRMImport
+   */
+
+  export type AggregateCRMImport = {
+    _count: CRMImportCountAggregateOutputType | null
+    _avg: CRMImportAvgAggregateOutputType | null
+    _sum: CRMImportSumAggregateOutputType | null
+    _min: CRMImportMinAggregateOutputType | null
+    _max: CRMImportMaxAggregateOutputType | null
+  }
+
+  export type CRMImportAvgAggregateOutputType = {
+    totalRows: number | null
+    successfulRows: number | null
+    failedRows: number | null
+  }
+
+  export type CRMImportSumAggregateOutputType = {
+    totalRows: number | null
+    successfulRows: number | null
+    failedRows: number | null
+  }
+
+  export type CRMImportMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    fileName: string | null
+    uploadedBy: string | null
+    totalRows: number | null
+    successfulRows: number | null
+    failedRows: number | null
+    status: string | null
+    createdAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type CRMImportMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    fileName: string | null
+    uploadedBy: string | null
+    totalRows: number | null
+    successfulRows: number | null
+    failedRows: number | null
+    status: string | null
+    createdAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type CRMImportCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    fileName: number
+    uploadedBy: number
+    totalRows: number
+    successfulRows: number
+    failedRows: number
+    status: number
+    summary: number
+    errors: number
+    createdAt: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type CRMImportAvgAggregateInputType = {
+    totalRows?: true
+    successfulRows?: true
+    failedRows?: true
+  }
+
+  export type CRMImportSumAggregateInputType = {
+    totalRows?: true
+    successfulRows?: true
+    failedRows?: true
+  }
+
+  export type CRMImportMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    fileName?: true
+    uploadedBy?: true
+    totalRows?: true
+    successfulRows?: true
+    failedRows?: true
+    status?: true
+    createdAt?: true
+    completedAt?: true
+  }
+
+  export type CRMImportMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    fileName?: true
+    uploadedBy?: true
+    totalRows?: true
+    successfulRows?: true
+    failedRows?: true
+    status?: true
+    createdAt?: true
+    completedAt?: true
+  }
+
+  export type CRMImportCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    fileName?: true
+    uploadedBy?: true
+    totalRows?: true
+    successfulRows?: true
+    failedRows?: true
+    status?: true
+    summary?: true
+    errors?: true
+    createdAt?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type CRMImportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CRMImport to aggregate.
+     */
+    where?: CRMImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImports to fetch.
+     */
+    orderBy?: CRMImportOrderByWithRelationInput | CRMImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CRMImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CRMImports
+    **/
+    _count?: true | CRMImportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CRMImportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CRMImportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CRMImportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CRMImportMaxAggregateInputType
+  }
+
+  export type GetCRMImportAggregateType<T extends CRMImportAggregateArgs> = {
+        [P in keyof T & keyof AggregateCRMImport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCRMImport[P]>
+      : GetScalarType<T[P], AggregateCRMImport[P]>
+  }
+
+
+
+
+  export type CRMImportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportWhereInput
+    orderBy?: CRMImportOrderByWithAggregationInput | CRMImportOrderByWithAggregationInput[]
+    by: CRMImportScalarFieldEnum[] | CRMImportScalarFieldEnum
+    having?: CRMImportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CRMImportCountAggregateInputType | true
+    _avg?: CRMImportAvgAggregateInputType
+    _sum?: CRMImportSumAggregateInputType
+    _min?: CRMImportMinAggregateInputType
+    _max?: CRMImportMaxAggregateInputType
+  }
+
+  export type CRMImportGroupByOutputType = {
+    id: string
+    organizationId: string
+    fileName: string
+    uploadedBy: string
+    totalRows: number
+    successfulRows: number
+    failedRows: number
+    status: string
+    summary: JsonValue | null
+    errors: JsonValue | null
+    createdAt: Date
+    completedAt: Date | null
+    _count: CRMImportCountAggregateOutputType | null
+    _avg: CRMImportAvgAggregateOutputType | null
+    _sum: CRMImportSumAggregateOutputType | null
+    _min: CRMImportMinAggregateOutputType | null
+    _max: CRMImportMaxAggregateOutputType | null
+  }
+
+  type GetCRMImportGroupByPayload<T extends CRMImportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CRMImportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CRMImportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CRMImportGroupByOutputType[P]>
+            : GetScalarType<T[P], CRMImportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CRMImportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    totalRows?: boolean
+    successfulRows?: boolean
+    failedRows?: boolean
+    status?: boolean
+    summary?: boolean
+    errors?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+    rows?: boolean | CRMImport$rowsArgs<ExtArgs>
+    _count?: boolean | CRMImportCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cRMImport"]>
+
+  export type CRMImportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    totalRows?: boolean
+    successfulRows?: boolean
+    failedRows?: boolean
+    status?: boolean
+    summary?: boolean
+    errors?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cRMImport"]>
+
+  export type CRMImportSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    totalRows?: boolean
+    successfulRows?: boolean
+    failedRows?: boolean
+    status?: boolean
+    summary?: boolean
+    errors?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cRMImport"]>
+
+  export type CRMImportSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    fileName?: boolean
+    uploadedBy?: boolean
+    totalRows?: boolean
+    successfulRows?: boolean
+    failedRows?: boolean
+    status?: boolean
+    summary?: boolean
+    errors?: boolean
+    createdAt?: boolean
+    completedAt?: boolean
+  }
+
+  export type CRMImportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "fileName" | "uploadedBy" | "totalRows" | "successfulRows" | "failedRows" | "status" | "summary" | "errors" | "createdAt" | "completedAt", ExtArgs["result"]["cRMImport"]>
+  export type CRMImportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+    rows?: boolean | CRMImport$rowsArgs<ExtArgs>
+    _count?: boolean | CRMImportCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CRMImportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CRMImportIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    uploader?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $CRMImportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CRMImport"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      uploader: Prisma.$UserPayload<ExtArgs>
+      rows: Prisma.$CRMImportRowPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      fileName: string
+      uploadedBy: string
+      totalRows: number
+      successfulRows: number
+      failedRows: number
+      status: string
+      summary: Prisma.JsonValue | null
+      errors: Prisma.JsonValue | null
+      createdAt: Date
+      completedAt: Date | null
+    }, ExtArgs["result"]["cRMImport"]>
+    composites: {}
+  }
+
+  type CRMImportGetPayload<S extends boolean | null | undefined | CRMImportDefaultArgs> = $Result.GetResult<Prisma.$CRMImportPayload, S>
+
+  type CRMImportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CRMImportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CRMImportCountAggregateInputType | true
+    }
+
+  export interface CRMImportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CRMImport'], meta: { name: 'CRMImport' } }
+    /**
+     * Find zero or one CRMImport that matches the filter.
+     * @param {CRMImportFindUniqueArgs} args - Arguments to find a CRMImport
+     * @example
+     * // Get one CRMImport
+     * const cRMImport = await prisma.cRMImport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CRMImportFindUniqueArgs>(args: SelectSubset<T, CRMImportFindUniqueArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CRMImport that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CRMImportFindUniqueOrThrowArgs} args - Arguments to find a CRMImport
+     * @example
+     * // Get one CRMImport
+     * const cRMImport = await prisma.cRMImport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CRMImportFindUniqueOrThrowArgs>(args: SelectSubset<T, CRMImportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CRMImport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportFindFirstArgs} args - Arguments to find a CRMImport
+     * @example
+     * // Get one CRMImport
+     * const cRMImport = await prisma.cRMImport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CRMImportFindFirstArgs>(args?: SelectSubset<T, CRMImportFindFirstArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CRMImport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportFindFirstOrThrowArgs} args - Arguments to find a CRMImport
+     * @example
+     * // Get one CRMImport
+     * const cRMImport = await prisma.cRMImport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CRMImportFindFirstOrThrowArgs>(args?: SelectSubset<T, CRMImportFindFirstOrThrowArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CRMImports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CRMImports
+     * const cRMImports = await prisma.cRMImport.findMany()
+     * 
+     * // Get first 10 CRMImports
+     * const cRMImports = await prisma.cRMImport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cRMImportWithIdOnly = await prisma.cRMImport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CRMImportFindManyArgs>(args?: SelectSubset<T, CRMImportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CRMImport.
+     * @param {CRMImportCreateArgs} args - Arguments to create a CRMImport.
+     * @example
+     * // Create one CRMImport
+     * const CRMImport = await prisma.cRMImport.create({
+     *   data: {
+     *     // ... data to create a CRMImport
+     *   }
+     * })
+     * 
+     */
+    create<T extends CRMImportCreateArgs>(args: SelectSubset<T, CRMImportCreateArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CRMImports.
+     * @param {CRMImportCreateManyArgs} args - Arguments to create many CRMImports.
+     * @example
+     * // Create many CRMImports
+     * const cRMImport = await prisma.cRMImport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CRMImportCreateManyArgs>(args?: SelectSubset<T, CRMImportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CRMImports and returns the data saved in the database.
+     * @param {CRMImportCreateManyAndReturnArgs} args - Arguments to create many CRMImports.
+     * @example
+     * // Create many CRMImports
+     * const cRMImport = await prisma.cRMImport.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CRMImports and only return the `id`
+     * const cRMImportWithIdOnly = await prisma.cRMImport.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CRMImportCreateManyAndReturnArgs>(args?: SelectSubset<T, CRMImportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CRMImport.
+     * @param {CRMImportDeleteArgs} args - Arguments to delete one CRMImport.
+     * @example
+     * // Delete one CRMImport
+     * const CRMImport = await prisma.cRMImport.delete({
+     *   where: {
+     *     // ... filter to delete one CRMImport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CRMImportDeleteArgs>(args: SelectSubset<T, CRMImportDeleteArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CRMImport.
+     * @param {CRMImportUpdateArgs} args - Arguments to update one CRMImport.
+     * @example
+     * // Update one CRMImport
+     * const cRMImport = await prisma.cRMImport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CRMImportUpdateArgs>(args: SelectSubset<T, CRMImportUpdateArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CRMImports.
+     * @param {CRMImportDeleteManyArgs} args - Arguments to filter CRMImports to delete.
+     * @example
+     * // Delete a few CRMImports
+     * const { count } = await prisma.cRMImport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CRMImportDeleteManyArgs>(args?: SelectSubset<T, CRMImportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CRMImports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CRMImports
+     * const cRMImport = await prisma.cRMImport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CRMImportUpdateManyArgs>(args: SelectSubset<T, CRMImportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CRMImports and returns the data updated in the database.
+     * @param {CRMImportUpdateManyAndReturnArgs} args - Arguments to update many CRMImports.
+     * @example
+     * // Update many CRMImports
+     * const cRMImport = await prisma.cRMImport.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CRMImports and only return the `id`
+     * const cRMImportWithIdOnly = await prisma.cRMImport.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CRMImportUpdateManyAndReturnArgs>(args: SelectSubset<T, CRMImportUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CRMImport.
+     * @param {CRMImportUpsertArgs} args - Arguments to update or create a CRMImport.
+     * @example
+     * // Update or create a CRMImport
+     * const cRMImport = await prisma.cRMImport.upsert({
+     *   create: {
+     *     // ... data to create a CRMImport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CRMImport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CRMImportUpsertArgs>(args: SelectSubset<T, CRMImportUpsertArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CRMImports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportCountArgs} args - Arguments to filter CRMImports to count.
+     * @example
+     * // Count the number of CRMImports
+     * const count = await prisma.cRMImport.count({
+     *   where: {
+     *     // ... the filter for the CRMImports we want to count
+     *   }
+     * })
+    **/
+    count<T extends CRMImportCountArgs>(
+      args?: Subset<T, CRMImportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CRMImportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CRMImport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CRMImportAggregateArgs>(args: Subset<T, CRMImportAggregateArgs>): Prisma.PrismaPromise<GetCRMImportAggregateType<T>>
+
+    /**
+     * Group by CRMImport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CRMImportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CRMImportGroupByArgs['orderBy'] }
+        : { orderBy?: CRMImportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CRMImportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCRMImportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CRMImport model
+   */
+  readonly fields: CRMImportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CRMImport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CRMImportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    uploader<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    rows<T extends CRMImport$rowsArgs<ExtArgs> = {}>(args?: Subset<T, CRMImport$rowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CRMImport model
+   */
+  interface CRMImportFieldRefs {
+    readonly id: FieldRef<"CRMImport", 'String'>
+    readonly organizationId: FieldRef<"CRMImport", 'String'>
+    readonly fileName: FieldRef<"CRMImport", 'String'>
+    readonly uploadedBy: FieldRef<"CRMImport", 'String'>
+    readonly totalRows: FieldRef<"CRMImport", 'Int'>
+    readonly successfulRows: FieldRef<"CRMImport", 'Int'>
+    readonly failedRows: FieldRef<"CRMImport", 'Int'>
+    readonly status: FieldRef<"CRMImport", 'String'>
+    readonly summary: FieldRef<"CRMImport", 'Json'>
+    readonly errors: FieldRef<"CRMImport", 'Json'>
+    readonly createdAt: FieldRef<"CRMImport", 'DateTime'>
+    readonly completedAt: FieldRef<"CRMImport", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CRMImport findUnique
+   */
+  export type CRMImportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImport to fetch.
+     */
+    where: CRMImportWhereUniqueInput
+  }
+
+  /**
+   * CRMImport findUniqueOrThrow
+   */
+  export type CRMImportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImport to fetch.
+     */
+    where: CRMImportWhereUniqueInput
+  }
+
+  /**
+   * CRMImport findFirst
+   */
+  export type CRMImportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImport to fetch.
+     */
+    where?: CRMImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImports to fetch.
+     */
+    orderBy?: CRMImportOrderByWithRelationInput | CRMImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CRMImports.
+     */
+    cursor?: CRMImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CRMImports.
+     */
+    distinct?: CRMImportScalarFieldEnum | CRMImportScalarFieldEnum[]
+  }
+
+  /**
+   * CRMImport findFirstOrThrow
+   */
+  export type CRMImportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImport to fetch.
+     */
+    where?: CRMImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImports to fetch.
+     */
+    orderBy?: CRMImportOrderByWithRelationInput | CRMImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CRMImports.
+     */
+    cursor?: CRMImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CRMImports.
+     */
+    distinct?: CRMImportScalarFieldEnum | CRMImportScalarFieldEnum[]
+  }
+
+  /**
+   * CRMImport findMany
+   */
+  export type CRMImportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImports to fetch.
+     */
+    where?: CRMImportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImports to fetch.
+     */
+    orderBy?: CRMImportOrderByWithRelationInput | CRMImportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CRMImports.
+     */
+    cursor?: CRMImportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CRMImports.
+     */
+    distinct?: CRMImportScalarFieldEnum | CRMImportScalarFieldEnum[]
+  }
+
+  /**
+   * CRMImport create
+   */
+  export type CRMImportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CRMImport.
+     */
+    data: XOR<CRMImportCreateInput, CRMImportUncheckedCreateInput>
+  }
+
+  /**
+   * CRMImport createMany
+   */
+  export type CRMImportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CRMImports.
+     */
+    data: CRMImportCreateManyInput | CRMImportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CRMImport createManyAndReturn
+   */
+  export type CRMImportCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * The data used to create many CRMImports.
+     */
+    data: CRMImportCreateManyInput | CRMImportCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CRMImport update
+   */
+  export type CRMImportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CRMImport.
+     */
+    data: XOR<CRMImportUpdateInput, CRMImportUncheckedUpdateInput>
+    /**
+     * Choose, which CRMImport to update.
+     */
+    where: CRMImportWhereUniqueInput
+  }
+
+  /**
+   * CRMImport updateMany
+   */
+  export type CRMImportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CRMImports.
+     */
+    data: XOR<CRMImportUpdateManyMutationInput, CRMImportUncheckedUpdateManyInput>
+    /**
+     * Filter which CRMImports to update
+     */
+    where?: CRMImportWhereInput
+    /**
+     * Limit how many CRMImports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CRMImport updateManyAndReturn
+   */
+  export type CRMImportUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * The data used to update CRMImports.
+     */
+    data: XOR<CRMImportUpdateManyMutationInput, CRMImportUncheckedUpdateManyInput>
+    /**
+     * Filter which CRMImports to update
+     */
+    where?: CRMImportWhereInput
+    /**
+     * Limit how many CRMImports to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CRMImport upsert
+   */
+  export type CRMImportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CRMImport to update in case it exists.
+     */
+    where: CRMImportWhereUniqueInput
+    /**
+     * In case the CRMImport found by the `where` argument doesn't exist, create a new CRMImport with this data.
+     */
+    create: XOR<CRMImportCreateInput, CRMImportUncheckedCreateInput>
+    /**
+     * In case the CRMImport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CRMImportUpdateInput, CRMImportUncheckedUpdateInput>
+  }
+
+  /**
+   * CRMImport delete
+   */
+  export type CRMImportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+    /**
+     * Filter which CRMImport to delete.
+     */
+    where: CRMImportWhereUniqueInput
+  }
+
+  /**
+   * CRMImport deleteMany
+   */
+  export type CRMImportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CRMImports to delete
+     */
+    where?: CRMImportWhereInput
+    /**
+     * Limit how many CRMImports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CRMImport.rows
+   */
+  export type CRMImport$rowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    where?: CRMImportRowWhereInput
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    cursor?: CRMImportRowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * CRMImport without action
+   */
+  export type CRMImportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImport
+     */
+    select?: CRMImportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImport
+     */
+    omit?: CRMImportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CRMImportRow
+   */
+
+  export type AggregateCRMImportRow = {
+    _count: CRMImportRowCountAggregateOutputType | null
+    _avg: CRMImportRowAvgAggregateOutputType | null
+    _sum: CRMImportRowSumAggregateOutputType | null
+    _min: CRMImportRowMinAggregateOutputType | null
+    _max: CRMImportRowMaxAggregateOutputType | null
+  }
+
+  export type CRMImportRowAvgAggregateOutputType = {
+    rowNumber: number | null
+    quantity: number | null
+    expectedValue: number | null
+  }
+
+  export type CRMImportRowSumAggregateOutputType = {
+    rowNumber: number | null
+    quantity: number | null
+    expectedValue: number | null
+  }
+
+  export type CRMImportRowMinAggregateOutputType = {
+    id: string | null
+    importId: string | null
+    organizationId: string | null
+    rowNumber: number | null
+    crmCustomerId: string | null
+    crmProductId: string | null
+    customerName: string | null
+    phoneNumber: string | null
+    email: string | null
+    city: string | null
+    pincode: string | null
+    address: string | null
+    productCode: string | null
+    productName: string | null
+    quantity: number | null
+    requirement: string | null
+    leadSource: string | null
+    expectedValue: number | null
+    mappedCustomerId: string | null
+    mappedProductId: string | null
+    mappedBranchId: string | null
+    mappedTerritoryId: string | null
+    status: string | null
+    errorMessage: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CRMImportRowMaxAggregateOutputType = {
+    id: string | null
+    importId: string | null
+    organizationId: string | null
+    rowNumber: number | null
+    crmCustomerId: string | null
+    crmProductId: string | null
+    customerName: string | null
+    phoneNumber: string | null
+    email: string | null
+    city: string | null
+    pincode: string | null
+    address: string | null
+    productCode: string | null
+    productName: string | null
+    quantity: number | null
+    requirement: string | null
+    leadSource: string | null
+    expectedValue: number | null
+    mappedCustomerId: string | null
+    mappedProductId: string | null
+    mappedBranchId: string | null
+    mappedTerritoryId: string | null
+    status: string | null
+    errorMessage: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CRMImportRowCountAggregateOutputType = {
+    id: number
+    importId: number
+    organizationId: number
+    rowNumber: number
+    crmCustomerId: number
+    crmProductId: number
+    customerName: number
+    phoneNumber: number
+    email: number
+    city: number
+    pincode: number
+    address: number
+    productCode: number
+    productName: number
+    quantity: number
+    requirement: number
+    leadSource: number
+    expectedValue: number
+    customFields: number
+    mappedCustomerId: number
+    mappedProductId: number
+    mappedBranchId: number
+    mappedTerritoryId: number
+    status: number
+    errorMessage: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CRMImportRowAvgAggregateInputType = {
+    rowNumber?: true
+    quantity?: true
+    expectedValue?: true
+  }
+
+  export type CRMImportRowSumAggregateInputType = {
+    rowNumber?: true
+    quantity?: true
+    expectedValue?: true
+  }
+
+  export type CRMImportRowMinAggregateInputType = {
+    id?: true
+    importId?: true
+    organizationId?: true
+    rowNumber?: true
+    crmCustomerId?: true
+    crmProductId?: true
+    customerName?: true
+    phoneNumber?: true
+    email?: true
+    city?: true
+    pincode?: true
+    address?: true
+    productCode?: true
+    productName?: true
+    quantity?: true
+    requirement?: true
+    leadSource?: true
+    expectedValue?: true
+    mappedCustomerId?: true
+    mappedProductId?: true
+    mappedBranchId?: true
+    mappedTerritoryId?: true
+    status?: true
+    errorMessage?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CRMImportRowMaxAggregateInputType = {
+    id?: true
+    importId?: true
+    organizationId?: true
+    rowNumber?: true
+    crmCustomerId?: true
+    crmProductId?: true
+    customerName?: true
+    phoneNumber?: true
+    email?: true
+    city?: true
+    pincode?: true
+    address?: true
+    productCode?: true
+    productName?: true
+    quantity?: true
+    requirement?: true
+    leadSource?: true
+    expectedValue?: true
+    mappedCustomerId?: true
+    mappedProductId?: true
+    mappedBranchId?: true
+    mappedTerritoryId?: true
+    status?: true
+    errorMessage?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CRMImportRowCountAggregateInputType = {
+    id?: true
+    importId?: true
+    organizationId?: true
+    rowNumber?: true
+    crmCustomerId?: true
+    crmProductId?: true
+    customerName?: true
+    phoneNumber?: true
+    email?: true
+    city?: true
+    pincode?: true
+    address?: true
+    productCode?: true
+    productName?: true
+    quantity?: true
+    requirement?: true
+    leadSource?: true
+    expectedValue?: true
+    customFields?: true
+    mappedCustomerId?: true
+    mappedProductId?: true
+    mappedBranchId?: true
+    mappedTerritoryId?: true
+    status?: true
+    errorMessage?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CRMImportRowAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CRMImportRow to aggregate.
+     */
+    where?: CRMImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImportRows to fetch.
+     */
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CRMImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImportRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CRMImportRows
+    **/
+    _count?: true | CRMImportRowCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CRMImportRowAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CRMImportRowSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CRMImportRowMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CRMImportRowMaxAggregateInputType
+  }
+
+  export type GetCRMImportRowAggregateType<T extends CRMImportRowAggregateArgs> = {
+        [P in keyof T & keyof AggregateCRMImportRow]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCRMImportRow[P]>
+      : GetScalarType<T[P], AggregateCRMImportRow[P]>
+  }
+
+
+
+
+  export type CRMImportRowGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CRMImportRowWhereInput
+    orderBy?: CRMImportRowOrderByWithAggregationInput | CRMImportRowOrderByWithAggregationInput[]
+    by: CRMImportRowScalarFieldEnum[] | CRMImportRowScalarFieldEnum
+    having?: CRMImportRowScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CRMImportRowCountAggregateInputType | true
+    _avg?: CRMImportRowAvgAggregateInputType
+    _sum?: CRMImportRowSumAggregateInputType
+    _min?: CRMImportRowMinAggregateInputType
+    _max?: CRMImportRowMaxAggregateInputType
+  }
+
+  export type CRMImportRowGroupByOutputType = {
+    id: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId: string | null
+    crmProductId: string | null
+    customerName: string | null
+    phoneNumber: string | null
+    email: string | null
+    city: string | null
+    pincode: string | null
+    address: string | null
+    productCode: string | null
+    productName: string | null
+    quantity: number | null
+    requirement: string | null
+    leadSource: string | null
+    expectedValue: number | null
+    customFields: JsonValue | null
+    mappedCustomerId: string | null
+    mappedProductId: string | null
+    mappedBranchId: string | null
+    mappedTerritoryId: string | null
+    status: string
+    errorMessage: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CRMImportRowCountAggregateOutputType | null
+    _avg: CRMImportRowAvgAggregateOutputType | null
+    _sum: CRMImportRowSumAggregateOutputType | null
+    _min: CRMImportRowMinAggregateOutputType | null
+    _max: CRMImportRowMaxAggregateOutputType | null
+  }
+
+  type GetCRMImportRowGroupByPayload<T extends CRMImportRowGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CRMImportRowGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CRMImportRowGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CRMImportRowGroupByOutputType[P]>
+            : GetScalarType<T[P], CRMImportRowGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CRMImportRowSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    importId?: boolean
+    organizationId?: boolean
+    rowNumber?: boolean
+    crmCustomerId?: boolean
+    crmProductId?: boolean
+    customerName?: boolean
+    phoneNumber?: boolean
+    email?: boolean
+    city?: boolean
+    pincode?: boolean
+    address?: boolean
+    productCode?: boolean
+    productName?: boolean
+    quantity?: boolean
+    requirement?: boolean
+    leadSource?: boolean
+    expectedValue?: boolean
+    customFields?: boolean
+    mappedCustomerId?: boolean
+    mappedProductId?: boolean
+    mappedBranchId?: boolean
+    mappedTerritoryId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    crmImport?: boolean | CRMImportDefaultArgs<ExtArgs>
+    customer?: boolean | CRMImportRow$customerArgs<ExtArgs>
+    product?: boolean | CRMImportRow$productArgs<ExtArgs>
+    branch?: boolean | CRMImportRow$branchArgs<ExtArgs>
+    territory?: boolean | CRMImportRow$territoryArgs<ExtArgs>
+  }, ExtArgs["result"]["cRMImportRow"]>
+
+  export type CRMImportRowSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    importId?: boolean
+    organizationId?: boolean
+    rowNumber?: boolean
+    crmCustomerId?: boolean
+    crmProductId?: boolean
+    customerName?: boolean
+    phoneNumber?: boolean
+    email?: boolean
+    city?: boolean
+    pincode?: boolean
+    address?: boolean
+    productCode?: boolean
+    productName?: boolean
+    quantity?: boolean
+    requirement?: boolean
+    leadSource?: boolean
+    expectedValue?: boolean
+    customFields?: boolean
+    mappedCustomerId?: boolean
+    mappedProductId?: boolean
+    mappedBranchId?: boolean
+    mappedTerritoryId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    crmImport?: boolean | CRMImportDefaultArgs<ExtArgs>
+    customer?: boolean | CRMImportRow$customerArgs<ExtArgs>
+    product?: boolean | CRMImportRow$productArgs<ExtArgs>
+    branch?: boolean | CRMImportRow$branchArgs<ExtArgs>
+    territory?: boolean | CRMImportRow$territoryArgs<ExtArgs>
+  }, ExtArgs["result"]["cRMImportRow"]>
+
+  export type CRMImportRowSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    importId?: boolean
+    organizationId?: boolean
+    rowNumber?: boolean
+    crmCustomerId?: boolean
+    crmProductId?: boolean
+    customerName?: boolean
+    phoneNumber?: boolean
+    email?: boolean
+    city?: boolean
+    pincode?: boolean
+    address?: boolean
+    productCode?: boolean
+    productName?: boolean
+    quantity?: boolean
+    requirement?: boolean
+    leadSource?: boolean
+    expectedValue?: boolean
+    customFields?: boolean
+    mappedCustomerId?: boolean
+    mappedProductId?: boolean
+    mappedBranchId?: boolean
+    mappedTerritoryId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    crmImport?: boolean | CRMImportDefaultArgs<ExtArgs>
+    customer?: boolean | CRMImportRow$customerArgs<ExtArgs>
+    product?: boolean | CRMImportRow$productArgs<ExtArgs>
+    branch?: boolean | CRMImportRow$branchArgs<ExtArgs>
+    territory?: boolean | CRMImportRow$territoryArgs<ExtArgs>
+  }, ExtArgs["result"]["cRMImportRow"]>
+
+  export type CRMImportRowSelectScalar = {
+    id?: boolean
+    importId?: boolean
+    organizationId?: boolean
+    rowNumber?: boolean
+    crmCustomerId?: boolean
+    crmProductId?: boolean
+    customerName?: boolean
+    phoneNumber?: boolean
+    email?: boolean
+    city?: boolean
+    pincode?: boolean
+    address?: boolean
+    productCode?: boolean
+    productName?: boolean
+    quantity?: boolean
+    requirement?: boolean
+    leadSource?: boolean
+    expectedValue?: boolean
+    customFields?: boolean
+    mappedCustomerId?: boolean
+    mappedProductId?: boolean
+    mappedBranchId?: boolean
+    mappedTerritoryId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CRMImportRowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "importId" | "organizationId" | "rowNumber" | "crmCustomerId" | "crmProductId" | "customerName" | "phoneNumber" | "email" | "city" | "pincode" | "address" | "productCode" | "productName" | "quantity" | "requirement" | "leadSource" | "expectedValue" | "customFields" | "mappedCustomerId" | "mappedProductId" | "mappedBranchId" | "mappedTerritoryId" | "status" | "errorMessage" | "createdAt" | "updatedAt", ExtArgs["result"]["cRMImportRow"]>
+  export type CRMImportRowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    crmImport?: boolean | CRMImportDefaultArgs<ExtArgs>
+    customer?: boolean | CRMImportRow$customerArgs<ExtArgs>
+    product?: boolean | CRMImportRow$productArgs<ExtArgs>
+    branch?: boolean | CRMImportRow$branchArgs<ExtArgs>
+    territory?: boolean | CRMImportRow$territoryArgs<ExtArgs>
+  }
+  export type CRMImportRowIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    crmImport?: boolean | CRMImportDefaultArgs<ExtArgs>
+    customer?: boolean | CRMImportRow$customerArgs<ExtArgs>
+    product?: boolean | CRMImportRow$productArgs<ExtArgs>
+    branch?: boolean | CRMImportRow$branchArgs<ExtArgs>
+    territory?: boolean | CRMImportRow$territoryArgs<ExtArgs>
+  }
+  export type CRMImportRowIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    crmImport?: boolean | CRMImportDefaultArgs<ExtArgs>
+    customer?: boolean | CRMImportRow$customerArgs<ExtArgs>
+    product?: boolean | CRMImportRow$productArgs<ExtArgs>
+    branch?: boolean | CRMImportRow$branchArgs<ExtArgs>
+    territory?: boolean | CRMImportRow$territoryArgs<ExtArgs>
+  }
+
+  export type $CRMImportRowPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CRMImportRow"
+    objects: {
+      crmImport: Prisma.$CRMImportPayload<ExtArgs>
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
+      product: Prisma.$ProductPayload<ExtArgs> | null
+      branch: Prisma.$BranchPayload<ExtArgs> | null
+      territory: Prisma.$TerritoryPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      importId: string
+      organizationId: string
+      rowNumber: number
+      crmCustomerId: string | null
+      crmProductId: string | null
+      customerName: string | null
+      phoneNumber: string | null
+      email: string | null
+      city: string | null
+      pincode: string | null
+      address: string | null
+      productCode: string | null
+      productName: string | null
+      quantity: number | null
+      requirement: string | null
+      leadSource: string | null
+      expectedValue: number | null
+      customFields: Prisma.JsonValue | null
+      mappedCustomerId: string | null
+      mappedProductId: string | null
+      mappedBranchId: string | null
+      mappedTerritoryId: string | null
+      status: string
+      errorMessage: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["cRMImportRow"]>
+    composites: {}
+  }
+
+  type CRMImportRowGetPayload<S extends boolean | null | undefined | CRMImportRowDefaultArgs> = $Result.GetResult<Prisma.$CRMImportRowPayload, S>
+
+  type CRMImportRowCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CRMImportRowFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CRMImportRowCountAggregateInputType | true
+    }
+
+  export interface CRMImportRowDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CRMImportRow'], meta: { name: 'CRMImportRow' } }
+    /**
+     * Find zero or one CRMImportRow that matches the filter.
+     * @param {CRMImportRowFindUniqueArgs} args - Arguments to find a CRMImportRow
+     * @example
+     * // Get one CRMImportRow
+     * const cRMImportRow = await prisma.cRMImportRow.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CRMImportRowFindUniqueArgs>(args: SelectSubset<T, CRMImportRowFindUniqueArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CRMImportRow that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CRMImportRowFindUniqueOrThrowArgs} args - Arguments to find a CRMImportRow
+     * @example
+     * // Get one CRMImportRow
+     * const cRMImportRow = await prisma.cRMImportRow.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CRMImportRowFindUniqueOrThrowArgs>(args: SelectSubset<T, CRMImportRowFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CRMImportRow that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportRowFindFirstArgs} args - Arguments to find a CRMImportRow
+     * @example
+     * // Get one CRMImportRow
+     * const cRMImportRow = await prisma.cRMImportRow.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CRMImportRowFindFirstArgs>(args?: SelectSubset<T, CRMImportRowFindFirstArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CRMImportRow that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportRowFindFirstOrThrowArgs} args - Arguments to find a CRMImportRow
+     * @example
+     * // Get one CRMImportRow
+     * const cRMImportRow = await prisma.cRMImportRow.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CRMImportRowFindFirstOrThrowArgs>(args?: SelectSubset<T, CRMImportRowFindFirstOrThrowArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CRMImportRows that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportRowFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CRMImportRows
+     * const cRMImportRows = await prisma.cRMImportRow.findMany()
+     * 
+     * // Get first 10 CRMImportRows
+     * const cRMImportRows = await prisma.cRMImportRow.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cRMImportRowWithIdOnly = await prisma.cRMImportRow.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CRMImportRowFindManyArgs>(args?: SelectSubset<T, CRMImportRowFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CRMImportRow.
+     * @param {CRMImportRowCreateArgs} args - Arguments to create a CRMImportRow.
+     * @example
+     * // Create one CRMImportRow
+     * const CRMImportRow = await prisma.cRMImportRow.create({
+     *   data: {
+     *     // ... data to create a CRMImportRow
+     *   }
+     * })
+     * 
+     */
+    create<T extends CRMImportRowCreateArgs>(args: SelectSubset<T, CRMImportRowCreateArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CRMImportRows.
+     * @param {CRMImportRowCreateManyArgs} args - Arguments to create many CRMImportRows.
+     * @example
+     * // Create many CRMImportRows
+     * const cRMImportRow = await prisma.cRMImportRow.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CRMImportRowCreateManyArgs>(args?: SelectSubset<T, CRMImportRowCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CRMImportRows and returns the data saved in the database.
+     * @param {CRMImportRowCreateManyAndReturnArgs} args - Arguments to create many CRMImportRows.
+     * @example
+     * // Create many CRMImportRows
+     * const cRMImportRow = await prisma.cRMImportRow.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CRMImportRows and only return the `id`
+     * const cRMImportRowWithIdOnly = await prisma.cRMImportRow.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CRMImportRowCreateManyAndReturnArgs>(args?: SelectSubset<T, CRMImportRowCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CRMImportRow.
+     * @param {CRMImportRowDeleteArgs} args - Arguments to delete one CRMImportRow.
+     * @example
+     * // Delete one CRMImportRow
+     * const CRMImportRow = await prisma.cRMImportRow.delete({
+     *   where: {
+     *     // ... filter to delete one CRMImportRow
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CRMImportRowDeleteArgs>(args: SelectSubset<T, CRMImportRowDeleteArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CRMImportRow.
+     * @param {CRMImportRowUpdateArgs} args - Arguments to update one CRMImportRow.
+     * @example
+     * // Update one CRMImportRow
+     * const cRMImportRow = await prisma.cRMImportRow.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CRMImportRowUpdateArgs>(args: SelectSubset<T, CRMImportRowUpdateArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CRMImportRows.
+     * @param {CRMImportRowDeleteManyArgs} args - Arguments to filter CRMImportRows to delete.
+     * @example
+     * // Delete a few CRMImportRows
+     * const { count } = await prisma.cRMImportRow.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CRMImportRowDeleteManyArgs>(args?: SelectSubset<T, CRMImportRowDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CRMImportRows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportRowUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CRMImportRows
+     * const cRMImportRow = await prisma.cRMImportRow.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CRMImportRowUpdateManyArgs>(args: SelectSubset<T, CRMImportRowUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CRMImportRows and returns the data updated in the database.
+     * @param {CRMImportRowUpdateManyAndReturnArgs} args - Arguments to update many CRMImportRows.
+     * @example
+     * // Update many CRMImportRows
+     * const cRMImportRow = await prisma.cRMImportRow.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CRMImportRows and only return the `id`
+     * const cRMImportRowWithIdOnly = await prisma.cRMImportRow.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CRMImportRowUpdateManyAndReturnArgs>(args: SelectSubset<T, CRMImportRowUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CRMImportRow.
+     * @param {CRMImportRowUpsertArgs} args - Arguments to update or create a CRMImportRow.
+     * @example
+     * // Update or create a CRMImportRow
+     * const cRMImportRow = await prisma.cRMImportRow.upsert({
+     *   create: {
+     *     // ... data to create a CRMImportRow
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CRMImportRow we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CRMImportRowUpsertArgs>(args: SelectSubset<T, CRMImportRowUpsertArgs<ExtArgs>>): Prisma__CRMImportRowClient<$Result.GetResult<Prisma.$CRMImportRowPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CRMImportRows.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportRowCountArgs} args - Arguments to filter CRMImportRows to count.
+     * @example
+     * // Count the number of CRMImportRows
+     * const count = await prisma.cRMImportRow.count({
+     *   where: {
+     *     // ... the filter for the CRMImportRows we want to count
+     *   }
+     * })
+    **/
+    count<T extends CRMImportRowCountArgs>(
+      args?: Subset<T, CRMImportRowCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CRMImportRowCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CRMImportRow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportRowAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CRMImportRowAggregateArgs>(args: Subset<T, CRMImportRowAggregateArgs>): Prisma.PrismaPromise<GetCRMImportRowAggregateType<T>>
+
+    /**
+     * Group by CRMImportRow.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CRMImportRowGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CRMImportRowGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CRMImportRowGroupByArgs['orderBy'] }
+        : { orderBy?: CRMImportRowGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CRMImportRowGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCRMImportRowGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CRMImportRow model
+   */
+  readonly fields: CRMImportRowFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CRMImportRow.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CRMImportRowClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    crmImport<T extends CRMImportDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CRMImportDefaultArgs<ExtArgs>>): Prisma__CRMImportClient<$Result.GetResult<Prisma.$CRMImportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    customer<T extends CRMImportRow$customerArgs<ExtArgs> = {}>(args?: Subset<T, CRMImportRow$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    product<T extends CRMImportRow$productArgs<ExtArgs> = {}>(args?: Subset<T, CRMImportRow$productArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    branch<T extends CRMImportRow$branchArgs<ExtArgs> = {}>(args?: Subset<T, CRMImportRow$branchArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    territory<T extends CRMImportRow$territoryArgs<ExtArgs> = {}>(args?: Subset<T, CRMImportRow$territoryArgs<ExtArgs>>): Prisma__TerritoryClient<$Result.GetResult<Prisma.$TerritoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CRMImportRow model
+   */
+  interface CRMImportRowFieldRefs {
+    readonly id: FieldRef<"CRMImportRow", 'String'>
+    readonly importId: FieldRef<"CRMImportRow", 'String'>
+    readonly organizationId: FieldRef<"CRMImportRow", 'String'>
+    readonly rowNumber: FieldRef<"CRMImportRow", 'Int'>
+    readonly crmCustomerId: FieldRef<"CRMImportRow", 'String'>
+    readonly crmProductId: FieldRef<"CRMImportRow", 'String'>
+    readonly customerName: FieldRef<"CRMImportRow", 'String'>
+    readonly phoneNumber: FieldRef<"CRMImportRow", 'String'>
+    readonly email: FieldRef<"CRMImportRow", 'String'>
+    readonly city: FieldRef<"CRMImportRow", 'String'>
+    readonly pincode: FieldRef<"CRMImportRow", 'String'>
+    readonly address: FieldRef<"CRMImportRow", 'String'>
+    readonly productCode: FieldRef<"CRMImportRow", 'String'>
+    readonly productName: FieldRef<"CRMImportRow", 'String'>
+    readonly quantity: FieldRef<"CRMImportRow", 'Float'>
+    readonly requirement: FieldRef<"CRMImportRow", 'String'>
+    readonly leadSource: FieldRef<"CRMImportRow", 'String'>
+    readonly expectedValue: FieldRef<"CRMImportRow", 'Float'>
+    readonly customFields: FieldRef<"CRMImportRow", 'Json'>
+    readonly mappedCustomerId: FieldRef<"CRMImportRow", 'String'>
+    readonly mappedProductId: FieldRef<"CRMImportRow", 'String'>
+    readonly mappedBranchId: FieldRef<"CRMImportRow", 'String'>
+    readonly mappedTerritoryId: FieldRef<"CRMImportRow", 'String'>
+    readonly status: FieldRef<"CRMImportRow", 'String'>
+    readonly errorMessage: FieldRef<"CRMImportRow", 'String'>
+    readonly createdAt: FieldRef<"CRMImportRow", 'DateTime'>
+    readonly updatedAt: FieldRef<"CRMImportRow", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CRMImportRow findUnique
+   */
+  export type CRMImportRowFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImportRow to fetch.
+     */
+    where: CRMImportRowWhereUniqueInput
+  }
+
+  /**
+   * CRMImportRow findUniqueOrThrow
+   */
+  export type CRMImportRowFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImportRow to fetch.
+     */
+    where: CRMImportRowWhereUniqueInput
+  }
+
+  /**
+   * CRMImportRow findFirst
+   */
+  export type CRMImportRowFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImportRow to fetch.
+     */
+    where?: CRMImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImportRows to fetch.
+     */
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CRMImportRows.
+     */
+    cursor?: CRMImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImportRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CRMImportRows.
+     */
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * CRMImportRow findFirstOrThrow
+   */
+  export type CRMImportRowFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImportRow to fetch.
+     */
+    where?: CRMImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImportRows to fetch.
+     */
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CRMImportRows.
+     */
+    cursor?: CRMImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImportRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CRMImportRows.
+     */
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * CRMImportRow findMany
+   */
+  export type CRMImportRowFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * Filter, which CRMImportRows to fetch.
+     */
+    where?: CRMImportRowWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CRMImportRows to fetch.
+     */
+    orderBy?: CRMImportRowOrderByWithRelationInput | CRMImportRowOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CRMImportRows.
+     */
+    cursor?: CRMImportRowWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CRMImportRows from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CRMImportRows.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CRMImportRows.
+     */
+    distinct?: CRMImportRowScalarFieldEnum | CRMImportRowScalarFieldEnum[]
+  }
+
+  /**
+   * CRMImportRow create
+   */
+  export type CRMImportRowCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CRMImportRow.
+     */
+    data: XOR<CRMImportRowCreateInput, CRMImportRowUncheckedCreateInput>
+  }
+
+  /**
+   * CRMImportRow createMany
+   */
+  export type CRMImportRowCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CRMImportRows.
+     */
+    data: CRMImportRowCreateManyInput | CRMImportRowCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CRMImportRow createManyAndReturn
+   */
+  export type CRMImportRowCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * The data used to create many CRMImportRows.
+     */
+    data: CRMImportRowCreateManyInput | CRMImportRowCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CRMImportRow update
+   */
+  export type CRMImportRowUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CRMImportRow.
+     */
+    data: XOR<CRMImportRowUpdateInput, CRMImportRowUncheckedUpdateInput>
+    /**
+     * Choose, which CRMImportRow to update.
+     */
+    where: CRMImportRowWhereUniqueInput
+  }
+
+  /**
+   * CRMImportRow updateMany
+   */
+  export type CRMImportRowUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CRMImportRows.
+     */
+    data: XOR<CRMImportRowUpdateManyMutationInput, CRMImportRowUncheckedUpdateManyInput>
+    /**
+     * Filter which CRMImportRows to update
+     */
+    where?: CRMImportRowWhereInput
+    /**
+     * Limit how many CRMImportRows to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CRMImportRow updateManyAndReturn
+   */
+  export type CRMImportRowUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * The data used to update CRMImportRows.
+     */
+    data: XOR<CRMImportRowUpdateManyMutationInput, CRMImportRowUncheckedUpdateManyInput>
+    /**
+     * Filter which CRMImportRows to update
+     */
+    where?: CRMImportRowWhereInput
+    /**
+     * Limit how many CRMImportRows to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CRMImportRow upsert
+   */
+  export type CRMImportRowUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CRMImportRow to update in case it exists.
+     */
+    where: CRMImportRowWhereUniqueInput
+    /**
+     * In case the CRMImportRow found by the `where` argument doesn't exist, create a new CRMImportRow with this data.
+     */
+    create: XOR<CRMImportRowCreateInput, CRMImportRowUncheckedCreateInput>
+    /**
+     * In case the CRMImportRow was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CRMImportRowUpdateInput, CRMImportRowUncheckedUpdateInput>
+  }
+
+  /**
+   * CRMImportRow delete
+   */
+  export type CRMImportRowDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+    /**
+     * Filter which CRMImportRow to delete.
+     */
+    where: CRMImportRowWhereUniqueInput
+  }
+
+  /**
+   * CRMImportRow deleteMany
+   */
+  export type CRMImportRowDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CRMImportRows to delete
+     */
+    where?: CRMImportRowWhereInput
+    /**
+     * Limit how many CRMImportRows to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CRMImportRow.customer
+   */
+  export type CRMImportRow$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
+  }
+
+  /**
+   * CRMImportRow.product
+   */
+  export type CRMImportRow$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+  }
+
+  /**
+   * CRMImportRow.branch
+   */
+  export type CRMImportRow$branchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Branch
+     */
+    select?: BranchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Branch
+     */
+    omit?: BranchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BranchInclude<ExtArgs> | null
+    where?: BranchWhereInput
+  }
+
+  /**
+   * CRMImportRow.territory
+   */
+  export type CRMImportRow$territoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Territory
+     */
+    select?: TerritorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Territory
+     */
+    omit?: TerritoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TerritoryInclude<ExtArgs> | null
+    where?: TerritoryWhereInput
+  }
+
+  /**
+   * CRMImportRow without action
+   */
+  export type CRMImportRowDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CRMImportRow
+     */
+    select?: CRMImportRowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CRMImportRow
+     */
+    omit?: CRMImportRowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CRMImportRowInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -48714,6 +51892,8 @@ export namespace Prisma {
     address: 'address',
     latitude: 'latitude',
     longitude: 'longitude',
+    crmId: 'crmId',
+    customFields: 'customFields',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -49092,6 +52272,57 @@ export namespace Prisma {
   export type ProductIssueScalarFieldEnum = (typeof ProductIssueScalarFieldEnum)[keyof typeof ProductIssueScalarFieldEnum]
 
 
+  export const CRMImportScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    fileName: 'fileName',
+    uploadedBy: 'uploadedBy',
+    totalRows: 'totalRows',
+    successfulRows: 'successfulRows',
+    failedRows: 'failedRows',
+    status: 'status',
+    summary: 'summary',
+    errors: 'errors',
+    createdAt: 'createdAt',
+    completedAt: 'completedAt'
+  };
+
+  export type CRMImportScalarFieldEnum = (typeof CRMImportScalarFieldEnum)[keyof typeof CRMImportScalarFieldEnum]
+
+
+  export const CRMImportRowScalarFieldEnum: {
+    id: 'id',
+    importId: 'importId',
+    organizationId: 'organizationId',
+    rowNumber: 'rowNumber',
+    crmCustomerId: 'crmCustomerId',
+    crmProductId: 'crmProductId',
+    customerName: 'customerName',
+    phoneNumber: 'phoneNumber',
+    email: 'email',
+    city: 'city',
+    pincode: 'pincode',
+    address: 'address',
+    productCode: 'productCode',
+    productName: 'productName',
+    quantity: 'quantity',
+    requirement: 'requirement',
+    leadSource: 'leadSource',
+    expectedValue: 'expectedValue',
+    customFields: 'customFields',
+    mappedCustomerId: 'mappedCustomerId',
+    mappedProductId: 'mappedProductId',
+    mappedBranchId: 'mappedBranchId',
+    mappedTerritoryId: 'mappedTerritoryId',
+    status: 'status',
+    errorMessage: 'errorMessage',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CRMImportRowScalarFieldEnum = (typeof CRMImportRowScalarFieldEnum)[keyof typeof CRMImportRowScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -49432,6 +52663,7 @@ export namespace Prisma {
     stocks?: StockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
     productIssues?: ProductIssueListRelationFilter
+    crmImports?: CRMImportListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -49477,6 +52709,7 @@ export namespace Prisma {
     stocks?: StockOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
     productIssues?: ProductIssueOrderByRelationAggregateInput
+    crmImports?: CRMImportOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -49525,6 +52758,7 @@ export namespace Prisma {
     stocks?: StockListRelationFilter
     stockMovements?: StockMovementListRelationFilter
     productIssues?: ProductIssueListRelationFilter
+    crmImports?: CRMImportListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -49596,6 +52830,7 @@ export namespace Prisma {
     teams?: TeamListRelationFilter
     users?: UserListRelationFilter
     warehouses?: WarehouseListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -49622,6 +52857,7 @@ export namespace Prisma {
     teams?: TeamOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
     warehouses?: WarehouseOrderByRelationAggregateInput
+    crmImportRows?: CRMImportRowOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -49652,6 +52888,7 @@ export namespace Prisma {
     teams?: TeamListRelationFilter
     users?: UserListRelationFilter
     warehouses?: WarehouseListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }, "id" | "organizationId_code">
 
   export type BranchOrderByWithAggregationInput = {
@@ -49803,6 +53040,7 @@ export namespace Prisma {
     branches?: BranchListRelationFilter
     teams?: TeamListRelationFilter
     users?: UserListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }
 
   export type TerritoryOrderByWithRelationInput = {
@@ -49820,6 +53058,7 @@ export namespace Prisma {
     branches?: BranchOrderByRelationAggregateInput
     teams?: TeamOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
+    crmImportRows?: CRMImportRowOrderByRelationAggregateInput
   }
 
   export type TerritoryWhereUniqueInput = Prisma.AtLeast<{
@@ -49841,6 +53080,7 @@ export namespace Prisma {
     branches?: BranchListRelationFilter
     teams?: TeamListRelationFilter
     users?: UserListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }, "id" | "organizationId_code">
 
   export type TerritoryOrderByWithAggregationInput = {
@@ -50221,6 +53461,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceListRelationFilter
     orders?: OrderListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    crmImports?: CRMImportListRelationFilter
     managedWarehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
     productIssuesWarehouseManaged?: ProductIssueListRelationFilter
     productIssuesReceived?: ProductIssueListRelationFilter
@@ -50277,6 +53518,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
+    crmImports?: CRMImportOrderByRelationAggregateInput
     managedWarehouse?: WarehouseOrderByWithRelationInput
     productIssuesWarehouseManaged?: ProductIssueOrderByRelationAggregateInput
     productIssuesReceived?: ProductIssueOrderByRelationAggregateInput
@@ -50337,6 +53579,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceListRelationFilter
     orders?: OrderListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    crmImports?: CRMImportListRelationFilter
     managedWarehouse?: XOR<WarehouseNullableScalarRelationFilter, WarehouseWhereInput> | null
     productIssuesWarehouseManaged?: ProductIssueListRelationFilter
     productIssuesReceived?: ProductIssueListRelationFilter
@@ -50689,11 +53932,14 @@ export namespace Prisma {
     address?: JsonNullableFilter<"Customer">
     latitude?: FloatNullableFilter<"Customer"> | number | null
     longitude?: FloatNullableFilter<"Customer"> | number | null
+    crmId?: StringNullableFilter<"Customer"> | string | null
+    customFields?: JsonNullableFilter<"Customer">
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     orders?: OrderListRelationFilter
     visits?: VisitListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -50706,11 +53952,14 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     latitude?: SortOrderInput | SortOrder
     longitude?: SortOrderInput | SortOrder
+    crmId?: SortOrderInput | SortOrder
+    customFields?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
     orders?: OrderOrderByRelationAggregateInput
     visits?: VisitOrderByRelationAggregateInput
+    crmImportRows?: CRMImportRowOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -50726,11 +53975,14 @@ export namespace Prisma {
     address?: JsonNullableFilter<"Customer">
     latitude?: FloatNullableFilter<"Customer"> | number | null
     longitude?: FloatNullableFilter<"Customer"> | number | null
+    crmId?: StringNullableFilter<"Customer"> | string | null
+    customFields?: JsonNullableFilter<"Customer">
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     orders?: OrderListRelationFilter
     visits?: VisitListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }, "id">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -50743,6 +53995,8 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     latitude?: SortOrderInput | SortOrder
     longitude?: SortOrderInput | SortOrder
+    crmId?: SortOrderInput | SortOrder
+    customFields?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CustomerCountOrderByAggregateInput
@@ -50765,6 +54019,8 @@ export namespace Prisma {
     address?: JsonNullableWithAggregatesFilter<"Customer">
     latitude?: FloatNullableWithAggregatesFilter<"Customer"> | number | null
     longitude?: FloatNullableWithAggregatesFilter<"Customer"> | number | null
+    crmId?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    customFields?: JsonNullableWithAggregatesFilter<"Customer">
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
   }
@@ -50795,6 +54051,7 @@ export namespace Prisma {
     stocks?: StockListRelationFilter
     movements?: StockMovementListRelationFilter
     issues?: ProductIssueListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -50820,6 +54077,7 @@ export namespace Prisma {
     stocks?: StockOrderByRelationAggregateInput
     movements?: StockMovementOrderByRelationAggregateInput
     issues?: ProductIssueOrderByRelationAggregateInput
+    crmImportRows?: CRMImportRowOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -50848,6 +54106,7 @@ export namespace Prisma {
     stocks?: StockListRelationFilter
     movements?: StockMovementListRelationFilter
     issues?: ProductIssueListRelationFilter
+    crmImportRows?: CRMImportRowListRelationFilter
   }, "id" | "sku" | "productCode">
 
   export type ProductOrderByWithAggregationInput = {
@@ -52768,6 +56027,283 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ProductIssue"> | Date | string
   }
 
+  export type CRMImportWhereInput = {
+    AND?: CRMImportWhereInput | CRMImportWhereInput[]
+    OR?: CRMImportWhereInput[]
+    NOT?: CRMImportWhereInput | CRMImportWhereInput[]
+    id?: UuidFilter<"CRMImport"> | string
+    organizationId?: UuidFilter<"CRMImport"> | string
+    fileName?: StringFilter<"CRMImport"> | string
+    uploadedBy?: UuidFilter<"CRMImport"> | string
+    totalRows?: IntFilter<"CRMImport"> | number
+    successfulRows?: IntFilter<"CRMImport"> | number
+    failedRows?: IntFilter<"CRMImport"> | number
+    status?: StringFilter<"CRMImport"> | string
+    summary?: JsonNullableFilter<"CRMImport">
+    errors?: JsonNullableFilter<"CRMImport">
+    createdAt?: DateTimeFilter<"CRMImport"> | Date | string
+    completedAt?: DateTimeNullableFilter<"CRMImport"> | Date | string | null
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
+    rows?: CRMImportRowListRelationFilter
+  }
+
+  export type CRMImportOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    totalRows?: SortOrder
+    successfulRows?: SortOrder
+    failedRows?: SortOrder
+    status?: SortOrder
+    summary?: SortOrderInput | SortOrder
+    errors?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    uploader?: UserOrderByWithRelationInput
+    rows?: CRMImportRowOrderByRelationAggregateInput
+  }
+
+  export type CRMImportWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CRMImportWhereInput | CRMImportWhereInput[]
+    OR?: CRMImportWhereInput[]
+    NOT?: CRMImportWhereInput | CRMImportWhereInput[]
+    organizationId?: UuidFilter<"CRMImport"> | string
+    fileName?: StringFilter<"CRMImport"> | string
+    uploadedBy?: UuidFilter<"CRMImport"> | string
+    totalRows?: IntFilter<"CRMImport"> | number
+    successfulRows?: IntFilter<"CRMImport"> | number
+    failedRows?: IntFilter<"CRMImport"> | number
+    status?: StringFilter<"CRMImport"> | string
+    summary?: JsonNullableFilter<"CRMImport">
+    errors?: JsonNullableFilter<"CRMImport">
+    createdAt?: DateTimeFilter<"CRMImport"> | Date | string
+    completedAt?: DateTimeNullableFilter<"CRMImport"> | Date | string | null
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
+    rows?: CRMImportRowListRelationFilter
+  }, "id">
+
+  export type CRMImportOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    totalRows?: SortOrder
+    successfulRows?: SortOrder
+    failedRows?: SortOrder
+    status?: SortOrder
+    summary?: SortOrderInput | SortOrder
+    errors?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: CRMImportCountOrderByAggregateInput
+    _avg?: CRMImportAvgOrderByAggregateInput
+    _max?: CRMImportMaxOrderByAggregateInput
+    _min?: CRMImportMinOrderByAggregateInput
+    _sum?: CRMImportSumOrderByAggregateInput
+  }
+
+  export type CRMImportScalarWhereWithAggregatesInput = {
+    AND?: CRMImportScalarWhereWithAggregatesInput | CRMImportScalarWhereWithAggregatesInput[]
+    OR?: CRMImportScalarWhereWithAggregatesInput[]
+    NOT?: CRMImportScalarWhereWithAggregatesInput | CRMImportScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"CRMImport"> | string
+    organizationId?: UuidWithAggregatesFilter<"CRMImport"> | string
+    fileName?: StringWithAggregatesFilter<"CRMImport"> | string
+    uploadedBy?: UuidWithAggregatesFilter<"CRMImport"> | string
+    totalRows?: IntWithAggregatesFilter<"CRMImport"> | number
+    successfulRows?: IntWithAggregatesFilter<"CRMImport"> | number
+    failedRows?: IntWithAggregatesFilter<"CRMImport"> | number
+    status?: StringWithAggregatesFilter<"CRMImport"> | string
+    summary?: JsonNullableWithAggregatesFilter<"CRMImport">
+    errors?: JsonNullableWithAggregatesFilter<"CRMImport">
+    createdAt?: DateTimeWithAggregatesFilter<"CRMImport"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"CRMImport"> | Date | string | null
+  }
+
+  export type CRMImportRowWhereInput = {
+    AND?: CRMImportRowWhereInput | CRMImportRowWhereInput[]
+    OR?: CRMImportRowWhereInput[]
+    NOT?: CRMImportRowWhereInput | CRMImportRowWhereInput[]
+    id?: UuidFilter<"CRMImportRow"> | string
+    importId?: UuidFilter<"CRMImportRow"> | string
+    organizationId?: UuidFilter<"CRMImportRow"> | string
+    rowNumber?: IntFilter<"CRMImportRow"> | number
+    crmCustomerId?: StringNullableFilter<"CRMImportRow"> | string | null
+    crmProductId?: StringNullableFilter<"CRMImportRow"> | string | null
+    customerName?: StringNullableFilter<"CRMImportRow"> | string | null
+    phoneNumber?: StringNullableFilter<"CRMImportRow"> | string | null
+    email?: StringNullableFilter<"CRMImportRow"> | string | null
+    city?: StringNullableFilter<"CRMImportRow"> | string | null
+    pincode?: StringNullableFilter<"CRMImportRow"> | string | null
+    address?: StringNullableFilter<"CRMImportRow"> | string | null
+    productCode?: StringNullableFilter<"CRMImportRow"> | string | null
+    productName?: StringNullableFilter<"CRMImportRow"> | string | null
+    quantity?: FloatNullableFilter<"CRMImportRow"> | number | null
+    requirement?: StringNullableFilter<"CRMImportRow"> | string | null
+    leadSource?: StringNullableFilter<"CRMImportRow"> | string | null
+    expectedValue?: FloatNullableFilter<"CRMImportRow"> | number | null
+    customFields?: JsonNullableFilter<"CRMImportRow">
+    mappedCustomerId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedProductId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedBranchId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedTerritoryId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    status?: StringFilter<"CRMImportRow"> | string
+    errorMessage?: StringNullableFilter<"CRMImportRow"> | string | null
+    createdAt?: DateTimeFilter<"CRMImportRow"> | Date | string
+    updatedAt?: DateTimeFilter<"CRMImportRow"> | Date | string
+    crmImport?: XOR<CRMImportScalarRelationFilter, CRMImportWhereInput>
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+    territory?: XOR<TerritoryNullableScalarRelationFilter, TerritoryWhereInput> | null
+  }
+
+  export type CRMImportRowOrderByWithRelationInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    organizationId?: SortOrder
+    rowNumber?: SortOrder
+    crmCustomerId?: SortOrderInput | SortOrder
+    crmProductId?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    phoneNumber?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    pincode?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    productCode?: SortOrderInput | SortOrder
+    productName?: SortOrderInput | SortOrder
+    quantity?: SortOrderInput | SortOrder
+    requirement?: SortOrderInput | SortOrder
+    leadSource?: SortOrderInput | SortOrder
+    expectedValue?: SortOrderInput | SortOrder
+    customFields?: SortOrderInput | SortOrder
+    mappedCustomerId?: SortOrderInput | SortOrder
+    mappedProductId?: SortOrderInput | SortOrder
+    mappedBranchId?: SortOrderInput | SortOrder
+    mappedTerritoryId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    crmImport?: CRMImportOrderByWithRelationInput
+    customer?: CustomerOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
+    territory?: TerritoryOrderByWithRelationInput
+  }
+
+  export type CRMImportRowWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CRMImportRowWhereInput | CRMImportRowWhereInput[]
+    OR?: CRMImportRowWhereInput[]
+    NOT?: CRMImportRowWhereInput | CRMImportRowWhereInput[]
+    importId?: UuidFilter<"CRMImportRow"> | string
+    organizationId?: UuidFilter<"CRMImportRow"> | string
+    rowNumber?: IntFilter<"CRMImportRow"> | number
+    crmCustomerId?: StringNullableFilter<"CRMImportRow"> | string | null
+    crmProductId?: StringNullableFilter<"CRMImportRow"> | string | null
+    customerName?: StringNullableFilter<"CRMImportRow"> | string | null
+    phoneNumber?: StringNullableFilter<"CRMImportRow"> | string | null
+    email?: StringNullableFilter<"CRMImportRow"> | string | null
+    city?: StringNullableFilter<"CRMImportRow"> | string | null
+    pincode?: StringNullableFilter<"CRMImportRow"> | string | null
+    address?: StringNullableFilter<"CRMImportRow"> | string | null
+    productCode?: StringNullableFilter<"CRMImportRow"> | string | null
+    productName?: StringNullableFilter<"CRMImportRow"> | string | null
+    quantity?: FloatNullableFilter<"CRMImportRow"> | number | null
+    requirement?: StringNullableFilter<"CRMImportRow"> | string | null
+    leadSource?: StringNullableFilter<"CRMImportRow"> | string | null
+    expectedValue?: FloatNullableFilter<"CRMImportRow"> | number | null
+    customFields?: JsonNullableFilter<"CRMImportRow">
+    mappedCustomerId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedProductId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedBranchId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedTerritoryId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    status?: StringFilter<"CRMImportRow"> | string
+    errorMessage?: StringNullableFilter<"CRMImportRow"> | string | null
+    createdAt?: DateTimeFilter<"CRMImportRow"> | Date | string
+    updatedAt?: DateTimeFilter<"CRMImportRow"> | Date | string
+    crmImport?: XOR<CRMImportScalarRelationFilter, CRMImportWhereInput>
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+    branch?: XOR<BranchNullableScalarRelationFilter, BranchWhereInput> | null
+    territory?: XOR<TerritoryNullableScalarRelationFilter, TerritoryWhereInput> | null
+  }, "id">
+
+  export type CRMImportRowOrderByWithAggregationInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    organizationId?: SortOrder
+    rowNumber?: SortOrder
+    crmCustomerId?: SortOrderInput | SortOrder
+    crmProductId?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    phoneNumber?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    pincode?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    productCode?: SortOrderInput | SortOrder
+    productName?: SortOrderInput | SortOrder
+    quantity?: SortOrderInput | SortOrder
+    requirement?: SortOrderInput | SortOrder
+    leadSource?: SortOrderInput | SortOrder
+    expectedValue?: SortOrderInput | SortOrder
+    customFields?: SortOrderInput | SortOrder
+    mappedCustomerId?: SortOrderInput | SortOrder
+    mappedProductId?: SortOrderInput | SortOrder
+    mappedBranchId?: SortOrderInput | SortOrder
+    mappedTerritoryId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CRMImportRowCountOrderByAggregateInput
+    _avg?: CRMImportRowAvgOrderByAggregateInput
+    _max?: CRMImportRowMaxOrderByAggregateInput
+    _min?: CRMImportRowMinOrderByAggregateInput
+    _sum?: CRMImportRowSumOrderByAggregateInput
+  }
+
+  export type CRMImportRowScalarWhereWithAggregatesInput = {
+    AND?: CRMImportRowScalarWhereWithAggregatesInput | CRMImportRowScalarWhereWithAggregatesInput[]
+    OR?: CRMImportRowScalarWhereWithAggregatesInput[]
+    NOT?: CRMImportRowScalarWhereWithAggregatesInput | CRMImportRowScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"CRMImportRow"> | string
+    importId?: UuidWithAggregatesFilter<"CRMImportRow"> | string
+    organizationId?: UuidWithAggregatesFilter<"CRMImportRow"> | string
+    rowNumber?: IntWithAggregatesFilter<"CRMImportRow"> | number
+    crmCustomerId?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    crmProductId?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    customerName?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    phoneNumber?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    email?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    city?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    pincode?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    address?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    productCode?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    productName?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    quantity?: FloatNullableWithAggregatesFilter<"CRMImportRow"> | number | null
+    requirement?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    leadSource?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    expectedValue?: FloatNullableWithAggregatesFilter<"CRMImportRow"> | number | null
+    customFields?: JsonNullableWithAggregatesFilter<"CRMImportRow">
+    mappedCustomerId?: UuidNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    mappedProductId?: UuidNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    mappedBranchId?: UuidNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    mappedTerritoryId?: UuidNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    status?: StringWithAggregatesFilter<"CRMImportRow"> | string
+    errorMessage?: StringNullableWithAggregatesFilter<"CRMImportRow"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CRMImportRow"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CRMImportRow"> | Date | string
+  }
+
   export type OrganizationCreateInput = {
     id?: string
     name: string
@@ -52811,6 +56347,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -52856,6 +56393,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -52901,6 +56439,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -52946,6 +56485,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -53023,6 +56563,7 @@ export namespace Prisma {
     teams?: TeamCreateNestedManyWithoutBranchInput
     users?: UserCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -53046,6 +56587,7 @@ export namespace Prisma {
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
     users?: UserUncheckedCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -53069,6 +56611,7 @@ export namespace Prisma {
     teams?: TeamUpdateManyWithoutBranchNestedInput
     users?: UserUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -53092,6 +56635,7 @@ export namespace Prisma {
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
     users?: UserUncheckedUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -53256,6 +56800,7 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutTerritoryInput
     teams?: TeamCreateNestedManyWithoutTerritoryInput
     users?: UserCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryUncheckedCreateInput = {
@@ -53271,6 +56816,7 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutTerritoryInput
     teams?: TeamUncheckedCreateNestedManyWithoutTerritoryInput
     users?: UserUncheckedCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryUpdateInput = {
@@ -53286,6 +56832,7 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUpdateManyWithoutTerritoryNestedInput
     users?: UserUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateInput = {
@@ -53301,6 +56848,7 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUncheckedUpdateManyWithoutTerritoryNestedInput
     users?: UserUncheckedUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryCreateManyInput = {
@@ -53678,6 +57226,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -53728,6 +57277,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -53778,6 +57328,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -53828,6 +57379,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -54193,11 +57745,14 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutCustomersInput
     orders?: OrderCreateNestedManyWithoutCustomerInput
     visits?: VisitCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -54210,10 +57765,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     visits?: VisitUncheckedCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -54225,11 +57783,14 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutCustomersNestedInput
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     visits?: VisitUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -54242,10 +57803,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     visits?: VisitUncheckedUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -54258,6 +57822,8 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -54271,6 +57837,8 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -54285,6 +57853,8 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -54311,6 +57881,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
     issues?: ProductIssueCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -54335,6 +57906,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -54359,6 +57931,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -54383,6 +57956,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -56444,6 +60018,318 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CRMImportCreateInput = {
+    id?: string
+    fileName: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    organization: OrganizationCreateNestedOneWithoutCrmImportsInput
+    uploader: UserCreateNestedOneWithoutCrmImportsInput
+    rows?: CRMImportRowCreateNestedManyWithoutCrmImportInput
+  }
+
+  export type CRMImportUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    fileName: string
+    uploadedBy: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    rows?: CRMImportRowUncheckedCreateNestedManyWithoutCrmImportInput
+  }
+
+  export type CRMImportUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutCrmImportsNestedInput
+    uploader?: UserUpdateOneRequiredWithoutCrmImportsNestedInput
+    rows?: CRMImportRowUpdateManyWithoutCrmImportNestedInput
+  }
+
+  export type CRMImportUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rows?: CRMImportRowUncheckedUpdateManyWithoutCrmImportNestedInput
+  }
+
+  export type CRMImportCreateManyInput = {
+    id?: string
+    organizationId: string
+    fileName: string
+    uploadedBy: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type CRMImportUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CRMImportUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CRMImportRowCreateInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crmImport: CRMImportCreateNestedOneWithoutRowsInput
+    customer?: CustomerCreateNestedOneWithoutCrmImportRowsInput
+    product?: ProductCreateNestedOneWithoutCrmImportRowsInput
+    branch?: BranchCreateNestedOneWithoutCrmImportRowsInput
+    territory?: TerritoryCreateNestedOneWithoutCrmImportRowsInput
+  }
+
+  export type CRMImportRowUncheckedCreateInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crmImport?: CRMImportUpdateOneRequiredWithoutRowsNestedInput
+    customer?: CustomerUpdateOneWithoutCrmImportRowsNestedInput
+    product?: ProductUpdateOneWithoutCrmImportRowsNestedInput
+    branch?: BranchUpdateOneWithoutCrmImportRowsNestedInput
+    territory?: TerritoryUpdateOneWithoutCrmImportRowsNestedInput
+  }
+
+  export type CRMImportRowUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowCreateManyInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -56664,6 +60550,12 @@ export namespace Prisma {
     none?: ProductIssueWhereInput
   }
 
+  export type CRMImportListRelationFilter = {
+    every?: CRMImportWhereInput
+    some?: CRMImportWhereInput
+    none?: CRMImportWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -56774,6 +60666,10 @@ export namespace Prisma {
   }
 
   export type ProductIssueOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CRMImportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56928,6 +60824,16 @@ export namespace Prisma {
   export type TerritoryScalarRelationFilter = {
     is?: TerritoryWhereInput
     isNot?: TerritoryWhereInput
+  }
+
+  export type CRMImportRowListRelationFilter = {
+    every?: CRMImportRowWhereInput
+    some?: CRMImportRowWhereInput
+    none?: CRMImportRowWhereInput
+  }
+
+  export type CRMImportRowOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type BranchOrganizationIdCodeCompoundUniqueInput = {
@@ -57713,6 +61619,8 @@ export namespace Prisma {
     address?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    crmId?: SortOrder
+    customFields?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -57731,6 +61639,7 @@ export namespace Prisma {
     industry?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    crmId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -57744,6 +61653,7 @@ export namespace Prisma {
     industry?: SortOrder
     latitude?: SortOrder
     longitude?: SortOrder
+    crmId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -57762,17 +61672,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type OrderItemListRelationFilter = {
@@ -57873,22 +61772,6 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type CustomerScalarRelationFilter = {
@@ -59102,6 +62985,164 @@ export namespace Prisma {
     _max?: NestedEnumProductIssueStatusFilter<$PrismaModel>
   }
 
+  export type CRMImportCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    totalRows?: SortOrder
+    successfulRows?: SortOrder
+    failedRows?: SortOrder
+    status?: SortOrder
+    summary?: SortOrder
+    errors?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type CRMImportAvgOrderByAggregateInput = {
+    totalRows?: SortOrder
+    successfulRows?: SortOrder
+    failedRows?: SortOrder
+  }
+
+  export type CRMImportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    totalRows?: SortOrder
+    successfulRows?: SortOrder
+    failedRows?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type CRMImportMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    fileName?: SortOrder
+    uploadedBy?: SortOrder
+    totalRows?: SortOrder
+    successfulRows?: SortOrder
+    failedRows?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type CRMImportSumOrderByAggregateInput = {
+    totalRows?: SortOrder
+    successfulRows?: SortOrder
+    failedRows?: SortOrder
+  }
+
+  export type CRMImportScalarRelationFilter = {
+    is?: CRMImportWhereInput
+    isNot?: CRMImportWhereInput
+  }
+
+  export type CRMImportRowCountOrderByAggregateInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    organizationId?: SortOrder
+    rowNumber?: SortOrder
+    crmCustomerId?: SortOrder
+    crmProductId?: SortOrder
+    customerName?: SortOrder
+    phoneNumber?: SortOrder
+    email?: SortOrder
+    city?: SortOrder
+    pincode?: SortOrder
+    address?: SortOrder
+    productCode?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    requirement?: SortOrder
+    leadSource?: SortOrder
+    expectedValue?: SortOrder
+    customFields?: SortOrder
+    mappedCustomerId?: SortOrder
+    mappedProductId?: SortOrder
+    mappedBranchId?: SortOrder
+    mappedTerritoryId?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CRMImportRowAvgOrderByAggregateInput = {
+    rowNumber?: SortOrder
+    quantity?: SortOrder
+    expectedValue?: SortOrder
+  }
+
+  export type CRMImportRowMaxOrderByAggregateInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    organizationId?: SortOrder
+    rowNumber?: SortOrder
+    crmCustomerId?: SortOrder
+    crmProductId?: SortOrder
+    customerName?: SortOrder
+    phoneNumber?: SortOrder
+    email?: SortOrder
+    city?: SortOrder
+    pincode?: SortOrder
+    address?: SortOrder
+    productCode?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    requirement?: SortOrder
+    leadSource?: SortOrder
+    expectedValue?: SortOrder
+    mappedCustomerId?: SortOrder
+    mappedProductId?: SortOrder
+    mappedBranchId?: SortOrder
+    mappedTerritoryId?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CRMImportRowMinOrderByAggregateInput = {
+    id?: SortOrder
+    importId?: SortOrder
+    organizationId?: SortOrder
+    rowNumber?: SortOrder
+    crmCustomerId?: SortOrder
+    crmProductId?: SortOrder
+    customerName?: SortOrder
+    phoneNumber?: SortOrder
+    email?: SortOrder
+    city?: SortOrder
+    pincode?: SortOrder
+    address?: SortOrder
+    productCode?: SortOrder
+    productName?: SortOrder
+    quantity?: SortOrder
+    requirement?: SortOrder
+    leadSource?: SortOrder
+    expectedValue?: SortOrder
+    mappedCustomerId?: SortOrder
+    mappedProductId?: SortOrder
+    mappedBranchId?: SortOrder
+    mappedTerritoryId?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CRMImportRowSumOrderByAggregateInput = {
+    rowNumber?: SortOrder
+    quantity?: SortOrder
+    expectedValue?: SortOrder
+  }
+
   export type BranchCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<BranchCreateWithoutOrganizationInput, BranchUncheckedCreateWithoutOrganizationInput> | BranchCreateWithoutOrganizationInput[] | BranchUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutOrganizationInput | BranchCreateOrConnectWithoutOrganizationInput[]
@@ -59291,6 +63332,13 @@ export namespace Prisma {
     connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
+  export type CRMImportCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<CRMImportCreateWithoutOrganizationInput, CRMImportUncheckedCreateWithoutOrganizationInput> | CRMImportCreateWithoutOrganizationInput[] | CRMImportUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutOrganizationInput | CRMImportCreateOrConnectWithoutOrganizationInput[]
+    createMany?: CRMImportCreateManyOrganizationInputEnvelope
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+  }
+
   export type BranchUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<BranchCreateWithoutOrganizationInput, BranchUncheckedCreateWithoutOrganizationInput> | BranchCreateWithoutOrganizationInput[] | BranchUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutOrganizationInput | BranchCreateOrConnectWithoutOrganizationInput[]
@@ -59478,6 +63526,13 @@ export namespace Prisma {
     connectOrCreate?: ProductIssueCreateOrConnectWithoutOrganizationInput | ProductIssueCreateOrConnectWithoutOrganizationInput[]
     createMany?: ProductIssueCreateManyOrganizationInputEnvelope
     connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
+  }
+
+  export type CRMImportUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<CRMImportCreateWithoutOrganizationInput, CRMImportUncheckedCreateWithoutOrganizationInput> | CRMImportCreateWithoutOrganizationInput[] | CRMImportUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutOrganizationInput | CRMImportCreateOrConnectWithoutOrganizationInput[]
+    createMany?: CRMImportCreateManyOrganizationInputEnvelope
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -59874,6 +63929,20 @@ export namespace Prisma {
     deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
   }
 
+  export type CRMImportUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<CRMImportCreateWithoutOrganizationInput, CRMImportUncheckedCreateWithoutOrganizationInput> | CRMImportCreateWithoutOrganizationInput[] | CRMImportUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutOrganizationInput | CRMImportCreateOrConnectWithoutOrganizationInput[]
+    upsert?: CRMImportUpsertWithWhereUniqueWithoutOrganizationInput | CRMImportUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: CRMImportCreateManyOrganizationInputEnvelope
+    set?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    disconnect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    delete?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    update?: CRMImportUpdateWithWhereUniqueWithoutOrganizationInput | CRMImportUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: CRMImportUpdateManyWithWhereWithoutOrganizationInput | CRMImportUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: CRMImportScalarWhereInput | CRMImportScalarWhereInput[]
+  }
+
   export type BranchUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<BranchCreateWithoutOrganizationInput, BranchUncheckedCreateWithoutOrganizationInput> | BranchCreateWithoutOrganizationInput[] | BranchUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutOrganizationInput | BranchCreateOrConnectWithoutOrganizationInput[]
@@ -60252,6 +64321,20 @@ export namespace Prisma {
     deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
   }
 
+  export type CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<CRMImportCreateWithoutOrganizationInput, CRMImportUncheckedCreateWithoutOrganizationInput> | CRMImportCreateWithoutOrganizationInput[] | CRMImportUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutOrganizationInput | CRMImportCreateOrConnectWithoutOrganizationInput[]
+    upsert?: CRMImportUpsertWithWhereUniqueWithoutOrganizationInput | CRMImportUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: CRMImportCreateManyOrganizationInputEnvelope
+    set?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    disconnect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    delete?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    update?: CRMImportUpdateWithWhereUniqueWithoutOrganizationInput | CRMImportUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: CRMImportUpdateManyWithWhereWithoutOrganizationInput | CRMImportUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: CRMImportScalarWhereInput | CRMImportScalarWhereInput[]
+  }
+
   export type OrganizationCreateNestedOneWithoutBranchesInput = {
     create?: XOR<OrganizationCreateWithoutBranchesInput, OrganizationUncheckedCreateWithoutBranchesInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutBranchesInput
@@ -60290,6 +64373,13 @@ export namespace Prisma {
     connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
   }
 
+  export type CRMImportRowCreateNestedManyWithoutBranchInput = {
+    create?: XOR<CRMImportRowCreateWithoutBranchInput, CRMImportRowUncheckedCreateWithoutBranchInput> | CRMImportRowCreateWithoutBranchInput[] | CRMImportRowUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutBranchInput | CRMImportRowCreateOrConnectWithoutBranchInput[]
+    createMany?: CRMImportRowCreateManyBranchInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+  }
+
   export type TeamUncheckedCreateNestedManyWithoutBranchInput = {
     create?: XOR<TeamCreateWithoutBranchInput, TeamUncheckedCreateWithoutBranchInput> | TeamCreateWithoutBranchInput[] | TeamUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: TeamCreateOrConnectWithoutBranchInput | TeamCreateOrConnectWithoutBranchInput[]
@@ -60304,19 +64394,25 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
-<<<<<<< HEAD
+  export type WarehouseUncheckedCreateNestedManyWithoutBranchesInput = {
+    create?: XOR<WarehouseCreateWithoutBranchesInput, WarehouseUncheckedCreateWithoutBranchesInput> | WarehouseCreateWithoutBranchesInput[] | WarehouseUncheckedCreateWithoutBranchesInput[]
+    connectOrCreate?: WarehouseCreateOrConnectWithoutBranchesInput | WarehouseCreateOrConnectWithoutBranchesInput[]
+    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
+  }
+
+  export type CRMImportRowUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<CRMImportRowCreateWithoutBranchInput, CRMImportRowUncheckedCreateWithoutBranchInput> | CRMImportRowCreateWithoutBranchInput[] | CRMImportRowUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutBranchInput | CRMImportRowCreateOrConnectWithoutBranchInput[]
+    createMany?: CRMImportRowCreateManyBranchInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+  }
+
   export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
-=======
-  export type WarehouseUncheckedCreateNestedManyWithoutBranchesInput = {
-    create?: XOR<WarehouseCreateWithoutBranchesInput, WarehouseUncheckedCreateWithoutBranchesInput> | WarehouseCreateWithoutBranchesInput[] | WarehouseUncheckedCreateWithoutBranchesInput[]
-    connectOrCreate?: WarehouseCreateOrConnectWithoutBranchesInput | WarehouseCreateOrConnectWithoutBranchesInput[]
-    connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
->>>>>>> origin/adarsh
   }
 
   export type OrganizationUpdateOneRequiredWithoutBranchesNestedInput = {
@@ -60384,6 +64480,20 @@ export namespace Prisma {
     deleteMany?: WarehouseScalarWhereInput | WarehouseScalarWhereInput[]
   }
 
+  export type CRMImportRowUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutBranchInput, CRMImportRowUncheckedCreateWithoutBranchInput> | CRMImportRowCreateWithoutBranchInput[] | CRMImportRowUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutBranchInput | CRMImportRowCreateOrConnectWithoutBranchInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutBranchInput | CRMImportRowUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: CRMImportRowCreateManyBranchInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutBranchInput | CRMImportRowUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutBranchInput | CRMImportRowUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+  }
+
   export type TeamUncheckedUpdateManyWithoutBranchNestedInput = {
     create?: XOR<TeamCreateWithoutBranchInput, TeamUncheckedCreateWithoutBranchInput> | TeamCreateWithoutBranchInput[] | TeamUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: TeamCreateOrConnectWithoutBranchInput | TeamCreateOrConnectWithoutBranchInput[]
@@ -60423,6 +64533,20 @@ export namespace Prisma {
     update?: WarehouseUpdateWithWhereUniqueWithoutBranchesInput | WarehouseUpdateWithWhereUniqueWithoutBranchesInput[]
     updateMany?: WarehouseUpdateManyWithWhereWithoutBranchesInput | WarehouseUpdateManyWithWhereWithoutBranchesInput[]
     deleteMany?: WarehouseScalarWhereInput | WarehouseScalarWhereInput[]
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutBranchInput, CRMImportRowUncheckedCreateWithoutBranchInput> | CRMImportRowCreateWithoutBranchInput[] | CRMImportRowUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutBranchInput | CRMImportRowCreateOrConnectWithoutBranchInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutBranchInput | CRMImportRowUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: CRMImportRowCreateManyBranchInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutBranchInput | CRMImportRowUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutBranchInput | CRMImportRowUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutDepartmentsInput = {
@@ -60640,6 +64764,13 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type CRMImportRowCreateNestedManyWithoutTerritoryInput = {
+    create?: XOR<CRMImportRowCreateWithoutTerritoryInput, CRMImportRowUncheckedCreateWithoutTerritoryInput> | CRMImportRowCreateWithoutTerritoryInput[] | CRMImportRowUncheckedCreateWithoutTerritoryInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutTerritoryInput | CRMImportRowCreateOrConnectWithoutTerritoryInput[]
+    createMany?: CRMImportRowCreateManyTerritoryInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+  }
+
   export type BranchUncheckedCreateNestedManyWithoutTerritoryInput = {
     create?: XOR<BranchCreateWithoutTerritoryInput, BranchUncheckedCreateWithoutTerritoryInput> | BranchCreateWithoutTerritoryInput[] | BranchUncheckedCreateWithoutTerritoryInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutTerritoryInput | BranchCreateOrConnectWithoutTerritoryInput[]
@@ -60659,6 +64790,13 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutTerritoryInput | UserCreateOrConnectWithoutTerritoryInput[]
     createMany?: UserCreateManyTerritoryInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type CRMImportRowUncheckedCreateNestedManyWithoutTerritoryInput = {
+    create?: XOR<CRMImportRowCreateWithoutTerritoryInput, CRMImportRowUncheckedCreateWithoutTerritoryInput> | CRMImportRowCreateWithoutTerritoryInput[] | CRMImportRowUncheckedCreateWithoutTerritoryInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutTerritoryInput | CRMImportRowCreateOrConnectWithoutTerritoryInput[]
+    createMany?: CRMImportRowCreateManyTerritoryInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutTerritoriesNestedInput = {
@@ -60719,6 +64857,20 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type CRMImportRowUpdateManyWithoutTerritoryNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutTerritoryInput, CRMImportRowUncheckedCreateWithoutTerritoryInput> | CRMImportRowCreateWithoutTerritoryInput[] | CRMImportRowUncheckedCreateWithoutTerritoryInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutTerritoryInput | CRMImportRowCreateOrConnectWithoutTerritoryInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutTerritoryInput | CRMImportRowUpsertWithWhereUniqueWithoutTerritoryInput[]
+    createMany?: CRMImportRowCreateManyTerritoryInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutTerritoryInput | CRMImportRowUpdateWithWhereUniqueWithoutTerritoryInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutTerritoryInput | CRMImportRowUpdateManyWithWhereWithoutTerritoryInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+  }
+
   export type BranchUncheckedUpdateManyWithoutTerritoryNestedInput = {
     create?: XOR<BranchCreateWithoutTerritoryInput, BranchUncheckedCreateWithoutTerritoryInput> | BranchCreateWithoutTerritoryInput[] | BranchUncheckedCreateWithoutTerritoryInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutTerritoryInput | BranchCreateOrConnectWithoutTerritoryInput[]
@@ -60759,6 +64911,20 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutTerritoryInput | UserUpdateWithWhereUniqueWithoutTerritoryInput[]
     updateMany?: UserUpdateManyWithWhereWithoutTerritoryInput | UserUpdateManyWithWhereWithoutTerritoryInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutTerritoryNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutTerritoryInput, CRMImportRowUncheckedCreateWithoutTerritoryInput> | CRMImportRowCreateWithoutTerritoryInput[] | CRMImportRowUncheckedCreateWithoutTerritoryInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutTerritoryInput | CRMImportRowCreateOrConnectWithoutTerritoryInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutTerritoryInput | CRMImportRowUpsertWithWhereUniqueWithoutTerritoryInput[]
+    createMany?: CRMImportRowCreateManyTerritoryInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutTerritoryInput | CRMImportRowUpdateWithWhereUniqueWithoutTerritoryInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutTerritoryInput | CRMImportRowUpdateManyWithWhereWithoutTerritoryInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutTeamsInput = {
@@ -61310,6 +65476,13 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type CRMImportCreateNestedManyWithoutUploaderInput = {
+    create?: XOR<CRMImportCreateWithoutUploaderInput, CRMImportUncheckedCreateWithoutUploaderInput> | CRMImportCreateWithoutUploaderInput[] | CRMImportUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutUploaderInput | CRMImportCreateOrConnectWithoutUploaderInput[]
+    createMany?: CRMImportCreateManyUploaderInputEnvelope
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+  }
+
   export type WarehouseCreateNestedOneWithoutWarehouseManagerInput = {
     create?: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
     connectOrCreate?: WarehouseCreateOrConnectWithoutWarehouseManagerInput
@@ -61461,6 +65634,13 @@ export namespace Prisma {
     connectOrCreate?: StockMovementCreateOrConnectWithoutUserInput | StockMovementCreateOrConnectWithoutUserInput[]
     createMany?: StockMovementCreateManyUserInputEnvelope
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type CRMImportUncheckedCreateNestedManyWithoutUploaderInput = {
+    create?: XOR<CRMImportCreateWithoutUploaderInput, CRMImportUncheckedCreateWithoutUploaderInput> | CRMImportCreateWithoutUploaderInput[] | CRMImportUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutUploaderInput | CRMImportCreateOrConnectWithoutUploaderInput[]
+    createMany?: CRMImportCreateManyUploaderInputEnvelope
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
   }
 
   export type WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput = {
@@ -61819,6 +65999,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type CRMImportUpdateManyWithoutUploaderNestedInput = {
+    create?: XOR<CRMImportCreateWithoutUploaderInput, CRMImportUncheckedCreateWithoutUploaderInput> | CRMImportCreateWithoutUploaderInput[] | CRMImportUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutUploaderInput | CRMImportCreateOrConnectWithoutUploaderInput[]
+    upsert?: CRMImportUpsertWithWhereUniqueWithoutUploaderInput | CRMImportUpsertWithWhereUniqueWithoutUploaderInput[]
+    createMany?: CRMImportCreateManyUploaderInputEnvelope
+    set?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    disconnect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    delete?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    update?: CRMImportUpdateWithWhereUniqueWithoutUploaderInput | CRMImportUpdateWithWhereUniqueWithoutUploaderInput[]
+    updateMany?: CRMImportUpdateManyWithWhereWithoutUploaderInput | CRMImportUpdateManyWithWhereWithoutUploaderInput[]
+    deleteMany?: CRMImportScalarWhereInput | CRMImportScalarWhereInput[]
+  }
+
   export type WarehouseUpdateOneWithoutWarehouseManagerNestedInput = {
     create?: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
     connectOrCreate?: WarehouseCreateOrConnectWithoutWarehouseManagerInput
@@ -62123,6 +66317,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type CRMImportUncheckedUpdateManyWithoutUploaderNestedInput = {
+    create?: XOR<CRMImportCreateWithoutUploaderInput, CRMImportUncheckedCreateWithoutUploaderInput> | CRMImportCreateWithoutUploaderInput[] | CRMImportUncheckedCreateWithoutUploaderInput[]
+    connectOrCreate?: CRMImportCreateOrConnectWithoutUploaderInput | CRMImportCreateOrConnectWithoutUploaderInput[]
+    upsert?: CRMImportUpsertWithWhereUniqueWithoutUploaderInput | CRMImportUpsertWithWhereUniqueWithoutUploaderInput[]
+    createMany?: CRMImportCreateManyUploaderInputEnvelope
+    set?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    disconnect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    delete?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+    update?: CRMImportUpdateWithWhereUniqueWithoutUploaderInput | CRMImportUpdateWithWhereUniqueWithoutUploaderInput[]
+    updateMany?: CRMImportUpdateManyWithWhereWithoutUploaderInput | CRMImportUpdateManyWithWhereWithoutUploaderInput[]
+    deleteMany?: CRMImportScalarWhereInput | CRMImportScalarWhereInput[]
+  }
+
   export type WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput = {
     create?: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
     connectOrCreate?: WarehouseCreateOrConnectWithoutWarehouseManagerInput
@@ -62281,6 +66489,13 @@ export namespace Prisma {
     connect?: VisitWhereUniqueInput | VisitWhereUniqueInput[]
   }
 
+  export type CRMImportRowCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CRMImportRowCreateWithoutCustomerInput, CRMImportRowUncheckedCreateWithoutCustomerInput> | CRMImportRowCreateWithoutCustomerInput[] | CRMImportRowUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCustomerInput | CRMImportRowCreateOrConnectWithoutCustomerInput[]
+    createMany?: CRMImportRowCreateManyCustomerInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -62293,6 +66508,13 @@ export namespace Prisma {
     connectOrCreate?: VisitCreateOrConnectWithoutCustomerInput | VisitCreateOrConnectWithoutCustomerInput[]
     createMany?: VisitCreateManyCustomerInputEnvelope
     connect?: VisitWhereUniqueInput | VisitWhereUniqueInput[]
+  }
+
+  export type CRMImportRowUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CRMImportRowCreateWithoutCustomerInput, CRMImportRowUncheckedCreateWithoutCustomerInput> | CRMImportRowCreateWithoutCustomerInput[] | CRMImportRowUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCustomerInput | CRMImportRowCreateOrConnectWithoutCustomerInput[]
+    createMany?: CRMImportRowCreateManyCustomerInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutCustomersNestedInput = {
@@ -62331,6 +66553,20 @@ export namespace Prisma {
     deleteMany?: VisitScalarWhereInput | VisitScalarWhereInput[]
   }
 
+  export type CRMImportRowUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutCustomerInput, CRMImportRowUncheckedCreateWithoutCustomerInput> | CRMImportRowCreateWithoutCustomerInput[] | CRMImportRowUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCustomerInput | CRMImportRowCreateOrConnectWithoutCustomerInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutCustomerInput | CRMImportRowUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CRMImportRowCreateManyCustomerInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutCustomerInput | CRMImportRowUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutCustomerInput | CRMImportRowUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -62357,6 +66593,20 @@ export namespace Prisma {
     update?: VisitUpdateWithWhereUniqueWithoutCustomerInput | VisitUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: VisitUpdateManyWithWhereWithoutCustomerInput | VisitUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: VisitScalarWhereInput | VisitScalarWhereInput[]
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutCustomerInput, CRMImportRowUncheckedCreateWithoutCustomerInput> | CRMImportRowCreateWithoutCustomerInput[] | CRMImportRowUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCustomerInput | CRMImportRowCreateOrConnectWithoutCustomerInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutCustomerInput | CRMImportRowUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CRMImportRowCreateManyCustomerInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutCustomerInput | CRMImportRowUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutCustomerInput | CRMImportRowUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutProductsInput = {
@@ -62393,6 +66643,13 @@ export namespace Prisma {
     connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
+  export type CRMImportRowCreateNestedManyWithoutProductInput = {
+    create?: XOR<CRMImportRowCreateWithoutProductInput, CRMImportRowUncheckedCreateWithoutProductInput> | CRMImportRowCreateWithoutProductInput[] | CRMImportRowUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutProductInput | CRMImportRowCreateOrConnectWithoutProductInput[]
+    createMany?: CRMImportRowCreateManyProductInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -62421,16 +66678,15 @@ export namespace Prisma {
     connect?: ProductIssueWhereUniqueInput | ProductIssueWhereUniqueInput[]
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type CRMImportRowUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<CRMImportRowCreateWithoutProductInput, CRMImportRowUncheckedCreateWithoutProductInput> | CRMImportRowCreateWithoutProductInput[] | CRMImportRowUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutProductInput | CRMImportRowCreateOrConnectWithoutProductInput[]
+    createMany?: CRMImportRowCreateManyProductInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
     increment?: number
     decrement?: number
     multiply?: number
@@ -62501,6 +66757,20 @@ export namespace Prisma {
     deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
   }
 
+  export type CRMImportRowUpdateManyWithoutProductNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutProductInput, CRMImportRowUncheckedCreateWithoutProductInput> | CRMImportRowCreateWithoutProductInput[] | CRMImportRowUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutProductInput | CRMImportRowCreateOrConnectWithoutProductInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutProductInput | CRMImportRowUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: CRMImportRowCreateManyProductInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutProductInput | CRMImportRowUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutProductInput | CRMImportRowUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -62555,6 +66825,20 @@ export namespace Prisma {
     update?: ProductIssueUpdateWithWhereUniqueWithoutProductInput | ProductIssueUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: ProductIssueUpdateManyWithWhereWithoutProductInput | ProductIssueUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: ProductIssueScalarWhereInput | ProductIssueScalarWhereInput[]
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutProductInput, CRMImportRowUncheckedCreateWithoutProductInput> | CRMImportRowCreateWithoutProductInput[] | CRMImportRowUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutProductInput | CRMImportRowCreateOrConnectWithoutProductInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutProductInput | CRMImportRowUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: CRMImportRowCreateManyProductInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutProductInput | CRMImportRowUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutProductInput | CRMImportRowUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutOrdersInput = {
@@ -63627,6 +67911,154 @@ export namespace Prisma {
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutProductIssuesInput, OrderUpdateWithoutProductIssuesInput>, OrderUncheckedUpdateWithoutProductIssuesInput>
   }
 
+  export type OrganizationCreateNestedOneWithoutCrmImportsInput = {
+    create?: XOR<OrganizationCreateWithoutCrmImportsInput, OrganizationUncheckedCreateWithoutCrmImportsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutCrmImportsInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCrmImportsInput = {
+    create?: XOR<UserCreateWithoutCrmImportsInput, UserUncheckedCreateWithoutCrmImportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCrmImportsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CRMImportRowCreateNestedManyWithoutCrmImportInput = {
+    create?: XOR<CRMImportRowCreateWithoutCrmImportInput, CRMImportRowUncheckedCreateWithoutCrmImportInput> | CRMImportRowCreateWithoutCrmImportInput[] | CRMImportRowUncheckedCreateWithoutCrmImportInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCrmImportInput | CRMImportRowCreateOrConnectWithoutCrmImportInput[]
+    createMany?: CRMImportRowCreateManyCrmImportInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+  }
+
+  export type CRMImportRowUncheckedCreateNestedManyWithoutCrmImportInput = {
+    create?: XOR<CRMImportRowCreateWithoutCrmImportInput, CRMImportRowUncheckedCreateWithoutCrmImportInput> | CRMImportRowCreateWithoutCrmImportInput[] | CRMImportRowUncheckedCreateWithoutCrmImportInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCrmImportInput | CRMImportRowCreateOrConnectWithoutCrmImportInput[]
+    createMany?: CRMImportRowCreateManyCrmImportInputEnvelope
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutCrmImportsNestedInput = {
+    create?: XOR<OrganizationCreateWithoutCrmImportsInput, OrganizationUncheckedCreateWithoutCrmImportsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutCrmImportsInput
+    upsert?: OrganizationUpsertWithoutCrmImportsInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutCrmImportsInput, OrganizationUpdateWithoutCrmImportsInput>, OrganizationUncheckedUpdateWithoutCrmImportsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCrmImportsNestedInput = {
+    create?: XOR<UserCreateWithoutCrmImportsInput, UserUncheckedCreateWithoutCrmImportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCrmImportsInput
+    upsert?: UserUpsertWithoutCrmImportsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCrmImportsInput, UserUpdateWithoutCrmImportsInput>, UserUncheckedUpdateWithoutCrmImportsInput>
+  }
+
+  export type CRMImportRowUpdateManyWithoutCrmImportNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutCrmImportInput, CRMImportRowUncheckedCreateWithoutCrmImportInput> | CRMImportRowCreateWithoutCrmImportInput[] | CRMImportRowUncheckedCreateWithoutCrmImportInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCrmImportInput | CRMImportRowCreateOrConnectWithoutCrmImportInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutCrmImportInput | CRMImportRowUpsertWithWhereUniqueWithoutCrmImportInput[]
+    createMany?: CRMImportRowCreateManyCrmImportInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutCrmImportInput | CRMImportRowUpdateWithWhereUniqueWithoutCrmImportInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutCrmImportInput | CRMImportRowUpdateManyWithWhereWithoutCrmImportInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutCrmImportNestedInput = {
+    create?: XOR<CRMImportRowCreateWithoutCrmImportInput, CRMImportRowUncheckedCreateWithoutCrmImportInput> | CRMImportRowCreateWithoutCrmImportInput[] | CRMImportRowUncheckedCreateWithoutCrmImportInput[]
+    connectOrCreate?: CRMImportRowCreateOrConnectWithoutCrmImportInput | CRMImportRowCreateOrConnectWithoutCrmImportInput[]
+    upsert?: CRMImportRowUpsertWithWhereUniqueWithoutCrmImportInput | CRMImportRowUpsertWithWhereUniqueWithoutCrmImportInput[]
+    createMany?: CRMImportRowCreateManyCrmImportInputEnvelope
+    set?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    disconnect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    delete?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
+    update?: CRMImportRowUpdateWithWhereUniqueWithoutCrmImportInput | CRMImportRowUpdateWithWhereUniqueWithoutCrmImportInput[]
+    updateMany?: CRMImportRowUpdateManyWithWhereWithoutCrmImportInput | CRMImportRowUpdateManyWithWhereWithoutCrmImportInput[]
+    deleteMany?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+  }
+
+  export type CRMImportCreateNestedOneWithoutRowsInput = {
+    create?: XOR<CRMImportCreateWithoutRowsInput, CRMImportUncheckedCreateWithoutRowsInput>
+    connectOrCreate?: CRMImportCreateOrConnectWithoutRowsInput
+    connect?: CRMImportWhereUniqueInput
+  }
+
+  export type CustomerCreateNestedOneWithoutCrmImportRowsInput = {
+    create?: XOR<CustomerCreateWithoutCrmImportRowsInput, CustomerUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutCrmImportRowsInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutCrmImportRowsInput = {
+    create?: XOR<ProductCreateWithoutCrmImportRowsInput, ProductUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutCrmImportRowsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutCrmImportRowsInput = {
+    create?: XOR<BranchCreateWithoutCrmImportRowsInput, BranchUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutCrmImportRowsInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type TerritoryCreateNestedOneWithoutCrmImportRowsInput = {
+    create?: XOR<TerritoryCreateWithoutCrmImportRowsInput, TerritoryUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: TerritoryCreateOrConnectWithoutCrmImportRowsInput
+    connect?: TerritoryWhereUniqueInput
+  }
+
+  export type CRMImportUpdateOneRequiredWithoutRowsNestedInput = {
+    create?: XOR<CRMImportCreateWithoutRowsInput, CRMImportUncheckedCreateWithoutRowsInput>
+    connectOrCreate?: CRMImportCreateOrConnectWithoutRowsInput
+    upsert?: CRMImportUpsertWithoutRowsInput
+    connect?: CRMImportWhereUniqueInput
+    update?: XOR<XOR<CRMImportUpdateToOneWithWhereWithoutRowsInput, CRMImportUpdateWithoutRowsInput>, CRMImportUncheckedUpdateWithoutRowsInput>
+  }
+
+  export type CustomerUpdateOneWithoutCrmImportRowsNestedInput = {
+    create?: XOR<CustomerCreateWithoutCrmImportRowsInput, CustomerUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutCrmImportRowsInput
+    upsert?: CustomerUpsertWithoutCrmImportRowsInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutCrmImportRowsInput, CustomerUpdateWithoutCrmImportRowsInput>, CustomerUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
+  export type ProductUpdateOneWithoutCrmImportRowsNestedInput = {
+    create?: XOR<ProductCreateWithoutCrmImportRowsInput, ProductUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutCrmImportRowsInput
+    upsert?: ProductUpsertWithoutCrmImportRowsInput
+    disconnect?: ProductWhereInput | boolean
+    delete?: ProductWhereInput | boolean
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutCrmImportRowsInput, ProductUpdateWithoutCrmImportRowsInput>, ProductUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
+  export type BranchUpdateOneWithoutCrmImportRowsNestedInput = {
+    create?: XOR<BranchCreateWithoutCrmImportRowsInput, BranchUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutCrmImportRowsInput
+    upsert?: BranchUpsertWithoutCrmImportRowsInput
+    disconnect?: BranchWhereInput | boolean
+    delete?: BranchWhereInput | boolean
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutCrmImportRowsInput, BranchUpdateWithoutCrmImportRowsInput>, BranchUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
+  export type TerritoryUpdateOneWithoutCrmImportRowsNestedInput = {
+    create?: XOR<TerritoryCreateWithoutCrmImportRowsInput, TerritoryUncheckedCreateWithoutCrmImportRowsInput>
+    connectOrCreate?: TerritoryCreateOrConnectWithoutCrmImportRowsInput
+    upsert?: TerritoryUpsertWithoutCrmImportRowsInput
+    disconnect?: TerritoryWhereInput | boolean
+    delete?: TerritoryWhereInput | boolean
+    connect?: TerritoryWhereUniqueInput
+    update?: XOR<XOR<TerritoryUpdateToOneWithWhereWithoutCrmImportRowsInput, TerritoryUpdateWithoutCrmImportRowsInput>, TerritoryUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -63933,22 +68365,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type NestedEnumAttendanceStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
     in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
@@ -64119,8 +68535,6 @@ export namespace Prisma {
     _max?: NestedEnumTaskPriorityFilter<$PrismaModel>
   }
 
-<<<<<<< HEAD
-=======
   export type NestedEnumStockMovementTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.StockMovementType | EnumStockMovementTypeFieldRefInput<$PrismaModel>
     in?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
@@ -64155,7 +68569,6 @@ export namespace Prisma {
     _max?: NestedEnumProductIssueStatusFilter<$PrismaModel>
   }
 
->>>>>>> origin/adarsh
   export type BranchCreateWithoutOrganizationInput = {
     id?: string
     name: string
@@ -64176,6 +68589,7 @@ export namespace Prisma {
     teams?: TeamCreateNestedManyWithoutBranchInput
     users?: UserCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutOrganizationInput = {
@@ -64198,6 +68612,7 @@ export namespace Prisma {
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
     users?: UserUncheckedCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutOrganizationInput = {
@@ -64222,6 +68637,7 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutTerritoryInput
     teams?: TeamCreateNestedManyWithoutTerritoryInput
     users?: UserCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryUncheckedCreateWithoutOrganizationInput = {
@@ -64236,6 +68652,7 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutTerritoryInput
     teams?: TeamUncheckedCreateNestedManyWithoutTerritoryInput
     users?: UserUncheckedCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryCreateOrConnectWithoutOrganizationInput = {
@@ -64366,6 +68783,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -64415,6 +68833,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -64977,10 +69396,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
     visits?: VisitCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrganizationInput = {
@@ -64992,10 +69414,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     visits?: VisitUncheckedCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrganizationInput = {
@@ -65029,6 +69454,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
     issues?: ProductIssueCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrganizationInput = {
@@ -65052,6 +69478,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrganizationInput = {
@@ -65301,6 +69728,46 @@ export namespace Prisma {
 
   export type ProductIssueCreateManyOrganizationInputEnvelope = {
     data: ProductIssueCreateManyOrganizationInput | ProductIssueCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CRMImportCreateWithoutOrganizationInput = {
+    id?: string
+    fileName: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    uploader: UserCreateNestedOneWithoutCrmImportsInput
+    rows?: CRMImportRowCreateNestedManyWithoutCrmImportInput
+  }
+
+  export type CRMImportUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    fileName: string
+    uploadedBy: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    rows?: CRMImportRowUncheckedCreateNestedManyWithoutCrmImportInput
+  }
+
+  export type CRMImportCreateOrConnectWithoutOrganizationInput = {
+    where: CRMImportWhereUniqueInput
+    create: XOR<CRMImportCreateWithoutOrganizationInput, CRMImportUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type CRMImportCreateManyOrganizationInputEnvelope = {
+    data: CRMImportCreateManyOrganizationInput | CRMImportCreateManyOrganizationInput[]
     skipDuplicates?: boolean
   }
 
@@ -65991,6 +70458,8 @@ export namespace Prisma {
     address?: JsonNullableFilter<"Customer">
     latitude?: FloatNullableFilter<"Customer"> | number | null
     longitude?: FloatNullableFilter<"Customer"> | number | null
+    crmId?: StringNullableFilter<"Customer"> | string | null
+    customFields?: JsonNullableFilter<"Customer">
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
   }
@@ -66232,6 +70701,40 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ProductIssue"> | Date | string
   }
 
+  export type CRMImportUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: CRMImportWhereUniqueInput
+    update: XOR<CRMImportUpdateWithoutOrganizationInput, CRMImportUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<CRMImportCreateWithoutOrganizationInput, CRMImportUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type CRMImportUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: CRMImportWhereUniqueInput
+    data: XOR<CRMImportUpdateWithoutOrganizationInput, CRMImportUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type CRMImportUpdateManyWithWhereWithoutOrganizationInput = {
+    where: CRMImportScalarWhereInput
+    data: XOR<CRMImportUpdateManyMutationInput, CRMImportUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type CRMImportScalarWhereInput = {
+    AND?: CRMImportScalarWhereInput | CRMImportScalarWhereInput[]
+    OR?: CRMImportScalarWhereInput[]
+    NOT?: CRMImportScalarWhereInput | CRMImportScalarWhereInput[]
+    id?: UuidFilter<"CRMImport"> | string
+    organizationId?: UuidFilter<"CRMImport"> | string
+    fileName?: StringFilter<"CRMImport"> | string
+    uploadedBy?: UuidFilter<"CRMImport"> | string
+    totalRows?: IntFilter<"CRMImport"> | number
+    successfulRows?: IntFilter<"CRMImport"> | number
+    failedRows?: IntFilter<"CRMImport"> | number
+    status?: StringFilter<"CRMImport"> | string
+    summary?: JsonNullableFilter<"CRMImport">
+    errors?: JsonNullableFilter<"CRMImport">
+    createdAt?: DateTimeFilter<"CRMImport"> | Date | string
+    completedAt?: DateTimeNullableFilter<"CRMImport"> | Date | string | null
+  }
+
   export type OrganizationCreateWithoutBranchesInput = {
     id?: string
     name: string
@@ -66274,6 +70777,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutBranchesInput = {
@@ -66318,6 +70822,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutBranchesInput = {
@@ -66370,6 +70875,7 @@ export namespace Prisma {
     department: DepartmentCreateNestedOneWithoutTerritoriesInput
     teams?: TeamCreateNestedManyWithoutTerritoryInput
     users?: UserCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryUncheckedCreateWithoutBranchesInput = {
@@ -66384,6 +70890,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutTerritoryInput
     users?: UserUncheckedCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryCreateOrConnectWithoutBranchesInput = {
@@ -66471,6 +70978,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -66520,6 +71028,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -66568,6 +71077,74 @@ export namespace Prisma {
   export type WarehouseCreateOrConnectWithoutBranchesInput = {
     where: WarehouseWhereUniqueInput
     create: XOR<WarehouseCreateWithoutBranchesInput, WarehouseUncheckedCreateWithoutBranchesInput>
+  }
+
+  export type CRMImportRowCreateWithoutBranchInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crmImport: CRMImportCreateNestedOneWithoutRowsInput
+    customer?: CustomerCreateNestedOneWithoutCrmImportRowsInput
+    product?: ProductCreateNestedOneWithoutCrmImportRowsInput
+    territory?: TerritoryCreateNestedOneWithoutCrmImportRowsInput
+  }
+
+  export type CRMImportRowUncheckedCreateWithoutBranchInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateOrConnectWithoutBranchInput = {
+    where: CRMImportRowWhereUniqueInput
+    create: XOR<CRMImportRowCreateWithoutBranchInput, CRMImportRowUncheckedCreateWithoutBranchInput>
+  }
+
+  export type CRMImportRowCreateManyBranchInputEnvelope = {
+    data: CRMImportRowCreateManyBranchInput | CRMImportRowCreateManyBranchInput[]
+    skipDuplicates?: boolean
   }
 
   export type OrganizationUpsertWithoutBranchesInput = {
@@ -66623,6 +71200,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutBranchesInput = {
@@ -66667,6 +71245,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type DepartmentUpsertWithoutBranchesInput = {
@@ -66731,6 +71310,7 @@ export namespace Prisma {
     department?: DepartmentUpdateOneRequiredWithoutTerritoriesNestedInput
     teams?: TeamUpdateManyWithoutTerritoryNestedInput
     users?: UserUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateWithoutBranchesInput = {
@@ -66745,6 +71325,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutTerritoryNestedInput
     users?: UserUncheckedUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TeamUpsertWithWhereUniqueWithoutBranchInput = {
@@ -66795,6 +71376,55 @@ export namespace Prisma {
     data: XOR<WarehouseUpdateManyMutationInput, WarehouseUncheckedUpdateManyWithoutBranchesInput>
   }
 
+  export type CRMImportRowUpsertWithWhereUniqueWithoutBranchInput = {
+    where: CRMImportRowWhereUniqueInput
+    update: XOR<CRMImportRowUpdateWithoutBranchInput, CRMImportRowUncheckedUpdateWithoutBranchInput>
+    create: XOR<CRMImportRowCreateWithoutBranchInput, CRMImportRowUncheckedCreateWithoutBranchInput>
+  }
+
+  export type CRMImportRowUpdateWithWhereUniqueWithoutBranchInput = {
+    where: CRMImportRowWhereUniqueInput
+    data: XOR<CRMImportRowUpdateWithoutBranchInput, CRMImportRowUncheckedUpdateWithoutBranchInput>
+  }
+
+  export type CRMImportRowUpdateManyWithWhereWithoutBranchInput = {
+    where: CRMImportRowScalarWhereInput
+    data: XOR<CRMImportRowUpdateManyMutationInput, CRMImportRowUncheckedUpdateManyWithoutBranchInput>
+  }
+
+  export type CRMImportRowScalarWhereInput = {
+    AND?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+    OR?: CRMImportRowScalarWhereInput[]
+    NOT?: CRMImportRowScalarWhereInput | CRMImportRowScalarWhereInput[]
+    id?: UuidFilter<"CRMImportRow"> | string
+    importId?: UuidFilter<"CRMImportRow"> | string
+    organizationId?: UuidFilter<"CRMImportRow"> | string
+    rowNumber?: IntFilter<"CRMImportRow"> | number
+    crmCustomerId?: StringNullableFilter<"CRMImportRow"> | string | null
+    crmProductId?: StringNullableFilter<"CRMImportRow"> | string | null
+    customerName?: StringNullableFilter<"CRMImportRow"> | string | null
+    phoneNumber?: StringNullableFilter<"CRMImportRow"> | string | null
+    email?: StringNullableFilter<"CRMImportRow"> | string | null
+    city?: StringNullableFilter<"CRMImportRow"> | string | null
+    pincode?: StringNullableFilter<"CRMImportRow"> | string | null
+    address?: StringNullableFilter<"CRMImportRow"> | string | null
+    productCode?: StringNullableFilter<"CRMImportRow"> | string | null
+    productName?: StringNullableFilter<"CRMImportRow"> | string | null
+    quantity?: FloatNullableFilter<"CRMImportRow"> | number | null
+    requirement?: StringNullableFilter<"CRMImportRow"> | string | null
+    leadSource?: StringNullableFilter<"CRMImportRow"> | string | null
+    expectedValue?: FloatNullableFilter<"CRMImportRow"> | number | null
+    customFields?: JsonNullableFilter<"CRMImportRow">
+    mappedCustomerId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedProductId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedBranchId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    mappedTerritoryId?: UuidNullableFilter<"CRMImportRow"> | string | null
+    status?: StringFilter<"CRMImportRow"> | string
+    errorMessage?: StringNullableFilter<"CRMImportRow"> | string | null
+    createdAt?: DateTimeFilter<"CRMImportRow"> | Date | string
+    updatedAt?: DateTimeFilter<"CRMImportRow"> | Date | string
+  }
+
   export type OrganizationCreateWithoutDepartmentsInput = {
     id?: string
     name: string
@@ -66837,6 +71467,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutDepartmentsInput = {
@@ -66881,6 +71512,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutDepartmentsInput = {
@@ -66900,6 +71532,7 @@ export namespace Prisma {
     branches?: BranchCreateNestedManyWithoutTerritoryInput
     teams?: TeamCreateNestedManyWithoutTerritoryInput
     users?: UserCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryUncheckedCreateWithoutDepartmentInput = {
@@ -66914,6 +71547,7 @@ export namespace Prisma {
     branches?: BranchUncheckedCreateNestedManyWithoutTerritoryInput
     teams?: TeamUncheckedCreateNestedManyWithoutTerritoryInput
     users?: UserUncheckedCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryCreateOrConnectWithoutDepartmentInput = {
@@ -66946,6 +71580,7 @@ export namespace Prisma {
     teams?: TeamCreateNestedManyWithoutBranchInput
     users?: UserCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutDepartmentInput = {
@@ -66968,6 +71603,7 @@ export namespace Prisma {
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
     users?: UserUncheckedCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutDepartmentInput = {
@@ -67060,6 +71696,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -67109,6 +71746,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -67177,6 +71815,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutDepartmentsInput = {
@@ -67221,6 +71860,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type TerritoryUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -67329,6 +71969,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTerritoriesInput = {
@@ -67373,6 +72014,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTerritoriesInput = {
@@ -67433,6 +72075,7 @@ export namespace Prisma {
     teams?: TeamCreateNestedManyWithoutBranchInput
     users?: UserCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTerritoryInput = {
@@ -67455,6 +72098,7 @@ export namespace Prisma {
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
     users?: UserUncheckedCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTerritoryInput = {
@@ -67547,6 +72191,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -67596,6 +72241,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -67608,6 +72254,74 @@ export namespace Prisma {
 
   export type UserCreateManyTerritoryInputEnvelope = {
     data: UserCreateManyTerritoryInput | UserCreateManyTerritoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CRMImportRowCreateWithoutTerritoryInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crmImport: CRMImportCreateNestedOneWithoutRowsInput
+    customer?: CustomerCreateNestedOneWithoutCrmImportRowsInput
+    product?: ProductCreateNestedOneWithoutCrmImportRowsInput
+    branch?: BranchCreateNestedOneWithoutCrmImportRowsInput
+  }
+
+  export type CRMImportRowUncheckedCreateWithoutTerritoryInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateOrConnectWithoutTerritoryInput = {
+    where: CRMImportRowWhereUniqueInput
+    create: XOR<CRMImportRowCreateWithoutTerritoryInput, CRMImportRowUncheckedCreateWithoutTerritoryInput>
+  }
+
+  export type CRMImportRowCreateManyTerritoryInputEnvelope = {
+    data: CRMImportRowCreateManyTerritoryInput | CRMImportRowCreateManyTerritoryInput[]
     skipDuplicates?: boolean
   }
 
@@ -67664,6 +72378,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTerritoriesInput = {
@@ -67708,6 +72423,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type DepartmentUpsertWithoutTerritoriesInput = {
@@ -67797,6 +72513,22 @@ export namespace Prisma {
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutTerritoryInput>
   }
 
+  export type CRMImportRowUpsertWithWhereUniqueWithoutTerritoryInput = {
+    where: CRMImportRowWhereUniqueInput
+    update: XOR<CRMImportRowUpdateWithoutTerritoryInput, CRMImportRowUncheckedUpdateWithoutTerritoryInput>
+    create: XOR<CRMImportRowCreateWithoutTerritoryInput, CRMImportRowUncheckedCreateWithoutTerritoryInput>
+  }
+
+  export type CRMImportRowUpdateWithWhereUniqueWithoutTerritoryInput = {
+    where: CRMImportRowWhereUniqueInput
+    data: XOR<CRMImportRowUpdateWithoutTerritoryInput, CRMImportRowUncheckedUpdateWithoutTerritoryInput>
+  }
+
+  export type CRMImportRowUpdateManyWithWhereWithoutTerritoryInput = {
+    where: CRMImportRowScalarWhereInput
+    data: XOR<CRMImportRowUpdateManyMutationInput, CRMImportRowUncheckedUpdateManyWithoutTerritoryInput>
+  }
+
   export type OrganizationCreateWithoutTeamsInput = {
     id?: string
     name: string
@@ -67839,6 +72571,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTeamsInput = {
@@ -67883,6 +72616,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTeamsInput = {
@@ -67910,6 +72644,7 @@ export namespace Prisma {
     territory: TerritoryCreateNestedOneWithoutBranchesInput
     users?: UserCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutTeamsInput = {
@@ -67932,6 +72667,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutTeamsInput = {
@@ -67984,6 +72720,7 @@ export namespace Prisma {
     department: DepartmentCreateNestedOneWithoutTerritoriesInput
     branches?: BranchCreateNestedManyWithoutTerritoryInput
     users?: UserCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryUncheckedCreateWithoutTeamsInput = {
@@ -67998,6 +72735,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     branches?: BranchUncheckedCreateNestedManyWithoutTerritoryInput
     users?: UserUncheckedCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryCreateOrConnectWithoutTeamsInput = {
@@ -68049,6 +72787,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -68098,6 +72837,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -68206,6 +72946,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTeamsInput = {
@@ -68250,6 +72991,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type BranchUpsertWithoutTeamsInput = {
@@ -68283,6 +73025,7 @@ export namespace Prisma {
     territory?: TerritoryUpdateOneRequiredWithoutBranchesNestedInput
     users?: UserUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTeamsInput = {
@@ -68305,6 +73048,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type DepartmentUpsertWithoutTeamsInput = {
@@ -68369,6 +73113,7 @@ export namespace Prisma {
     department?: DepartmentUpdateOneRequiredWithoutTerritoriesNestedInput
     branches?: BranchUpdateManyWithoutTerritoryNestedInput
     users?: UserUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateWithoutTeamsInput = {
@@ -68383,6 +73128,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branches?: BranchUncheckedUpdateManyWithoutTerritoryNestedInput
     users?: UserUncheckedUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutTerritoryNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutTeamInput = {
@@ -68459,6 +73205,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutRolesInput = {
@@ -68503,6 +73250,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutRolesInput = {
@@ -68674,6 +73422,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutRolesInput = {
@@ -68718,6 +73467,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type RoleUpsertWithoutChildRolesInput = {
@@ -69031,6 +73781,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -69075,6 +73826,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -69102,6 +73854,7 @@ export namespace Prisma {
     territory: TerritoryCreateNestedOneWithoutBranchesInput
     teams?: TeamCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutUsersInput = {
@@ -69124,6 +73877,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutBranchesInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutUsersInput = {
@@ -69207,6 +73961,7 @@ export namespace Prisma {
     department: DepartmentCreateNestedOneWithoutTerritoriesInput
     branches?: BranchCreateNestedManyWithoutTerritoryInput
     teams?: TeamCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryUncheckedCreateWithoutUsersInput = {
@@ -69221,6 +73976,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     branches?: BranchUncheckedCreateNestedManyWithoutTerritoryInput
     teams?: TeamUncheckedCreateNestedManyWithoutTerritoryInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutTerritoryInput
   }
 
   export type TerritoryCreateOrConnectWithoutUsersInput = {
@@ -69272,6 +74028,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -69321,6 +74078,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -69375,6 +74133,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -69424,6 +74183,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -70183,6 +74943,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CRMImportCreateWithoutUploaderInput = {
+    id?: string
+    fileName: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    organization: OrganizationCreateNestedOneWithoutCrmImportsInput
+    rows?: CRMImportRowCreateNestedManyWithoutCrmImportInput
+  }
+
+  export type CRMImportUncheckedCreateWithoutUploaderInput = {
+    id?: string
+    organizationId: string
+    fileName: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    rows?: CRMImportRowUncheckedCreateNestedManyWithoutCrmImportInput
+  }
+
+  export type CRMImportCreateOrConnectWithoutUploaderInput = {
+    where: CRMImportWhereUniqueInput
+    create: XOR<CRMImportCreateWithoutUploaderInput, CRMImportUncheckedCreateWithoutUploaderInput>
+  }
+
+  export type CRMImportCreateManyUploaderInputEnvelope = {
+    data: CRMImportCreateManyUploaderInput | CRMImportCreateManyUploaderInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WarehouseCreateWithoutWarehouseManagerInput = {
     id?: string
     name: string
@@ -70347,6 +75147,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -70391,6 +75192,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type BranchUpsertWithoutUsersInput = {
@@ -70424,6 +75226,7 @@ export namespace Prisma {
     territory?: TerritoryUpdateOneRequiredWithoutBranchesNestedInput
     teams?: TeamUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutUsersInput = {
@@ -70446,6 +75249,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type DepartmentUpsertWithoutUsersInput = {
@@ -70547,6 +75351,7 @@ export namespace Prisma {
     department?: DepartmentUpdateOneRequiredWithoutTerritoriesNestedInput
     branches?: BranchUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateWithoutUsersInput = {
@@ -70561,6 +75366,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     branches?: BranchUncheckedUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUncheckedUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutTerritoryNestedInput
   }
 
   export type UserUpsertWithoutSubordinatesInput = {
@@ -70618,6 +75424,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -70667,6 +75474,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -70986,6 +75794,22 @@ export namespace Prisma {
     data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type CRMImportUpsertWithWhereUniqueWithoutUploaderInput = {
+    where: CRMImportWhereUniqueInput
+    update: XOR<CRMImportUpdateWithoutUploaderInput, CRMImportUncheckedUpdateWithoutUploaderInput>
+    create: XOR<CRMImportCreateWithoutUploaderInput, CRMImportUncheckedCreateWithoutUploaderInput>
+  }
+
+  export type CRMImportUpdateWithWhereUniqueWithoutUploaderInput = {
+    where: CRMImportWhereUniqueInput
+    data: XOR<CRMImportUpdateWithoutUploaderInput, CRMImportUncheckedUpdateWithoutUploaderInput>
+  }
+
+  export type CRMImportUpdateManyWithWhereWithoutUploaderInput = {
+    where: CRMImportScalarWhereInput
+    data: XOR<CRMImportUpdateManyMutationInput, CRMImportUncheckedUpdateManyWithoutUploaderInput>
+  }
+
   export type WarehouseUpsertWithoutWarehouseManagerInput = {
     update: XOR<WarehouseUpdateWithoutWarehouseManagerInput, WarehouseUncheckedUpdateWithoutWarehouseManagerInput>
     create: XOR<WarehouseCreateWithoutWarehouseManagerInput, WarehouseUncheckedCreateWithoutWarehouseManagerInput>
@@ -71103,6 +75927,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -71152,6 +75977,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -71250,6 +76076,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -71299,6 +76126,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -71385,6 +76213,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSessionsInput = {
@@ -71429,6 +76258,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSessionsInput = {
@@ -71480,6 +76310,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -71529,6 +76360,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -71592,6 +76424,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSessionsInput = {
@@ -71636,6 +76469,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutSessionsInput = {
@@ -71693,6 +76527,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -71742,6 +76577,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -71789,6 +76625,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAuditLogsInput = {
@@ -71833,6 +76670,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAuditLogsInput = {
@@ -71884,6 +76722,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -71933,6 +76772,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -71996,6 +76836,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAuditLogsInput = {
@@ -72040,6 +76881,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAuditLogsInput = {
@@ -72097,6 +76939,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -72146,6 +76989,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -72195,6 +77039,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -72244,6 +77089,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -72309,6 +77155,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -72358,6 +77205,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -72405,6 +77253,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutCustomersInput = {
@@ -72449,6 +77298,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutCustomersInput = {
@@ -72558,6 +77408,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CRMImportRowCreateWithoutCustomerInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crmImport: CRMImportCreateNestedOneWithoutRowsInput
+    product?: ProductCreateNestedOneWithoutCrmImportRowsInput
+    branch?: BranchCreateNestedOneWithoutCrmImportRowsInput
+    territory?: TerritoryCreateNestedOneWithoutCrmImportRowsInput
+  }
+
+  export type CRMImportRowUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateOrConnectWithoutCustomerInput = {
+    where: CRMImportRowWhereUniqueInput
+    create: XOR<CRMImportRowCreateWithoutCustomerInput, CRMImportRowUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CRMImportRowCreateManyCustomerInputEnvelope = {
+    data: CRMImportRowCreateManyCustomerInput | CRMImportRowCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutCustomersInput = {
     update: XOR<OrganizationUpdateWithoutCustomersInput, OrganizationUncheckedUpdateWithoutCustomersInput>
     create: XOR<OrganizationCreateWithoutCustomersInput, OrganizationUncheckedCreateWithoutCustomersInput>
@@ -72611,6 +77529,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutCustomersInput = {
@@ -72655,6 +77574,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -72687,6 +77607,22 @@ export namespace Prisma {
   export type VisitUpdateManyWithWhereWithoutCustomerInput = {
     where: VisitScalarWhereInput
     data: XOR<VisitUpdateManyMutationInput, VisitUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CRMImportRowUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: CRMImportRowWhereUniqueInput
+    update: XOR<CRMImportRowUpdateWithoutCustomerInput, CRMImportRowUncheckedUpdateWithoutCustomerInput>
+    create: XOR<CRMImportRowCreateWithoutCustomerInput, CRMImportRowUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CRMImportRowUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: CRMImportRowWhereUniqueInput
+    data: XOR<CRMImportRowUpdateWithoutCustomerInput, CRMImportRowUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type CRMImportRowUpdateManyWithWhereWithoutCustomerInput = {
+    where: CRMImportRowScalarWhereInput
+    data: XOR<CRMImportRowUpdateManyMutationInput, CRMImportRowUncheckedUpdateManyWithoutCustomerInput>
   }
 
   export type OrganizationCreateWithoutProductsInput = {
@@ -72731,6 +77667,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProductsInput = {
@@ -72775,6 +77712,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProductsInput = {
@@ -72914,6 +77852,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CRMImportRowCreateWithoutProductInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crmImport: CRMImportCreateNestedOneWithoutRowsInput
+    customer?: CustomerCreateNestedOneWithoutCrmImportRowsInput
+    branch?: BranchCreateNestedOneWithoutCrmImportRowsInput
+    territory?: TerritoryCreateNestedOneWithoutCrmImportRowsInput
+  }
+
+  export type CRMImportRowUncheckedCreateWithoutProductInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateOrConnectWithoutProductInput = {
+    where: CRMImportRowWhereUniqueInput
+    create: XOR<CRMImportRowCreateWithoutProductInput, CRMImportRowUncheckedCreateWithoutProductInput>
+  }
+
+  export type CRMImportRowCreateManyProductInputEnvelope = {
+    data: CRMImportRowCreateManyProductInput | CRMImportRowCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutProductsInput = {
     update: XOR<OrganizationUpdateWithoutProductsInput, OrganizationUncheckedUpdateWithoutProductsInput>
     create: XOR<OrganizationCreateWithoutProductsInput, OrganizationUncheckedCreateWithoutProductsInput>
@@ -72967,6 +77973,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProductsInput = {
@@ -73011,6 +78018,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
@@ -73091,6 +78099,22 @@ export namespace Prisma {
     data: XOR<ProductIssueUpdateManyMutationInput, ProductIssueUncheckedUpdateManyWithoutProductInput>
   }
 
+  export type CRMImportRowUpsertWithWhereUniqueWithoutProductInput = {
+    where: CRMImportRowWhereUniqueInput
+    update: XOR<CRMImportRowUpdateWithoutProductInput, CRMImportRowUncheckedUpdateWithoutProductInput>
+    create: XOR<CRMImportRowCreateWithoutProductInput, CRMImportRowUncheckedCreateWithoutProductInput>
+  }
+
+  export type CRMImportRowUpdateWithWhereUniqueWithoutProductInput = {
+    where: CRMImportRowWhereUniqueInput
+    data: XOR<CRMImportRowUpdateWithoutProductInput, CRMImportRowUncheckedUpdateWithoutProductInput>
+  }
+
+  export type CRMImportRowUpdateManyWithWhereWithoutProductInput = {
+    where: CRMImportRowScalarWhereInput
+    data: XOR<CRMImportRowUpdateManyMutationInput, CRMImportRowUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type OrganizationCreateWithoutOrdersInput = {
     id?: string
     name: string
@@ -73133,6 +78157,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutOrdersInput = {
@@ -73177,6 +78202,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutOrdersInput = {
@@ -73193,10 +78219,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutCustomersInput
     visits?: VisitCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -73209,9 +78238,12 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     visits?: VisitUncheckedCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -73263,6 +78295,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -73312,6 +78345,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -73495,6 +78529,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutOrdersInput = {
@@ -73539,6 +78574,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type CustomerUpsertWithoutOrdersInput = {
@@ -73561,10 +78597,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutCustomersNestedInput
     visits?: VisitUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -73577,9 +78616,12 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     visits?: VisitUncheckedUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type UserUpsertWithoutOrdersInput = {
@@ -73637,6 +78679,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -73686,6 +78729,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -73855,6 +78899,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
     issues?: ProductIssueCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -73878,6 +78923,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -73978,6 +79024,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -74001,6 +79048,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutActivitiesInput = {
@@ -74277,6 +79325,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAttendancesInput = {
@@ -74321,6 +79370,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAttendancesInput = {
@@ -74372,6 +79422,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -74421,6 +79472,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -74484,6 +79536,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAttendancesInput = {
@@ -74528,6 +79581,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAttendancesInput = {
@@ -74585,6 +79639,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -74634,6 +79689,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -74681,6 +79737,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutVisitsInput = {
@@ -74725,6 +79782,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutVisitsInput = {
@@ -74776,6 +79834,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -74825,6 +79884,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -74844,10 +79904,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutCustomersInput
     orders?: OrderCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutVisitsInput = {
@@ -74860,9 +79923,12 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutVisitsInput = {
@@ -74923,6 +79989,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutVisitsInput = {
@@ -74967,6 +80034,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutVisitsInput = {
@@ -75024,6 +80092,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -75073,6 +80142,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -75098,10 +80168,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutCustomersNestedInput
     orders?: OrderUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutVisitsInput = {
@@ -75114,9 +80187,12 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrganizationCreateWithoutTargetsInput = {
@@ -75161,6 +80237,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTargetsInput = {
@@ -75205,6 +80282,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTargetsInput = {
@@ -75256,6 +80334,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -75305,6 +80384,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -75399,6 +80479,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTargetsInput = {
@@ -75443,6 +80524,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutTargetsInput = {
@@ -75500,6 +80582,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -75549,6 +80632,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -75633,6 +80717,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutNotificationsInput = {
@@ -75677,6 +80762,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutNotificationsInput = {
@@ -75728,6 +80814,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -75777,6 +80864,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -75840,6 +80928,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutNotificationsInput = {
@@ -75884,6 +80973,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutNotificationsInput = {
@@ -75941,6 +81031,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -75990,6 +81081,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -76037,6 +81129,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutNotificationTemplatesInput = {
@@ -76081,6 +81174,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutNotificationTemplatesInput = {
@@ -76141,6 +81235,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutNotificationTemplatesInput = {
@@ -76185,6 +81280,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutTasksInput = {
@@ -76229,6 +81325,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTasksInput = {
@@ -76273,6 +81370,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTasksInput = {
@@ -76324,6 +81422,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -76373,6 +81472,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -76427,6 +81527,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -76476,6 +81577,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -76539,6 +81641,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTasksInput = {
@@ -76583,6 +81686,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutTasksAssignedInput = {
@@ -76640,6 +81744,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -76689,6 +81794,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -76749,6 +81855,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -76798,6 +81905,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -76845,6 +81953,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutBeatPlansInput = {
@@ -76889,6 +81998,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutBeatPlansInput = {
@@ -76940,6 +82050,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -76989,6 +82100,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -77052,6 +82164,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutBeatPlansInput = {
@@ -77096,6 +82209,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutBeatPlansInput = {
@@ -77153,6 +82267,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -77202,6 +82317,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -77249,6 +82365,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutCalendarEventsInput = {
@@ -77293,6 +82410,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutCalendarEventsInput = {
@@ -77344,6 +82462,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -77393,6 +82512,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -77456,6 +82576,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutCalendarEventsInput = {
@@ -77500,6 +82621,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutCalendarEventsInput = {
@@ -77557,6 +82679,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -77606,6 +82729,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -77653,6 +82777,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutNotificationPrefsInput = {
@@ -77697,6 +82822,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutNotificationPrefsInput = {
@@ -77748,6 +82874,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -77797,6 +82924,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -77860,6 +82988,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutNotificationPrefsInput = {
@@ -77904,6 +83033,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutNotificationPrefsInput = {
@@ -77961,6 +83091,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -78010,6 +83141,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -78057,6 +83189,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutBusinessRulesInput = {
@@ -78101,6 +83234,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutBusinessRulesInput = {
@@ -78161,6 +83295,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutBusinessRulesInput = {
@@ -78205,6 +83340,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutExpensesInput = {
@@ -78249,6 +83385,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutExpensesInput = {
@@ -78293,6 +83430,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutExpensesInput = {
@@ -78344,6 +83482,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -78393,6 +83532,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -78447,6 +83587,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -78496,6 +83637,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -78559,6 +83701,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutExpensesInput = {
@@ -78603,6 +83746,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutExpensesInput = {
@@ -78660,6 +83804,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -78709,6 +83854,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -78769,6 +83915,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -78818,6 +83965,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -78865,6 +84013,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutDailyActivitiesInput = {
@@ -78909,6 +84058,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutDailyActivitiesInput = {
@@ -78960,6 +84110,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -79009,6 +84160,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -79072,6 +84224,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutDailyActivitiesInput = {
@@ -79116,6 +84269,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutDailyActivitiesInput = {
@@ -79173,6 +84327,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -79222,6 +84377,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -79269,6 +84425,7 @@ export namespace Prisma {
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWarehousesInput = {
@@ -79313,6 +84470,7 @@ export namespace Prisma {
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWarehousesInput = {
@@ -79365,6 +84523,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
@@ -79414,6 +84573,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
@@ -79498,6 +84658,8 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutBranchesInput
@@ -79505,6 +84667,7 @@ export namespace Prisma {
     territory: TerritoryCreateNestedOneWithoutBranchesInput
     teams?: TeamCreateNestedManyWithoutBranchInput
     users?: UserCreateNestedManyWithoutBranchInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateWithoutWarehousesInput = {
@@ -79521,10 +84684,13 @@ export namespace Prisma {
     state?: string | null
     country?: string | null
     postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
     users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchCreateOrConnectWithoutWarehousesInput = {
@@ -79623,6 +84789,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWarehousesInput = {
@@ -79667,6 +84834,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutManagedWarehouseInput = {
@@ -79725,6 +84893,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
@@ -79774,6 +84943,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
@@ -79884,6 +85054,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutStocksInput = {
@@ -79928,6 +85099,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutStocksInput = {
@@ -79956,6 +85128,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
     issues?: ProductIssueCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStocksInput = {
@@ -79979,6 +85152,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
     issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStocksInput = {
@@ -80074,6 +85248,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutStocksInput = {
@@ -80118,6 +85293,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProductUpsertWithoutStocksInput = {
@@ -80152,6 +85328,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStocksInput = {
@@ -80175,6 +85352,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutStocksInput = {
@@ -80260,6 +85438,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutStockMovementsInput = {
@@ -80304,6 +85483,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutStockMovementsInput = {
@@ -80332,6 +85512,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     stocks?: StockCreateNestedManyWithoutProductInput
     issues?: ProductIssueCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutMovementsInput = {
@@ -80355,6 +85536,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutMovementsInput = {
@@ -80441,6 +85623,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
@@ -80490,6 +85673,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
@@ -80553,6 +85737,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutStockMovementsInput = {
@@ -80597,6 +85782,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProductUpsertWithoutMovementsInput = {
@@ -80631,6 +85817,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     stocks?: StockUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutMovementsInput = {
@@ -80654,6 +85841,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutMovementsInput = {
@@ -80752,6 +85940,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -80801,6 +85990,7 @@ export namespace Prisma {
     calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -80848,6 +86038,7 @@ export namespace Prisma {
     warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
     stocks?: StockCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProductIssuesInput = {
@@ -80892,6 +86083,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
     stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProductIssuesInput = {
@@ -80920,6 +86112,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     stocks?: StockCreateNestedManyWithoutProductInput
     movements?: StockMovementCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutIssuesInput = {
@@ -80943,6 +86136,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     stocks?: StockUncheckedCreateNestedManyWithoutProductInput
     movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    crmImportRows?: CRMImportRowUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutIssuesInput = {
@@ -81030,6 +86224,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
   }
@@ -81079,6 +86274,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
   }
@@ -81133,6 +86329,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
   }
@@ -81182,6 +86379,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
     managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
   }
@@ -81299,6 +86497,7 @@ export namespace Prisma {
     warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProductIssuesInput = {
@@ -81343,6 +86542,7 @@ export namespace Prisma {
     warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
     stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProductUpsertWithoutIssuesInput = {
@@ -81377,6 +86577,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     stocks?: StockUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutIssuesInput = {
@@ -81400,6 +86601,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type WarehouseUpsertWithoutProductIssuesInput = {
@@ -81499,6 +86701,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
   }
@@ -81548,6 +86751,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
@@ -81608,6 +86812,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
   }
@@ -81657,6 +86862,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
   }
@@ -81720,6 +86926,962 @@ export namespace Prisma {
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
     notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrganizationCreateWithoutCrmImportsInput = {
+    id?: string
+    name: string
+    slug: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    gstNumber?: string | null
+    panNumber?: string | null
+    branches?: BranchCreateNestedManyWithoutOrganizationInput
+    territories?: TerritoryCreateNestedManyWithoutOrganizationInput
+    teams?: TeamCreateNestedManyWithoutOrganizationInput
+    roles?: RoleCreateNestedManyWithoutOrganizationInput
+    users?: UserCreateNestedManyWithoutOrganizationInput
+    sessions?: SessionCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
+    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
+    visits?: VisitCreateNestedManyWithoutOrganizationInput
+    expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
+    dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
+    targets?: TargetCreateNestedManyWithoutOrganizationInput
+    notifications?: NotificationCreateNestedManyWithoutOrganizationInput
+    notificationTemplates?: NotificationTemplateCreateNestedManyWithoutOrganizationInput
+    tasks?: TaskCreateNestedManyWithoutOrganizationInput
+    beatPlans?: BeatPlanCreateNestedManyWithoutOrganizationInput
+    calendarEvents?: CalendarEventCreateNestedManyWithoutOrganizationInput
+    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+    businessRules?: BusinessRuleConfigCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerCreateNestedManyWithoutOrganizationInput
+    products?: ProductCreateNestedManyWithoutOrganizationInput
+    orders?: OrderCreateNestedManyWithoutOrganizationInput
+    departments?: DepartmentCreateNestedManyWithoutOrganizationInput
+    warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
+    stocks?: StockCreateNestedManyWithoutOrganizationInput
+    stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutCrmImportsInput = {
+    id?: string
+    name: string
+    slug: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    gstNumber?: string | null
+    panNumber?: string | null
+    branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
+    territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
+    teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
+    roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
+    users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
+    visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
+    targets?: TargetUncheckedCreateNestedManyWithoutOrganizationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+    notificationTemplates?: NotificationTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutOrganizationInput
+    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutOrganizationInput
+    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+    businessRules?: BusinessRuleConfigUncheckedCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+    products?: ProductUncheckedCreateNestedManyWithoutOrganizationInput
+    orders?: OrderUncheckedCreateNestedManyWithoutOrganizationInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
+    warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
+    stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutCrmImportsInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutCrmImportsInput, OrganizationUncheckedCreateWithoutCrmImportsInput>
+  }
+
+  export type UserCreateWithoutCrmImportsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutUsersInput
+    branch?: BranchCreateNestedOneWithoutUsersInput
+    department?: DepartmentCreateNestedOneWithoutUsersInput
+    team?: TeamCreateNestedOneWithoutUsersInput
+    territory?: TerritoryCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutSubordinatesInput
+    subordinates?: UserCreateNestedManyWithoutManagerInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    visits?: VisitCreateNestedManyWithoutUserInput
+    expenses?: ExpenseCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
+    targets?: TargetCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
+  }
+
+  export type UserUncheckedCreateWithoutCrmImportsInput = {
+    id?: string
+    organizationId: string
+    branchId?: string | null
+    departmentId?: string | null
+    teamId?: string | null
+    territoryId?: string | null
+    managerId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string | null
+    isActive?: boolean
+    emailVerifiedAt?: Date | string | null
+    emailVerificationOtp?: string | null
+    emailVerificationExpiresAt?: Date | string | null
+    failedLoginAttempts?: number
+    lockoutExpiresAt?: Date | string | null
+    passwordResetOtp?: string | null
+    passwordResetExpiresAt?: Date | string | null
+    lastLoginAt?: Date | string | null
+    lastPasswordChangedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: UserUncheckedCreateNestedManyWithoutManagerInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    visits?: VisitUncheckedCreateNestedManyWithoutUserInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
+    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
+    targets?: TargetUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    expensesApproved?: ExpenseUncheckedCreateNestedManyWithoutApproverInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssignedByInput
+    tasksReceived?: TaskUncheckedCreateNestedManyWithoutAssignedToInput
+    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutUserInput
+    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
+    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
+    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
+  }
+
+  export type UserCreateOrConnectWithoutCrmImportsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCrmImportsInput, UserUncheckedCreateWithoutCrmImportsInput>
+  }
+
+  export type CRMImportRowCreateWithoutCrmImportInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customer?: CustomerCreateNestedOneWithoutCrmImportRowsInput
+    product?: ProductCreateNestedOneWithoutCrmImportRowsInput
+    branch?: BranchCreateNestedOneWithoutCrmImportRowsInput
+    territory?: TerritoryCreateNestedOneWithoutCrmImportRowsInput
+  }
+
+  export type CRMImportRowUncheckedCreateWithoutCrmImportInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateOrConnectWithoutCrmImportInput = {
+    where: CRMImportRowWhereUniqueInput
+    create: XOR<CRMImportRowCreateWithoutCrmImportInput, CRMImportRowUncheckedCreateWithoutCrmImportInput>
+  }
+
+  export type CRMImportRowCreateManyCrmImportInputEnvelope = {
+    data: CRMImportRowCreateManyCrmImportInput | CRMImportRowCreateManyCrmImportInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutCrmImportsInput = {
+    update: XOR<OrganizationUpdateWithoutCrmImportsInput, OrganizationUncheckedUpdateWithoutCrmImportsInput>
+    create: XOR<OrganizationCreateWithoutCrmImportsInput, OrganizationUncheckedCreateWithoutCrmImportsInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutCrmImportsInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutCrmImportsInput, OrganizationUncheckedUpdateWithoutCrmImportsInput>
+  }
+
+  export type OrganizationUpdateWithoutCrmImportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    branches?: BranchUpdateManyWithoutOrganizationNestedInput
+    territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
+    teams?: TeamUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUpdateManyWithoutOrganizationNestedInput
+    users?: UserUpdateManyWithoutOrganizationNestedInput
+    sessions?: SessionUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
+    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
+    visits?: VisitUpdateManyWithoutOrganizationNestedInput
+    expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
+    dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
+    targets?: TargetUpdateManyWithoutOrganizationNestedInput
+    notifications?: NotificationUpdateManyWithoutOrganizationNestedInput
+    notificationTemplates?: NotificationTemplateUpdateManyWithoutOrganizationNestedInput
+    tasks?: TaskUpdateManyWithoutOrganizationNestedInput
+    beatPlans?: BeatPlanUpdateManyWithoutOrganizationNestedInput
+    calendarEvents?: CalendarEventUpdateManyWithoutOrganizationNestedInput
+    notificationPrefs?: NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+    businessRules?: BusinessRuleConfigUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUpdateManyWithoutOrganizationNestedInput
+    orders?: OrderUpdateManyWithoutOrganizationNestedInput
+    departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
+    warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
+    stocks?: StockUpdateManyWithoutOrganizationNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutCrmImportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
+    territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
+    teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+    users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
+    targets?: TargetUncheckedUpdateManyWithoutOrganizationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+    notificationTemplates?: NotificationTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+    beatPlans?: BeatPlanUncheckedUpdateManyWithoutOrganizationNestedInput
+    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+    businessRules?: BusinessRuleConfigUncheckedUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
+    warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type UserUpsertWithoutCrmImportsInput = {
+    update: XOR<UserUpdateWithoutCrmImportsInput, UserUncheckedUpdateWithoutCrmImportsInput>
+    create: XOR<UserCreateWithoutCrmImportsInput, UserUncheckedCreateWithoutCrmImportsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCrmImportsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCrmImportsInput, UserUncheckedUpdateWithoutCrmImportsInput>
+  }
+
+  export type UserUpdateWithoutCrmImportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutUsersNestedInput
+    branch?: BranchUpdateOneWithoutUsersNestedInput
+    department?: DepartmentUpdateOneWithoutUsersNestedInput
+    team?: TeamUpdateOneWithoutUsersNestedInput
+    territory?: TerritoryUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: UserUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    visits?: VisitUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
+    targets?: TargetUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCrmImportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    teamId?: NullableStringFieldUpdateOperationsInput | string | null
+    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
+    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
+    targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    expensesApproved?: ExpenseUncheckedUpdateManyWithoutApproverNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssignedByNestedInput
+    tasksReceived?: TaskUncheckedUpdateManyWithoutAssignedToNestedInput
+    beatPlans?: BeatPlanUncheckedUpdateManyWithoutUserNestedInput
+    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
+    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
+    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
+  }
+
+  export type CRMImportRowUpsertWithWhereUniqueWithoutCrmImportInput = {
+    where: CRMImportRowWhereUniqueInput
+    update: XOR<CRMImportRowUpdateWithoutCrmImportInput, CRMImportRowUncheckedUpdateWithoutCrmImportInput>
+    create: XOR<CRMImportRowCreateWithoutCrmImportInput, CRMImportRowUncheckedCreateWithoutCrmImportInput>
+  }
+
+  export type CRMImportRowUpdateWithWhereUniqueWithoutCrmImportInput = {
+    where: CRMImportRowWhereUniqueInput
+    data: XOR<CRMImportRowUpdateWithoutCrmImportInput, CRMImportRowUncheckedUpdateWithoutCrmImportInput>
+  }
+
+  export type CRMImportRowUpdateManyWithWhereWithoutCrmImportInput = {
+    where: CRMImportRowScalarWhereInput
+    data: XOR<CRMImportRowUpdateManyMutationInput, CRMImportRowUncheckedUpdateManyWithoutCrmImportInput>
+  }
+
+  export type CRMImportCreateWithoutRowsInput = {
+    id?: string
+    fileName: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+    organization: OrganizationCreateNestedOneWithoutCrmImportsInput
+    uploader: UserCreateNestedOneWithoutCrmImportsInput
+  }
+
+  export type CRMImportUncheckedCreateWithoutRowsInput = {
+    id?: string
+    organizationId: string
+    fileName: string
+    uploadedBy: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type CRMImportCreateOrConnectWithoutRowsInput = {
+    where: CRMImportWhereUniqueInput
+    create: XOR<CRMImportCreateWithoutRowsInput, CRMImportUncheckedCreateWithoutRowsInput>
+  }
+
+  export type CustomerCreateWithoutCrmImportRowsInput = {
+    id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    industry?: string | null
+    address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutCustomersInput
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    visits?: VisitCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutCrmImportRowsInput = {
+    id?: string
+    organizationId: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    industry?: string | null
+    address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: number | null
+    longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    visits?: VisitUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutCrmImportRowsInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutCrmImportRowsInput, CustomerUncheckedCreateWithoutCrmImportRowsInput>
+  }
+
+  export type ProductCreateWithoutCrmImportRowsInput = {
+    id?: string
+    sku: string
+    productCode?: string | null
+    name: string
+    description?: string | null
+    category?: string | null
+    brand?: string | null
+    unit?: string | null
+    price: number
+    costPrice?: number | null
+    tax?: number | null
+    minimumStock?: number | null
+    barcode?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutProductsInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    stocks?: StockCreateNestedManyWithoutProductInput
+    movements?: StockMovementCreateNestedManyWithoutProductInput
+    issues?: ProductIssueCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutCrmImportRowsInput = {
+    id?: string
+    organizationId: string
+    sku: string
+    productCode?: string | null
+    name: string
+    description?: string | null
+    category?: string | null
+    brand?: string | null
+    unit?: string | null
+    price: number
+    costPrice?: number | null
+    tax?: number | null
+    minimumStock?: number | null
+    barcode?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    stocks?: StockUncheckedCreateNestedManyWithoutProductInput
+    movements?: StockMovementUncheckedCreateNestedManyWithoutProductInput
+    issues?: ProductIssueUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutCrmImportRowsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutCrmImportRowsInput, ProductUncheckedCreateWithoutCrmImportRowsInput>
+  }
+
+  export type BranchCreateWithoutCrmImportRowsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutBranchesInput
+    department: DepartmentCreateNestedOneWithoutBranchesInput
+    territory: TerritoryCreateNestedOneWithoutBranchesInput
+    teams?: TeamCreateNestedManyWithoutBranchInput
+    users?: UserCreateNestedManyWithoutBranchInput
+    warehouses?: WarehouseCreateNestedManyWithoutBranchesInput
+  }
+
+  export type BranchUncheckedCreateWithoutCrmImportRowsInput = {
+    id?: string
+    organizationId: string
+    departmentId: string
+    territoryId: string
+    name: string
+    code?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teams?: TeamUncheckedCreateNestedManyWithoutBranchInput
+    users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    warehouses?: WarehouseUncheckedCreateNestedManyWithoutBranchesInput
+  }
+
+  export type BranchCreateOrConnectWithoutCrmImportRowsInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutCrmImportRowsInput, BranchUncheckedCreateWithoutCrmImportRowsInput>
+  }
+
+  export type TerritoryCreateWithoutCrmImportRowsInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTerritoriesInput
+    department: DepartmentCreateNestedOneWithoutTerritoriesInput
+    branches?: BranchCreateNestedManyWithoutTerritoryInput
+    teams?: TeamCreateNestedManyWithoutTerritoryInput
+    users?: UserCreateNestedManyWithoutTerritoryInput
+  }
+
+  export type TerritoryUncheckedCreateWithoutCrmImportRowsInput = {
+    id?: string
+    organizationId: string
+    departmentId: string
+    name: string
+    code?: string | null
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branches?: BranchUncheckedCreateNestedManyWithoutTerritoryInput
+    teams?: TeamUncheckedCreateNestedManyWithoutTerritoryInput
+    users?: UserUncheckedCreateNestedManyWithoutTerritoryInput
+  }
+
+  export type TerritoryCreateOrConnectWithoutCrmImportRowsInput = {
+    where: TerritoryWhereUniqueInput
+    create: XOR<TerritoryCreateWithoutCrmImportRowsInput, TerritoryUncheckedCreateWithoutCrmImportRowsInput>
+  }
+
+  export type CRMImportUpsertWithoutRowsInput = {
+    update: XOR<CRMImportUpdateWithoutRowsInput, CRMImportUncheckedUpdateWithoutRowsInput>
+    create: XOR<CRMImportCreateWithoutRowsInput, CRMImportUncheckedCreateWithoutRowsInput>
+    where?: CRMImportWhereInput
+  }
+
+  export type CRMImportUpdateToOneWithWhereWithoutRowsInput = {
+    where?: CRMImportWhereInput
+    data: XOR<CRMImportUpdateWithoutRowsInput, CRMImportUncheckedUpdateWithoutRowsInput>
+  }
+
+  export type CRMImportUpdateWithoutRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutCrmImportsNestedInput
+    uploader?: UserUpdateOneRequiredWithoutCrmImportsNestedInput
+  }
+
+  export type CRMImportUncheckedUpdateWithoutRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CustomerUpsertWithoutCrmImportRowsInput = {
+    update: XOR<CustomerUpdateWithoutCrmImportRowsInput, CustomerUncheckedUpdateWithoutCrmImportRowsInput>
+    create: XOR<CustomerCreateWithoutCrmImportRowsInput, CustomerUncheckedCreateWithoutCrmImportRowsInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutCrmImportRowsInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutCrmImportRowsInput, CustomerUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
+  export type CustomerUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutCustomersNestedInput
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    visits?: VisitUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableJsonNullValueInput | InputJsonValue
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type ProductUpsertWithoutCrmImportRowsInput = {
+    update: XOR<ProductUpdateWithoutCrmImportRowsInput, ProductUncheckedUpdateWithoutCrmImportRowsInput>
+    create: XOR<ProductCreateWithoutCrmImportRowsInput, ProductUncheckedCreateWithoutCrmImportRowsInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutCrmImportRowsInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutCrmImportRowsInput, ProductUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
+  export type ProductUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    tax?: NullableFloatFieldUpdateOperationsInput | number | null
+    minimumStock?: NullableIntFieldUpdateOperationsInput | number | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutProductsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    stocks?: StockUpdateManyWithoutProductNestedInput
+    movements?: StockMovementUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sku?: StringFieldUpdateOperationsInput | string
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    tax?: NullableFloatFieldUpdateOperationsInput | number | null
+    minimumStock?: NullableIntFieldUpdateOperationsInput | number | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
+    movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
+    issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type BranchUpsertWithoutCrmImportRowsInput = {
+    update: XOR<BranchUpdateWithoutCrmImportRowsInput, BranchUncheckedUpdateWithoutCrmImportRowsInput>
+    create: XOR<BranchCreateWithoutCrmImportRowsInput, BranchUncheckedCreateWithoutCrmImportRowsInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutCrmImportRowsInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutCrmImportRowsInput, BranchUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
+  export type BranchUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutBranchesNestedInput
+    territory?: TerritoryUpdateOneRequiredWithoutBranchesNestedInput
+    teams?: TeamUpdateManyWithoutBranchNestedInput
+    users?: UserUpdateManyWithoutBranchNestedInput
+    warehouses?: WarehouseUpdateManyWithoutBranchesNestedInput
+  }
+
+  export type BranchUncheckedUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
+    territoryId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
+    users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    warehouses?: WarehouseUncheckedUpdateManyWithoutBranchesNestedInput
+  }
+
+  export type TerritoryUpsertWithoutCrmImportRowsInput = {
+    update: XOR<TerritoryUpdateWithoutCrmImportRowsInput, TerritoryUncheckedUpdateWithoutCrmImportRowsInput>
+    create: XOR<TerritoryCreateWithoutCrmImportRowsInput, TerritoryUncheckedCreateWithoutCrmImportRowsInput>
+    where?: TerritoryWhereInput
+  }
+
+  export type TerritoryUpdateToOneWithWhereWithoutCrmImportRowsInput = {
+    where?: TerritoryWhereInput
+    data: XOR<TerritoryUpdateWithoutCrmImportRowsInput, TerritoryUncheckedUpdateWithoutCrmImportRowsInput>
+  }
+
+  export type TerritoryUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTerritoriesNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutTerritoriesNestedInput
+    branches?: BranchUpdateManyWithoutTerritoryNestedInput
+    teams?: TeamUpdateManyWithoutTerritoryNestedInput
+    users?: UserUpdateManyWithoutTerritoryNestedInput
+  }
+
+  export type TerritoryUncheckedUpdateWithoutCrmImportRowsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branches?: BranchUncheckedUpdateManyWithoutTerritoryNestedInput
+    teams?: TeamUncheckedUpdateManyWithoutTerritoryNestedInput
+    users?: UserUncheckedUpdateManyWithoutTerritoryNestedInput
   }
 
   export type BranchCreateManyOrganizationInput = {
@@ -82009,6 +88171,8 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: number | null
     longitude?: number | null
+    crmId?: string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -82110,6 +88274,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CRMImportCreateManyOrganizationInput = {
+    id?: string
+    fileName: string
+    uploadedBy: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
   export type BranchUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -82130,6 +88308,7 @@ export namespace Prisma {
     teams?: TeamUpdateManyWithoutBranchNestedInput
     users?: UserUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutOrganizationInput = {
@@ -82152,6 +88331,7 @@ export namespace Prisma {
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
     users?: UserUncheckedUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateManyWithoutOrganizationInput = {
@@ -82185,6 +88365,7 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUpdateManyWithoutTerritoryNestedInput
     users?: UserUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateWithoutOrganizationInput = {
@@ -82199,6 +88380,7 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUncheckedUpdateManyWithoutTerritoryNestedInput
     users?: UserUncheckedUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateManyWithoutOrganizationInput = {
@@ -82332,6 +88514,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -82381,6 +88564,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -83019,10 +89203,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     visits?: VisitUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrganizationInput = {
@@ -83034,10 +89221,13 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     visits?: VisitUncheckedUpdateManyWithoutCustomerNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateManyWithoutOrganizationInput = {
@@ -83049,6 +89239,8 @@ export namespace Prisma {
     address?: NullableJsonNullValueInput | InputJsonValue
     latitude?: NullableFloatFieldUpdateOperationsInput | number | null
     longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    crmId?: NullableStringFieldUpdateOperationsInput | string | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -83074,6 +89266,7 @@ export namespace Prisma {
     stocks?: StockUpdateManyWithoutProductNestedInput
     movements?: StockMovementUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrganizationInput = {
@@ -83097,6 +89290,7 @@ export namespace Prisma {
     stocks?: StockUncheckedUpdateManyWithoutProductNestedInput
     movements?: StockMovementUncheckedUpdateManyWithoutProductNestedInput
     issues?: ProductIssueUncheckedUpdateManyWithoutProductNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutOrganizationInput = {
@@ -83376,6 +89570,50 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CRMImportUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    uploader?: UserUpdateOneRequiredWithoutCrmImportsNestedInput
+    rows?: CRMImportRowUpdateManyWithoutCrmImportNestedInput
+  }
+
+  export type CRMImportUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rows?: CRMImportRowUncheckedUpdateManyWithoutCrmImportNestedInput
+  }
+
+  export type CRMImportUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type TeamCreateManyBranchInput = {
     id?: string
     organizationId: string
@@ -83410,6 +89648,35 @@ export namespace Prisma {
     lastLoginAt?: Date | string | null
     lastPasswordChangedAt?: Date | string | null
     deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateManyBranchInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -83495,6 +89762,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -83544,6 +89812,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -83614,6 +89883,93 @@ export namespace Prisma {
     location?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crmImport?: CRMImportUpdateOneRequiredWithoutRowsNestedInput
+    customer?: CustomerUpdateOneWithoutCrmImportRowsNestedInput
+    product?: ProductUpdateOneWithoutCrmImportRowsNestedInput
+    territory?: TerritoryUpdateOneWithoutCrmImportRowsNestedInput
+  }
+
+  export type CRMImportRowUncheckedUpdateWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutBranchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -83698,6 +90054,7 @@ export namespace Prisma {
     branches?: BranchUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUpdateManyWithoutTerritoryNestedInput
     users?: UserUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateWithoutDepartmentInput = {
@@ -83712,6 +90069,7 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUncheckedUpdateManyWithoutTerritoryNestedInput
     users?: UserUncheckedUpdateManyWithoutTerritoryNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutTerritoryNestedInput
   }
 
   export type TerritoryUncheckedUpdateManyWithoutDepartmentInput = {
@@ -83745,6 +90103,7 @@ export namespace Prisma {
     teams?: TeamUpdateManyWithoutBranchNestedInput
     users?: UserUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutDepartmentInput = {
@@ -83767,6 +90126,7 @@ export namespace Prisma {
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
     users?: UserUncheckedUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateManyWithoutDepartmentInput = {
@@ -83869,6 +90229,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -83918,6 +90279,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -84007,6 +90369,35 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CRMImportRowCreateManyTerritoryInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type BranchUpdateWithoutTerritoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -84027,6 +90418,7 @@ export namespace Prisma {
     teams?: TeamUpdateManyWithoutBranchNestedInput
     users?: UserUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutTerritoryInput = {
@@ -84049,6 +90441,7 @@ export namespace Prisma {
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
     users?: UserUncheckedUpdateManyWithoutBranchNestedInput
     warehouses?: WarehouseUncheckedUpdateManyWithoutBranchesNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateManyWithoutTerritoryInput = {
@@ -84151,6 +90544,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -84200,6 +90594,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -84228,6 +90623,93 @@ export namespace Prisma {
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUpdateWithoutTerritoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crmImport?: CRMImportUpdateOneRequiredWithoutRowsNestedInput
+    customer?: CustomerUpdateOneWithoutCrmImportRowsNestedInput
+    product?: ProductUpdateOneWithoutCrmImportRowsNestedInput
+    branch?: BranchUpdateOneWithoutCrmImportRowsNestedInput
+  }
+
+  export type CRMImportRowUncheckedUpdateWithoutTerritoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutTerritoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -84318,6 +90800,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -84367,6 +90850,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -84859,6 +91343,20 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type CRMImportCreateManyUploaderInput = {
+    id?: string
+    organizationId: string
+    fileName: string
+    totalRows?: number
+    successfulRows?: number
+    failedRows?: number
+    status?: string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
   export type ProductIssueCreateManyWarehouseManagerInput = {
     id?: string
     organizationId: string
@@ -84931,6 +91429,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
@@ -84980,6 +91479,7 @@ export namespace Prisma {
     notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
     managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
     productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
     productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
@@ -85854,6 +92354,50 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CRMImportUpdateWithoutUploaderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutCrmImportsNestedInput
+    rows?: CRMImportRowUpdateManyWithoutCrmImportNestedInput
+  }
+
+  export type CRMImportUncheckedUpdateWithoutUploaderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rows?: CRMImportRowUncheckedUpdateManyWithoutCrmImportNestedInput
+  }
+
+  export type CRMImportUncheckedUpdateManyWithoutUploaderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    totalRows?: IntFieldUpdateOperationsInput | number
+    successfulRows?: IntFieldUpdateOperationsInput | number
+    failedRows?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type ProductIssueUpdateWithoutWarehouseManagerInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
@@ -85971,6 +92515,35 @@ export namespace Prisma {
     location?: NullableJsonNullValueInput | InputJsonValue
     notes?: string | null
     photoUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateManyCustomerInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -86094,6 +92667,93 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CRMImportRowUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crmImport?: CRMImportUpdateOneRequiredWithoutRowsNestedInput
+    product?: ProductUpdateOneWithoutCrmImportRowsNestedInput
+    branch?: BranchUpdateOneWithoutCrmImportRowsNestedInput
+    territory?: TerritoryUpdateOneWithoutCrmImportRowsNestedInput
+  }
+
+  export type CRMImportRowUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrderItemCreateManyProductInput = {
     id?: string
     orderId: string
@@ -86136,6 +92796,35 @@ export namespace Prisma {
     quantity: number
     status?: $Enums.ProductIssueStatus
     notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowCreateManyProductInput = {
+    id?: string
+    importId: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -86274,6 +92963,93 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crmImport?: CRMImportUpdateOneRequiredWithoutRowsNestedInput
+    customer?: CustomerUpdateOneWithoutCrmImportRowsNestedInput
+    branch?: BranchUpdateOneWithoutCrmImportRowsNestedInput
+    territory?: TerritoryUpdateOneWithoutCrmImportRowsNestedInput
+  }
+
+  export type CRMImportRowUncheckedUpdateWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutProductInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    importId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -86551,6 +93327,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutBranchesNestedInput
@@ -86558,6 +93336,7 @@ export namespace Prisma {
     territory?: TerritoryUpdateOneRequiredWithoutBranchesNestedInput
     teams?: TeamUpdateManyWithoutBranchNestedInput
     users?: UserUpdateManyWithoutBranchNestedInput
+    crmImportRows?: CRMImportRowUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateWithoutWarehousesInput = {
@@ -86574,10 +93353,13 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teams?: TeamUncheckedUpdateManyWithoutBranchNestedInput
     users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    crmImportRows?: CRMImportRowUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateManyWithoutWarehousesInput = {
@@ -86594,6 +93376,8 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -86636,6 +93420,122 @@ export namespace Prisma {
     quantity?: IntFieldUpdateOperationsInput | number
     status?: EnumProductIssueStatusFieldUpdateOperationsInput | $Enums.ProductIssueStatus
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowCreateManyCrmImportInput = {
+    id?: string
+    organizationId: string
+    rowNumber: number
+    crmCustomerId?: string | null
+    crmProductId?: string | null
+    customerName?: string | null
+    phoneNumber?: string | null
+    email?: string | null
+    city?: string | null
+    pincode?: string | null
+    address?: string | null
+    productCode?: string | null
+    productName?: string | null
+    quantity?: number | null
+    requirement?: string | null
+    leadSource?: string | null
+    expectedValue?: number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: string | null
+    mappedProductId?: string | null
+    mappedBranchId?: string | null
+    mappedTerritoryId?: string | null
+    status?: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CRMImportRowUpdateWithoutCrmImportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneWithoutCrmImportRowsNestedInput
+    product?: ProductUpdateOneWithoutCrmImportRowsNestedInput
+    branch?: BranchUpdateOneWithoutCrmImportRowsNestedInput
+    territory?: TerritoryUpdateOneWithoutCrmImportRowsNestedInput
+  }
+
+  export type CRMImportRowUncheckedUpdateWithoutCrmImportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CRMImportRowUncheckedUpdateManyWithoutCrmImportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    rowNumber?: IntFieldUpdateOperationsInput | number
+    crmCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    crmProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    productCode?: NullableStringFieldUpdateOperationsInput | string | null
+    productName?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableFloatFieldUpdateOperationsInput | number | null
+    requirement?: NullableStringFieldUpdateOperationsInput | string | null
+    leadSource?: NullableStringFieldUpdateOperationsInput | string | null
+    expectedValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    customFields?: NullableJsonNullValueInput | InputJsonValue
+    mappedCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    mappedTerritoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -4,11 +4,7 @@ import { prisma } from '../../../config/database.js';
 import { BranchRepository } from '../repositories/BranchRepository.js';
 import { DepartmentRepository } from '../repositories/DepartmentRepository.js';
 import { TerritoryRepository } from '../repositories/TerritoryRepository.js';
-<<<<<<< HEAD
 import { locationService } from '../../../services/location.service.js';
-=======
-import { prisma } from '../../../config/database.js';
->>>>>>> origin/adarsh
 
 /**
  * Organization Service
@@ -313,7 +309,18 @@ export class OrganizationService {
     const department = await this.departmentRepo.findById(data.departmentId, organizationId);
     if (!department) throw AppError.badRequest('Department not found within your organization.');
 
-<<<<<<< HEAD
+    if (data.warehouseIds && data.warehouseIds.length > 0) {
+      const validWarehouses = await prisma.warehouse.count({
+        where: {
+          id: { in: data.warehouseIds },
+          organizationId
+        }
+      });
+      if (validWarehouses !== data.warehouseIds.length) {
+        throw AppError.badRequest('One or more selected warehouses do not exist or do not belong to your organization.');
+      }
+    }
+
     let lat = data.latitude ? parseFloat(data.latitude) : null;
     let lng = data.longitude ? parseFloat(data.longitude) : null;
     const fullAddress = [data.address, data.city, data.state, data.country].filter(Boolean).join(', ');
@@ -330,22 +337,7 @@ export class OrganizationService {
       }
     }
 
-    const branch = await this.branchRepo.create({
-=======
-    if (data.warehouseIds && data.warehouseIds.length > 0) {
-      const validWarehouses = await prisma.warehouse.count({
-        where: {
-          id: { in: data.warehouseIds },
-          organizationId
-        }
-      });
-      if (validWarehouses !== data.warehouseIds.length) {
-        throw AppError.badRequest('One or more selected warehouses do not exist or do not belong to your organization.');
-      }
-    }
-
     const branchData = {
->>>>>>> origin/adarsh
       organizationId,
       departmentId: data.departmentId,
       territoryId: data.territoryId,
@@ -358,11 +350,8 @@ export class OrganizationService {
       state: data.state,
       country: data.country,
       postalCode: data.postalCode,
-<<<<<<< HEAD
       latitude: lat,
       longitude: lng,
-    });
-=======
     };
 
     if (data.warehouseIds && data.warehouseIds.length > 0) {
@@ -372,7 +361,6 @@ export class OrganizationService {
     }
 
     const branch = await this.branchRepo.create(branchData);
->>>>>>> origin/adarsh
 
     if (req?.user?.id) {
       await logAudit({
@@ -397,7 +385,18 @@ export class OrganizationService {
       if (existing) throw AppError.badRequest(`Branch code '${data.code}' is already in use within this company.`);
     }
 
-<<<<<<< HEAD
+    if (data.warehouseIds !== undefined && data.warehouseIds.length > 0) {
+      const validWarehouses = await prisma.warehouse.count({
+        where: {
+          id: { in: data.warehouseIds },
+          organizationId
+        }
+      });
+      if (validWarehouses !== data.warehouseIds.length) {
+        throw AppError.badRequest('One or more selected warehouses do not exist or do not belong to your organization.');
+      }
+    }
+
     let lat = data.latitude !== undefined ? (data.latitude ? parseFloat(data.latitude) : null) : branch.latitude;
     let lng = data.longitude !== undefined ? (data.longitude ? parseFloat(data.longitude) : null) : branch.longitude;
 
@@ -414,27 +413,18 @@ export class OrganizationService {
     const missingCoords = !lat || !lng;
 
     if ((addressChanged || missingCoords) && newFullAddress) {
-      const geo = await locationService.geocodeAddress(newFullAddress);
-      lat = geo.latitude;
-      lng = geo.longitude;
-    }
-
-    const updated = await this.branchRepo.update(id, {
-=======
-    if (data.warehouseIds !== undefined && data.warehouseIds.length > 0) {
-      const validWarehouses = await prisma.warehouse.count({
-        where: {
-          id: { in: data.warehouseIds },
-          organizationId
+      try {
+        const geo = await locationService.geocodeAddress(newFullAddress);
+        if (geo?.latitude && geo?.longitude) {
+          lat = geo.latitude;
+          lng = geo.longitude;
         }
-      });
-      if (validWarehouses !== data.warehouseIds.length) {
-        throw AppError.badRequest('One or more selected warehouses do not exist or do not belong to your organization.');
+      } catch (e) {
+        console.warn('Branch update geocoding warning:', e.message);
       }
     }
 
     const updateData = {
->>>>>>> origin/adarsh
       ...(data.departmentId !== undefined && { departmentId: data.departmentId }),
       ...(data.territoryId !== undefined && { territoryId: data.territoryId }),
       ...(data.name !== undefined && { name: data.name }),
@@ -448,11 +438,8 @@ export class OrganizationService {
       ...(data.state !== undefined && { state: data.state }),
       ...(data.country !== undefined && { country: data.country }),
       ...(data.postalCode !== undefined && { postalCode: data.postalCode }),
-<<<<<<< HEAD
       latitude: lat,
       longitude: lng,
-    });
-=======
     };
 
     if (data.warehouseIds !== undefined) {
@@ -462,7 +449,6 @@ export class OrganizationService {
     }
 
     const updated = await this.branchRepo.update(id, updateData);
->>>>>>> origin/adarsh
     await logAudit({
       organizationId,
       userId: req.user.id,
