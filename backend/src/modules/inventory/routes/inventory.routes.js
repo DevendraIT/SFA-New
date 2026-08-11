@@ -63,6 +63,12 @@ router.patch(
   controller.updateProduct
 );
 
+router.delete(
+  '/products/:id',
+  authorize([INVENTORY_PERMISSIONS.UPDATE_PRODUCTS]),
+  controller.deleteProduct
+);
+
 // ===== WAREHOUSES =====
 router.get(
   '/warehouses',
@@ -177,6 +183,13 @@ router.patch(
   authorize([INVENTORY_PERMISSIONS.MANAGE_PRODUCT_ISSUES]),
   validate(updateProductIssueSchema),
   controller.updateProductIssueStatus
+);
+
+// ===== STOCK MOVEMENTS =====
+router.get(
+  ['/stock-movements', '/stock-movement'],
+  authorize([INVENTORY_PERMISSIONS.READ_STOCK]),
+  controller.getStockMovements
 );
 
 export default router;

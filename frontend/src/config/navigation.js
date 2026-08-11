@@ -26,6 +26,9 @@ import {
   FileText,
   User,
   MapPin,
+  Package,
+  Warehouse,
+  Layers,
 } from "lucide-react";
 
 const navigation = [
@@ -33,6 +36,33 @@ const navigation = [
     title: "Dashboard",
     icon: LayoutDashboard,
     path: "/dashboard",
+  },
+
+  {
+    title: "Inventory",
+    icon: Package,
+    children: [
+      {
+        title: "Products",
+        path: "/inventory/products",
+        icon: Package,
+      },
+      {
+        title: "Warehouses",
+        path: "/inventory/warehouses",
+        icon: Warehouse,
+      },
+      {
+        title: "Stock",
+        path: "/inventory/stock",
+        icon: Layers,
+      },
+      {
+        title: "Stock Movements",
+        path: "/inventory/stock-movements",
+        icon: Activity,
+      },
+    ],
   },
 
   {
@@ -68,6 +98,11 @@ const navigation = [
         title: "Users",
         path: "/organization/users",
         icon: UserCog,
+      },
+      {
+        title: "Warehouses",
+        path: "/inventory/warehouses",
+        icon: Warehouse,
       },
     ],
   },

@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import TaskStatusBadge, { PriorityBadge } from "./TaskStatusBadge";
 
+import { useAuth } from "../../context/AuthContext";
+import { isSalesExecutiveUser } from "../../utils/roleUtils";
+
 export default function TaskCard({ task, index = 0 }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Guard against undefined task (e.g. during loading skeleton)
   if (!task) {
@@ -32,9 +36,11 @@ export default function TaskCard({ task, index = 0 }) {
   const category = metadata.category;
 
   const handleClick = () => {
-    if (window.location.pathname.startsWith("/field-force")) {
+    // Only Sales Executive executing their task in field-force enters execution workflow
+    if (isSalesExecutiveUser(user) && window.location.pathname.startsWith("/field-force")) {
       navigate(`/field-force/tasks/${task.id}/execute`);
     } else {
+      // Super Admin, Company Admin, Sales Manager go to administrative task detail
       navigate(`/team/tasks/${task.id}`);
     }
   };

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, RefreshCw, Loader2, CheckCircle2, Navigation, MapPin, Building2,
   ShoppingCart, Package, DollarSign, Camera, FileText, FileSignature, Check,
-  Compass, Clock, AlertCircle, ShieldCheck, Phone, Mail, ChevronRight, XCircle
+  Compass, Clock, AlertCircle, ShieldCheck, Phone, Mail, ChevronRight, XCircle, Warehouse
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -147,6 +147,47 @@ export default function TaskExecutionPage() {
   const testingMode = true; // Testing Mode: Allow Check-In / Arrived actions from any location
   const isWithinGeoFence = testingMode ? true : (currentDistance !== null ? currentDistance <= 100 : true);
 
+  // Dynamic requirements calculation
+  const requiresSignature = requirements.signature === true || requirements.requireSignature === true;
+  const requiresInvoice = requirements.invoice === true || requirements.requireInvoice === true;
+  const requiresPayment = requirements.payment === true || requirements.requirePayment === true;
+  const requiresCheckOut = requirements.checkOut === true || requirements.requireCheckOut === true;
+  const requiresPhoto = requirements.photo === true || requirements.requirePhoto === true;
+  const requiresVisitNotes = requirements.visitNotes === true || requirements.requireVisitNotes === true;
+  const requiresPhotoOrNotes = requiresPhoto || requiresVisitNotes || (!requiresSignature && !requiresInvoice && !requiresPayment && !requiresCheckOut);
+
+  const hasProductsToPickup = products.length > 0;
+
+  // Dynamic workflow timeline steps generator (MUST BE DECLARED BEFORE EARLY RETURNS)
+  const workflowSteps = useMemo(() => {
+    const steps = [
+      { status: "PENDING", label: "Assigned", icon: Clock },
+    ];
+    if (hasProductsToPickup) {
+      steps.push({ status: "STOCK_PICKED_UP", label: "Warehouse Pickup", icon: Warehouse });
+    }
+    steps.push({ status: "IN_PROGRESS", label: "Navigating", icon: Navigation });
+    steps.push({ status: "CHECKED_IN", label: "Geo Check-In", icon: ShieldCheck });
+
+    if (requiresPhotoOrNotes) {
+      steps.push({ status: "PHOTO_UPLOADED", label: "Photos & Notes", icon: Camera });
+    }
+    if (requiresSignature) {
+      steps.push({ status: "SIGNATURE_CAPTURED", label: "Digital Signature", icon: FileSignature });
+    }
+    if (requiresInvoice) {
+      steps.push({ status: "INVOICE_GENERATED", label: "Generate Invoice", icon: FileText });
+    }
+    if (requiresPayment) {
+      steps.push({ status: "PAYMENT_COLLECTED", label: "Payment Collection", icon: DollarSign });
+    }
+    if (requiresCheckOut) {
+      steps.push({ status: "CHECKED_OUT", label: "Geo Check-Out", icon: Compass });
+    }
+    steps.push({ status: "COMPLETED", label: "Completed", icon: CheckCircle2 });
+    return steps;
+  }, [hasProductsToPickup, requiresPhotoOrNotes, requiresSignature, requiresInvoice, requiresPayment, requiresCheckOut]);
+
   const handleStatusTransition = async (nextStatus, extraData = {}) => {
     try {
       setActionLoading(true);
@@ -194,6 +235,49 @@ export default function TaskExecutionPage() {
     }
   };
 
+  const handleSaveSignature = async (dataUrl) => {
+    try {
+      setActionLoading(true);
+      await handleStatusTransition("SIGNATURE_CAPTURED", {
+        signature: dataUrl,
+      });
+      toast.success("Customer Digital Signature saved!");
+    } catch (err) {
+      toast.error("Failed to save digital signature");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleGenerateInvoiceAction = async () => {
+    try {
+      setActionLoading(true);
+      await handleStatusTransition("INVOICE_GENERATED", {
+        notes: `Invoice generated for ${customer.name || 'Customer'}`
+      });
+      toast.success("Invoice generated successfully!");
+    } catch (err) {
+      toast.error("Failed to generate invoice");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleGeoCheckOutAction = async () => {
+    try {
+      setActionLoading(true);
+      await handleStatusTransition("CHECKED_OUT", {
+        location: gpsLocation || undefined
+      });
+      toast.success("Geo Check-Out recorded successfully!");
+    } catch (err) {
+      toast.error("Failed to record Geo Check-Out");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // EARLY RETURNS PLACED STRICTLY AFTER ALL HOOKS
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-80 space-y-4">
@@ -207,7 +291,9 @@ export default function TaskExecutionPage() {
     return <ErrorState message={typeof error === "string" ? error : (error?.message || "Failed to load field task details")} onRetry={loadTaskData} />;
   }
 
-  const currentStepIndex = WORKFLOW_STEPS.findIndex((s) => s.status === task.status);
+  const currentStepIndex = workflowSteps.findIndex((s) => s.status === task.status);
+
+  const isPickupCompleted = metadata.pickupStatus === 'PICKED_UP' || task.status === 'STOCK_PICKED_UP' || task.status === 'DELIVERY_IN_PROGRESS';
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 max-w-7xl mx-auto pb-12">
@@ -256,11 +342,11 @@ export default function TaskExecutionPage() {
           </div>
         </div>
 
-        {/* 12-Step Visual Timeline Progress Bar */}
+        {/* Dynamic Visual Timeline Progress Bar */}
         <div>
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Execution Workflow Lifecycle</p>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-2">
-            {WORKFLOW_STEPS.map((step, idx) => {
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-2">
+            {workflowSteps.map((step, idx) => {
               const StepIcon = step.icon;
               const isPast = currentStepIndex > idx;
               const isCurrent = currentStepIndex === idx;
@@ -297,7 +383,7 @@ export default function TaskExecutionPage() {
         pickup={{
           lat: task?.pickupLatitude,
           lng: task?.pickupLongitude,
-          address: task?.pickupAddress || "Branch Location",
+          address: task?.pickupAddress || "Branch Warehouse Pickup Location",
         }}
         distanceMeters={routeInfo?.distanceMeters || currentDistance}
         estimatedMinutes={routeInfo?.estimatedMinutes}
@@ -328,11 +414,68 @@ export default function TaskExecutionPage() {
         </div>
 
         {/* Step Action Controls */}
-        {task.status === "PENDING" || task.status === "ASSIGNED" || task.status === "ACCEPTED" ? (
+        {hasProductsToPickup && !isPickupCompleted ? (
+          <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-amber-200/60 pb-3">
+              <div className="flex items-center gap-2">
+                <Warehouse size={20} className="text-amber-700" />
+                <h4 className="font-bold text-amber-900 text-base">Step 1: Branch Warehouse Product Pickup</h4>
+              </div>
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-200 text-amber-900">
+                Stock Pickup Required
+              </span>
+            </div>
+
+            <p className="text-xs text-amber-800">
+              Proceed to your branch dedicated warehouse to receive the assigned products from the Warehouse Manager before starting customer navigation.
+            </p>
+
+            <div className="bg-white rounded-xl p-4 border border-amber-200/80 space-y-3">
+              <div className="flex items-start gap-2 text-xs text-slate-700">
+                <MapPin size={16} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold block text-slate-900">Pickup Warehouse:</span>
+                  <span>{task.pickupAddress || "Branch Dedicated Warehouse"}</span>
+                </div>
+              </div>
+
+              <div className="border-t border-slate-100 pt-2">
+                <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Assigned Products to Pickup:</span>
+                <div className="space-y-1.5">
+                  {products.map((p, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-xs bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">
+                      <span className="font-semibold text-slate-800">{p.name || `Item ${idx+1}`}</span>
+                      <span className="font-bold text-amber-700">Qty: {p.quantity || 1}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+              <button
+                onClick={() => handleStatusTransition("DELIVERY_IN_PROGRESS", { metadata: { ...metadata, pickupStatus: 'PICKED_UP' } })}
+                disabled={actionLoading}
+                className="flex-1 w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
+                Confirm Stock Handover Received
+              </button>
+            </div>
+          </div>
+        ) : task.status === "PENDING" || task.status === "ASSIGNED" || task.status === "ACCEPTED" || task.status === "WAITING_FOR_WAREHOUSE_PICKUP" || task.status === "STOCK_PICKED_UP" || task.status === "DELIVERY_IN_PROGRESS" ? (
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center space-y-4">
-            <h4 className="font-bold text-blue-900 text-base">Start Task & Navigation</h4>
+            <div className="flex items-center justify-center gap-2 text-blue-900 font-bold text-base">
+              <Navigation size={20} className="text-blue-600" />
+              <span>Start Customer Route Navigation</span>
+            </div>
+            {isPickupCompleted && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 mx-auto">
+                <CheckCircle2 size={14} /> Warehouse Stock Picked Up & Verified
+              </div>
+            )}
             <p className="text-xs text-blue-700 max-w-md mx-auto">
-              Click Start Task to begin your field route navigation towards the customer location.
+              Click Start Navigation to navigate live towards customer destination: <span className="font-bold">{customer.name || task.destinationAddress || 'Customer'}</span>.
             </p>
             <button
               onClick={() => handleStatusTransition("IN_PROGRESS")}
@@ -340,7 +483,7 @@ export default function TaskExecutionPage() {
               className="px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-sm shadow-lg shadow-blue-500/20 transition disabled:opacity-50 cursor-pointer"
             >
               {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <Navigation size={16} className="inline mr-2" />}
-              Start Task
+              Start Navigation to Customer
             </button>
           </div>
         ) : task.status === "IN_PROGRESS" || task.status === "NAVIGATING" || task.status === "ARRIVED" ? (
@@ -363,14 +506,13 @@ export default function TaskExecutionPage() {
               <p className="text-xs text-red-600 font-medium">Check-In requires being within 100 meters of customer coordinates.</p>
             )}
           </div>
-        ) : task.status === "CHECKED_IN" || task.status === "DELIVERY_IN_PROGRESS" ? (
+        ) : task.status === "CHECKED_IN" && requiresPhotoOrNotes ? (
           <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-6 space-y-5">
             <div className="flex items-center gap-2 border-b border-blue-100 pb-3">
               <Camera size={18} className="text-blue-600" />
               <h4 className="font-bold text-blue-900 text-base">Upload Visit Photos & Visit Notes</h4>
             </div>
 
-            {/* Combined Photo Upload UI in Application Blue Theme */}
             <div className="space-y-3 bg-white p-4 rounded-xl border border-blue-100 shadow-sm">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Product / Visit Photo Proof</label>
               <input
@@ -380,7 +522,6 @@ export default function TaskExecutionPage() {
                 className="block w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
               />
 
-              {/* Photo Preview rendering: show local preview blob OR saved task photo after save */}
               {(photoPreview || getPhotoUrl(task.photos) || photoUrl) && (
                 <div className="mt-3 rounded-xl overflow-hidden border border-blue-200 bg-slate-900/5">
                   <img
@@ -397,7 +538,6 @@ export default function TaskExecutionPage() {
               )}
             </div>
 
-            {/* Visit Notes Textarea on the same screen */}
             <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm space-y-2">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Visit Notes & Summary</label>
               <textarea
@@ -418,15 +558,56 @@ export default function TaskExecutionPage() {
               {uploadingPhoto ? "Uploading Photo..." : "Save Photos & Visit Notes"}
             </button>
           </div>
-        ) : task.status === "PHOTO_UPLOADED" || task.status === "VISIT_NOTES_COMPLETED" ? (
+        ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "VISIT_NOTES_COMPLETED") && requiresSignature && !task.customerSignature ? (
+          <div className="space-y-4">
+            <SignaturePad onSave={handleSaveSignature} />
+            <button
+              onClick={() => handleStatusTransition("SIGNATURE_CAPTURED")}
+              disabled={actionLoading}
+              className="w-full py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 transition"
+            >
+              Skip Signature & Continue
+            </button>
+          </div>
+        ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "SIGNATURE_CAPTURED") && requiresInvoice && !task.invoiceGeneratedAt ? (
+          <div className="bg-purple-50 border border-purple-200 rounded-2xl p-6 space-y-5">
+            <div className="flex items-center gap-2 border-b border-purple-200 pb-3">
+              <FileText size={20} className="text-purple-600" />
+              <h4 className="font-bold text-purple-900 text-base">Generate Customer Invoice</h4>
+            </div>
+
+            <div className="bg-white p-5 rounded-xl border border-purple-100 space-y-3">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-500 font-medium">Customer:</span>
+                <span className="font-bold text-slate-800">{customer.name || "Customer"}</span>
+              </div>
+              {order.orderNumber && (
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-slate-500 font-medium">Sales Order #:</span>
+                  <span className="font-bold text-slate-800">{order.orderNumber}</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center text-sm font-bold pt-2 border-t border-slate-100">
+                <span className="text-slate-700">Total Invoice Amount:</span>
+                <span className="text-purple-700">₹{(order.totalAmount || order.total || 0).toLocaleString()}</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleGenerateInvoiceAction}
+              disabled={actionLoading}
+              className="w-full py-3.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
+              Generate & Record Invoice
+            </button>
+          </div>
+        ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "SIGNATURE_CAPTURED" || task.status === "INVOICE_GENERATED") && requiresPayment && !task.paymentCollectedAt ? (
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="font-bold text-emerald-900 text-base">Payment Collection (Optional)</h4>
-              <span className="text-xs font-semibold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full">Optional</span>
+              <h4 className="font-bold text-emerald-900 text-base">Payment Collection</h4>
+              <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full">Required</span>
             </div>
-            <p className="text-xs text-emerald-700">
-              Record customer payment below, or click Skip Payment Collection if payment was already received or not required.
-            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Amount Collected (₹)</label>
@@ -467,15 +648,30 @@ export default function TaskExecutionPage() {
                 Confirm Payment Collection
               </button>
               <button
-                onClick={() => handleStatusTransition("COMPLETED")}
+                onClick={() => handleStatusTransition("PAYMENT_COLLECTED")}
                 disabled={actionLoading}
                 className="flex-1 w-full py-3.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-sm shadow-sm transition disabled:opacity-50 cursor-pointer"
               >
-                Skip Payment & Complete Task
+                Skip Payment
               </button>
             </div>
           </div>
-        ) : task.status === "PAYMENT_COLLECTED" || task.status === "CHECKED_OUT" ? (
+        ) : requiresCheckOut && !task.checkedOutAt && task.status !== "COMPLETED" ? (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center space-y-4">
+            <h4 className="font-bold text-amber-900 text-base">Geo Check-Out & Departure</h4>
+            <p className="text-xs text-amber-700 max-w-md mx-auto">
+              Record your exit GPS coordinates before completing the mission.
+            </p>
+            <button
+              onClick={handleGeoCheckOutAction}
+              disabled={actionLoading}
+              className="px-8 py-3.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-lg shadow-amber-500/20 transition disabled:opacity-50 cursor-pointer"
+            >
+              {actionLoading ? <Loader2 size={16} className="animate-spin inline mr-2" /> : <Compass size={16} className="inline mr-2" />}
+              Perform Geo Check-Out
+            </button>
+          </div>
+        ) : task.status !== "COMPLETED" ? (
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center space-y-4">
             <h4 className="font-bold text-emerald-900 text-base">Finalize Mission Completion</h4>
             <p className="text-xs text-emerald-700 max-w-md mx-auto">

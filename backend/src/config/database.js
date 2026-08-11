@@ -23,14 +23,16 @@ export const getPrismaClient = () => {
     return prismaInstance;
   }
 
-  const rawUrl = (process.env.DATABASE_URL || process.env.DIRECT_URL || '').replace(/['"]/g, '');
+  const connectionString = (process.env.DATABASE_URL || process.env.DIRECT_URL || '').replace(/['"]/g, '');
 
   poolInstance = new Pool({
-    connectionString: rawUrl,
+    connectionString,
     ssl: { rejectUnauthorized: false },
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+    connectionTimeoutMillis: 30000,
+  });
+
+  poolInstance.on('error', (err) => {
+    console.error('Unexpected pool error:', err.message);
   });
 
   const adapter = new PrismaPg(poolInstance);

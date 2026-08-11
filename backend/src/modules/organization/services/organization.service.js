@@ -562,8 +562,30 @@ export class OrganizationService {
     const department = await this.departmentRepo.findById(id, organizationId);
     if (!department) throw AppError.notFound('Department not found.');
 
-    if (department._count.users > 0 || department._count.teams > 0) {
-      throw AppError.conflict('Cannot delete department while users or teams are assigned.');
+    // Unassign users and teams
+    await prisma.user.updateMany({
+      where: { departmentId: id },
+      data: { departmentId: null },
+    });
+    await prisma.team.updateMany({
+      where: { departmentId: id },
+      data: { departmentId: null },
+    });
+
+    // Find fallback department for branches & territories if available
+    const fallbackDept = await prisma.department.findFirst({
+      where: { organizationId, NOT: { id } },
+    });
+
+    if (fallbackDept) {
+      await prisma.branch.updateMany({
+        where: { departmentId: id },
+        data: { departmentId: fallbackDept.id },
+      });
+      await prisma.territory.updateMany({
+        where: { departmentId: id },
+        data: { departmentId: fallbackDept.id },
+      });
     }
 
     const deleted = await this.departmentRepo.delete(id);
@@ -616,7 +638,19 @@ export class OrganizationService {
     return territory;
   }
 
+  _checkSuperAdminTerritoryRestriction(req) {
+    const userRoles = Array.isArray(req?.user?.roles) ? req.user.roles : [];
+    const isSuperAdmin = userRoles.some(
+      (r) => typeof r === 'string' && (r.toLowerCase().includes('super') || r.toLowerCase().includes('admin')) && r.toLowerCase().includes('super')
+    );
+    if (isSuperAdmin) {
+      throw AppError.forbidden('Super Admin is restricted from creating, editing, or deleting territories. Super Admin can only view territory details.');
+    }
+  }
+
   async createTerritory(organizationId, data, req) {
+    this._checkSuperAdminTerritoryRestriction(req);
+
     const department = await this.departmentRepo.findById(data.departmentId, organizationId);
     if (!department) throw AppError.badRequest('Department not found within your organization.');
 
@@ -640,6 +674,8 @@ export class OrganizationService {
   }
 
   async updateTerritory(id, organizationId, data, req) {
+    this._checkSuperAdminTerritoryRestriction(req);
+
     const territory = await this.territoryRepo.findById(id, organizationId);
     if (!territory) throw AppError.notFound('Territory not found.');
 
@@ -663,6 +699,8 @@ export class OrganizationService {
   }
 
   async deleteTerritory(id, organizationId, req) {
+    this._checkSuperAdminTerritoryRestriction(req);
+
     const territory = await this.territoryRepo.findById(id, organizationId);
     if (!territory) throw AppError.notFound('Territory not found.');
 

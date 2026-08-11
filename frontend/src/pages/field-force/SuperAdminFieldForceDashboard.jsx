@@ -218,9 +218,9 @@ export default function SuperAdminFieldForceDashboard() {
         
         {/* Left Column (2 Cols) - Tasks & Weekly Operations Trend */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Today's Tasks */}
+          {/* Today's Tasks Summary (Read-Only Upper Overview, Zero Redirection) */}
           <SectionCard
-            title="Today's Field Execution Tasks"
+            title="Today's Field Execution Tasks Overview"
             subtitle={pendingTasks.length > 0 ? `${pendingTasks.length} tasks currently pending review` : "All field tasks updated"}
             icon={Target}
             iconColor="text-blue-600"
@@ -228,9 +228,38 @@ export default function SuperAdminFieldForceDashboard() {
             {tasks.length === 0 ? (
               <EmptyDashboard title="No Tasks Assigned" description="No field force tasks registered for today." />
             ) : (
-              <div className="space-y-3">
-                {tasks.slice(0, 5).map((task, i) => (
-                  <TaskCard key={task.id} task={task} index={i} />
+              <div className="space-y-2 text-xs">
+                {tasks.slice(0, 5).map((task) => (
+                  <div
+                    key={task.id}
+                    className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                  >
+                    <div className="space-y-0.5">
+                      <span className="font-bold text-slate-800 block text-sm">{task.title}</span>
+                      <span className="text-slate-500 block">
+                        Assigned Executive: <strong className="text-slate-700">{task.assignedTo ? `${task.assignedTo.firstName} ${task.assignedTo.lastName}` : "Unassigned"}</strong>
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 self-start sm:self-auto">
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          task.status === "COMPLETED"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : task.status === "IN_PROGRESS"
+                            ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                            : "bg-amber-50 text-amber-700 border border-amber-200"
+                        }`}
+                      >
+                        {task.status}
+                      </span>
+                      {task.dueDate && (
+                        <span className="text-slate-400 text-[11px] font-mono">
+                          {dayjs(task.dueDate).format("MMM D")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 ))}
               </div>
             )}

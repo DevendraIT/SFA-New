@@ -31,8 +31,9 @@ export default function TerritoryList() {
       ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
       : [user.role?.name || ""];
     const isSuperAdmin = roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+    if (isSuperAdmin) return false;
     const isCompanyAdmin = roleNames.some((r) => r && (r.toLowerCase() === "admin" || r.toLowerCase().includes("company admin")));
-    return isSuperAdmin || isCompanyAdmin;
+    return isCompanyAdmin;
   }, [user]);
 
   const displayedTerritories = useMemo(() => {

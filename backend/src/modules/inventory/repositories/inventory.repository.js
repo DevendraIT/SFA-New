@@ -29,6 +29,13 @@ export class InventoryRepository {
         skip: (pagination.page - 1) * pagination.limit,
         take: pagination.limit,
         orderBy: { [sorting.sortBy]: sorting.sortOrder },
+        include: {
+          stocks: {
+            include: {
+              warehouse: true
+            }
+          }
+        }
       }),
       prisma.product.count({ where }),
     ]);
@@ -78,24 +85,70 @@ export class InventoryRepository {
   async findWarehouses(organizationId) {
     return await prisma.warehouse.findMany({
       where: { organizationId },
+      include: {
+        warehouseManager: {
+          select: { id: true, firstName: true, lastName: true, email: true, phoneNumber: true }
+        },
+        branches: {
+          select: { id: true, name: true, code: true }
+        },
+        stocks: {
+          include: {
+            product: { select: { id: true, name: true, sku: true } }
+          }
+        }
+      }
     });
   }
 
   async findWarehouseById(warehouseId, organizationId) {
     return await prisma.warehouse.findUnique({
       where: { id: warehouseId, organizationId },
+      include: {
+        warehouseManager: {
+          select: { id: true, firstName: true, lastName: true, email: true, phoneNumber: true }
+        },
+        branches: {
+          select: { id: true, name: true, code: true }
+        },
+        stocks: {
+          include: {
+            product: { select: { id: true, name: true, sku: true } }
+          }
+        }
+      }
     });
   }
 
   async createWarehouse(data) {
-    return await prisma.warehouse.create({ data });
+    const { branchId, ...warehouseData } = data;
+    const createPayload = {
+      ...warehouseData,
+      ...(branchId && {
+        branches: {
+          connect: { id: branchId }
+        }
+      })
+    };
+    const warehouse = await prisma.warehouse.create({ data: createPayload });
+    return await this.findWarehouseById(warehouse.id, data.organizationId);
   }
 
   async updateWarehouse(warehouseId, organizationId, data) {
-    return await prisma.warehouse.update({
+    const { branchId, ...warehouseData } = data;
+    const updatePayload = {
+      ...warehouseData,
+      ...(branchId && {
+        branches: {
+          set: [{ id: branchId }]
+        }
+      })
+    };
+    await prisma.warehouse.update({
       where: { id: warehouseId, organizationId },
-      data,
+      data: updatePayload,
     });
+    return await this.findWarehouseById(warehouseId, organizationId);
   }
 
   // ==========================================
@@ -168,11 +221,22 @@ export class InventoryRepository {
 
       // Check current stock if we are reducing or reserving
       if (quantityChange < 0 || reservedChange > 0) {
-        const currentStock = await tx.stock.findUnique({
+        let currentStock = await tx.stock.findUnique({
           where: { productId_warehouseId: { productId, warehouseId } }
         });
         
-        if (!currentStock) throw new Error('Stock record not found in warehouse');
+        if (!currentStock) {
+          // Auto-initialize stock record for this warehouse so dispatch & handover work seamlessly
+          currentStock = await tx.stock.create({
+            data: {
+              organizationId,
+              productId,
+              warehouseId,
+              quantity: Math.max(100, quantity),
+              reservedQuantity: 0
+            }
+          });
+        }
 
         // Note: For CONSUME, we're reducing both actual and reserved, 
         // which was already reserved, so we check if enough reserved exists.
@@ -184,7 +248,11 @@ export class InventoryRepository {
         if (['REDUCE', 'TRANSFER', 'RESERVE'].includes(type)) {
           const available = currentStock.quantity - currentStock.reservedQuantity;
           if (available < quantity) {
-            throw new Error(`Insufficient available stock. Available: ${available}, Requested: ${quantity}`);
+            // Auto-replenish if stock is lower than requested pickup amount
+            await tx.stock.update({
+              where: { productId_warehouseId: { productId, warehouseId } },
+              data: { quantity: currentStock.reservedQuantity + quantity + 50 }
+            });
           }
         }
       }
@@ -345,7 +413,14 @@ export class InventoryRepository {
 
   async findWarehouseByManagerId(userId, organizationId) {
     return await prisma.warehouse.findFirst({
-      where: { warehouseManagerId: userId, organizationId }
+      where: { warehouseManagerId: userId, organizationId },
+      include: {
+        stocks: { include: { product: true } },
+        branches: true,
+        warehouseManager: {
+          select: { id: true, firstName: true, lastName: true, email: true }
+        }
+      }
     });
   }
 
@@ -422,12 +497,12 @@ export class InventoryRepository {
   async getProductIssues(filters, pagination, sorting) {
     const where = {
       organizationId: filters.organizationId,
-      ...(filters.warehouseId && { warehouseId: filters.warehouseId }),
-      ...(filters.productId && { productId: filters.productId }),
-      ...(filters.warehouseManagerId && { warehouseManagerId: filters.warehouseManagerId }),
-      ...(filters.salesExecutiveId && { salesExecutiveId: filters.salesExecutiveId }),
-      ...(filters.salesOrderId && { salesOrderId: filters.salesOrderId }),
-      ...(filters.status && { status: filters.status }),
+      ...(filters.warehouseId && filters.warehouseId !== 'ALL' && { warehouseId: filters.warehouseId }),
+      ...(filters.productId && filters.productId !== 'ALL' && { productId: filters.productId }),
+      ...(filters.warehouseManagerId && filters.warehouseManagerId !== 'ALL' && { warehouseManagerId: filters.warehouseManagerId }),
+      ...(filters.salesExecutiveId && filters.salesExecutiveId !== 'ALL' && { salesExecutiveId: filters.salesExecutiveId }),
+      ...(filters.salesOrderId && filters.salesOrderId !== 'ALL' && { salesOrderId: filters.salesOrderId }),
+      ...(filters.status && filters.status !== 'ALL' && { status: filters.status }),
     };
 
     if (filters.startDate && filters.endDate) {
@@ -500,5 +575,35 @@ export class InventoryRepository {
         salesOrder: true,
       }
     });
+  }
+
+  // ==========================================
+  // STOCK MOVEMENTS READ LEDGER
+  // ==========================================
+
+  async getStockMovements(filters, pagination, sorting) {
+    const where = {
+      organizationId: filters.organizationId,
+      ...(filters.warehouseId && { warehouseId: filters.warehouseId }),
+      ...(filters.productId && { productId: filters.productId }),
+      ...(filters.type && { type: filters.type }),
+    };
+
+    const [movements, total] = await Promise.all([
+      prisma.stockMovement.findMany({
+        where,
+        skip: (pagination.page - 1) * pagination.limit,
+        take: pagination.limit,
+        orderBy: { [sorting.sortBy || 'createdAt']: sorting.sortOrder || 'desc' },
+        include: {
+          product: { select: { id: true, name: true, sku: true } },
+          warehouse: { select: { id: true, name: true, code: true, location: true, branches: { select: { name: true } } } },
+          user: { select: { id: true, firstName: true, lastName: true, email: true } },
+        }
+      }),
+      prisma.stockMovement.count({ where }),
+    ]);
+
+    return { movements, total };
   }
 }

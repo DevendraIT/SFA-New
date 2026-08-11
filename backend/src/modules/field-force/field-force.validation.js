@@ -87,6 +87,8 @@ export const updateTaskStatusSchema = z.object({
     'PENDING',
     'ASSIGNED',
     'ACCEPTED',
+    'WAITING_FOR_WAREHOUSE_PICKUP',
+    'STOCK_PICKED_UP',
     'IN_PROGRESS',
     'NAVIGATING',
     'ARRIVED',
@@ -95,6 +97,8 @@ export const updateTaskStatusSchema = z.object({
     'PAYMENT_COLLECTED',
     'PHOTO_UPLOADED',
     'VISIT_NOTES_COMPLETED',
+    'SIGNATURE_CAPTURED',
+    'INVOICE_GENERATED',
     'CHECKED_OUT',
     'COMPLETED',
     'CANCELLED'

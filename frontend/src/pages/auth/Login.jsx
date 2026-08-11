@@ -12,8 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 const loginSchema = z.object({
   email: z
     .string()
-    .min(1, "Email is required")
-    .email("Invalid email address"),
+    .min(1, "Email or Phone Number is required"),
 
   password: z
     .string()
@@ -187,14 +186,14 @@ export default function Login() {
 
               <label className="font-medium">
 
-                Email
+                Email or Phone Number
 
               </label>
 
               <input
                 {...register("email")}
-                type="email"
-                placeholder="john@example.com"
+                type="text"
+                placeholder="john@example.com or 9876543210"
                 className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
               />
 
@@ -300,49 +299,6 @@ export default function Login() {
 
           </form>
 
-          {/* <div className="mt-10 border-t pt-6">
-
-            <div className="grid grid-cols-3 gap-3 text-center">
-
-              <div className="rounded-xl border p-3">
-
-                <h3 className="text-xl font-bold text-indigo-600">
-                  AI
-                </h3>
-
-                <p className="mt-1 text-xs text-gray-500">
-                  Lead Engine
-                </p>
-
-              </div>
-
-              <div className="rounded-xl border p-3">
-
-                <h3 className="text-xl font-bold text-indigo-600">
-                  CRM
-                </h3>
-
-                <p className="mt-1 text-xs text-gray-500">
-                  Sales Automation
-                </p>
-
-              </div>
-
-              <div className="rounded-xl border p-3">
-
-                <h3 className="text-xl font-bold text-indigo-600">
-                  SFA
-                </h3>
-
-                <p className="mt-1 text-xs text-gray-500">
-                  Field Force
-                </p>
-
-              </div>
-
-            </div>
-
-          </div> */}
 
           <div className="mt-8 text-center text-sm text-gray-500">
 

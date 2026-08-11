@@ -29,6 +29,11 @@ export class InventoryController {
     res.json(result);
   });
 
+  deleteProduct = asyncHandler(async (req, res) => {
+    const result = await this.inventoryService.deleteProduct(req.params.id, req.user);
+    res.json(result);
+  });
+
   // ==========================================
   // WAREHOUSES
   // ==========================================
@@ -87,7 +92,8 @@ export class InventoryController {
   });
 
   getWarehouseForManager = asyncHandler(async (req, res) => {
-    const result = await this.inventoryService.getWarehouseForManager(req.params.id, req.user);
+    const targetId = req.params.id === 'me' ? req.user.userId : req.params.id;
+    const result = await this.inventoryService.getWarehouseForManager(targetId, req.user);
     res.json(result);
   });
 
@@ -130,6 +136,15 @@ export class InventoryController {
 
   updateProductIssueStatus = asyncHandler(async (req, res) => {
     const result = await this.inventoryService.updateProductIssueStatus(req.params.id, req.body, req.user);
+    res.json(result);
+  });
+
+  // ==========================================
+  // STOCK MOVEMENTS
+  // ==========================================
+
+  getStockMovements = asyncHandler(async (req, res) => {
+    const result = await this.inventoryService.getStockMovements(req.query, req.user);
     res.json(result);
   });
 }

@@ -997,10 +997,17 @@ export default function AssignTaskModal({
           : undefined,
         orderId: formData.orderId || selectedOrder?.id || undefined,
         products: (formData.products?.length > 0)
-          ? formData.products
+          ? formData.products.map(p => ({
+              id: p.productId || p.id,
+              productId: p.productId || p.id,
+              name: p.name || p.product?.name || 'Product',
+              sku: p.sku || p.product?.sku || '',
+              quantity: Number(p.quantity || 1)
+            }))
           : (selectedOrder?.items?.map(i => ({
-              id: i.id || i.productId,
-              name: i.description || i.product?.name || 'Product',
+              id: i.productId || i.product?.id || i.id,
+              productId: i.productId || i.product?.id || i.id,
+              name: i.product?.name || i.description || 'Product',
               sku: i.product?.sku || '',
               quantity: i.quantity || 1,
               unitPrice: i.unitPrice || 0

@@ -1,4 +1,11 @@
 import http from "http";
+import dns from "node:dns";
+
+try {
+  dns.setDefaultResultOrder('ipv4first');
+} catch (e) {
+  // ignore
+}
 
 const origClose = http.Server.prototype.close;
 http.Server.prototype.close = function(cb) {

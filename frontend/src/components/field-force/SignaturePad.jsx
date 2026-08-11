@@ -37,7 +37,7 @@ export default function SignaturePad({ onSave, className = "" }) {
 
   const draw = (e) => {
     if (!isDrawing) return;
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     const ctx = canvasRef.current.getContext("2d");
     const { x, y } = getCoordinates(e);
     ctx.lineTo(x, y);

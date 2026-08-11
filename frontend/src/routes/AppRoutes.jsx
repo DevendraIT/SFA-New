@@ -5,10 +5,22 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
 
 import Dashboard from "../pages/dashboard/Dashboard";
+import InventoryDashboard from "../pages/inventory/InventoryDashboard";
+import Products from "../pages/inventory/Products";
+import Warehouses from "../pages/inventory/Warehouses";
+import Stock from "../pages/inventory/Stock";
+import ProductIssues from "../pages/inventory/ProductIssues";
+import StockMovements from "../pages/inventory/StockMovements";
+import MyWarehouse from "../pages/inventory/MyWarehouse";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 
 import ProtectedRoute from "./ProtectedRoute";
+import {
+  InventoryManagerRoute,
+  WarehouseManagerRoute,
+  TaskExecutionRoute,
+} from "./RoleRoute";
 
 
 import BranchList from "../pages/organization/branch/BranchList";
@@ -98,6 +110,23 @@ export default function AppRoutes() {
       >
         <Route path="/dashboard" element={<Dashboard />} />
 
+        {/* ===== GLOBAL INVENTORY MANAGER ROUTES ===== */}
+        <Route path="/inventory/dashboard" element={<InventoryManagerRoute><InventoryDashboard /></InventoryManagerRoute>} />
+        <Route path="/inventory/products" element={<InventoryManagerRoute><Products /></InventoryManagerRoute>} />
+        <Route path="/inventory/warehouses" element={<InventoryManagerRoute><Warehouses /></InventoryManagerRoute>} />
+        <Route path="/inventory/stock" element={<InventoryManagerRoute><Stock /></InventoryManagerRoute>} />
+        <Route path="/inventory/product-issues" element={<InventoryManagerRoute><ProductIssues /></InventoryManagerRoute>} />
+        <Route path="/inventory/stock-movements" element={<InventoryManagerRoute><StockMovements /></InventoryManagerRoute>} />
+
+        {/* ===== WAREHOUSE MANAGER WORKSPACE ROUTES ===== */}
+        <Route path="/inventory/warehouse" element={<WarehouseManagerRoute><MyWarehouse /></WarehouseManagerRoute>} />
+        <Route path="/inventory/my-warehouse" element={<WarehouseManagerRoute><MyWarehouse /></WarehouseManagerRoute>} />
+        <Route path="/inventory/warehouse/dashboard" element={<WarehouseManagerRoute><InventoryDashboard /></WarehouseManagerRoute>} />
+        <Route path="/inventory/warehouse/stock" element={<WarehouseManagerRoute><Stock /></WarehouseManagerRoute>} />
+        <Route path="/inventory/warehouse/product-issues" element={<WarehouseManagerRoute><ProductIssues /></WarehouseManagerRoute>} />
+        <Route path="/inventory/warehouse/returns" element={<WarehouseManagerRoute><ProductIssues /></WarehouseManagerRoute>} />
+        <Route path="/inventory/warehouse/stock-movements" element={<WarehouseManagerRoute><StockMovements /></WarehouseManagerRoute>} />
+
 
 
         <Route
@@ -170,7 +199,7 @@ export default function AppRoutes() {
         <Route path="/field-force/dashboard" element={<FieldForceDashboardWrapper />} />
         <Route path="/field-force/attendance" element={<AttendancePage />} />
         <Route path="/field-force/tasks" element={<TasksPage />} />
-        <Route path="/field-force/tasks/:id/execute" element={<TaskExecutionPage />} />
+        <Route path="/field-force/tasks/:id/execute" element={<TaskExecutionRoute><TaskExecutionPage /></TaskExecutionRoute>} />
         <Route path="/field-force/visits" element={<VisitsPage />} />
         <Route path="/field-force/visits/:id" element={<VisitDetailPage />} />
         <Route path="/field-force/activities" element={<ActivitiesPage />} />

@@ -18,40 +18,44 @@ export class AuthRepository {
    * Find user by email with full role/permission graph
    * @param {string} email - lowercased email
    */
-  async findAuthByEmail(email) {
+  async findAuthByEmail(identifier) {
+    const rawString = typeof identifier === 'string'
+      ? identifier
+      : typeof identifier === 'object' && identifier !== null
+        ? (identifier.email || identifier.identifier || '')
+        : String(identifier || '');
 
-  const allUsers = await prisma.user.findMany({
-    select: {
-      id: true,
-      email: true,
-      deletedAt: true,
-    },
-  });
+    const cleanInput = rawString.trim().toLowerCase();
+    const digitsOnly = cleanInput.replace(/\D/g, "");
 
-  const user = await prisma.user.findFirst({
-    where: {
-      email,
-      deletedAt: null,
-    },
-    include: {
-      organization: { select: { id: true, name: true, slug: true } },
-      branch: { select: { id: true, name: true, code: true } },
-      department: { select: { id: true, name: true, code: true } },
-      roles: {
-        include: {
-          role: {
-            include: {
-              permissions: {
-                include: {
-                  permission: true,
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: cleanInput },
+          { phoneNumber: cleanInput },
+          ...(digitsOnly.length >= 7 ? [{ phoneNumber: { contains: digitsOnly } }] : [])
+        ],
+        deletedAt: null,
+      },
+      include: {
+        organization: { select: { id: true, name: true, slug: true } },
+        branch: { select: { id: true, name: true, code: true } },
+        department: { select: { id: true, name: true, code: true } },
+        roles: {
+          include: {
+            role: {
+              include: {
+                permissions: {
+                  include: {
+                    permission: true,
+                  },
                 },
               },
             },
           },
         },
       },
-    },
-  });
+    });
 
 
   if (!user) return null;

@@ -207,6 +207,69 @@ export class FieldForceService {
     }
 
     const task = await this.repo.createTask(organizationId, userId, taskPayload);
+
+    // Create ProductIssue records for Warehouse Manager stock pickup if task contains products
+    try {
+      const meta = (taskPayload.metadata && typeof taskPayload.metadata === 'object')
+        ? taskPayload.metadata
+        : ((data.metadata && typeof data.metadata === 'object')
+            ? data.metadata
+            : (task.metadata && typeof task.metadata === 'object' ? task.metadata : (typeof task.metadata === 'string' ? JSON.parse(task.metadata) : {})));
+      const prods = Array.isArray(meta?.products) ? meta.products : (typeof meta === 'string' ? JSON.parse(meta)?.products : []);
+      console.log('createTask prods extracted:', prods);
+      if (prods.length > 0 && task.assignedToId) {
+        // Resolve Executive's branch warehouse
+        const execUser = await prisma.user.findUnique({
+          where: { id: task.assignedToId },
+          select: { branchId: true }
+        });
+        const targetBranchId = execUser?.branchId || task.branchId;
+        let targetWarehouse = targetBranchId
+          ? await prisma.warehouse.findFirst({ where: { branches: { some: { id: targetBranchId } } }, include: { warehouseManager: true } })
+          : null;
+
+        if (!targetWarehouse) {
+          targetWarehouse = await prisma.warehouse.findFirst({ where: { organizationId, isActive: true }, include: { warehouseManager: true } });
+        }
+
+        console.log('targetBranchId:', targetBranchId, 'targetWarehouse resolved:', targetWarehouse?.id, targetWarehouse?.name);
+        if (targetWarehouse) {
+          for (const prodItem of prods) {
+            let pId = prodItem.productId || prodItem.id;
+            let matchedProd = null;
+            if (pId) {
+              matchedProd = await prisma.product.findFirst({ where: { id: pId, organizationId } });
+            }
+            if (!matchedProd && prodItem.name) {
+              matchedProd = await prisma.product.findFirst({
+                where: { organizationId, name: { equals: prodItem.name, mode: 'insensitive' } }
+              });
+            }
+            if (!matchedProd) {
+              matchedProd = await prisma.product.findFirst({ where: { organizationId } });
+            }
+
+            if (matchedProd) {
+              const reqQty = Number(prodItem.quantity || 1);
+              await prisma.productIssue.create({
+                data: {
+                  organizationId,
+                  warehouseId: targetWarehouse.id,
+                  productId: matchedProd.id,
+                  salesExecutiveId: task.assignedToId,
+                  quantity: reqQty > 0 ? reqQty : 1,
+                  status: 'PENDING',
+                  notes: `Stock pickup request for task "${task.title}" (Ref: ${task.id})`,
+                }
+              }).catch(err => console.error('Failed to create ProductIssue for task:', err));
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to process task stock pickup requests:', e);
+    }
+
     try {
       const { notificationsService } = await import('../notifications/notifications.routes.js');
       if (task?.assignedToId) {
@@ -579,7 +642,21 @@ export class FieldForceService {
 
     const { status, location, notes, completionNotes, payment, photoUrl, signature } = payload;
     const now = new Date();
-    const updateFields = { status };
+
+    const validPrismaTaskStatuses = [
+      'PENDING', 'ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 'NAVIGATING',
+      'ARRIVED', 'CHECKED_IN', 'DELIVERY_IN_PROGRESS', 'PAYMENT_COLLECTED',
+      'PHOTO_UPLOADED', 'VISIT_NOTES_COMPLETED', 'CHECKED_OUT', 'COMPLETED', 'CANCELLED'
+    ];
+
+    let dbStatus = status;
+    if (!validPrismaTaskStatuses.includes(status)) {
+      if (status === 'STOCK_PICKED_UP') dbStatus = 'DELIVERY_IN_PROGRESS';
+      else if (status === 'WAITING_FOR_WAREHOUSE_PICKUP') dbStatus = 'PENDING';
+      else dbStatus = task.status; // Keep existing valid DB status (e.g. CHECKED_IN or PHOTO_UPLOADED)
+    }
+
+    const updateFields = { status: dbStatus };
 
     // Geo-fence validation for ARRIVED and CHECKED_IN
     if (status === 'ARRIVED' || status === 'CHECKED_IN') {
@@ -632,6 +709,13 @@ export class FieldForceService {
     if (status === 'VISIT_NOTES_COMPLETED') {
       updateFields.visitNotesCompletedAt = now;
       if (notes) updateFields.visitNotes = notes;
+    }
+    if (status === 'SIGNATURE_CAPTURED' || signature) {
+      updateFields.signatureCapturedAt = now;
+      if (signature) updateFields.customerSignature = signature;
+    }
+    if (status === 'INVOICE_GENERATED') {
+      updateFields.invoiceGeneratedAt = now;
     }
     if (status === 'CHECKED_OUT') {
       updateFields.checkedOutAt = now;

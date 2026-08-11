@@ -28,7 +28,15 @@ export class AuthService {
   /**
    * Authenticate user credentials
    */
-  async login(email, password, requestMeta = {}) {
+  async login(emailInput, passwordInput, requestMeta = {}) {
+    const email = typeof emailInput === 'object' && emailInput !== null
+      ? (emailInput.email || emailInput.identifier || '')
+      : emailInput;
+
+    const password = typeof emailInput === 'object' && emailInput !== null
+      ? (emailInput.password || passwordInput)
+      : passwordInput;
+
     const authRecord = await this.authRepository.findAuthByEmail(email);
      
 

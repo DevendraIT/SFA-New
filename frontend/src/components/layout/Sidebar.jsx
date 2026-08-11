@@ -11,6 +11,15 @@ import {
 
 import navigation from "../../config/navigation";
 import { useAuth } from "../../context/AuthContext";
+import {
+  isSuperAdminUser,
+  isCompanyAdminUser,
+  isSalesManagerUser,
+  isSalesExecutiveUser,
+  isHeadOfSalesUser,
+  isInventoryManagerUser,
+  isWarehouseManagerUser,
+} from "../../utils/roleUtils";
 import SidebarItem from "./SidebarItem";
 import SidebarGroup from "./SidebarGroup";
 
@@ -58,58 +67,45 @@ export default function Sidebar({
     );
   };
 
-  const isSuperAdmin = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
-  }, [user]);
-
-  const isCompanyAdmin = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some(
-      (r) =>
-        r &&
-        (r.toLowerCase().includes("company admin") ||
-          (r.toLowerCase().includes("admin") && !r.toLowerCase().includes("super admin")))
-    );
-  }, [user]);
-
-  const isSalesManager = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
-  }, [user]);
-
-  const isSalesExecutive = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some(
-      (r) => r && (r.toLowerCase().includes("sales executive") || r.toLowerCase().includes("sales person"))
-    );
-  }, [user]);
-
-
-  const isHeadOfSales = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
-  }, [user]);
+  const isSuperAdmin = useMemo(() => isSuperAdminUser(user), [user]);
+  const isCompanyAdmin = useMemo(() => isCompanyAdminUser(user), [user]);
+  const isSalesManager = useMemo(() => isSalesManagerUser(user), [user]);
+  const isSalesExecutive = useMemo(() => isSalesExecutiveUser(user), [user]);
+  const isHeadOfSales = useMemo(() => isHeadOfSalesUser(user), [user]);
+  const isInventoryManager = useMemo(() => isInventoryManagerUser(user), [user]);
+  const isWarehouseManager = useMemo(() => isWarehouseManagerUser(user), [user]);
 
   const filteredNavigation = useMemo(() => {
+    if (isInventoryManager) {
+      return navigation.filter(
+        (item) => ["Dashboard", "Inventory"].includes(item.title)
+      );
+    }
+
+    if (isWarehouseManager) {
+      return navigation
+        .filter((item) => ["Dashboard", "Inventory"].includes(item.title))
+        .map((item) => {
+          if (item.title === "Inventory" && Array.isArray(item.children)) {
+            return {
+              ...item,
+              children: item.children
+                .filter((child) => child.title !== "Products" && child.title !== "Dashboard")
+                .map((child) => {
+                  if (child.title === "Warehouses") {
+                    return { ...child, title: "My Warehouse Console", path: "/inventory/my-warehouse" };
+                  }
+                  return child;
+                }),
+            };
+          }
+          return item;
+        });
+    }
+
     if (isSuperAdmin) {
       return navigation
-        .filter((item) => item.title !== "Team Management")
+        .filter((item) => !["Inventory", "Team Management"].includes(item.title))
         .map((item) => {
           if (item.title === "Field Force") {
             return {
@@ -124,20 +120,20 @@ export default function Sidebar({
 
     if (isCompanyAdmin) {
       return navigation.filter(
-        (item) => !["Field Force", "Target & Performance", "Reports", "Team Management"].includes(item.title)
+        (item) => !["Inventory", "Field Force", "Target & Performance", "Reports", "Team Management"].includes(item.title)
       );
     }
 
     if (isHeadOfSales) {
       return navigation.filter(
-        (item) => !["Organization", "Field Force", "Team Management"].includes(item.title)
+        (item) => !["Inventory", "Organization", "Field Force", "Team Management"].includes(item.title)
       );
     }
 
     if (isSalesExecutive) {
       return navigation
         .filter(
-          (item) => !["Organization", "Team Management", "Sales Orders", "Reports"].includes(item.title)
+          (item) => !["Inventory", "Organization", "Team Management", "Sales Orders", "Reports"].includes(item.title)
         )
         .map((item) => {
           if (item.title === "Field Force" && Array.isArray(item.children)) {
@@ -155,14 +151,15 @@ export default function Sidebar({
 
     if (isSalesManager) {
       return navigation
-        .filter((item) => item.title !== "Field Force")
+        .filter((item) => !["Inventory", "Field Force"].includes(item.title))
         .map((item) => {
           if (item.title === "Organization" && Array.isArray(item.children)) {
             return {
               ...item,
               children: item.children.filter(
                 (child) =>
-                  !["/organization/organization", "/organization/branch", "/organization/department"].includes(child.path)
+                  !["/organization/organization", "/organization/branch", "/organization/department", "/inventory/warehouses"].includes(child.path) &&
+                  child.title !== "Warehouses"
               ),
             };
           }
@@ -170,8 +167,9 @@ export default function Sidebar({
         });
     }
 
-    return navigation;
-  }, [isSuperAdmin, isCompanyAdmin, isHeadOfSales, isSalesManager, isSalesExecutive]);
+    // Default fallback: Filter out Inventory for any unspecified role
+    return navigation.filter((item) => item.title !== "Inventory");
+  }, [isSuperAdmin, isCompanyAdmin, isSalesManager, isSalesExecutive, isInventoryManager, isWarehouseManager]);
 
 
 

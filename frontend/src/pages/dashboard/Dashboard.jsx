@@ -1,6 +1,12 @@
-import { useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { USER_ROLES } from "../../config/constants";
+import {
+  isSuperAdminUser,
+  isCompanyAdminUser,
+  isSalesManagerUser,
+  isSalesExecutiveUser,
+  isInventoryManagerUser,
+  isWarehouseManagerUser,
+} from "../../utils/roleUtils";
 
 import SuperAdminDashboard from "./SuperAdminDashboard";
 import CompanyAdminDashboard from "./CompanyAdminDashboard";
@@ -8,61 +14,37 @@ import HeadOfSalesDashboard from "./HeadOfSalesDashboard";
 import ManagerDashboard from "./ManagerDashboard";
 import SalesDashboard from "./SalesDashboard";
 
+import InventoryDashboard from "../inventory/InventoryDashboard";
+import MyWarehouse from "../inventory/MyWarehouse";
+
 export default function Dashboard() {
   const { user } = useAuth();
 
-  const isSuperAdmin = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
-  }, [user]);
+  if (isInventoryManagerUser(user)) {
+    return <InventoryDashboard />;
+  }
 
-  const isCompanyAdmin = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some(
-      (r) =>
-        r &&
-        (r.toLowerCase().includes("company admin") ||
-          (r.toLowerCase().includes("admin") && !r.toLowerCase().includes("super admin")))
-    );
-  }, [user]);
+  if (isWarehouseManagerUser(user)) {
+    return <MyWarehouse />;
+  }
 
-  if (isSuperAdmin) {
+  if (isSuperAdminUser(user)) {
     return <SuperAdminDashboard />;
   }
 
-  if (isCompanyAdmin) {
+  if (isCompanyAdminUser(user)) {
     return <CompanyAdminDashboard />;
   }
 
-  const role = Array.isArray(user?.roles) && user?.roles.length > 0
-    ? user.roles[0]?.role?.name
-    : user?.role?.name || null;
-
-  switch (role) {
-    case USER_ROLES.HEAD_OF_SALES:
-      return <HeadOfSalesDashboard />;
-
-    case USER_ROLES.SALES_MANAGER:
-      return <ManagerDashboard />;
-
-    case USER_ROLES.SALES_PERSON:
-      return <SalesDashboard />;
-
-    default:
-      if (role?.toLowerCase().includes("head")) {
-        return <HeadOfSalesDashboard />;
-      }
-      if (role?.toLowerCase().includes("manager")) {
-        return <ManagerDashboard />;
-      }
-      return <SalesDashboard />;
+  if (isSalesManagerUser(user)) {
+    return <ManagerDashboard />;
   }
+
+  if (isSalesExecutiveUser(user)) {
+    return <SalesDashboard />;
+  }
+
+  return <SalesDashboard />;
 }
 
 

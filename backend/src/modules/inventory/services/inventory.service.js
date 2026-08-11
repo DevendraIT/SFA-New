@@ -97,6 +97,16 @@ export class InventoryService {
     };
   }
 
+  async deleteProduct(productId, userContext) {
+    const product = await this.inventoryRepository.findProductById(productId, userContext.organizationId);
+    if (!product) throw AppError.notFound('Product not found');
+    await this.inventoryRepository.deleteProduct(productId, userContext.organizationId);
+    return {
+      success: true,
+      message: 'Product deleted successfully',
+    };
+  }
+
   // ==========================================
   // WAREHOUSES
   // ==========================================
@@ -294,8 +304,51 @@ export class InventoryService {
   }
 
   async getWarehouseForManager(managerId, userContext) {
-    const warehouse = await this.inventoryRepository.findWarehouseByManagerId(managerId, userContext.organizationId);
-    if (!warehouse) throw AppError.notFound('No warehouse assigned to this Warehouse Manager');
+    let warehouse = await this.inventoryRepository.findWarehouseByManagerId(managerId, userContext.organizationId);
+
+    const { prisma } = await import('../../../config/database.js');
+    if (!warehouse) {
+      const userRec = await prisma.user.findUnique({
+        where: { id: managerId },
+        select: { branchId: true }
+      });
+      if (userRec?.branchId) {
+        warehouse = await prisma.warehouse.findFirst({
+          where: {
+            organizationId: userContext.organizationId,
+            branches: { some: { id: userRec.branchId } }
+          },
+          include: {
+            stocks: { include: { product: true } },
+            branches: true
+          }
+        });
+      }
+    }
+
+    if (!warehouse) {
+      warehouse = await prisma.warehouse.findFirst({
+        where: { organizationId: userContext.organizationId, isActive: true },
+        include: {
+          stocks: { include: { product: true } },
+          branches: true
+        }
+      });
+    }
+
+    if (!warehouse) throw AppError.notFound('No active warehouse found in organization');
+
+    if (!warehouse.stocks) {
+      const fullWarehouse = await prisma.warehouse.findUnique({
+        where: { id: warehouse.id },
+        include: {
+          stocks: { include: { product: true } },
+          branches: true
+        }
+      });
+      if (fullWarehouse) warehouse = fullWarehouse;
+    }
+
     return { success: true, data: warehouse };
   }
 
@@ -523,6 +576,32 @@ export class InventoryService {
         referenceId: issue.id,
         notes: `Product issued to sales executive ${issue.salesExecutiveId}`
       }, userContext);
+
+      // Extract task ID if present in issue notes and update task status
+      if (issue.notes && issue.notes.includes('Ref: ')) {
+        try {
+          const match = issue.notes.match(/Ref:\s*([a-f0-9\-]+)/i);
+          if (match && match[1]) {
+            const taskId = match[1];
+            const { prisma } = await import('../../../config/database.js');
+            const currentTask = await prisma.task.findUnique({ where: { id: taskId }, select: { metadata: true } });
+            const existingMeta = typeof currentTask?.metadata === 'object' && currentTask?.metadata !== null ? currentTask.metadata : {};
+            await prisma.task.update({
+              where: { id: taskId },
+              data: {
+                status: 'DELIVERY_IN_PROGRESS',
+                metadata: {
+                  ...existingMeta,
+                  pickupStatus: 'PICKED_UP',
+                  stockPickedUpAt: new Date().toISOString(),
+                }
+              }
+            }).catch(e => console.warn('Task status update warning:', e.message));
+          }
+        } catch (e) {
+          console.warn('Failed to update task status on product issue:', e);
+        }
+      }
     } else if (updateData.status === 'RETURNED' && issue.status === 'ISSUED') {
       // Add stock back
       await this.addStock({
@@ -536,5 +615,36 @@ export class InventoryService {
 
     const updated = await this.inventoryRepository.updateProductIssueStatus(issueId, userContext.organizationId, updateData.status, updateData.notes);
     return { success: true, data: updated, message: 'Product issue status updated' };
+  }
+
+  // ==========================================
+  // STOCK MOVEMENTS READ LEDGER
+  // ==========================================
+
+  async getStockMovements(queryParams, userContext) {
+    const pagination = {
+      page: parseInt(queryParams.page) || 1,
+      limit: parseInt(queryParams.limit) || 100,
+    };
+    const sorting = {
+      sortBy: queryParams.sortBy || 'createdAt',
+      sortOrder: queryParams.sortOrder || 'desc',
+    };
+    const filters = {
+      organizationId: userContext.organizationId,
+      ...queryParams
+    };
+
+    const userRoles = userContext.roles || [];
+    const isWM = userRoles.includes('Warehouse Manager') || userRoles.includes('WAREHOUSE_MANAGER');
+    if (isWM) {
+      const assignedWh = await this.inventoryRepository.findWarehouseByManagerId(userContext.userId, userContext.organizationId);
+      if (assignedWh) {
+        filters.warehouseId = assignedWh.id;
+      }
+    }
+
+    const result = await this.inventoryRepository.getStockMovements(filters, pagination, sorting);
+    return { success: true, data: result };
   }
 }

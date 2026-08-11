@@ -58,8 +58,8 @@ export const loginSchema = z.object({
     .string()
     .trim()
     .toLowerCase()
-    .email({
-      message: "Invalid email address.",
+    .min(1, {
+      message: "Email or Phone Number is required.",
     })
     .transform(sanitizeText),
 

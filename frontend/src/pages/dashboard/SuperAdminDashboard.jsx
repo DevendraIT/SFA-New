@@ -439,17 +439,17 @@ export default function SuperAdminDashboard() {
           title="System Activity Feed"
           subtitle="Real-time operations & transaction log across organizations"
           icon={Activity}
-          className="xl:col-span-2"
-          action={
-            <button className="text-blue-600 text-sm font-semibold hover:underline">
-              View All Logged
-            </button>
-          }
+          className="xl:col-span-20"
+          // action={
+          //   // <button className="text-blue-600 text-sm font-semibold hover:underline">
+          //   //   View All Logged
+          //   // </button>
+          // }
         >
           <ActivityTimeline activities={recentActivities} />
         </SectionCard>
 
-        <SectionCard
+        {/* <SectionCard
           title="System Notifications"
           icon={Bell}
           iconColor="text-amber-500"
@@ -461,7 +461,7 @@ export default function SuperAdminDashboard() {
               { title: "Field Operations Active", type: "info", time: "Today" },
             ]}
           />
-        </SectionCard>
+        </SectionCard> */}
       </div>
 
       {/* Quick Actions & Pending Approvals Grid */}

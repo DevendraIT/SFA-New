@@ -8,6 +8,17 @@ export class ProductListDto {
     this.brand = product.brand;
     this.price = product.price;
     this.isActive = product.isActive;
+
+    if (product.stocks) {
+      this.stocks = product.stocks.map(stock => ({
+        id: stock.id,
+        warehouseId: stock.warehouseId || stock.warehouse?.id,
+        quantity: stock.quantity,
+        reservedQuantity: stock.reservedQuantity,
+        available: Math.max(0, (stock.quantity || 0) - (stock.reservedQuantity || 0)),
+        warehouse: stock.warehouse ? { id: stock.warehouse.id, name: stock.warehouse.name, code: stock.warehouse.code } : undefined
+      }));
+    }
   }
 }
 
@@ -51,6 +62,36 @@ export class WarehouseDto {
     this.code = warehouse.code;
     this.location = warehouse.location;
     this.isActive = warehouse.isActive;
+    this.warehouseManagerId = warehouse.warehouseManagerId;
+
+    if (warehouse.warehouseManager) {
+      this.warehouseManager = {
+        id: warehouse.warehouseManager.id,
+        firstName: warehouse.warehouseManager.firstName,
+        lastName: warehouse.warehouseManager.lastName,
+        email: warehouse.warehouseManager.email,
+        phoneNumber: warehouse.warehouseManager.phoneNumber,
+      };
+    }
+
+    if (warehouse.branches) {
+      this.branches = warehouse.branches.map(b => ({
+        id: b.id,
+        name: b.name,
+        code: b.code,
+      }));
+    }
+
+    if (warehouse.stocks) {
+      this.stocks = warehouse.stocks.map(s => ({
+        id: s.id,
+        productId: s.productId,
+        quantity: s.quantity,
+        reservedQuantity: s.reservedQuantity,
+        available: Math.max(0, (s.quantity || 0) - (s.reservedQuantity || 0)),
+        product: s.product ? { id: s.product.id, name: s.product.name, sku: s.product.sku } : undefined
+      }));
+    }
   }
 }
 
