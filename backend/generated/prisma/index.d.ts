@@ -64400,8 +64400,6 @@ export namespace Prisma {
     connect?: WarehouseWhereUniqueInput | WarehouseWhereUniqueInput[]
   }
 
-<<<<<<< HEAD
-=======
   export type CRMImportRowUncheckedCreateNestedManyWithoutBranchInput = {
     create?: XOR<CRMImportRowCreateWithoutBranchInput, CRMImportRowUncheckedCreateWithoutBranchInput> | CRMImportRowCreateWithoutBranchInput[] | CRMImportRowUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: CRMImportRowCreateOrConnectWithoutBranchInput | CRMImportRowCreateOrConnectWithoutBranchInput[]
@@ -64409,7 +64407,6 @@ export namespace Prisma {
     connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
   }
 
->>>>>>> a123138 (crmintegration)
   export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -66688,8 +66685,6 @@ export namespace Prisma {
     connect?: CRMImportRowWhereUniqueInput | CRMImportRowWhereUniqueInput[]
   }
 
-<<<<<<< HEAD
-=======
   export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -66698,7 +66693,6 @@ export namespace Prisma {
     divide?: number
   }
 
->>>>>>> a123138 (crmintegration)
   export type OrganizationUpdateOneRequiredWithoutProductsNestedInput = {
     create?: XOR<OrganizationCreateWithoutProductsInput, OrganizationUncheckedCreateWithoutProductsInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutProductsInput
