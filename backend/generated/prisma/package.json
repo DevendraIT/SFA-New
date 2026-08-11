@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "prisma-client-4252bdf797c5df04072f2f75c46547a080ccd1ac7869914e80ce91421875fcab",
+=======
+  "name": "prisma-client-744559b30f2bc2d3c8f351345e0de90fb3f386a24cc979bf53a81fd50845c38d",
+>>>>>>> a123138 (crmintegration)
   "main": "index.js",
   "types": "index.d.ts",
   "browser": "default.js",

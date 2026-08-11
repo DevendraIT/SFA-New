@@ -299,6 +299,8 @@ exports.Prisma.CustomerScalarFieldEnum = {
   address: 'address',
   latitude: 'latitude',
   longitude: 'longitude',
+  crmId: 'crmId',
+  customFields: 'customFields',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -611,6 +613,51 @@ exports.Prisma.ProductIssueScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CRMImportScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  fileName: 'fileName',
+  uploadedBy: 'uploadedBy',
+  totalRows: 'totalRows',
+  successfulRows: 'successfulRows',
+  failedRows: 'failedRows',
+  status: 'status',
+  summary: 'summary',
+  errors: 'errors',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+};
+
+exports.Prisma.CRMImportRowScalarFieldEnum = {
+  id: 'id',
+  importId: 'importId',
+  organizationId: 'organizationId',
+  rowNumber: 'rowNumber',
+  crmCustomerId: 'crmCustomerId',
+  crmProductId: 'crmProductId',
+  customerName: 'customerName',
+  phoneNumber: 'phoneNumber',
+  email: 'email',
+  city: 'city',
+  pincode: 'pincode',
+  address: 'address',
+  productCode: 'productCode',
+  productName: 'productName',
+  quantity: 'quantity',
+  requirement: 'requirement',
+  leadSource: 'leadSource',
+  expectedValue: 'expectedValue',
+  customFields: 'customFields',
+  mappedCustomerId: 'mappedCustomerId',
+  mappedProductId: 'mappedProductId',
+  mappedBranchId: 'mappedBranchId',
+  mappedTerritoryId: 'mappedTerritoryId',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -763,7 +810,9 @@ exports.Prisma.ModelName = {
   Warehouse: 'Warehouse',
   Stock: 'Stock',
   StockMovement: 'StockMovement',
-  ProductIssue: 'ProductIssue'
+  ProductIssue: 'ProductIssue',
+  CRMImport: 'CRMImport',
+  CRMImportRow: 'CRMImportRow'
 };
 
 /**

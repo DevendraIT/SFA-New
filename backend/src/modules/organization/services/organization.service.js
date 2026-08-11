@@ -402,17 +402,23 @@ export class OrganizationService {
     const missingCoords = !lat || !lng;
 
     if ((addressChanged || missingCoords) && newFullAddress) {
-      const geo = await locationService.geocodeAddress(newFullAddress);
-      lat = geo.latitude;
-      lng = geo.longitude;
+      try {
+        const geo = await locationService.geocodeAddress(newFullAddress);
+        if (geo?.latitude && geo?.longitude) {
+          lat = geo.latitude;
+          lng = geo.longitude;
+        }
+      } catch (e) {
+        console.warn('Branch update geocoding warning:', e.message);
+      }
     }
 
     if (data.warehouseIds !== undefined && data.warehouseIds.length > 0) {
       const validWarehouses = await prisma.warehouse.count({
         where: {
           id: { in: data.warehouseIds },
-          organizationId
-        }
+          organizationId,
+        },
       });
       if (validWarehouses !== data.warehouseIds.length) {
         throw AppError.badRequest('One or more selected warehouses do not exist or do not belong to your organization.');

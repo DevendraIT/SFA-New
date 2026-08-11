@@ -81,6 +81,8 @@ router.use("/reports", reportsRouter);
 import notificationsRouter from "../modules/notifications/index.js";
 router.use("/notifications", notificationsRouter);
 
-// Campaigns removed
+// CRM Integration
+import crmIntegrationRouter from "../modules/crm-integration/index.js";
+router.use("/crm-integration", crmIntegrationRouter);
 
 export default router;

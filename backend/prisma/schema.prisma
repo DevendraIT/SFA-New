@@ -59,6 +59,7 @@ model Organization {
   stocks                Stock[]
   stockMovements        StockMovement[]
   productIssues         ProductIssue[]
+  crmImports            CRMImport[]
 }
 
 // --------------------------------------------------
@@ -92,6 +93,7 @@ model Branch {
   teams        Team[]
   users        User[]
   warehouses   Warehouse[]
+  crmImportRows CRMImportRow[]
 
   @@unique([organizationId, code])
 }
@@ -133,6 +135,7 @@ model Territory {
   branches     Branch[]
   teams        Team[]
   users        User[]
+  crmImportRows CRMImportRow[]
 
   @@unique([organizationId, code])
 }
@@ -268,6 +271,7 @@ model User {
   notificationPrefs NotificationPreference[]
   orders            Order[]
   stockMovements    StockMovement[]
+  crmImports        CRMImport[]
 
   managedWarehouse              Warehouse?       @relation("WarehouseManager")
   productIssuesWarehouseManaged ProductIssue[]   @relation("IssueWarehouseManager")
@@ -354,13 +358,18 @@ model Customer {
   address        Json?
   latitude       Float?
   longitude      Float?
+  crmId          String?
+  customFields   Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   orders       Order[]
   visits       Visit[]
+  crmImportRows CRMImportRow[]
+
+  @@index([organizationId, crmId])
 }
 
 model Product {
@@ -388,6 +397,7 @@ model Product {
   stocks       Stock[]
   movements    StockMovement[]
   issues       ProductIssue[]
+  crmImportRows CRMImportRow[]
 }
 
 model Order {
@@ -946,3 +956,68 @@ enum ProductIssueStatus {
   RETURNED
   CANCELLED
 }
+
+// ==================================================
+// CRM Integration Module Models
+// ==================================================
+
+model CRMImport {
+  id             String    @id @default(uuid()) @db.Uuid
+  organizationId String    @db.Uuid
+  fileName       String
+  uploadedBy     String    @db.Uuid
+  totalRows      Int       @default(0)
+  successfulRows Int       @default(0)
+  failedRows     Int       @default(0)
+  status         String    @default("PENDING")
+  summary        Json?
+  errors         Json?
+  createdAt      DateTime  @default(now())
+  completedAt    DateTime?
+
+  organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  uploader     User           @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+  rows         CRMImportRow[]
+
+  @@index([organizationId, status])
+}
+
+model CRMImportRow {
+  id                String   @id @default(uuid()) @db.Uuid
+  importId          String   @db.Uuid
+  organizationId    String   @db.Uuid
+  rowNumber         Int
+  crmCustomerId     String?
+  crmProductId      String?
+  customerName      String?
+  phoneNumber       String?
+  email             String?
+  city              String?
+  pincode           String?
+  address           String?
+  productCode       String?
+  productName       String?
+  quantity          Float?
+  requirement       String?
+  leadSource        String?
+  expectedValue     Float?
+  customFields      Json?
+  mappedCustomerId  String?  @db.Uuid
+  mappedProductId   String?  @db.Uuid
+  mappedBranchId    String?  @db.Uuid
+  mappedTerritoryId String?  @db.Uuid
+  status            String   @default("PENDING")
+  errorMessage      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  crmImport   CRMImport  @relation(fields: [importId], references: [id], onDelete: Cascade)
+  customer    Customer?  @relation(fields: [mappedCustomerId], references: [id], onDelete: SetNull)
+  product     Product?   @relation(fields: [mappedProductId], references: [id], onDelete: SetNull)
+  branch      Branch?    @relation(fields: [mappedBranchId], references: [id], onDelete: SetNull)
+  territory   Territory? @relation(fields: [mappedTerritoryId], references: [id], onDelete: SetNull)
+
+  @@index([importId])
+  @@index([organizationId, status])
+}
+
