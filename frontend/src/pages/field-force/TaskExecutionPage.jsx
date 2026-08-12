@@ -132,17 +132,38 @@ export default function TaskExecutionPage() {
   const order = typeof metadata.order === "object" && metadata.order !== null ? metadata.order : {};
   const products = Array.isArray(metadata.products) ? metadata.products : [];
   const requirements = typeof metadata.requirements === "object" && metadata.requirements !== null ? metadata.requirements : {};
-  const instructions = Array.isArray(metadata.instructions) ? metadata.instructions : [];
+  const isPickupCompleted = metadata.pickupStatus === 'PICKED_UP' || task?.status === 'STOCK_PICKED_UP' || task?.status === 'DELIVERY_IN_PROGRESS';
 
   const destLat = task?.destinationLatitude ?? customer.lat ?? metadata.location?.lat ?? metadata.destination?.lat;
   const destLng = task?.destinationLongitude ?? customer.lng ?? metadata.location?.lng ?? metadata.destination?.lng;
-  const targetCoords = destLat != null && destLng != null ? { lat: Number(destLat), lng: Number(destLng) } : null;
+  const customerCoords = destLat != null && destLng != null ? { lat: Number(destLat), lng: Number(destLng) } : null;
+
+  const pickupLat = task?.pickupLatitude;
+  const pickupLng = task?.pickupLongitude;
+  const pickupCoords = pickupLat != null && pickupLng != null ? { lat: Number(pickupLat), lng: Number(pickupLng) } : null;
+
+  // Active Navigation Target: Route to Warehouse Pickup location first if products are required and pickup not yet completed
+  const isNavigatingToPickup = (products.length > 0) && !isPickupCompleted;
+
+  const activeTargetCoords = isNavigatingToPickup && pickupCoords ? pickupCoords : customerCoords;
+
+  const activeDestination = isNavigatingToPickup
+    ? {
+        lat: pickupCoords?.lat ?? destLat,
+        lng: pickupCoords?.lng ?? destLng,
+        address: task?.pickupAddress || "Branch Dedicated Warehouse",
+      }
+    : {
+        lat: destLat != null ? Number(destLat) : customerCoords?.lat,
+        lng: destLng != null ? Number(destLng) : customerCoords?.lng,
+        address: task?.destinationAddress || customer.address || customer.name || "Customer Destination",
+      };
 
   const currentDistance = calculateDistanceMeters(
     gpsLocation?.lat,
     gpsLocation?.lng,
-    targetCoords?.lat,
-    targetCoords?.lng
+    activeTargetCoords?.lat,
+    activeTargetCoords?.lng
   );
   const testingMode = true; // Testing Mode: Allow Check-In / Arrived actions from any location
   const isWithinGeoFence = testingMode ? true : (currentDistance !== null ? currentDistance <= 100 : true);
@@ -293,8 +314,6 @@ export default function TaskExecutionPage() {
 
   const currentStepIndex = workflowSteps.findIndex((s) => s.status === task.status);
 
-  const isPickupCompleted = metadata.pickupStatus === 'PICKED_UP' || task.status === 'STOCK_PICKED_UP' || task.status === 'DELIVERY_IN_PROGRESS';
-
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header */}
@@ -375,11 +394,7 @@ export default function TaskExecutionPage() {
       <RouteMap
         task={task}
         userLocation={gpsLocation}
-        destination={{
-          lat: task?.destinationLatitude ?? targetCoords?.lat,
-          lng: task?.destinationLongitude ?? targetCoords?.lng,
-          address: task?.destinationAddress || customer.address || customer.name || "Customer Destination",
-        }}
+        destination={activeDestination}
         pickup={{
           lat: task?.pickupLatitude,
           lng: task?.pickupLongitude,
@@ -397,7 +412,7 @@ export default function TaskExecutionPage() {
       {/* Geo-Fence Banner */}
       <GeoFenceBanner
         userLocation={gpsLocation}
-        targetLocation={targetCoords}
+        targetLocation={activeTargetCoords}
         accuracy={gpsAccuracy}
         testingMode={testingMode}
         overrideDistanceMeters={liveRouteData?.distanceMeters ?? routeInfo?.distanceMeters ?? currentDistance}
@@ -427,7 +442,7 @@ export default function TaskExecutionPage() {
             </div>
 
             <p className="text-xs text-amber-800">
-              Proceed to your branch dedicated warehouse to receive the assigned products from the Warehouse Manager before starting customer navigation.
+              Start navigation from your current location to your branch dedicated warehouse. Once arrived, confirm pickup received from the Warehouse Manager before proceeding to the customer destination.
             </p>
 
             <div className="bg-white rounded-xl p-4 border border-amber-200/80 space-y-3">
@@ -459,7 +474,7 @@ export default function TaskExecutionPage() {
                 className="flex-1 w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
               >
                 {actionLoading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
-                Confirm Stock Handover Received
+                Confirm Pickup Received from Warehouse Manager
               </button>
             </div>
           </div>

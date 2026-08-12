@@ -96,6 +96,7 @@ router.use(authenticate, requireOrganization);
 
 // Upload & Import (Restricted to Sales Managers and Admins)
 router.post('/import', requireCRMUploadAccess, handleUpload, controller.importExcel);
+router.post('/imports/:id/convert-to-orders', requireCRMUploadAccess, controller.convertToOrders);
 
 // Import History & Details
 router.get('/imports', controller.listImports);

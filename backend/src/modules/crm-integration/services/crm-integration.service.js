@@ -150,11 +150,9 @@ export class CRMIntegrationService {
           }
         }
 
-        if (mappedCustomer && mappedProduct && mappedBranch) {
+        if (mappedCustomer && mappedProduct) {
           rowStatus = ROW_STATUS.MAPPED;
           successfulRows++;
-        } else if (rowStatus !== ROW_STATUS.FAILED) {
-          successfulRows++; // row is successfully imported into DB pending manual mapping
         }
       }
 
@@ -193,13 +191,15 @@ export class CRMIntegrationService {
     let finalStatus = IMPORT_STATUS.COMPLETED;
     if (failedRows > 0 && successfulRows > 0) {
       finalStatus = IMPORT_STATUS.PARTIAL;
-    } else if (failedRows > 0 && successfulRows === 0) {
-      finalStatus = IMPORT_STATUS.FAILED;
+    } else if (failedRows > 0 || invalidProductsCount > 0 || unmappedCustomersCount > 0) {
+      finalStatus = successfulRows > 0 ? IMPORT_STATUS.PARTIAL : IMPORT_STATUS.FAILED;
     }
 
     const summary = {
       totalRows: parsedRows.length,
-      successfulRows,
+      successfulRows, // Fully mapped rows ready for conversion
+      mappedRows: successfulRows,
+      stagedRows: dbRowsToCreate.length,
       failedRows,
       duplicateRows: 0,
       unmappedCustomers: unmappedCustomersCount,
@@ -356,5 +356,145 @@ export class CRMIntegrationService {
     }
 
     return generateExportExcel(rows);
+  }
+
+  /**
+   * Convert Mapped CRM Import Rows into SFA Sales Orders + OrderItems
+   */
+  async convertToOrders(importId, userContext) {
+    const userId = userContext.userId || userContext.id;
+    const organizationId = userContext.organizationId;
+    const importRecord = await this.repo.findImportById(importId, organizationId);
+    if (!importRecord) {
+      throw AppError.notFound('CRM Import record not found');
+    }
+
+    const eligibleRows = await this.repo.findMappedRowsForConversion(importId, organizationId);
+    if (!eligibleRows || eligibleRows.length === 0) {
+      return {
+        importId,
+        convertedOrdersCount: 0,
+        convertedRowsCount: 0,
+        message: 'No eligible MAPPED rows found for conversion in this import.',
+        orders: [],
+      };
+    }
+
+    // Group rows by (mappedCustomerId, mappedBranchId || 'GLOBAL')
+    const grouped = new Map();
+    for (const row of eligibleRows) {
+      const key = `${row.mappedCustomerId}_${row.mappedBranchId || 'GLOBAL'}`;
+      if (!grouped.has(key)) {
+        grouped.set(key, []);
+      }
+      grouped.get(key).push(row);
+    }
+
+    const createdOrders = [];
+    const processedRowIds = [];
+
+    await prisma.$transaction(async (tx) => {
+      let orderIndex = 1;
+      for (const [key, rows] of grouped.entries()) {
+        const firstRow = rows[0];
+        const customerId = firstRow.mappedCustomerId;
+        const branchId = firstRow.mappedBranchId || userContext.branchId || null;
+        const territoryId = firstRow.mappedTerritoryId || userContext.territoryId || null;
+
+        // Generate Order Number
+        const timestamp = Date.now().toString().slice(-6);
+        const orderNumber = `ORD-CRM-${timestamp}-${orderIndex++}`;
+        const orderName = `CRM Import Order - ${firstRow.customer?.name || 'Customer'}`;
+
+        let totalOrderAmount = 0;
+        const itemsToCreate = [];
+
+        for (const row of rows) {
+          processedRowIds.push(row.id);
+
+          const qty = parseInt(row.quantity) || 1;
+          const unitPrice = (row.product && row.product.price !== undefined && row.product.price !== null && row.product.price > 0)
+            ? parseFloat(row.product.price)
+            : (row.expectedValue && qty > 0 ? parseFloat(row.expectedValue) / qty : 0);
+
+          const itemTotal = qty * unitPrice;
+          totalOrderAmount += itemTotal;
+
+          itemsToCreate.push({
+            productId: row.mappedProductId,
+            description: row.requirement || row.productName || row.product?.name || 'Imported Product Item',
+            quantity: qty,
+            unitPrice: unitPrice,
+            discountAmount: 0,
+            taxAmount: 0,
+          });
+        }
+
+        const order = await tx.order.create({
+          data: {
+            organizationId,
+            orderNumber,
+            orderName,
+            customerId,
+            ownerId: userId,
+            branchId,
+            territoryId,
+            status: 'DRAFT',
+            totalAmount: totalOrderAmount,
+            currency: 'INR',
+            items: {
+              create: itemsToCreate,
+            },
+          },
+          include: {
+            customer: true,
+            items: {
+              include: { product: true },
+            },
+          },
+        });
+
+        createdOrders.push(order);
+      }
+
+      // Mark CRMImportRow status as PROCESSED
+      await tx.cRMImportRow.updateMany({
+        where: {
+          id: { in: processedRowIds },
+          organizationId,
+        },
+        data: {
+          status: 'PROCESSED',
+          errorMessage: null,
+        },
+      });
+
+      // Update parent CRMImport record status
+      await tx.cRMImport.update({
+        where: { id: importId, organizationId },
+        data: {
+          status: 'COMPLETED',
+          completedAt: new Date(),
+        },
+      });
+    });
+
+    return {
+      importId,
+      convertedOrdersCount: createdOrders.length,
+      convertedRowsCount: processedRowIds.length,
+      orders: createdOrders.map((o) => ({
+        id: o.id,
+        orderNumber: o.orderNumber,
+        orderName: o.orderName,
+        customerId: o.customerId,
+        customerName: o.customer?.name,
+        branchId: o.branchId,
+        totalAmount: o.totalAmount,
+        status: o.status,
+        itemsCount: o.items?.length || 0,
+        createdAt: o.createdAt,
+      })),
+    };
   }
 }

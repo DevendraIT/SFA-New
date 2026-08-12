@@ -100,4 +100,14 @@ export class CRMIntegrationController {
       next(error);
     }
   };
+
+  convertToOrders = async (req, res, next) => {
+    try {
+      const { id } = req.params; // importId
+      const result = await this.service.convertToOrders(id, req.user);
+      return successResponse(res, result, 'CRM import rows successfully converted into Sales Orders', 200);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

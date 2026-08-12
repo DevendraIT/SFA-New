@@ -15,6 +15,9 @@ import EmptyDashboard from "../../components/dashboard/EmptyDashboard";
 import ErrorState from "../../components/dashboard/ErrorState";
 import { TableSkeleton } from "../../components/dashboard/LoadingSkeleton";
 
+import ImportOrdersModal from "./ImportOrdersModal";
+import { FileSpreadsheet } from "lucide-react";
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +28,7 @@ export default function OrdersPage() {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   const loadOrders = async () => {
     try {
@@ -97,12 +101,20 @@ export default function OrdersPage() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <PageHeader title="Sales Orders" subtitle="Manage and track customer sales orders across your organization">
-        <button
-          onClick={loadOrders}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition shadow-sm"
-        >
-          <RefreshCw size={16} /> Refresh
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowImportModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md transition cursor-pointer"
+          >
+            <FileSpreadsheet size={16} /> Import Orders (Excel)
+          </button>
+          <button
+            onClick={loadOrders}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition shadow-sm"
+          >
+            <RefreshCw size={16} /> Refresh
+          </button>
+        </div>
       </PageHeader>
 
       {/* Summary Cards */}
@@ -400,6 +412,12 @@ export default function OrdersPage() {
           </div>
         )}
       </AnimatePresence>
+
+      <ImportOrdersModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onOrdersConverted={() => loadOrders()}
+      />
     </motion.div>
   );
 }

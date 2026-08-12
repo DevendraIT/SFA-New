@@ -99,4 +99,36 @@ export class CRMIntegrationRepository {
       },
     });
   }
+
+  async findMappedRowsForConversion(importId, organizationId) {
+    return prisma.cRMImportRow.findMany({
+      where: {
+        importId,
+        organizationId,
+        status: 'MAPPED',
+        mappedCustomerId: { not: null },
+        mappedProductId: { not: null },
+      },
+      orderBy: { rowNumber: 'asc' },
+      include: {
+        customer: true,
+        product: true,
+        branch: true,
+        territory: true,
+      },
+    });
+  }
+
+  async markRowsAsProcessed(rowIds, organizationId, tx = prisma) {
+    return tx.cRMImportRow.updateMany({
+      where: {
+        id: { in: rowIds },
+        organizationId,
+      },
+      data: {
+        status: 'PROCESSED',
+        errorMessage: null,
+      },
+    });
+  }
 }

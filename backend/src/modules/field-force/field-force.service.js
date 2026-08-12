@@ -215,9 +215,21 @@ export class FieldForceService {
         : ((data.metadata && typeof data.metadata === 'object')
             ? data.metadata
             : (task.metadata && typeof task.metadata === 'object' ? task.metadata : (typeof task.metadata === 'string' ? JSON.parse(task.metadata) : {})));
-      const prods = Array.isArray(meta?.products) ? meta.products : (typeof meta === 'string' ? JSON.parse(meta)?.products : []);
+      let prods = Array.isArray(meta?.products) ? meta.products : (typeof meta === 'string' ? JSON.parse(meta)?.products : []);
+      const targetOrderId = data.orderId || data.referenceId || task.referenceId || task.orderId;
+      if ((!prods || prods.length === 0) && targetOrderId) {
+        const orderItems = await prisma.orderItem.findMany({
+          where: { orderId: targetOrderId },
+          include: { product: true }
+        });
+        prods = orderItems.map(item => ({
+          productId: item.productId,
+          quantity: Number(item.quantity || 1),
+          name: item.product?.name || item.description
+        }));
+      }
       console.log('createTask prods extracted:', prods);
-      if (prods.length > 0 && task.assignedToId) {
+      if (prods && prods.length > 0 && task.assignedToId) {
         // Resolve Executive's branch warehouse
         const execUser = await prisma.user.findUnique({
           where: { id: task.assignedToId },
@@ -715,7 +727,8 @@ export class FieldForceService {
       if (signature) updateFields.customerSignature = signature;
     }
     if (status === 'INVOICE_GENERATED') {
-      updateFields.invoiceGeneratedAt = now;
+      const currentMetadata = typeof task.metadata === 'object' && task.metadata !== null ? task.metadata : {};
+      updateFields.metadata = { ...currentMetadata, invoiceGeneratedAt: now.toISOString() };
     }
     if (status === 'CHECKED_OUT') {
       updateFields.checkedOutAt = now;
