@@ -426,6 +426,7 @@ export class InventoryService {
           email: data.email.toLowerCase().trim(),
           passwordHash,
           phoneNumber: data.phoneNumber || null,
+          emailVerifiedAt: new Date(),
           ...(roleId && {
             roles: {
               create: {

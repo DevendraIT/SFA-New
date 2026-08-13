@@ -119,9 +119,23 @@ export default function Sidebar({
     }
 
     if (isCompanyAdmin) {
-      return navigation.filter(
-        (item) => !["Inventory", "Field Force", "Target & Performance", "Reports", "Team Management", "Sales Orders"].includes(item.title)
-      );
+      return navigation
+        .filter(
+          (item) => !["Inventory", "Field Force", "Target & Performance", "Reports", "Team Management", "Sales Orders"].includes(item.title)
+        )
+        .map((item) => {
+          if (item.title === "Organization" && Array.isArray(item.children)) {
+            return {
+              ...item,
+              children: item.children.filter(
+                (child) =>
+                  !["/inventory/warehouses"].includes(child.path) &&
+                  child.title !== "Warehouses"
+              ),
+            };
+          }
+          return item;
+        });
     }
 
     if (isHeadOfSales) {
