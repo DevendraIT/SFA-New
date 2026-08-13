@@ -135,8 +135,6 @@ export default function Warehouses() {
       name: "",
       code: `WH-${Date.now().toString().slice(-4)}`,
       location: "",
-      latitude: "",
-      longitude: "",
       branchId: branches[0]?.id || "",
       isActive: true,
     });
@@ -151,8 +149,6 @@ export default function Warehouses() {
       name: wh.name || "",
       code: wh.code || "",
       location: wh.location || "",
-      latitude: wh.latitude != null ? wh.latitude : "",
-      longitude: wh.longitude != null ? wh.longitude : "",
       branchId: wh.branches?.[0]?.id || "",
       isActive: wh.isActive !== false,
     });
@@ -174,8 +170,6 @@ export default function Warehouses() {
       name: warehouseForm.name.trim(),
       code: warehouseForm.code.trim() || undefined,
       location: warehouseForm.location.trim() || undefined,
-      latitude: warehouseForm.latitude !== "" && warehouseForm.latitude != null ? parseFloat(warehouseForm.latitude) : undefined,
-      longitude: warehouseForm.longitude !== "" && warehouseForm.longitude != null ? parseFloat(warehouseForm.longitude) : undefined,
       isActive: warehouseForm.isActive,
     };
 
@@ -553,31 +547,6 @@ export default function Warehouses() {
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
-
-                {/* <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Latitude (Optional)</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={warehouseForm.latitude}
-                      onChange={(e) => setWarehouseForm({ ...warehouseForm, latitude: e.target.value })}
-                      placeholder="e.g. 22.7196"
-                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Longitude (Optional)</label>
-                    <input
-                      type="number"
-                      step="any"
-                      value={warehouseForm.longitude}
-                      onChange={(e) => setWarehouseForm({ ...warehouseForm, longitude: e.target.value })}
-                      placeholder="e.g. 75.8577"
-                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                  </div>
-                </div> */}
 
                 <div className="pt-3 flex items-center justify-between border-t border-slate-100">
                   <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">

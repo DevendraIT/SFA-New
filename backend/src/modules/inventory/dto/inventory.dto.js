@@ -61,8 +61,6 @@ export class WarehouseDto {
     this.name = warehouse.name;
     this.code = warehouse.code;
     this.location = warehouse.location;
-    this.latitude = warehouse.latitude;
-    this.longitude = warehouse.longitude;
     this.isActive = warehouse.isActive;
     this.warehouseManagerId = warehouse.warehouseManagerId;
 

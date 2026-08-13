@@ -860,8 +860,6 @@ model Warehouse {
   name           String
   code           String?
   location           String?
-  latitude           Float?
-  longitude          Float?
   isActive           Boolean @default(true)
   warehouseManagerId String? @unique @db.Uuid
 

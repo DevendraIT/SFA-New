@@ -13,7 +13,11 @@ const uuidSchema = (label) => z.string().uuid(`Invalid ${label} ID.`);
 const passwordSchema = z
   .string()
   .min(USER_VALIDATION.PASSWORD_MIN_LENGTH, `Password must be at least ${USER_VALIDATION.PASSWORD_MIN_LENGTH} characters.`)
-  .max(USER_VALIDATION.PASSWORD_MAX_LENGTH, `Password cannot exceed ${USER_VALIDATION.PASSWORD_MAX_LENGTH} characters.`);
+  .max(USER_VALIDATION.PASSWORD_MAX_LENGTH, `Password cannot exceed ${USER_VALIDATION.PASSWORD_MAX_LENGTH} characters.`)
+  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+  .regex(/[a-z]/, 'Password must contain at least one lowercase letter.')
+  .regex(/[0-9]/, 'Password must contain at least one number.')
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character.');
 
 export const listQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(DEFAULT_PAGINATION.PAGE),

@@ -58,7 +58,7 @@ export class InventoryRepository {
       };
     }
 
-    return await prisma.product.findFirst(query);
+    return await prisma.product.findUnique(query);
   }
 
   async createProduct(data) {
@@ -102,7 +102,7 @@ export class InventoryRepository {
   }
 
   async findWarehouseById(warehouseId, organizationId) {
-    return await prisma.warehouse.findFirst({
+    return await prisma.warehouse.findUnique({
       where: { id: warehouseId, organizationId },
       include: {
         warehouseManager: {
@@ -426,7 +426,7 @@ export class InventoryRepository {
   }
 
   async findManagerByWarehouseId(warehouseId, organizationId) {
-    const warehouse = await prisma.warehouse.findFirst({
+    const warehouse = await prisma.warehouse.findUnique({
       where: { id: warehouseId, organizationId },
       include: {
         warehouseManager: {
@@ -440,7 +440,7 @@ export class InventoryRepository {
         }
       }
     });
-    return warehouse?.warehouseManager || null;
+    return warehouse ? warehouse.warehouseManager : null;
   }
 
   async findWarehouseManagerRole(organizationId) {
@@ -543,7 +543,7 @@ export class InventoryRepository {
       isActive: true,
     };
 
-    return await prisma.productIssue.findFirst({
+    return await prisma.productIssue.findUnique({
       where: { id: issueId, organizationId },
       include: {
         product: true,

@@ -37,7 +37,7 @@ export class CustomerService {
 
     const branchId = !isGlobalAdmin ? (userContext?.branchId || query.branchId) : query.branchId;
 
-    return this.repo.findAll(organizationId, { skip, take: limit, search, branchId, userId: userContext?.id });
+    return this.repo.findAll(organizationId, { skip, take: limit, search, branchId });
   }
 
   async getById(id, organizationId) {
