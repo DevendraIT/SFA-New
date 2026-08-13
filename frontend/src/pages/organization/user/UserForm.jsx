@@ -59,8 +59,13 @@ export default function UserForm({ user, onClose, onSuccess }) {
   const filteredRoles = useMemo(() => {
     if (!roles) return [];
     let list = roles;
-    if (!isCurrentSuperAdmin) {
-      list = list.filter((role) => !role.name?.toLowerCase().includes("super admin"));
+    if (isCurrentSuperAdmin) {
+      list = list.filter((role) => role.name && role.name.toLowerCase().includes("company admin"));
+    } else {
+      list = list.filter((role) => {
+        const name = role.name?.toLowerCase() || "";
+        return !name.includes("super admin") && !name.includes("company admin");
+      });
     }
     if (isSalesManager) {
       list = list.filter((role) => role.name && role.name.toLowerCase() === "sales executive");
@@ -95,13 +100,13 @@ export default function UserForm({ user, onClose, onSuccess }) {
   }, []);
 
   useEffect(() => {
-    if (!isEditMode && isSalesManager && filteredRoles.length > 0 && form.roleIds.length === 0) {
+    if (!isEditMode && filteredRoles.length > 0 && form.roleIds.length === 0) {
       setForm((prev) => ({
         ...prev,
-        roleIds: filteredRoles.map((r) => r.id),
+        roleIds: [filteredRoles[0].id],
       }));
     }
-  }, [filteredRoles, isSalesManager, isEditMode, form.roleIds.length]);
+  }, [filteredRoles, isEditMode, form.roleIds.length]);
 
   // Auto-set Branch & Manager for Sales Manager (Department chosen by Sales Manager)
   useEffect(() => {
@@ -113,6 +118,26 @@ export default function UserForm({ user, onClose, onSuccess }) {
       }));
     }
   }, [isSalesManager, isEditMode, currentUser]);
+
+  // Auto-assign Sales Manager when Branch is selected by Company Admin
+  useEffect(() => {
+    if (form.branchId && users.length > 0 && !isSalesManager) {
+      const branchSalesManager = users.find((u) => {
+        const isSameBranch = u.branchId === form.branchId || u.branch?.id === form.branchId;
+        if (!isSameBranch) return false;
+        const roleNames = Array.isArray(u.roles)
+          ? u.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+          : [u.role?.name || ""];
+        return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+      });
+      if (branchSalesManager) {
+        setForm((prev) => ({
+          ...prev,
+          managerId: prev.managerId || branchSalesManager.id,
+        }));
+      }
+    }
+  }, [form.branchId, users, isSalesManager]);
 
   // Fetch departments when branch changes
   useEffect(() => {
@@ -189,12 +214,10 @@ export default function UserForm({ user, onClose, onSuccess }) {
     }));
   };
 
-  const handleRoleToggle = (roleId) => {
+  const handleRoleSelect = (roleId) => {
     setForm((prev) => ({
       ...prev,
-      roleIds: prev.roleIds.includes(roleId)
-        ? prev.roleIds.filter((id) => id !== roleId)
-        : [...prev.roleIds, roleId],
+      roleIds: [roleId],
     }));
   };
 
@@ -233,8 +256,8 @@ export default function UserForm({ user, onClose, onSuccess }) {
       if (pwdErr) errors.password = pwdErr;
     }
 
-    if (form.roleIds.length === 0) {
-      errors.roles = "At least one role must be assigned to the user.";
+    if (form.roleIds.length !== 1) {
+      errors.roles = "Please select exactly one role for the user.";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -497,33 +520,38 @@ export default function UserForm({ user, onClose, onSuccess }) {
         )}
       </div>
 
-      {/* Roles */}
+      {/* Roles - Single Role Selection */}
       <div>
         <label className="mb-1.5 block text-sm font-medium text-slate-700">
-          Roles <span className="text-red-500">*</span>
+          Role Designation <span className="text-red-500">*</span>{" "}
+          <span className="text-xs text-slate-400 font-normal">(Select 1 Role)</span>
         </label>
-        <div className={`flex flex-wrap gap-3 rounded-lg border p-4 ${fieldErrors.roles ? "border-red-500 bg-red-50/20" : "border-slate-200"}`}>
+        <div className={`flex flex-wrap gap-3 rounded-xl border p-4 ${fieldErrors.roles ? "border-red-500 bg-red-50/20" : "border-slate-200"}`}>
           {filteredRoles.length === 0 && (
             <p className="text-sm text-slate-400">No roles available</p>
           )}
-          {filteredRoles.map((role) => (
-            <label
-              key={role.id}
-              className={`flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 text-sm transition ${
-                form.roleIds.includes(role.id)
-                  ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                  : "border-slate-200 text-slate-600 hover:border-slate-300"
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={form.roleIds.includes(role.id)}
-                onChange={() => handleRoleToggle(role.id)}
-                className="sr-only"
-              />
-              {role.name}
-            </label>
-          ))}
+          {filteredRoles.map((role) => {
+            const isSelected = form.roleIds.includes(role.id);
+            return (
+              <label
+                key={role.id}
+                className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-2.5 text-sm font-semibold transition ${
+                  isSelected
+                    ? "border-indigo-600 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-200 shadow-xs"
+                    : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="userSingleRole"
+                  checked={isSelected}
+                  onChange={() => handleRoleSelect(role.id)}
+                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                />
+                {role.name}
+              </label>
+            );
+          })}
         </div>
         {fieldErrors.roles && (
           <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">

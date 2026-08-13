@@ -81,40 +81,18 @@ export class FieldForceRepository {
       data: {
         organizationId,
         userId,
-        amount: data.amount,
-        category: data.category,
-        date: new Date(data.date),
-        notes: data.notes,
-        receiptUrl: data.receiptUrl,
+        amount: Number(data.amount) || 0,
+        status: data.status || 'PENDING',
       },
     });
   }
 
   async createDar(organizationId, userId, data) {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    return prisma.dailyActivityReport.upsert({
-      where: {
-        userId_date: {
-          userId,
-          date: today,
-        },
-      },
-      update: {
-        totalVisits: data.totalVisits,
-        totalOrders: data.totalOrders,
-        summary: data.summary,
-        status: data.status || 'DRAFT',
-      },
-      create: {
+    return prisma.dailyActivityReport.create({
+      data: {
         organizationId,
         userId,
-        date: today,
-        totalVisits: data.totalVisits || 0,
-        totalOrders: data.totalOrders || 0,
-        summary: data.summary,
-        status: data.status || 'DRAFT',
+        content: typeof data.summary === 'string' ? data.summary : (data.content || JSON.stringify(data)),
       },
     });
   }
@@ -264,7 +242,7 @@ export class FieldForceRepository {
   async getExpense(expenseId, organizationId) {
     return prisma.expense.findFirst({
       where: { id: expenseId, organizationId },
-      include: { user: true, approvedBy: true },
+      include: { user: true, approver: true },
     });
   }
 
@@ -275,7 +253,7 @@ export class FieldForceRepository {
     if (userId) where.userId = userId;
     if (status) where.status = status;
     if (startDate && endDate) {
-      where.date = {
+      where.createdAt = {
         gte: new Date(startDate),
         lte: new Date(endDate),
       };
@@ -286,8 +264,8 @@ export class FieldForceRepository {
         where,
         skip: Number(skip) || 0,
         take: Number(take) || 20,
-        include: { user: true, approvedBy: true },
-        orderBy: { date: 'desc' },
+        include: { user: true, approver: true },
+        orderBy: { createdAt: 'desc' },
       }),
       prisma.expense.count({ where }),
     ]);
@@ -298,13 +276,13 @@ export class FieldForceRepository {
   async updateExpenseStatus(expenseId, organizationId, status, approvedById = null) {
     const updateData = { status };
     if (approvedById) {
-      updateData.approvedBy = { connect: { id: approvedById } };
+      updateData.approver = { connect: { id: approvedById } };
     }
 
     return prisma.expense.update({
       where: { id: expenseId, organizationId },
       data: updateData,
-      include: { user: true, approvedBy: true },
+      include: { user: true, approver: true },
     });
   }
 
@@ -316,13 +294,12 @@ export class FieldForceRepository {
   }
 
   async listDailyActivityReports(organizationId, filters = {}) {
-    const { userId, status, startDate, endDate, skip = 0, take = 20 } = filters;
+    const { userId, startDate, endDate, skip = 0, take = 20 } = filters;
 
     const where = { organizationId };
     if (userId) where.userId = userId;
-    if (status) where.status = status;
     if (startDate && endDate) {
-      where.date = {
+      where.createdAt = {
         gte: new Date(startDate),
         lte: new Date(endDate),
       };
@@ -334,7 +311,7 @@ export class FieldForceRepository {
         skip: Number(skip) || 0,
         take: Number(take) || 20,
         include: { user: true },
-        orderBy: { date: 'desc' },
+        orderBy: { createdAt: 'desc' },
       }),
       prisma.dailyActivityReport.count({ where }),
     ]);
@@ -343,9 +320,8 @@ export class FieldForceRepository {
   }
 
   async updateDarStatus(darId, organizationId, status) {
-    return prisma.dailyActivityReport.update({
+    return prisma.dailyActivityReport.findFirst({
       where: { id: darId, organizationId },
-      data: { status },
       include: { user: true },
     });
   }
@@ -542,16 +518,16 @@ export class FieldForceRepository {
 
   // Analytics & Aggregations
   async getAttendanceSummary(organizationId, userId, startDate, endDate) {
-    const records = await prisma.attendance.findMany({
-      where: {
-        organizationId,
-        userId,
-        date: {
-          gte: new Date(startDate),
-          lte: new Date(endDate),
-        },
-      },
-    });
+    const where = { organizationId };
+    if (userId) where.userId = userId;
+    if (startDate && endDate) {
+      where.date = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    }
+
+    const records = await prisma.attendance.findMany({ where });
 
     const summary = {
       totalDays: records.length,
@@ -564,17 +540,17 @@ export class FieldForceRepository {
     return summary;
   }
 
-  async getVisitSummary(organizationId, userId, startDate, endDate) {
-    const visits = await prisma.visit.findMany({
-      where: {
-        organizationId,
-        userId,
-        scheduledAt: {
-          gte: new Date(startDate),
-          lte: new Date(endDate),
-        },
-      },
-    });
+  async getVisitsSummary(organizationId, userId, startDate, endDate) {
+    const where = { organizationId };
+    if (userId) where.userId = userId;
+    if (startDate && endDate) {
+      where.scheduledAt = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    }
+
+    const visits = await prisma.visit.findMany({ where });
 
     const summary = {
       total: visits.length,
@@ -587,16 +563,22 @@ export class FieldForceRepository {
     return summary;
   }
 
+  async getVisitSummary(organizationId, userId, startDate, endDate) {
+    return this.getVisitsSummary(organizationId, userId, startDate, endDate);
+  }
+
   async getExpenseSummary(organizationId, userId, startDate, endDate) {
+    const where = { organizationId };
+    if (userId) where.userId = userId;
+    if (startDate && endDate) {
+      where.createdAt = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    }
+
     const expenses = await prisma.expense.aggregate({
-      where: {
-        organizationId,
-        userId,
-        createdAt: {
-          gte: new Date(startDate),
-          lte: new Date(endDate),
-        },
-      },
+      where,
       _sum: { amount: true },
       _count: true,
     });

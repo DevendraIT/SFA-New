@@ -177,7 +177,7 @@ export default function SuperAdminFieldForceDashboard() {
         subtitle="Live system-wide field operations monitoring, task analytics & performance metrics"
         onRefresh={refresh}
         showExport
-        onExport={() => {}}
+        // onExport={() => {}}
       />
 
       {/* Top 5 Key Metric Cards */}

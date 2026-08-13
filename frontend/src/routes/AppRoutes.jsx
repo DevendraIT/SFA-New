@@ -20,8 +20,12 @@ import {
   InventoryManagerRoute,
   WarehouseManagerRoute,
   TaskExecutionRoute,
+  SalesOrdersRoute,
+  OrganizationRoute,
+  TeamManagementRoute,
+  FieldForceRoute,
+  ReportsRoute,
 } from "./RoleRoute";
-
 
 import BranchList from "../pages/organization/branch/BranchList";
 import OrganizationProfile from "../pages/organization/OrganizationProfile";
@@ -127,90 +131,48 @@ export default function AppRoutes() {
         <Route path="/inventory/warehouse/returns" element={<WarehouseManagerRoute><ProductIssues /></WarehouseManagerRoute>} />
         <Route path="/inventory/warehouse/stock-movements" element={<WarehouseManagerRoute><StockMovements /></WarehouseManagerRoute>} />
 
+        {/* ===== ORGANIZATION STRUCTURE ROUTES ===== */}
+        <Route path="/organization/organization" element={<OrganizationRoute><OrganizationProfile /></OrganizationRoute>} />
+        <Route path="/organization/branch" element={<OrganizationRoute><BranchList /></OrganizationRoute>} />
+        <Route path="/organization/department" element={<OrganizationRoute><DepartmentList /></OrganizationRoute>} />
+        <Route path="/organization/territory" element={<OrganizationRoute><TerritoryList /></OrganizationRoute>} />
+        <Route path="/organization/teams" element={<OrganizationRoute><TeamList /></OrganizationRoute>} />
+        <Route path="/organization/users" element={<OrganizationRoute><UserList /></OrganizationRoute>} />
 
-
-        <Route
-          path="/organization/organization"
-          element={<OrganizationProfile />}
-        />
-
-        <Route
-          path="/organization/branch"
-          element={<BranchList />}
-        />
-
-        <Route
-          path="/organization/department"
-          element={<DepartmentList />}
-        />
-
-        <Route
-          path="/organization/territory"
-          element={<TerritoryList />}
-        />
-
-        <Route
-          path="/organization/teams"
-          element={<TeamList />}
-        />
-
-        <Route
-          path="/organization/users"
-          element={<UserList />}
-        />
-
-        <Route
-          path="/team/manage"
-          element={<TeamManagement />}
-        />
-
-        <Route
-          path="/team/members/:id"
-          element={<ExecutiveDetail />}
-        />
-
-        <Route
-          path="/team/assigned-tasks"
-          element={<AssignedTasks />}
-        />
-
-        <Route
-          path="/team/tasks/:id"
-          element={<TaskDetail />}
-        />
-
-        <Route
-          path="/team/performance"
-          element={<PerformanceWrapper />}
-        />
+        {/* ===== TEAM MANAGEMENT ROUTES ===== */}
+        <Route path="/team/manage" element={<TeamManagementRoute><TeamManagement /></TeamManagementRoute>} />
+        <Route path="/team/members/:id" element={<TeamManagementRoute><ExecutiveDetail /></TeamManagementRoute>} />
+        <Route path="/team/assigned-tasks" element={<TeamManagementRoute><AssignedTasks /></TeamManagementRoute>} />
+        <Route path="/team/tasks/:id" element={<TeamManagementRoute><TaskDetail /></TeamManagementRoute>} />
+        <Route path="/team/performance" element={<ReportsRoute><PerformanceWrapper /></ReportsRoute>} />
 
         {/* ===== SALES ORDERS ===== */}
-        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/orders" element={<SalesOrdersRoute><OrdersPage /></SalesOrdersRoute>} />
 
         {/* ===== PERFORMANCE & REPORTS & SETTINGS ===== */}
-        <Route path="/performance" element={<PerformanceWrapper />} />
-        <Route path="/reports/target-performance" element={<PerformanceWrapper />} />
-        <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/performance" element={<ReportsRoute><PerformanceWrapper /></ReportsRoute>} />
+        <Route path="/reports/target-performance" element={<ReportsRoute><PerformanceWrapper /></ReportsRoute>} />
+        <Route path="/reports" element={<ReportsRoute><ReportsPage /></ReportsRoute>} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
 
         {/* ===== FIELD FORCE AUTOMATION ROUTES ===== */}
-        <Route path="/field-force" element={<FieldForceDashboardWrapper />} />
-        <Route path="/field-force/dashboard" element={<FieldForceDashboardWrapper />} />
-        <Route path="/field-force/attendance" element={<AttendancePage />} />
-        <Route path="/field-force/tasks" element={<TasksPage />} />
+        <Route path="/field-force" element={<FieldForceRoute><FieldForceDashboardWrapper /></FieldForceRoute>} />
+        <Route path="/field-force/dashboard" element={<FieldForceRoute><FieldForceDashboardWrapper /></FieldForceRoute>} />
+        <Route path="/field-force/attendance" element={<FieldForceRoute><AttendancePage /></FieldForceRoute>} />
+        <Route path="/field-force/tasks" element={<FieldForceRoute><TasksPage /></FieldForceRoute>} />
         <Route path="/field-force/tasks/:id/execute" element={<TaskExecutionRoute><TaskExecutionPage /></TaskExecutionRoute>} />
-        <Route path="/field-force/visits" element={<VisitsPage />} />
-        <Route path="/field-force/visits/:id" element={<VisitDetailPage />} />
-        <Route path="/field-force/activities" element={<ActivitiesPage />} />
-        <Route path="/field-force/dar" element={<DARPage />} />
-        <Route path="/field-force/profile" element={<ProfilePage />} />
-        <Route path="/field-force/beat-plans" element={<BeatPlanningPage />} />
-        <Route path="/field-force/route" element={<RouteOptimizationPage />} />
-        <Route path="/field-force/photo-upload" element={<PhotoUploadPage />} />
-        <Route path="/field-force/meeting-notes" element={<MeetingNotesPage />} />
-        <Route path="/field-force/expenses" element={<ExpensesPage />} />
-        <Route path="/field-force/calendar" element={<CalendarPage />} />
+        <Route path="/field-force/visits" element={<FieldForceRoute><VisitsPage /></FieldForceRoute>} />
+        <Route path="/field-force/visits/:id" element={<FieldForceRoute><VisitDetailPage /></FieldForceRoute>} />
+        <Route path="/field-force/activities" element={<FieldForceRoute><ActivitiesPage /></FieldForceRoute>} />
+        <Route path="/field-force/dar" element={<FieldForceRoute><DARPage /></FieldForceRoute>} />
+        <Route path="/field-force/profile" element={<FieldForceRoute><ProfilePage /></FieldForceRoute>} />
+        <Route path="/field-force/beat-plans" element={<FieldForceRoute><BeatPlanningPage /></FieldForceRoute>} />
+        <Route path="/field-force/route" element={<FieldForceRoute><RouteOptimizationPage /></FieldForceRoute>} />
+        <Route path="/field-force/photo-upload" element={<FieldForceRoute><PhotoUploadPage /></FieldForceRoute>} />
+        <Route path="/field-force/meeting-notes" element={<FieldForceRoute><MeetingNotesPage /></FieldForceRoute>} />
+        <Route path="/field-force/expenses" element={<FieldForceRoute><ExpensesPage /></FieldForceRoute>} />
+        <Route path="/field-force/calendar" element={<FieldForceRoute><CalendarPage /></FieldForceRoute>} />
       </Route>
 
     </Routes>

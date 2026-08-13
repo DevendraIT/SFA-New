@@ -22,13 +22,22 @@ export class CustomerService {
     this.repo = customerRepository;
   }
 
-  async list(organizationId, query = {}) {
+  async list(organizationId, query = {}, userContext = null) {
     const page = parseInt(query.page) || 1;
     const limit = Math.min(100, parseInt(query.limit) || 50);
     const skip = (page - 1) * limit;
     const search = query.search;
 
-    return this.repo.findAll(organizationId, { skip, take: limit, search });
+    const userRoles = (userContext?.roles || []).map(r => 
+      typeof r === 'string' ? r : (r.role?.name || r.name || '')
+    );
+    const isGlobalAdmin = userRoles.some(r => 
+      ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
+    );
+
+    const branchId = !isGlobalAdmin ? (userContext?.branchId || query.branchId) : query.branchId;
+
+    return this.repo.findAll(organizationId, { skip, take: limit, search, branchId });
   }
 
   async getById(id, organizationId) {

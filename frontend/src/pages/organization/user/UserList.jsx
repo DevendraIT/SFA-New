@@ -97,14 +97,33 @@ export default function UserList() {
     return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
   };
 
+  const isTargetCompanyAdmin = (userItem) => {
+    if (!userItem) return false;
+    const roleNames = Array.isArray(userItem.roles)
+      ? userItem.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [userItem.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("company admin"));
+  };
+
+  const hasCompanyAdmin = useMemo(() => {
+    if (!users) return false;
+    return users.some((u) => isTargetCompanyAdmin(u));
+  }, [users]);
+
   const canManageUserItem = (userItem) => {
+    if (!userItem) return false;
+    // Users cannot edit or delete their own logged-in account
+    if (userItem.id === user?.id) return false;
+
+    if (isCurrentSuperAdmin) {
+      // Super Admin can ONLY manage (edit/delete) Company Admin accounts!
+      return isTargetCompanyAdmin(userItem);
+    }
     if (isHeadOfSales) return false;
-    if (isTargetSuperAdmin(userItem) && !isCurrentSuperAdmin) {
-      return false;
-    }
-    if (isSalesManager && userItem.id === user?.id) {
-      return false;
-    }
+    if (isTargetSuperAdmin(userItem)) return false;
+    // Company Admin cannot edit/delete Company Admin accounts (only Super Admin manages Company Admin)
+    if (isTargetCompanyAdmin(userItem)) return false;
+
     return true;
   };
 
@@ -287,16 +306,35 @@ export default function UserList() {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setSelectedUser(null);
-            setShowModal(true);
-          }}
-          className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700 transition"
-        >
-          <Plus size={18} />
-          Create User
-        </button>
+        {isCurrentSuperAdmin ? (
+          !hasCompanyAdmin ? (
+            <button
+              onClick={() => {
+                setSelectedUser(null);
+                setShowModal(true);
+              }}
+              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white font-semibold hover:bg-indigo-700 transition"
+            >
+              <Plus size={18} />
+              Create Company Admin
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 rounded-xl bg-slate-100 border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600">
+              Company Admin Created (1 Max)
+            </div>
+          )
+        ) : (
+          <button
+            onClick={() => {
+              setSelectedUser(null);
+              setShowModal(true);
+            }}
+            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white font-semibold hover:bg-indigo-700 transition"
+          >
+            <Plus size={18} />
+            Create User
+          </button>
+        )}
       </div>
 
       {/* Search */}
@@ -341,12 +379,21 @@ export default function UserList() {
                     <p className="mt-2 text-slate-500">
                       No user records found in your operating branch.
                     </p>
-                    <button
-                      onClick={() => setShowModal(true)}
-                      className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
-                    >
-                      Create User
-                    </button>
+                    {!isCurrentSuperAdmin ? (
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
+                      >
+                        Create User
+                      </button>
+                    ) : !hasCompanyAdmin ? (
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
+                      >
+                        Create Company Admin
+                      </button>
+                    ) : null}
                   </div>
                 </td>
               </tr>
@@ -398,17 +445,27 @@ export default function UserList() {
                     </div>
                   </td>
                   <td className="px-6 py-5 text-center">
-                    <button
-                      onClick={() => handleToggleStatus(userItem)}
-                      title={userItem.isActive ? "Deactivate" : "Activate"}
-                      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition ${
+                    {canManageUserItem(userItem) ? (
+                      <button
+                        onClick={() => handleToggleStatus(userItem)}
+                        title={userItem.isActive ? "Deactivate" : "Activate"}
+                        className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition ${
+                          userItem.isActive
+                            ? "bg-green-100 text-green-700 hover:bg-green-200"
+                            : "bg-red-100 text-red-700 hover:bg-red-200"
+                        }`}
+                      >
+                        {userItem.isActive ? "Active" : "Inactive"}
+                      </button>
+                    ) : (
+                      <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
                         userItem.isActive
-                          ? "bg-green-100 text-green-700 hover:bg-green-200"
-                          : "bg-red-100 text-red-700 hover:bg-red-200"
-                      }`}
-                    >
-                      {userItem.isActive ? "Active" : "Inactive"}
-                    </button>
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}>
+                        {userItem.isActive ? "Active" : "Inactive"}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex items-center justify-center gap-2">

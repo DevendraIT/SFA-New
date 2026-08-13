@@ -7,7 +7,7 @@ export class CustomerController {
 
   list = async (req, res, next) => {
     try {
-      const result = await this.service.list(req.user.organizationId, req.query);
+      const result = await this.service.list(req.user.organizationId, req.query, req.user);
       return successResponse(res, {
         customers: result.customers,
         total: result.total,

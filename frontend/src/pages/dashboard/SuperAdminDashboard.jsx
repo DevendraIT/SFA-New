@@ -338,7 +338,7 @@ export default function SuperAdminDashboard() {
       </StatsGrid>
 
       {/* Modern Visual Charts Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Revenue Area Chart with Smooth Gradient Fill */}
         <ChartCard
           title="System Revenue Analytics"
@@ -377,7 +377,7 @@ export default function SuperAdminDashboard() {
         </ChartCard>
 
         {/* Orders Status Donut Pie Chart */}
-        <ChartCard
+        {/* <ChartCard
           title="Orders Status Distribution"
           subtitle="Breakdown of approved vs pending vs cancelled sales orders"
           delay={0.3}
@@ -420,7 +420,7 @@ export default function SuperAdminDashboard() {
               description="Orders will appear here when available."
             />
           )}
-        </ChartCard>
+        </ChartCard> */}
       </div>
 
       {/* Performance Section */}

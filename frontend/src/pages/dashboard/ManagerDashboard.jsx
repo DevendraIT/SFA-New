@@ -65,10 +65,10 @@ const quickActions = [
     path: "/organization/teams",
   },
   {
-    label: "Reports",
-    icon: FileText,
+    label: "Sales Orders",
+    icon: ShoppingCart,
     iconColor: "text-orange-500",
-    path: "/reports",
+    path: "/orders",
   },
   {
     label: "Settings",

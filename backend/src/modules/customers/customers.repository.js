@@ -2,14 +2,14 @@ import { prisma } from '../../config/database.js';
 
 export class CustomerRepository {
   async findAll(organizationId, filters = {}) {
-    const { skip = 0, take = 50, search } = filters;
+    const { skip = 0, take = 50, search, branchId } = filters;
     let where = organizationId ? { organizationId } : {};
 
-    if (organizationId) {
-      const count = await prisma.customer.count({ where: { organizationId } });
-      if (count === 0) {
-        where = {};
-      }
+    if (branchId) {
+      where.OR = [
+        { orders: { some: { branchId } } },
+        { visits: { some: { user: { branchId } } } }
+      ];
     }
 
     if (search) {
@@ -20,7 +20,12 @@ export class CustomerRepository {
           { phone: { contains: search, mode: 'insensitive' } },
         ],
       };
-      where = where.organizationId ? { ...where, ...searchWhere } : searchWhere;
+      where = {
+        AND: [
+          where,
+          searchWhere
+        ]
+      };
     }
 
     const [customers, total] = await Promise.all([

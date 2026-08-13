@@ -120,7 +120,7 @@ export default function Sidebar({
 
     if (isCompanyAdmin) {
       return navigation.filter(
-        (item) => !["Inventory", "Field Force", "Target & Performance", "Reports", "Team Management"].includes(item.title)
+        (item) => !["Inventory", "Field Force", "Target & Performance", "Reports", "Team Management", "Sales Orders"].includes(item.title)
       );
     }
 
@@ -133,7 +133,7 @@ export default function Sidebar({
     if (isSalesExecutive) {
       return navigation
         .filter(
-          (item) => !["Inventory", "Organization", "Team Management", "Sales Orders", "Reports"].includes(item.title)
+          (item) => !["Inventory", "Organization", "Team Management", "Sales Orders", "Reports", "Target & Performance"].includes(item.title)
         )
         .map((item) => {
           if (item.title === "Field Force" && Array.isArray(item.children)) {
@@ -151,7 +151,7 @@ export default function Sidebar({
 
     if (isSalesManager) {
       return navigation
-        .filter((item) => !["Inventory", "Field Force"].includes(item.title))
+        .filter((item) => !["Inventory", "Field Force", "Reports", "Target & Performance"].includes(item.title))
         .map((item) => {
           if (item.title === "Organization" && Array.isArray(item.children)) {
             return {

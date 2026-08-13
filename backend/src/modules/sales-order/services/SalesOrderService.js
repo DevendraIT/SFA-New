@@ -552,15 +552,16 @@ export class SalesOrderService {
 
     // Roles that see ALL orders in the org (no branch filter)
     const isGlobalAdmin = userRoles.some(r => 
-      ['organization super admin', 'super admin', 'company admin', 'head of sales',
-       'administrator', 'sales manager'].includes(r.toLowerCase())
+      ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
     );
 
-    // Super Admin / Company Admin / Head of Sales / Sales Manager see all orders in org.
-    // Sales Executives only see sales orders for their assigned branch.
+    // Super Admin / Company Admin / Head of Sales see all orders in org.
+    // Sales Managers and Sales Executives only see sales orders for their specific branch.
     if (!isGlobalAdmin) {
       if (userContext.branchId) {
         filters.branchId = userContext.branchId;
+      } else if (queryParams.branchId) {
+        filters.branchId = queryParams.branchId;
       }
       if (userContext.territoryId && !userContext.branchId) {
         filters.territoryId = userContext.territoryId;

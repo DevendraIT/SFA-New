@@ -156,9 +156,10 @@ export class InventoryRepository {
   // ==========================================
 
   async getStock(productId, warehouseId, organizationId) {
-    return await prisma.stock.findUnique({
+    return await prisma.stock.findFirst({
       where: {
-        productId_warehouseId: { productId, warehouseId },
+        productId,
+        warehouseId,
         organizationId,
       },
     });

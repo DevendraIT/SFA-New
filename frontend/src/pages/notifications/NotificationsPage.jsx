@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
-import { Bell, CheckCheck, Loader2, Filter, ExternalLink } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Bell, CheckCheck, Loader2, Filter } from "lucide-react";
 import notificationsApi from "../../api/notifications.api";
 import PageHeader from "../../components/dashboard/PageHeader";
 import SectionCard from "../../components/dashboard/SectionCard";
 import EmptyDashboard from "../../components/dashboard/EmptyDashboard";
 
 export default function NotificationsPage() {
-  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("ALL"); // ALL, UNREAD, READ
@@ -18,8 +16,16 @@ export default function NotificationsPage() {
     try {
       setLoading(true);
       const res = await notificationsApi.getMyNotifications();
-      const data = res.data?.data || res.data;
-      const allList = Array.isArray(data?.all) ? data.all : Array.isArray(data?.unread) ? data.unread : [];
+      const body = res.data?.data || res.data;
+      const allList = Array.isArray(body?.notifications) 
+        ? body.notifications 
+        : Array.isArray(body?.all) 
+        ? body.all 
+        : Array.isArray(body?.unread) 
+        ? body.unread 
+        : Array.isArray(body) 
+        ? body 
+        : [];
       setNotifications(allList);
     } catch (e) {
       console.warn("Failed to load notifications page:", e);
@@ -33,14 +39,10 @@ export default function NotificationsPage() {
   }, []);
 
   const handleMarkAsRead = async (n) => {
+    if (n.status === "READ") return;
     try {
       await notificationsApi.markAsRead(n.id);
       loadNotifications();
-      if (n.referenceType === "TASK" && n.referenceId) {
-        navigate(`/field-force/tasks/${n.referenceId}/execute`);
-      } else if (n.referenceType === "VISIT" && n.referenceId) {
-        navigate(`/field-force/visits/${n.referenceId}`);
-      }
     } catch (e) {
       console.warn("Mark read error:", e);
     }
@@ -103,12 +105,11 @@ export default function NotificationsPage() {
           {filteredNotifications.map((n) => (
             <motion.div
               key={n.id}
-              whileHover={{ scale: 1.01 }}
               onClick={() => handleMarkAsRead(n)}
-              className={`p-5 rounded-2xl border transition cursor-pointer flex items-start justify-between gap-4 ${
+              className={`p-5 rounded-2xl border transition flex items-start justify-between gap-4 ${
                 n.status === "UNREAD"
-                  ? "bg-blue-50/80 border-blue-200 text-slate-900 shadow-sm"
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                  ? "bg-blue-50/80 border-blue-200 text-slate-900 shadow-sm cursor-pointer"
+                  : "bg-white border-slate-200 text-slate-700"
               }`}
             >
               <div className="space-y-1">
@@ -123,7 +124,6 @@ export default function NotificationsPage() {
                   {dayjs(n.createdAt).format("MMM D, YYYY · h:mm A")}
                 </p>
               </div>
-              <ExternalLink size={16} className="text-slate-400 flex-shrink-0 mt-1" />
             </motion.div>
           ))}
         </div>

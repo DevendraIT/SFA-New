@@ -24,8 +24,12 @@ import toast from "react-hot-toast";
 
 import inventoryApi from "../../api/inventory.api";
 import branchApi from "../../api/branch.api";
+import { useAuth } from "../../context/AuthContext";
+import { isSuperAdminUser } from "../../utils/roleUtils";
 
 export default function Warehouses() {
+  const { user } = useAuth();
+  const isSuperAdmin = isSuperAdminUser(user);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
@@ -272,13 +276,15 @@ export default function Warehouses() {
             {refreshing ? "Refreshing..." : "Refresh"}
           </button>
 
-          <button
-            onClick={handleOpenCreate}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-xs transition"
-          >
-            <Plus size={18} />
-            Create Warehouse
-          </button>
+          {!isSuperAdmin && (
+            <button
+              onClick={handleOpenCreate}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-xs transition"
+            >
+              <Plus size={18} />
+              Create Warehouse
+            </button>
+          )}
         </div>
       </div>
 
@@ -414,12 +420,14 @@ export default function Warehouses() {
                       )}
                     </div>
 
-                    <button
-                      onClick={() => handleOpenAssignManager(wh)}
-                      className="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-xl border border-indigo-100 transition shrink-0"
-                    >
-                      {isAssigned ? "Reassign" : "Assign Manager"}
-                    </button>
+                    {!isSuperAdmin && (
+                      <button
+                        onClick={() => handleOpenAssignManager(wh)}
+                        className="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-xl border border-indigo-100 transition shrink-0"
+                      >
+                        {isAssigned ? "Reassign" : "Assign Manager"}
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -431,21 +439,23 @@ export default function Warehouses() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setViewWarehouse(wh)}
-                      className="p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
-                      title="View Details"
-                    >
-                      <Eye size={16} />
-                    </button>
-                    <button
-                      onClick={() => handleOpenEdit(wh)}
-                      className="p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
-                      title="Edit Warehouse"
-                    >
-                      <Pencil size={16} />
-                    </button>
-                  </div>
+                      <button
+                        onClick={() => setViewWarehouse(wh)}
+                        className="p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+                        title="View Details"
+                      >
+                        <Eye size={16} />
+                      </button>
+                      {!isSuperAdmin && (
+                        <button
+                          onClick={() => handleOpenEdit(wh)}
+                          className="p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+                          title="Edit Warehouse"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                      )}
+                    </div>
                 </div>
               </motion.div>
             );

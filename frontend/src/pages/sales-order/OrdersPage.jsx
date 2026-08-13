@@ -14,11 +14,15 @@ import SectionCard from "../../components/dashboard/SectionCard";
 import EmptyDashboard from "../../components/dashboard/EmptyDashboard";
 import ErrorState from "../../components/dashboard/ErrorState";
 import { TableSkeleton } from "../../components/dashboard/LoadingSkeleton";
+import { useAuth } from "../../context/AuthContext";
+import { isSuperAdminUser } from "../../utils/roleUtils";
 
 import ImportOrdersModal from "./ImportOrdersModal";
 import { FileSpreadsheet } from "lucide-react";
 
 export default function OrdersPage() {
+  const { user } = useAuth();
+  const isSuperAdmin = isSuperAdminUser(user);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -102,12 +106,14 @@ export default function OrdersPage() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <PageHeader title="Sales Orders" subtitle="Manage and track customer sales orders across your organization">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowImportModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md transition cursor-pointer"
-          >
-            <FileSpreadsheet size={16} /> Import Orders (Excel)
-          </button>
+          {!isSuperAdmin && (
+            <button
+              onClick={() => setShowImportModal(true)}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md transition cursor-pointer"
+            >
+              <FileSpreadsheet size={16} /> Import Orders (Excel)
+            </button>
+          )}
           <button
             onClick={loadOrders}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition shadow-sm"
