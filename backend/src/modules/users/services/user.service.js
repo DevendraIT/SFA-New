@@ -398,8 +398,10 @@ export class UserService {
       throw AppError.badRequest(USER_ERRORS.INVALID_ROLES);
     }
 
-    // If caller is a Sales Manager (and not Super Admin or Head of Sales), restrict target roles to Sales Executive only
-    const userRoles = req?.user?.roles || [];
+    // If caller is a Sales Manager (and not Super Admin, Company Admin, or Head of Sales), restrict target roles to Sales Executive only
+    const userRoles = (req?.user?.roles || []).map((r) =>
+      typeof r === "string" ? r : (r.role?.name || r.name || "")
+    );
     const isSalesManager =
       userRoles.some(
         (r) => typeof r === "string" && r.toLowerCase().includes("sales manager")
@@ -407,7 +409,10 @@ export class UserService {
       !userRoles.some(
         (r) =>
           typeof r === "string" &&
-          (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("head of sales"))
+          (r.toLowerCase().includes("super admin") ||
+            r.toLowerCase().includes("head of sales") ||
+            r.toLowerCase().includes("company admin") ||
+            r.toLowerCase().includes("admin"))
       );
 
     if (isSalesManager) {

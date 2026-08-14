@@ -237,7 +237,14 @@ export class UserRepository {
 
   async findRolesByIds(roleIds, organizationId) {
     return prisma.role.findMany({
-      where: { id: { in: roleIds }, organizationId },
+      where: {
+        id: { in: roleIds },
+        OR: [
+          { organizationId },
+          { organizationId: null },
+          { isSystem: true }
+        ]
+      },
       select: { id: true, name: true },
     });
   }

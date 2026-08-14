@@ -28,6 +28,8 @@ const schema = z.object({
   state: z.string().trim().max(100, "State cannot exceed 100 characters.").optional(),
   country: z.string().trim().max(100, "Country cannot exceed 100 characters.").optional(),
   postalCode: z.string().trim().max(20, "Postal Code cannot exceed 20 characters.").optional(),
+  latitude: z.union([z.string(), z.number()]).optional().nullable(),
+  longitude: z.union([z.string(), z.number()]).optional().nullable(),
 });
 
 export default function BranchForm({ branch, onClose, onSuccess }) {
@@ -54,6 +56,8 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
       state: "",
       country: "",
       postalCode: "",
+      latitude: "",
+      longitude: "",
     },
   });
 
@@ -76,6 +80,8 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
       state: branch.state || "",
       country: branch.country || "",
       postalCode: branch.postalCode || "",
+      latitude: branch.latitude != null ? branch.latitude : "",
+      longitude: branch.longitude != null ? branch.longitude : "",
     });
   }, [branch, reset]);
 
@@ -90,6 +96,8 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
       state: values.state || undefined,
       country: values.country || undefined,
       postalCode: values.postalCode || undefined,
+      latitude: values.latitude !== "" && values.latitude != null ? parseFloat(values.latitude) : undefined,
+      longitude: values.longitude !== "" && values.longitude != null ? parseFloat(values.longitude) : undefined,
     };
 
     try {
@@ -303,6 +311,38 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
             />
             {errors.postalCode && (
               <p className="mt-1 text-sm text-red-500">{errors.postalCode.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Latitude (Optional)
+            </label>
+            <input
+              {...register("latitude")}
+              type="number"
+              step="any"
+              placeholder="e.g. 22.7196"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            />
+            {errors.latitude && (
+              <p className="mt-1 text-sm text-red-500">{errors.latitude.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">
+              Longitude (Optional)
+            </label>
+            <input
+              {...register("longitude")}
+              type="number"
+              step="any"
+              placeholder="e.g. 75.8577"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+            />
+            {errors.longitude && (
+              <p className="mt-1 text-sm text-red-500">{errors.longitude.message}</p>
             )}
           </div>
         </div>

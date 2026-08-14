@@ -115,7 +115,7 @@ export class CRMIntegrationService {
       // Initial lookup / create matches
       mappedCustomer = await this.getOrCreateCustomer(organizationId, row);
       mappedProduct = await findProductMatch(organizationId, row);
-      mappedBranch = await findBranchMatch(organizationId, row);
+      mappedBranch = (await findBranchMatch(organizationId, row)) || (user?.branchId ? { id: user.branchId } : null);
       mappedTerritory = await findTerritoryMatch(organizationId, row);
 
       let rowStatus = ROW_STATUS.PENDING;

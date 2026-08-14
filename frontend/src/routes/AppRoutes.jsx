@@ -60,6 +60,7 @@ import CalendarPage from "../pages/field-force/CalendarPage";
 import ReportsPage from "../pages/reports/ReportsPage";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
 import SettingsPage from "../pages/settings/SettingsPage";
+import NotFoundPage from "../pages/error/NotFoundPage";
 
 import TargetPerformanceAnalytics from "../pages/reports/TargetPerformanceAnalytics";
 import { useAuth } from "../context/AuthContext";
@@ -173,8 +174,11 @@ export default function AppRoutes() {
         <Route path="/field-force/meeting-notes" element={<FieldForceRoute><MeetingNotesPage /></FieldForceRoute>} />
         <Route path="/field-force/expenses" element={<FieldForceRoute><ExpensesPage /></FieldForceRoute>} />
         <Route path="/field-force/calendar" element={<FieldForceRoute><CalendarPage /></FieldForceRoute>} />
+
       </Route>
 
+      {/* Standalone 404 Page Not Found Route */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

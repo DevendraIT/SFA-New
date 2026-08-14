@@ -42,6 +42,9 @@ export const createWarehouseSchema = z.object({
   name: z.string().min(2, 'Warehouse name is required'),
   code: z.string().optional(),
   location: z.string().optional(),
+  latitude: z.union([z.number(), z.string()]).optional().nullable(),
+  longitude: z.union([z.number(), z.string()]).optional().nullable(),
+  branchId: z.string().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -49,6 +52,8 @@ export const updateWarehouseSchema = z.object({
   name: z.string().min(2).optional(),
   code: z.string().optional(),
   location: z.string().optional(),
+  latitude: z.union([z.number(), z.string()]).optional().nullable(),
+  longitude: z.union([z.number(), z.string()]).optional().nullable(),
   isActive: z.boolean().optional(),
 });
 

@@ -2,15 +2,49 @@ import { prisma } from '../../config/database.js';
 
 export class CustomerRepository {
   async findAll(organizationId, filters = {}) {
-    const { skip = 0, take = 50, search, branchId } = filters;
+    const { skip = 0, take = 50, search, branchId, userId } = filters;
     let where = organizationId ? { organizationId } : {};
 
-    if (branchId) {
-      where.OR = [
-        { orders: { some: { branchId } } },
-        { visits: { some: { user: { branchId } } } }
-      ];
-    }
+    // Strictly filter out unmapped/unlinked customers — include only customers with MAPPED or PROCESSED Excel CRM import rows or active Sales Orders
+    const importOrOrderWhere = {
+      OR: [
+        {
+          crmImportRows: {
+            some: {
+              status: { in: ['MAPPED', 'PROCESSED'] },
+              ...(branchId ? { mappedBranchId: branchId } : {})
+            }
+          }
+        },
+        {
+          orders: {
+            some: branchId ? { branchId } : {}
+          }
+        },
+        ...(userId ? [
+          {
+            crmImportRows: {
+              some: {
+                status: { in: ['MAPPED', 'PROCESSED'] },
+                crmImport: { uploadedBy: userId }
+              }
+            }
+          },
+          {
+            orders: {
+              some: { ownerId: userId }
+            }
+          }
+        ] : [])
+      ]
+    };
+
+    where = {
+      AND: [
+        where,
+        importOrOrderWhere
+      ]
+    };
 
     if (search) {
       const searchWhere = {
@@ -20,12 +54,7 @@ export class CustomerRepository {
           { phone: { contains: search, mode: 'insensitive' } },
         ],
       };
-      where = {
-        AND: [
-          where,
-          searchWhere
-        ]
-      };
+      where.AND.push(searchWhere);
     }
 
     const [customers, total] = await Promise.all([
