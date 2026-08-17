@@ -607,10 +607,21 @@ export class DashboardRepository {
     });
   }
 
-  async getOrderMetrics(organizationId, userId = null, startDate, endDate) {
+  async getOrderMetrics(organizationId, userId = null, startDate = null, endDate = null) {
     const where = { organizationId, isDeleted: false };
-    if (userId) where.ownerId = userId;
-    if (startDate && endDate) {
+    if (userId) {
+      const assignedTasks = await prisma.task.findMany({
+        where: { assignedToId: userId, referenceId: { not: null } },
+        select: { referenceId: true }
+      });
+      const assignedOrderIds = assignedTasks.map(t => t.referenceId).filter(Boolean);
+
+      where.OR = [
+        { ownerId: userId },
+        ...(assignedOrderIds.length > 0 ? [{ id: { in: assignedOrderIds } }] : [])
+      ];
+    }
+    if (startDate && endDate && startDate instanceof Date && !isNaN(startDate.getTime()) && endDate instanceof Date && !isNaN(endDate.getTime())) {
       where.createdAt = { gte: startDate, lte: endDate };
     }
 
@@ -637,11 +648,15 @@ export class DashboardRepository {
           }
         }
       };
+
       if (branchId) {
         where.branchId = branchId;
+      } else if (userId) {
+        where.managerId = userId;
       } else if (organizationId) {
         where.organizationId = organizationId;
       }
+
       return await prisma.user.count({ where });
     } catch {
       return 0;
@@ -664,17 +679,41 @@ export class DashboardRepository {
 
   async getManagerCustomerCount(organizationId, branchId = null) {
     try {
-      const where = {};
       if (branchId) {
-        where.organization = {
-          branches: {
-            some: { id: branchId }
+        return await prisma.customer.count({
+          where: {
+            OR: [
+              {
+                crmImportRows: {
+                  some: {
+                    status: { in: ['MAPPED', 'PROCESSED'] },
+                    branch: { id: branchId }
+                  }
+                }
+              },
+              {
+                orders: {
+                  some: {
+                    branchId,
+                    isDeleted: false
+                  }
+                }
+              }
+            ]
           }
-        };
+        });
       } else if (organizationId) {
-        where.organizationId = organizationId;
+        return await prisma.customer.count({
+          where: {
+            organizationId,
+            OR: [
+              { crmImportRows: { some: { status: { in: ['MAPPED', 'PROCESSED'] } } } },
+              { orders: { some: { isDeleted: false } } }
+            ]
+          }
+        });
       }
-      return await prisma.customer.count({ where });
+      return 0;
     } catch {
       return 0;
     }
@@ -707,6 +746,50 @@ export class DashboardRepository {
     }
   }
 
+  async getManagerCompletedOrderRevenue(organizationId, branchId = null, startDate = null, endDate = null) {
+    try {
+      const taskWhere = {
+        status: 'COMPLETED',
+        referenceId: { not: null },
+      };
+
+      if (startDate && endDate && startDate instanceof Date && !isNaN(startDate.getTime()) && endDate instanceof Date && !isNaN(endDate.getTime())) {
+        taskWhere.completedAt = { gte: startDate, lte: endDate };
+      }
+
+      const completedTasks = await prisma.task.findMany({
+        where: taskWhere,
+        select: { referenceId: true }
+      });
+
+      const completedOrderIds = completedTasks.map(t => t.referenceId).filter(Boolean);
+
+      const orderWhere = {
+        isDeleted: false,
+        OR: [
+          { status: { in: ['COMPLETED', 'DELIVERED'] } },
+          ...(completedOrderIds.length > 0 ? [{ id: { in: completedOrderIds } }] : [])
+        ]
+      };
+
+      if (branchId) {
+        orderWhere.branchId = branchId;
+      } else if (organizationId) {
+        orderWhere.organizationId = organizationId;
+      }
+
+      const result = await prisma.order.aggregate({
+        where: orderWhere,
+        _sum: { totalAmount: true }
+      });
+
+      return result._sum.totalAmount || 0;
+    } catch (err) {
+      console.error("Error in getManagerCompletedOrderRevenue:", err);
+      return 0;
+    }
+  }
+
   async getManagerVisitMetrics(organizationId, userId = null, branchId = null, departmentId = null, startDate = null, endDate = null) {
     try {
       const where = {};
@@ -731,27 +814,31 @@ export class DashboardRepository {
   }
 
   async getManagerAttendanceMetrics(organizationId, userId = null, branchId = null, departmentId = null, date = new Date()) {
-    const validDate = date && date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
-    const start = new Date(validDate);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(validDate);
-    end.setHours(23, 59, 59, 999);
+    try {
+      const validDate = date && date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
+      const start = new Date(validDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(validDate);
+      end.setHours(23, 59, 59, 999);
 
-    const where = {
-      organizationId,
-      date: { gte: start, lte: end },
-    };
-    if (userId) {
-      where.userId = userId;
-    } else if (branchId) {
-      where.user = { branchId };
+      const where = {
+        organizationId,
+        date: { gte: start, lte: end },
+      };
+      if (userId) {
+        where.userId = userId;
+      } else if (branchId) {
+        where.user = { branchId };
+      }
+
+      return await prisma.attendance.groupBy({
+        by: ['status'],
+        where,
+        _count: { id: true },
+      });
+    } catch {
+      return [];
     }
-
-    return prisma.attendance.groupBy({
-      by: ['status'],
-      where,
-      _count: { id: true },
-    });
   }
 
   async getManagerTasks(organizationId, userId = null, branchId = null, departmentId = null) {
@@ -1127,10 +1214,37 @@ export class DashboardRepository {
 
   async getExecutiveCustomerCount(organizationId, userId) {
     try {
-      return await prisma.customer.count({
-        where: { organizationId }
+      const assignedTasks = await prisma.task.findMany({
+        where: { assignedToId: userId, referenceId: { not: null } },
+        select: { referenceId: true }
       });
-    } catch {
+      const assignedOrderIds = assignedTasks.map(t => t.referenceId).filter(Boolean);
+
+      return await prisma.customer.count({
+        where: {
+          organizationId,
+          OR: [
+            {
+              orders: {
+                some: {
+                  isDeleted: false,
+                  OR: [
+                    { ownerId: userId },
+                    ...(assignedOrderIds.length > 0 ? [{ id: { in: assignedOrderIds } }] : [])
+                  ]
+                }
+              }
+            },
+            {
+              visits: {
+                some: { userId }
+              }
+            }
+          ]
+        }
+      });
+    } catch (err) {
+      console.error("Error in getExecutiveCustomerCount:", err);
       return 0;
     }
   }

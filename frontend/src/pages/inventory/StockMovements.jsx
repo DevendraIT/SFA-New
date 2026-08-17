@@ -204,7 +204,7 @@ export default function StockMovements() {
             </select>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Warehouse size={16} className="text-slate-400" />
             <select
               value={warehouseFilter}
@@ -218,7 +218,7 @@ export default function StockMovements() {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
         </div>
       </div>
 

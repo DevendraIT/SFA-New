@@ -132,8 +132,7 @@ export class DashboardService {
     const formattedAllVisits = this._formatGroupBy(visitMetricsAll, 'status');
     const formattedTodayVisits = this._formatGroupBy(visitMetricsToday, 'status');
 
-    const effectiveOrderMetrics = (orderMetricsRaw && orderMetricsRaw.length > 0) ? orderMetricsRaw : branchOrderMetrics;
-    const formattedOrders = this._formatOrderGroupBy(effectiveOrderMetrics, 'status');
+    const formattedOrders = this._formatOrderGroupBy(orderMetricsRaw, 'status');
 
     const effectiveTargets = (targetMetricsRaw && targetMetricsRaw.length > 0) ? targetMetricsRaw : orgTargets;
 
@@ -385,7 +384,8 @@ export class DashboardService {
       totalTeams,
       totalCustomers,
       orderMetrics,
-      todayOrderMetrics,
+      completedRevenueData,
+      todayCompletedRevenueData,
       todayVisitMetrics,
       allVisitMetrics,
       attendanceRaw,
@@ -395,23 +395,23 @@ export class DashboardService {
       targetMetrics,
       organizationInfo,
     ] = await Promise.all([
-      this.repo.getManagerUserCount(organizationId, null, branchId, departmentId),
+      this.repo.getManagerUserCount(organizationId, userId, branchId, departmentId),
       this.repo.getManagerTeamCount(organizationId, branchId, departmentId),
       this.repo.getManagerCustomerCount(organizationId, branchId),
-      this.repo.getManagerOrderMetrics(organizationId, null, branchId, departmentId, null, null),
-      this.repo.getManagerOrderMetrics(organizationId, null, branchId, departmentId, todayStart, todayEnd),
-      this.repo.getManagerVisitMetrics(organizationId, null, branchId, departmentId, todayStart, todayEnd),
-      this.repo.getManagerVisitMetrics(organizationId, null, branchId, departmentId, null, null),
-      this.repo.getManagerAttendanceMetrics(organizationId, null, branchId, departmentId, now),
-      this.repo.getTaskMetrics(organizationId, null, userId, branchId),
-      this.repo.getTodayTaskCount(organizationId, null, userId, branchId),
+      this.repo.getManagerOrderMetrics(organizationId, userId, branchId, departmentId, null, null),
+      this.repo.getManagerCompletedOrderRevenue(organizationId, branchId, null, null),
+      this.repo.getManagerCompletedOrderRevenue(organizationId, branchId, todayStart, todayEnd),
+      this.repo.getManagerVisitMetrics(organizationId, userId, branchId, departmentId, todayStart, todayEnd),
+      this.repo.getManagerVisitMetrics(organizationId, userId, branchId, departmentId, null, null),
+      this.repo.getManagerAttendanceMetrics(organizationId, userId, branchId, departmentId, now),
+      this.repo.getTaskMetrics(organizationId, userId, userId, branchId),
+      this.repo.getTodayTaskCount(organizationId, userId, userId, branchId),
       this.repo.getManagerTasks(organizationId, userId, branchId, departmentId),
       this.repo.getTargetMetrics(organizationId),
       this.repo.getManagerOrganizationInfo(branchId, departmentId, organizationId),
     ]);
 
     const formattedOrders = this._formatOrderGroupBy(orderMetrics, 'status');
-    const formattedTodayOrders = this._formatOrderGroupBy(todayOrderMetrics, 'status');
     const todayVisitsFormatted = this._formatGroupBy(todayVisitMetrics, 'status');
     const allVisitsFormatted = this._formatGroupBy(allVisitMetrics, 'status');
     const attendanceFormatted = this._formatAttendance(attendanceRaw, totalSalesExecutives);
@@ -424,8 +424,9 @@ export class DashboardService {
     const approvedOrders = (formattedOrders['APPROVED']?.count || 0) + (formattedOrders['COMPLETED']?.count || 0) + (formattedOrders['DELIVERED']?.count || 0);
     const pendingOrders = (formattedOrders['PENDING']?.count || 0) + (formattedOrders['DRAFT']?.count || 0) + (formattedOrders['CONFIRMED']?.count || 0);
 
-    const revenue = Object.values(formattedOrders).reduce((sum, item) => sum + (item.revenue || 0), 0);
-    const todaysRevenue = Object.values(formattedTodayOrders).reduce((sum, item) => sum + (item.revenue || 0), 0);
+    // Revenue is ONLY calculated from orders whose associated task has been COMPLETED by the sales executive
+    const revenue = completedRevenueData || 0;
+    const todaysRevenue = todayCompletedRevenueData || 0;
 
     const teamTasksSummary = this._formatTaskSummary(taskMetrics, todayTaskCount);
 

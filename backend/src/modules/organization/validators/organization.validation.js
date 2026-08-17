@@ -75,12 +75,16 @@ export const createBranchSchema = z.object({
   code: codeSchema,
 
   email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
-  phone: z.string().trim().max(20, "Phone cannot exceed 20 characters.").optional(),
+  phone: z.string().trim().refine((val) => !val || /^\d{10}$/.test(val), {
+    message: "Mobile number must be 10 digits",
+  }).optional().or(z.literal("")),
   address: z.string().trim().max(255, "Address cannot exceed 255 characters.").optional(),
   city: z.string().trim().max(100, "City cannot exceed 100 characters.").optional(),
   state: z.string().trim().max(100, "State cannot exceed 100 characters.").optional(),
   country: z.string().trim().max(100, "Country cannot exceed 100 characters.").optional(),
   postalCode: z.string().trim().max(20, "Postal Code cannot exceed 20 characters.").optional(),
+  latitude: z.union([z.number(), z.string()]),
+  longitude: z.union([z.number(), z.string()]),
   warehouseIds: z.array(uuidSchema('Warehouse')).optional(),
 });
 
@@ -91,12 +95,16 @@ export const updateBranchSchema = z.object({
   code: codeSchema,
 
   email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
-  phone: z.string().trim().max(20).optional(),
+  phone: z.string().trim().refine((val) => !val || /^\d{10}$/.test(val), {
+    message: "Mobile number must be 10 digits",
+  }).optional().or(z.literal("")),
   address: z.string().trim().max(255).optional(),
   city: z.string().trim().max(100).optional(),
   state: z.string().trim().max(100).optional(),
   country: z.string().trim().max(100).optional(),
   postalCode: z.string().trim().max(20).optional(),
+  latitude: z.union([z.number(), z.string()]).optional().nullable(),
+  longitude: z.union([z.number(), z.string()]).optional().nullable(),
   warehouseIds: z.array(uuidSchema('Warehouse')).optional(),
 });
 

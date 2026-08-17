@@ -44062,8 +44062,20 @@ export namespace Prisma {
 
   export type AggregateWarehouse = {
     _count: WarehouseCountAggregateOutputType | null
+    _avg: WarehouseAvgAggregateOutputType | null
+    _sum: WarehouseSumAggregateOutputType | null
     _min: WarehouseMinAggregateOutputType | null
     _max: WarehouseMaxAggregateOutputType | null
+  }
+
+  export type WarehouseAvgAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type WarehouseSumAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
   }
 
   export type WarehouseMinAggregateOutputType = {
@@ -44072,6 +44084,8 @@ export namespace Prisma {
     name: string | null
     code: string | null
     location: string | null
+    latitude: number | null
+    longitude: number | null
     isActive: boolean | null
     warehouseManagerId: string | null
     createdAt: Date | null
@@ -44084,6 +44098,8 @@ export namespace Prisma {
     name: string | null
     code: string | null
     location: string | null
+    latitude: number | null
+    longitude: number | null
     isActive: boolean | null
     warehouseManagerId: string | null
     createdAt: Date | null
@@ -44096,6 +44112,8 @@ export namespace Prisma {
     name: number
     code: number
     location: number
+    latitude: number
+    longitude: number
     isActive: number
     warehouseManagerId: number
     createdAt: number
@@ -44104,12 +44122,24 @@ export namespace Prisma {
   }
 
 
+  export type WarehouseAvgAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type WarehouseSumAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
   export type WarehouseMinAggregateInputType = {
     id?: true
     organizationId?: true
     name?: true
     code?: true
     location?: true
+    latitude?: true
+    longitude?: true
     isActive?: true
     warehouseManagerId?: true
     createdAt?: true
@@ -44122,6 +44152,8 @@ export namespace Prisma {
     name?: true
     code?: true
     location?: true
+    latitude?: true
+    longitude?: true
     isActive?: true
     warehouseManagerId?: true
     createdAt?: true
@@ -44134,6 +44166,8 @@ export namespace Prisma {
     name?: true
     code?: true
     location?: true
+    latitude?: true
+    longitude?: true
     isActive?: true
     warehouseManagerId?: true
     createdAt?: true
@@ -44179,6 +44213,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: WarehouseAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WarehouseSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: WarehouseMinAggregateInputType
@@ -44209,6 +44255,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: WarehouseCountAggregateInputType | true
+    _avg?: WarehouseAvgAggregateInputType
+    _sum?: WarehouseSumAggregateInputType
     _min?: WarehouseMinAggregateInputType
     _max?: WarehouseMaxAggregateInputType
   }
@@ -44219,11 +44267,15 @@ export namespace Prisma {
     name: string
     code: string | null
     location: string | null
+    latitude: number | null
+    longitude: number | null
     isActive: boolean
     warehouseManagerId: string | null
     createdAt: Date
     updatedAt: Date
     _count: WarehouseCountAggregateOutputType | null
+    _avg: WarehouseAvgAggregateOutputType | null
+    _sum: WarehouseSumAggregateOutputType | null
     _min: WarehouseMinAggregateOutputType | null
     _max: WarehouseMaxAggregateOutputType | null
   }
@@ -44248,6 +44300,8 @@ export namespace Prisma {
     name?: boolean
     code?: boolean
     location?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isActive?: boolean
     warehouseManagerId?: boolean
     createdAt?: boolean
@@ -44267,6 +44321,8 @@ export namespace Prisma {
     name?: boolean
     code?: boolean
     location?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isActive?: boolean
     warehouseManagerId?: boolean
     createdAt?: boolean
@@ -44281,6 +44337,8 @@ export namespace Prisma {
     name?: boolean
     code?: boolean
     location?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isActive?: boolean
     warehouseManagerId?: boolean
     createdAt?: boolean
@@ -44295,13 +44353,15 @@ export namespace Prisma {
     name?: boolean
     code?: boolean
     location?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isActive?: boolean
     warehouseManagerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "code" | "location" | "isActive" | "warehouseManagerId" | "createdAt" | "updatedAt", ExtArgs["result"]["warehouse"]>
+  export type WarehouseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "code" | "location" | "latitude" | "longitude" | "isActive" | "warehouseManagerId" | "createdAt" | "updatedAt", ExtArgs["result"]["warehouse"]>
   export type WarehouseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     warehouseManager?: boolean | Warehouse$warehouseManagerArgs<ExtArgs>
@@ -44336,6 +44396,8 @@ export namespace Prisma {
       name: string
       code: string | null
       location: string | null
+      latitude: number | null
+      longitude: number | null
       isActive: boolean
       warehouseManagerId: string | null
       createdAt: Date
@@ -44774,6 +44836,8 @@ export namespace Prisma {
     readonly name: FieldRef<"Warehouse", 'String'>
     readonly code: FieldRef<"Warehouse", 'String'>
     readonly location: FieldRef<"Warehouse", 'String'>
+    readonly latitude: FieldRef<"Warehouse", 'Float'>
+    readonly longitude: FieldRef<"Warehouse", 'Float'>
     readonly isActive: FieldRef<"Warehouse", 'Boolean'>
     readonly warehouseManagerId: FieldRef<"Warehouse", 'String'>
     readonly createdAt: FieldRef<"Warehouse", 'DateTime'>
@@ -52215,6 +52279,8 @@ export namespace Prisma {
     name: 'name',
     code: 'code',
     location: 'location',
+    latitude: 'latitude',
+    longitude: 'longitude',
     isActive: 'isActive',
     warehouseManagerId: 'warehouseManagerId',
     createdAt: 'createdAt',
@@ -55668,6 +55734,8 @@ export namespace Prisma {
     name?: StringFilter<"Warehouse"> | string
     code?: StringNullableFilter<"Warehouse"> | string | null
     location?: StringNullableFilter<"Warehouse"> | string | null
+    latitude?: FloatNullableFilter<"Warehouse"> | number | null
+    longitude?: FloatNullableFilter<"Warehouse"> | number | null
     isActive?: BoolFilter<"Warehouse"> | boolean
     warehouseManagerId?: UuidNullableFilter<"Warehouse"> | string | null
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
@@ -55686,6 +55754,8 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     isActive?: SortOrder
     warehouseManagerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -55709,6 +55779,8 @@ export namespace Prisma {
     name?: StringFilter<"Warehouse"> | string
     code?: StringNullableFilter<"Warehouse"> | string | null
     location?: StringNullableFilter<"Warehouse"> | string | null
+    latitude?: FloatNullableFilter<"Warehouse"> | number | null
+    longitude?: FloatNullableFilter<"Warehouse"> | number | null
     isActive?: BoolFilter<"Warehouse"> | boolean
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
     updatedAt?: DateTimeFilter<"Warehouse"> | Date | string
@@ -55726,13 +55798,17 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
     isActive?: SortOrder
     warehouseManagerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: WarehouseCountOrderByAggregateInput
+    _avg?: WarehouseAvgOrderByAggregateInput
     _max?: WarehouseMaxOrderByAggregateInput
     _min?: WarehouseMinOrderByAggregateInput
+    _sum?: WarehouseSumOrderByAggregateInput
   }
 
   export type WarehouseScalarWhereWithAggregatesInput = {
@@ -55744,6 +55820,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Warehouse"> | string
     code?: StringNullableWithAggregatesFilter<"Warehouse"> | string | null
     location?: StringNullableWithAggregatesFilter<"Warehouse"> | string | null
+    latitude?: FloatNullableWithAggregatesFilter<"Warehouse"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"Warehouse"> | number | null
     isActive?: BoolWithAggregatesFilter<"Warehouse"> | boolean
     warehouseManagerId?: UuidNullableWithAggregatesFilter<"Warehouse"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Warehouse"> | Date | string
@@ -59665,6 +59743,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -59682,6 +59762,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -59697,6 +59779,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59714,6 +59798,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59730,6 +59816,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -59741,6 +59829,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59752,6 +59842,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -62758,10 +62850,17 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrder
     location?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isActive?: SortOrder
     warehouseManagerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type WarehouseAvgOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type WarehouseMaxOrderByAggregateInput = {
@@ -62770,6 +62869,8 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrder
     location?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isActive?: SortOrder
     warehouseManagerId?: SortOrder
     createdAt?: SortOrder
@@ -62782,10 +62883,17 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrder
     location?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isActive?: SortOrder
     warehouseManagerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type WarehouseSumOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
   }
 
   export type ProductScalarRelationFilter = {
@@ -69594,6 +69702,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -69609,6 +69719,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -70599,6 +70711,8 @@ export namespace Prisma {
     name?: StringFilter<"Warehouse"> | string
     code?: StringNullableFilter<"Warehouse"> | string | null
     location?: StringNullableFilter<"Warehouse"> | string | null
+    latitude?: FloatNullableFilter<"Warehouse"> | number | null
+    longitude?: FloatNullableFilter<"Warehouse"> | number | null
     isActive?: BoolFilter<"Warehouse"> | boolean
     warehouseManagerId?: UuidNullableFilter<"Warehouse"> | string | null
     createdAt?: DateTimeFilter<"Warehouse"> | Date | string
@@ -71049,6 +71163,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -71065,6 +71181,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -74988,6 +75106,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -75004,6 +75124,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -75826,6 +75948,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -75842,6 +75966,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85165,6 +85291,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85181,6 +85309,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -85371,6 +85501,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85387,6 +85519,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85549,6 +85683,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85565,6 +85701,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -85860,6 +85998,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85876,6 +86016,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86149,6 +86291,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86165,6 +86309,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -86620,6 +86766,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86636,6 +86784,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88232,6 +88382,8 @@ export namespace Prisma {
     name: string
     code?: string | null
     location?: string | null
+    latitude?: number | null
+    longitude?: number | null
     isActive?: boolean
     warehouseManagerId?: string | null
     createdAt?: Date | string
@@ -89426,6 +89578,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89441,6 +89595,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89456,6 +89612,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89850,6 +90008,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89866,6 +90026,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89881,6 +90043,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     warehouseManagerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

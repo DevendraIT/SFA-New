@@ -45,12 +45,12 @@ export class ProductDetailsDto {
       this.totalReserved = product.stocks.reduce((acc, stock) => acc + stock.reservedQuantity, 0);
       this.availableStock = this.totalStock - this.totalReserved;
       this.warehouses = product.stocks.map(stock => ({
-        warehouseId: stock.warehouse.id,
-        warehouseName: stock.warehouse.name,
+        warehouseId: stock.warehouse?.id || stock.warehouseId,
+        warehouseName: stock.warehouse?.name || 'Warehouse',
         quantity: stock.quantity,
         reservedQuantity: stock.reservedQuantity,
         available: stock.quantity - stock.reservedQuantity
-      }));
+      })).filter(w => w.warehouseId);
     }
   }
 }

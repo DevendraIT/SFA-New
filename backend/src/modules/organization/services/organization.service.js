@@ -310,16 +310,18 @@ export class OrganizationService {
     const department = await this.departmentRepo.findById(data.departmentId, organizationId);
     if (!department) throw AppError.badRequest('Department not found within your organization.');
 
-    let lat = data.latitude ? parseFloat(data.latitude) : null;
-    let lng = data.longitude ? parseFloat(data.longitude) : null;
+    let lat = data.latitude !== undefined && data.latitude !== null && data.latitude !== "" ? parseFloat(data.latitude) : null;
+    let lng = data.longitude !== undefined && data.longitude !== null && data.longitude !== "" ? parseFloat(data.longitude) : null;
+    if (isNaN(lat)) lat = null;
+    if (isNaN(lng)) lng = null;
     const fullAddress = [data.address, data.city, data.state, data.country].filter(Boolean).join(', ');
 
-    if ((!lat || !lng) && fullAddress) {
+    if ((lat == null || lng == null) && fullAddress) {
       try {
         const geo = await locationService.geocodeAddress(fullAddress);
         if (geo?.latitude && geo?.longitude) {
-          lat = geo.latitude;
-          lng = geo.longitude;
+          if (lat == null) lat = geo.latitude;
+          if (lng == null) lng = geo.longitude;
         }
       } catch (e) {
         console.warn('Branch creation geocoding warning:', e.message);
@@ -386,8 +388,12 @@ export class OrganizationService {
       if (existing) throw AppError.badRequest(`Branch code '${data.code}' is already in use within this company.`);
     }
 
-    let lat = data.latitude !== undefined ? (data.latitude ? parseFloat(data.latitude) : null) : branch.latitude;
-    let lng = data.longitude !== undefined ? (data.longitude ? parseFloat(data.longitude) : null) : branch.longitude;
+    let lat = data.latitude !== undefined
+      ? (data.latitude !== null && data.latitude !== "" && !isNaN(parseFloat(data.latitude)) ? parseFloat(data.latitude) : null)
+      : branch.latitude;
+    let lng = data.longitude !== undefined
+      ? (data.longitude !== null && data.longitude !== "" && !isNaN(parseFloat(data.longitude)) ? parseFloat(data.longitude) : null)
+      : branch.longitude;
 
     const newFullAddress = [
       data.address !== undefined ? data.address : branch.address,
@@ -399,14 +405,14 @@ export class OrganizationService {
     const oldFullAddress = [branch.address, branch.city, branch.state, branch.country].filter(Boolean).join(', ');
 
     const addressChanged = newFullAddress && newFullAddress !== oldFullAddress;
-    const missingCoords = !lat || !lng;
+    const missingCoords = (lat == null || lng == null);
 
     if ((addressChanged || missingCoords) && newFullAddress) {
       try {
         const geo = await locationService.geocodeAddress(newFullAddress);
         if (geo?.latitude && geo?.longitude) {
-          lat = geo.latitude;
-          lng = geo.longitude;
+          if (lat == null) lat = geo.latitude;
+          if (lng == null) lng = geo.longitude;
         }
       } catch (e) {
         console.warn('Branch update geocoding warning:', e.message);

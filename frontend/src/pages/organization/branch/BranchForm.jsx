@@ -22,14 +22,29 @@ const schema = z.object({
     .max(20, "Branch code cannot exceed 20 characters."),
 
   email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
-  phone: z.string().trim().max(20, "Phone cannot exceed 20 characters.").optional(),
+  phone: z
+    .string()
+    .trim()
+    .refine((val) => !val || /^\d{10}$/.test(val), {
+      message: "Mobile number must be 10 digits",
+    })
+    .optional()
+    .or(z.literal("")),
   address: z.string().trim().max(255, "Address cannot exceed 255 characters.").optional(),
   city: z.string().trim().max(100, "City cannot exceed 100 characters.").optional(),
   state: z.string().trim().max(100, "State cannot exceed 100 characters.").optional(),
   country: z.string().trim().max(100, "Country cannot exceed 100 characters.").optional(),
   postalCode: z.string().trim().max(20, "Postal Code cannot exceed 20 characters.").optional(),
-  latitude: z.union([z.string(), z.number()]).optional().nullable(),
-  longitude: z.union([z.string(), z.number()]).optional().nullable(),
+  latitude: z
+    .union([z.string(), z.number()])
+    .refine((val) => val !== "" && val != null && !isNaN(parseFloat(val)), {
+      message: "Latitude is required.",
+    }),
+  longitude: z
+    .union([z.string(), z.number()])
+    .refine((val) => val !== "" && val != null && !isNaN(parseFloat(val)), {
+      message: "Longitude is required.",
+    }),
 });
 
 export default function BranchForm({ branch, onClose, onSuccess }) {
@@ -316,7 +331,7 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Latitude (Optional)
+              Latitude *
             </label>
             <input
               {...register("latitude")}
@@ -332,7 +347,7 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Longitude (Optional)
+              Longitude *
             </label>
             <input
               {...register("longitude")}

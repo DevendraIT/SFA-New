@@ -1,9 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, Phone, ChevronRight, ExternalLink } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 export default function ExecutiveTable({ executives = [], loading = false }) {
-  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -37,8 +35,7 @@ export default function ExecutiveTable({ executives = [], loading = false }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.03 }}
-            onClick={() => navigate(`/team/members/${exec.id}`)}
-            className="flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-4 hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer"
+            className="flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-4 transition-all"
           >
             <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
               {fullName.charAt(0) || "U"}
@@ -59,12 +56,6 @@ export default function ExecutiveTable({ executives = [], loading = false }) {
                   </span>
                 )}
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={(e) => { e.stopPropagation(); navigate(`/team/members/${exec.id}`); }} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition">
-                View <ExternalLink size={12} />
-              </button>
-              <ChevronRight size={16} className="text-slate-300" />
             </div>
           </motion.div>
         );

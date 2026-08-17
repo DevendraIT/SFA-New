@@ -32,11 +32,28 @@ export function InventoryManagerRoute({ children }) {
 // Guard for Warehouse Manager Workspace (/inventory/warehouse/*)
 export function WarehouseManagerRoute({ children }) {
   const { user, loading } = useAuth();
-  const isAllowed = isWarehouseManagerUser(user) || isInventoryManagerUser(user);
+  const isAllowed = isWarehouseManagerUser(user) || isInventoryManagerUser(user) || isSuperAdminUser(user) || isCompanyAdminUser(user);
 
   useEffect(() => {
     if (!loading && !isAllowed) {
       toast.error("Access Restricted: Warehouse Manager workspace");
+    }
+  }, [loading, isAllowed]);
+
+  if (loading) return null;
+  if (!isAllowed) return <Navigate to="/dashboard" replace />;
+
+  return children;
+}
+
+// Guard for Shared Stock & Stock Movements Routes
+export function StockAccessRoute({ children }) {
+  const { user, loading } = useAuth();
+  const isAllowed = isInventoryManagerUser(user) || isWarehouseManagerUser(user) || isSuperAdminUser(user) || isCompanyAdminUser(user);
+
+  useEffect(() => {
+    if (!loading && !isAllowed) {
+      toast.error("Access Restricted: Inventory Workspace");
     }
   }, [loading, isAllowed]);
 
@@ -127,6 +144,8 @@ export function ReportsRoute({ children }) {
   const { user, loading } = useAuth();
   const isAllowed =
     isHeadOfSalesUser(user) ||
+    isSalesManagerUser(user) ||
+    isCompanyAdminUser(user) ||
     isSuperAdminUser(user);
 
   useEffect(() => {

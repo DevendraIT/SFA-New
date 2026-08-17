@@ -23,8 +23,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
 import inventoryApi from "../../api/inventory.api";
+import { useAuth } from "../../context/AuthContext";
+import {
+  isWarehouseManagerUser,
+  isInventoryManagerUser,
+  isCompanyAdminUser,
+  isSuperAdminUser,
+} from "../../utils/roleUtils";
 
 export default function Stock() {
+  const { user } = useAuth();
+  const isWMOnly = isWarehouseManagerUser(user) && !isInventoryManagerUser(user) && !isCompanyAdminUser(user) && !isSuperAdminUser(user);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -89,7 +98,11 @@ export default function Stock() {
 
     // Map through warehouses & products
     warehouses.forEach((wh) => {
-      const branchName = wh.branches?.[0]?.name || "Central Branch";
+      const branchName =
+        wh.branches?.[0]?.name ||
+        wh.branch?.name ||
+        wh.warehouseManager?.branch?.name ||
+        (wh.branches && wh.branches.length > 0 ? wh.branches.map(b => b.name).join(", ") : "Linked Branch");
 
       products.forEach((prod) => {
         // Find existing stock record in product.stocks or wh.stocks
@@ -300,19 +313,21 @@ export default function Stock() {
           <button
             onClick={() => fetchData(true)}
             disabled={refreshing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-medium text-sm rounded-xl shadow-xs hover:bg-slate-50 transition"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-medium text-sm rounded-xl shadow-xs hover:bg-slate-50 transition cursor-pointer"
           >
             <RotateCw size={16} className={refreshing ? "animate-spin text-indigo-600" : "text-slate-500"} />
             {refreshing ? "Refreshing..." : "Refresh"}
           </button>
 
-          <button
-            onClick={() => handleOpenAdd(null)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-xs transition"
-          >
-            <PlusCircle size={18} />
-            + Add Stock
-          </button>
+          {!isWMOnly && (
+            <button
+              onClick={() => handleOpenAdd(null)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-xs transition cursor-pointer"
+            >
+              <PlusCircle size={18} />
+              + Add Stock
+            </button>
+          )}
         </div>
       </div>
 
@@ -329,37 +344,39 @@ export default function Stock() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <div className="flex items-center gap-2">
-            <Warehouse size={16} className="text-slate-400" />
-            <select
-              value={selectedWarehouseFilter}
-              onChange={(e) => setSelectedWarehouseFilter(e.target.value)}
-              className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="ALL">All Warehouses (Global)</option>
-              {warehouses.map((wh) => (
-                <option key={wh.id} value={wh.id}>
-                  {wh.name} ({wh.code || "WH"})
-                </option>
-              ))}
-            </select>
-          </div>
+        {!isWMOnly && (
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-2">
+              <Warehouse size={16} className="text-slate-400" />
+              <select
+                value={selectedWarehouseFilter}
+                onChange={(e) => setSelectedWarehouseFilter(e.target.value)}
+                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="ALL">All Warehouses (Global)</option>
+                {warehouses.map((wh) => (
+                  <option key={wh.id} value={wh.id}>
+                    {wh.name} ({wh.code || "WH"})
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <Filter size={16} className="text-slate-400" />
-            <select
-              value={healthFilter}
-              onChange={(e) => setHealthFilter(e.target.value)}
-              className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="ALL">All Stock Health</option>
-              <option value="IN_STOCK">In Stock</option>
-              <option value="LOW_STOCK">Low Stock</option>
-              <option value="OUT_OF_STOCK">Out of Stock</option>
-            </select>
+            <div className="flex items-center gap-2">
+              <Filter size={16} className="text-slate-400" />
+              <select
+                value={healthFilter}
+                onChange={(e) => setHealthFilter(e.target.value)}
+                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="ALL">All Stock Health</option>
+                <option value="IN_STOCK">In Stock</option>
+                <option value="LOW_STOCK">Low Stock</option>
+                <option value="OUT_OF_STOCK">Out of Stock</option>
+              </select>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Stock Availability Data Table */}
@@ -372,13 +389,13 @@ export default function Stock() {
                 <th className="px-6 py-4">Product Name</th>
                 <th className="px-6 py-4">SKU</th>
                 <th className="px-6 py-4 text-center">Available Stock</th>
-                <th className="px-6 py-4 text-center">Stock Actions</th>
+                {!isWMOnly && <th className="px-6 py-4 text-center">Stock Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-400">
+                  <td colSpan={isWMOnly ? 4 : 5} className="py-12 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center space-y-2">
                       <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
                       <span>Loading stock availability records...</span>
@@ -387,10 +404,10 @@ export default function Stock() {
                 </tr>
               ) : filteredStockRows.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-400">
+                  <td colSpan={isWMOnly ? 4 : 5} className="py-12 text-center text-slate-400">
                     <Layers size={40} className="mx-auto text-slate-300 mb-2" />
                     <p className="font-semibold text-slate-700">No stock availability entries found</p>
-                    <p className="text-xs text-slate-400 mt-1">Try selecting another warehouse or search query.</p>
+                    <p className="text-xs text-slate-400 mt-1">Try another search query.</p>
                   </td>
                 </tr>
               ) : (
@@ -424,24 +441,26 @@ export default function Stock() {
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => handleOpenAdd(row)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition"
-                          title="Add Stock"
-                        >
-                          <PlusCircle size={14} /> + Add
-                        </button>
-                        <button
-                          onClick={() => handleOpenReduce(row)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold transition"
-                          title="Reduce Stock"
-                        >
-                          <MinusCircle size={14} /> - Reduce
-                        </button>
-                      </div>
-                    </td>
+                    {!isWMOnly && (
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => handleOpenAdd(row)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition"
+                            title="Add Stock"
+                          >
+                            <PlusCircle size={14} /> + Add
+                          </button>
+                          <button
+                            onClick={() => handleOpenReduce(row)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold transition"
+                            title="Reduce Stock"
+                          >
+                            <MinusCircle size={14} /> - Reduce
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}

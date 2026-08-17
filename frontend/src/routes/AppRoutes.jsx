@@ -6,6 +6,7 @@ import ResetPassword from "../pages/auth/ResetPassword";
 
 import Dashboard from "../pages/dashboard/Dashboard";
 import InventoryDashboard from "../pages/inventory/InventoryDashboard";
+import WarehouseManagerDashboard from "../pages/dashboard/WarehouseManagerDashboard";
 import Products from "../pages/inventory/Products";
 import Warehouses from "../pages/inventory/Warehouses";
 import Stock from "../pages/inventory/Stock";
@@ -19,6 +20,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import {
   InventoryManagerRoute,
   WarehouseManagerRoute,
+  StockAccessRoute,
   TaskExecutionRoute,
   SalesOrdersRoute,
   OrganizationRoute,
@@ -119,18 +121,18 @@ export default function AppRoutes() {
         <Route path="/inventory/dashboard" element={<InventoryManagerRoute><InventoryDashboard /></InventoryManagerRoute>} />
         <Route path="/inventory/products" element={<InventoryManagerRoute><Products /></InventoryManagerRoute>} />
         <Route path="/inventory/warehouses" element={<InventoryManagerRoute><Warehouses /></InventoryManagerRoute>} />
-        <Route path="/inventory/stock" element={<InventoryManagerRoute><Stock /></InventoryManagerRoute>} />
-        <Route path="/inventory/product-issues" element={<InventoryManagerRoute><ProductIssues /></InventoryManagerRoute>} />
-        <Route path="/inventory/stock-movements" element={<InventoryManagerRoute><StockMovements /></InventoryManagerRoute>} />
+        <Route path="/inventory/stock" element={<StockAccessRoute><Stock /></StockAccessRoute>} />
+        <Route path="/inventory/product-issues" element={<StockAccessRoute><ProductIssues /></StockAccessRoute>} />
+        <Route path="/inventory/stock-movements" element={<StockAccessRoute><StockMovements /></StockAccessRoute>} />
 
         {/* ===== WAREHOUSE MANAGER WORKSPACE ROUTES ===== */}
         <Route path="/inventory/warehouse" element={<WarehouseManagerRoute><MyWarehouse /></WarehouseManagerRoute>} />
         <Route path="/inventory/my-warehouse" element={<WarehouseManagerRoute><MyWarehouse /></WarehouseManagerRoute>} />
-        <Route path="/inventory/warehouse/dashboard" element={<WarehouseManagerRoute><InventoryDashboard /></WarehouseManagerRoute>} />
-        <Route path="/inventory/warehouse/stock" element={<WarehouseManagerRoute><Stock /></WarehouseManagerRoute>} />
-        <Route path="/inventory/warehouse/product-issues" element={<WarehouseManagerRoute><ProductIssues /></WarehouseManagerRoute>} />
-        <Route path="/inventory/warehouse/returns" element={<WarehouseManagerRoute><ProductIssues /></WarehouseManagerRoute>} />
-        <Route path="/inventory/warehouse/stock-movements" element={<WarehouseManagerRoute><StockMovements /></WarehouseManagerRoute>} />
+        <Route path="/inventory/warehouse/dashboard" element={<WarehouseManagerRoute><WarehouseManagerDashboard /></WarehouseManagerRoute>} />
+        <Route path="/inventory/warehouse/stock" element={<StockAccessRoute><Stock /></StockAccessRoute>} />
+        <Route path="/inventory/warehouse/product-issues" element={<StockAccessRoute><ProductIssues /></StockAccessRoute>} />
+        <Route path="/inventory/warehouse/returns" element={<StockAccessRoute><ProductIssues /></StockAccessRoute>} />
+        <Route path="/inventory/warehouse/stock-movements" element={<StockAccessRoute><StockMovements /></StockAccessRoute>} />
 
         {/* ===== ORGANIZATION STRUCTURE ROUTES ===== */}
         <Route path="/organization/organization" element={<OrganizationRoute><OrganizationProfile /></OrganizationRoute>} />

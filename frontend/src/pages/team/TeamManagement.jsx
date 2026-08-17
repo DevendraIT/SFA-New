@@ -131,7 +131,7 @@ export default function TeamManagement() {
       ) : viewMode === "card" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredMembers.map((member) => (
-            <ExecutiveCard key={member.id} executive={member} taskSummary={{ completed: 0, pending: 0, inProgress: 0, completionRate: 0 }} visitSummary={{ completed: 0, total: 0 }} />
+            <ExecutiveCard key={member.id} executive={member} taskSummary={member.taskSummary} visitSummary={member.visitSummary} />
           ))}
         </div>
       ) : (

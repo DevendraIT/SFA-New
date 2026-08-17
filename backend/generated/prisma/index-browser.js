@@ -568,6 +568,8 @@ exports.Prisma.WarehouseScalarFieldEnum = {
   name: 'name',
   code: 'code',
   location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
   isActive: 'isActive',
   warehouseManagerId: 'warehouseManagerId',
   createdAt: 'createdAt',

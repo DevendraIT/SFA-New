@@ -15,7 +15,7 @@ import ManagerDashboard from "./ManagerDashboard";
 import SalesDashboard from "./SalesDashboard";
 
 import InventoryDashboard from "../inventory/InventoryDashboard";
-import MyWarehouse from "../inventory/MyWarehouse";
+import WarehouseManagerDashboard from "./WarehouseManagerDashboard";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -25,7 +25,7 @@ export default function Dashboard() {
   }
 
   if (isWarehouseManagerUser(user)) {
-    return <MyWarehouse />;
+    return <WarehouseManagerDashboard />;
   }
 
   if (isSuperAdminUser(user)) {

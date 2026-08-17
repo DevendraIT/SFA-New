@@ -372,11 +372,17 @@ export class FieldForceRepository {
   }
 
   async listTasks(organizationId, filters = {}) {
-    const { assignedToId, assignedById, status, skip = 0, take = 20 } = filters;
+    const { assignedToId, assignedById, status, branchId, skip = 0, take = 20 } = filters;
 
     const where = { organizationId };
     if (assignedToId) where.assignedToId = assignedToId;
-    if (assignedById) where.assignedById = assignedById;
+    if (assignedById) {
+      where.OR = [
+        { assignedById: assignedById },
+        { assignedTo: { managerId: assignedById } },
+        ...(branchId ? [{ assignedTo: { branchId: branchId } }] : [])
+      ];
+    }
     if (status) where.status = status;
 
     const [tasks, total] = await Promise.all([

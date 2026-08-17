@@ -8,6 +8,22 @@ export class InventoryService {
     this.inventoryRepository = inventoryRepository;
   }
 
+  _getUserId(userContext) {
+    return userContext?.id || userContext?.userId || null;
+  }
+
+  _getUserRoles(userContext) {
+    return (userContext?.roles || []).map(r =>
+      typeof r === 'string' ? r : (r?.role?.name || r?.name || '')
+    );
+  }
+
+  _isWarehouseManagerOnly(userContext) {
+    const roles = this._getUserRoles(userContext).map(r => r.toLowerCase());
+    return roles.some(r => r.includes('warehouse manager')) &&
+      !roles.some(r => ['super admin', 'company admin', 'inventory manager', 'organization super admin'].includes(r));
+  }
+
   // ==========================================
   // PRODUCTS
   // ==========================================
@@ -112,6 +128,17 @@ export class InventoryService {
   // ==========================================
 
   async getWarehouses(userContext) {
+    const userId = this._getUserId(userContext);
+    if (this._isWarehouseManagerOnly(userContext) && userId) {
+      const assignedWh = await this.inventoryRepository.findWarehouseByManagerId(userId, userContext.organizationId);
+      if (assignedWh) {
+        return {
+          success: true,
+          data: [new WarehouseDto(assignedWh)],
+        };
+      }
+    }
+
     const warehouses = await this.inventoryRepository.findWarehouses(userContext.organizationId);
     return {
       success: true,
@@ -120,8 +147,29 @@ export class InventoryService {
   }
 
   async createWarehouse(data, userContext) {
+    const { prisma } = await import('../../../config/database.js');
+
+    let branchId = data.branchId;
+    if (!branchId && data.name) {
+      const nameLower = data.name.toLowerCase();
+      const branches = await prisma.branch.findMany({
+        where: { organizationId: userContext.organizationId }
+      });
+      const matched = branches.find(b => {
+        const keywords = b.name.toLowerCase().replace("branch", "").trim().split(" ").filter(Boolean);
+        return keywords.some(kw => kw.length > 2 && nameLower.includes(kw));
+      });
+      if (matched) branchId = matched.id;
+    }
+
+    const lat = data.latitude !== undefined && data.latitude !== null && data.latitude !== "" ? parseFloat(data.latitude) : null;
+    const lng = data.longitude !== undefined && data.longitude !== null && data.longitude !== "" ? parseFloat(data.longitude) : null;
+
     const warehouse = await this.inventoryRepository.createWarehouse({
       ...data,
+      ...(branchId && { branchId }),
+      latitude: lat,
+      longitude: lng,
       organizationId: userContext.organizationId,
     });
     return {
@@ -257,7 +305,7 @@ export class InventoryService {
 
       // Check low stock
       const product = await this.inventoryRepository.findProductById(data.productId, userContext.organizationId, true);
-      const stock = product.stocks.find(s => s.warehouse.id === data.warehouseId);
+      const stock = product && Array.isArray(product.stocks) ? product.stocks.find(s => s.warehouseId === data.warehouseId || s.warehouse?.id === data.warehouseId) : null;
       if (stock && product.minimumStock && (stock.quantity - stock.reservedQuantity) <= product.minimumStock) {
         InventoryEventPublisher.emitStockLow(data.productId, data.warehouseId, stock.quantity, product.minimumStock, userContext.organizationId);
       }
@@ -304,12 +352,13 @@ export class InventoryService {
   }
 
   async getWarehouseForManager(managerId, userContext) {
-    let warehouse = await this.inventoryRepository.findWarehouseByManagerId(managerId, userContext.organizationId);
+    const targetId = (!managerId || managerId === 'me') ? this._getUserId(userContext) : managerId;
+    let warehouse = targetId ? await this.inventoryRepository.findWarehouseByManagerId(targetId, userContext.organizationId) : null;
 
     const { prisma } = await import('../../../config/database.js');
-    if (!warehouse) {
+    if (!warehouse && targetId) {
       const userRec = await prisma.user.findUnique({
-        where: { id: managerId },
+        where: { id: targetId },
         select: { branchId: true }
       });
       if (userRec?.branchId) {
@@ -327,16 +376,8 @@ export class InventoryService {
     }
 
     if (!warehouse) {
-      warehouse = await prisma.warehouse.findFirst({
-        where: { organizationId: userContext.organizationId, isActive: true },
-        include: {
-          stocks: { include: { product: true } },
-          branches: true
-        }
-      });
+      throw AppError.notFound('No warehouse assigned to your account. Please contact your administrator to assign a warehouse.');
     }
-
-    if (!warehouse) throw AppError.notFound('No active warehouse found in organization');
 
     if (!warehouse.stocks) {
       const fullWarehouse = await prisma.warehouse.findUnique({
@@ -518,9 +559,8 @@ export class InventoryService {
     if (!warehouse) throw AppError.notFound('Warehouse not found in this organization');
 
     // Security Check: If user is a Warehouse Manager, ensure they can only issue from their assigned warehouse
-    const userRoles = userContext.roles || [];
-    const isWarehouseManagerOnly = userRoles.includes('Warehouse Manager') || userRoles.includes('WAREHOUSE_MANAGER');
-    if (isWarehouseManagerOnly && warehouse.warehouseManagerId !== userContext.userId) {
+    const currentUserId = this._getUserId(userContext);
+    if (this._isWarehouseManagerOnly(userContext) && warehouse.warehouseManagerId !== currentUserId) {
       throw AppError.forbidden('You are only authorized to issue products from your assigned warehouse');
     }
     
@@ -529,7 +569,7 @@ export class InventoryService {
     if (!available) throw AppError.badRequest('Insufficient available stock for this issue request');
 
     // Automatically resolve warehouse manager ID from request body, warehouse assigned manager, or logged in user
-    const assignedManagerId = data.warehouseManagerId || warehouse.warehouseManagerId || userContext.userId;
+    const assignedManagerId = data.warehouseManagerId || warehouse.warehouseManagerId || currentUserId;
 
     const issue = await this.inventoryRepository.createProductIssue({
       ...data,
@@ -554,6 +594,14 @@ export class InventoryService {
       ...queryParams
     };
     
+    const userId = this._getUserId(userContext);
+    if (this._isWarehouseManagerOnly(userContext) && userId) {
+      const assignedWh = await this.inventoryRepository.findWarehouseByManagerId(userId, userContext.organizationId);
+      if (assignedWh) {
+        filters.warehouseId = assignedWh.id;
+      }
+    }
+
     const result = await this.inventoryRepository.getProductIssues(filters, pagination, sorting);
     return { success: true, data: result };
   }
@@ -636,10 +684,9 @@ export class InventoryService {
       ...queryParams
     };
 
-    const userRoles = userContext.roles || [];
-    const isWM = userRoles.includes('Warehouse Manager') || userRoles.includes('WAREHOUSE_MANAGER');
-    if (isWM) {
-      const assignedWh = await this.inventoryRepository.findWarehouseByManagerId(userContext.userId, userContext.organizationId);
+    const userId = this._getUserId(userContext);
+    if (this._isWarehouseManagerOnly(userContext) && userId) {
+      const assignedWh = await this.inventoryRepository.findWarehouseByManagerId(userId, userContext.organizationId);
       if (assignedWh) {
         filters.warehouseId = assignedWh.id;
       }

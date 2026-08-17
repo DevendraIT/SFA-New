@@ -75,10 +75,21 @@ export default function UserList() {
 
   const displayedUsers = useMemo(() => {
     if (!users) return [];
-    if (isSalesManager && user?.branchId) {
-      return users.filter(
-        (u) => u.branchId === user.branchId || u.branch?.id === user.branchId || u.managerId === user.id
-      );
+    if (isSalesManager) {
+      return users.filter((u) => {
+        const uRoleNames = Array.isArray(u.roles)
+          ? u.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name || ""))
+          : [u.role?.name || ""];
+
+        const isWM = uRoleNames.some((r) => r.toLowerCase().includes("warehouse manager") || r.toLowerCase().includes("inventory manager"));
+        const isAdmin = uRoleNames.some((r) => r.toLowerCase().includes("admin"));
+        if (isWM || isAdmin) return false;
+
+        if (user?.branchId) {
+          return u.branchId === user.branchId || u.branch?.id === user.branchId || u.managerId === user.id;
+        }
+        return true;
+      });
     }
     return users;
   }, [users, isSalesManager, user]);

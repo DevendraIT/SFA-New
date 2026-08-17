@@ -170,12 +170,22 @@ export default function Warehouses() {
       return;
     }
 
+    if (warehouseForm.latitude === "" || warehouseForm.latitude == null || isNaN(parseFloat(warehouseForm.latitude))) {
+      setFormError("Latitude is required and must be a valid number");
+      return;
+    }
+
+    if (warehouseForm.longitude === "" || warehouseForm.longitude == null || isNaN(parseFloat(warehouseForm.longitude))) {
+      setFormError("Longitude is required and must be a valid number");
+      return;
+    }
+
     const payload = {
       name: warehouseForm.name.trim(),
       code: warehouseForm.code.trim() || undefined,
       location: warehouseForm.location.trim() || undefined,
-      latitude: warehouseForm.latitude !== "" && warehouseForm.latitude != null ? parseFloat(warehouseForm.latitude) : undefined,
-      longitude: warehouseForm.longitude !== "" && warehouseForm.longitude != null ? parseFloat(warehouseForm.longitude) : undefined,
+      latitude: parseFloat(warehouseForm.latitude),
+      longitude: parseFloat(warehouseForm.longitude),
       isActive: warehouseForm.isActive,
     };
 
@@ -554,12 +564,13 @@ export default function Warehouses() {
                   />
                 </div>
 
-                {/* <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Latitude (Optional)</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Latitude *</label>
                     <input
                       type="number"
                       step="any"
+                      required
                       value={warehouseForm.latitude}
                       onChange={(e) => setWarehouseForm({ ...warehouseForm, latitude: e.target.value })}
                       placeholder="e.g. 22.7196"
@@ -567,17 +578,18 @@ export default function Warehouses() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Longitude (Optional)</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Longitude *</label>
                     <input
                       type="number"
                       step="any"
+                      required
                       value={warehouseForm.longitude}
                       onChange={(e) => setWarehouseForm({ ...warehouseForm, longitude: e.target.value })}
                       placeholder="e.g. 75.8577"
                       className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
-                </div> */}
+                </div>
 
                 <div className="pt-3 flex items-center justify-between border-t border-slate-100">
                   <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">

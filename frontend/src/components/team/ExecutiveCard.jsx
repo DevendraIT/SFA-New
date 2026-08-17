@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { User, Mail, Building2, ChevronRight, BadgeCheck, CheckCircle2, Clock, Target } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Mail, Building2, BadgeCheck, CheckCircle2, Clock, Target } from "lucide-react";
 
 export default function ExecutiveCard({ executive, taskSummary, visitSummary, loading = false }) {
   if (loading) {
@@ -24,7 +23,7 @@ export default function ExecutiveCard({ executive, taskSummary, visitSummary, lo
 
   return (
     <motion.div whileHover={{ y: -3 }} className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all overflow-hidden">
-      <Link to={`/team/members/${executive.id}`} className="block p-6">
+      <div className="p-6">
         <div className="flex items-start gap-4">
           <div className="h-14 w-14 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
             {fullName.charAt(0) || "U"}
@@ -47,7 +46,6 @@ export default function ExecutiveCard({ executive, taskSummary, visitSummary, lo
               </div>
             )}
           </div>
-          <ChevronRight size={20} className="text-slate-300 flex-shrink-0 mt-1" />
         </div>
 
         <div className="grid grid-cols-3 gap-3 mt-5 pt-4 border-t border-slate-100">
@@ -88,7 +86,7 @@ export default function ExecutiveCard({ executive, taskSummary, visitSummary, lo
             />
           </div>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 }

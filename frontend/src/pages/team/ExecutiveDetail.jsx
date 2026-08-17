@@ -55,11 +55,6 @@ export default function ExecutiveDetail() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-      {/* Back Button */}
-      <Link to="/team" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition">
-        <ArrowLeft size={16} /> Back to Team
-      </Link>
-
       {/* Profile Header */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-6">

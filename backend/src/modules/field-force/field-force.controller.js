@@ -318,6 +318,7 @@ createTask = async (req, res, next) => {
       const filters = {
         assignedToId: req.query.assignedToId,
         assignedById: req.query.assignedById,
+        branchId: req.user.branchId || undefined,
         status: req.query.status,
         skip: parseInt(req.query.skip) || 0,
         take: parseInt(req.query.take) || 20,

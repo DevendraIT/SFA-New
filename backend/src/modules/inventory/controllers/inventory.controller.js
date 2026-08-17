@@ -92,7 +92,7 @@ export class InventoryController {
   });
 
   getWarehouseForManager = asyncHandler(async (req, res) => {
-    const targetId = req.params.id === 'me' ? req.user.userId : req.params.id;
+    const targetId = req.params.id === 'me' ? (req.user?.id || req.user?.userId) : req.params.id;
     const result = await this.inventoryService.getWarehouseForManager(targetId, req.user);
     res.json(result);
   });

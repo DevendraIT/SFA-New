@@ -148,7 +148,12 @@ export default function MyWarehouse() {
     );
   }
 
-  const branch = myWarehouse.branches?.[0];
+  const branchName =
+    myWarehouse.branches?.[0]?.name ||
+    myWarehouse.branch?.name ||
+    myWarehouse.warehouseManager?.branch?.name ||
+    (myWarehouse.branches && myWarehouse.branches.length > 0 ? myWarehouse.branches.map(b => b.name).join(", ") : null);
+  const branchCode = myWarehouse.branches?.[0]?.code || myWarehouse.branch?.code || myWarehouse.warehouseManager?.branch?.code || null;
 
   return (
     <div className="space-y-6 pb-12">
@@ -165,7 +170,7 @@ export default function MyWarehouse() {
         <button
           onClick={() => fetchMyWarehouse(true)}
           disabled={refreshing}
-          className="inline-flex items-center gap-2 self-start md:self-auto px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-medium text-sm rounded-xl shadow-xs hover:bg-slate-50 transition"
+          className="inline-flex items-center gap-2 self-start md:self-auto px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-medium text-sm rounded-xl shadow-xs hover:bg-slate-50 transition cursor-pointer"
         >
           <RotateCw size={16} className={refreshing ? "animate-spin text-indigo-600" : "text-slate-500"} />
           {refreshing ? "Refreshing..." : "Refresh Console"}
@@ -212,12 +217,12 @@ export default function MyWarehouse() {
 
           <div>
             <span className="text-xs text-slate-400 font-semibold uppercase block">Branch Name</span>
-            <span className="font-bold text-slate-800 text-base mt-0.5 block">{branch ? branch.name : "Unlinked Branch"}</span>
+            <span className="font-bold text-slate-800 text-base mt-0.5 block">{branchName || "Linked Branch"}</span>
           </div>
 
           <div>
             <span className="text-xs text-slate-400 font-semibold uppercase block">Branch Code</span>
-            <span className="font-mono text-xs text-slate-600 mt-1 block">{branch?.code || "BR-CODE"}</span>
+            <span className="font-mono text-xs text-slate-600 mt-1 block">{branchCode || "BR-LINKED"}</span>
           </div>
         </div>
 

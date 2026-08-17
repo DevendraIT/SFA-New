@@ -123,15 +123,12 @@ export default function TaskExecutionPage() {
     }
   }, [id, gpsLocation?.lat, gpsLocation?.lng]);
 
-  const metadata = typeof task?.metadata === "object" && task?.metadata !== null
-    ? task.metadata
-    : (typeof task?.metadata === "string"
-        ? (() => { try { return JSON.parse(task.metadata); } catch(e) { return {}; } })()
-        : {});
+  const metadata = typeof task?.metadata === "object" && task?.metadata !== null ? task?.metadata : {};
   const customer = typeof metadata.customer === "object" && metadata.customer !== null ? metadata.customer : {};
   const order = typeof metadata.order === "object" && metadata.order !== null ? metadata.order : {};
   const products = Array.isArray(metadata.products) ? metadata.products : [];
   const requirements = typeof metadata.requirements === "object" && metadata.requirements !== null ? metadata.requirements : {};
+  const invoiceGeneratedAt = task?.invoiceGeneratedAt || metadata?.invoiceGeneratedAt || (task?.status === 'INVOICE_GENERATED' ? new Date().toISOString() : null);
   const isPickupCompleted = metadata.pickupStatus === 'PICKED_UP' || task?.status === 'STOCK_PICKED_UP' || task?.status === 'DELIVERY_IN_PROGRESS';
 
   const destLat = task?.destinationLatitude ?? customer.lat ?? metadata.location?.lat ?? metadata.destination?.lat;
@@ -584,7 +581,7 @@ export default function TaskExecutionPage() {
               Skip Signature & Continue
             </button>
           </div>
-        ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "SIGNATURE_CAPTURED") && requiresInvoice && !task.invoiceGeneratedAt ? (
+        ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "SIGNATURE_CAPTURED" || task.status === "INVOICE_GENERATED") && requiresInvoice && !invoiceGeneratedAt ? (
           <div className="bg-purple-50 border border-purple-200 rounded-2xl p-6 space-y-5">
             <div className="flex items-center gap-2 border-b border-purple-200 pb-3">
               <FileText size={20} className="text-purple-600" />
@@ -617,7 +614,7 @@ export default function TaskExecutionPage() {
               Generate & Record Invoice
             </button>
           </div>
-        ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "SIGNATURE_CAPTURED" || task.status === "INVOICE_GENERATED") && requiresPayment && !task.paymentCollectedAt ? (
+        ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "SIGNATURE_CAPTURED" || task.status === "INVOICE_GENERATED" || invoiceGeneratedAt) && requiresPayment && !task.paymentCollectedAt ? (
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-emerald-900 text-base">Payment Collection</h4>

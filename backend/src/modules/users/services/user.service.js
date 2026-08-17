@@ -320,10 +320,74 @@ export class UserService {
     const user = await this.repo.findUserById(id, organizationId);
     if (!user) throw AppError.notFound(USER_ERRORS.NOT_FOUND);
 
-    const subordinates = await this.repo.findSubordinatesRecursive(id);
-    
+    let subordinates = await this.repo.findSubordinatesRecursive(id);
+
+    // Exclude Warehouse Managers, Inventory Managers, and Admins from subordinates list
+    if (subordinates.length > 0) {
+      const { prisma } = await import('../../../config/database.js');
+      const subUserIds = subordinates.map(s => s.id);
+      const subUsersWithRoles = await prisma.user.findMany({
+        where: { id: { in: subUserIds } },
+        include: { roles: { include: { role: true } } }
+      });
+
+      const allowedUserIds = new Set(
+        subUsersWithRoles
+          .filter(u => {
+            const roleNames = u.roles.map(r => r.role?.name?.toLowerCase() || "");
+            const isWM = roleNames.some(r => r.includes("warehouse manager") || r.includes("inventory manager"));
+            const isAdmin = roleNames.some(r => r.includes("admin"));
+            return !isWM && !isAdmin;
+          })
+          .map(u => u.id)
+      );
+
+      subordinates = subordinates.filter(s => allowedUserIds.has(s.id));
+
+      if (subordinates.length > 0) {
+        const finalSubUserIds = subordinates.map(s => s.id);
+        const taskStats = await prisma.task.groupBy({
+          by: ['assignedToId', 'status'],
+          where: { assignedToId: { in: finalSubUserIds } },
+          _count: { id: true }
+        });
+
+        const visitStats = await prisma.visit.groupBy({
+          by: ['userId', 'status'],
+          where: { userId: { in: finalSubUserIds } },
+          _count: { id: true }
+        });
+
+        subordinates = subordinates.map(sub => {
+          const subTasks = taskStats.filter(t => t.assignedToId === sub.id);
+          const completedTasks = subTasks.filter(t => t.status === 'COMPLETED').reduce((acc, curr) => acc + curr._count.id, 0);
+          const pendingTasks = subTasks.filter(t => t.status !== 'COMPLETED' && t.status !== 'CANCELLED').reduce((acc, curr) => acc + curr._count.id, 0);
+          const totalTasks = completedTasks + pendingTasks;
+          const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+          const subVisits = visitStats.filter(v => v.userId === sub.id);
+          const completedVisits = subVisits.filter(v => v.status === 'COMPLETED').reduce((acc, curr) => acc + curr._count.id, 0);
+          const totalVisits = subVisits.reduce((acc, curr) => acc + curr._count.id, 0);
+
+          return {
+            ...sub,
+            taskSummary: {
+              completed: completedTasks,
+              pending: pendingTasks,
+              total: totalTasks,
+              completionRate
+            },
+            visitSummary: {
+              completed: completedVisits,
+              total: totalVisits
+            }
+          };
+        });
+      }
+    }
+
     // Check hierarchy depth limit
-    const maxDepth = Math.max(...subordinates.map(s => s.depth || 0));
+    const maxDepth = Math.max(...subordinates.map(s => s.depth || 0), 0);
     if (maxDepth >= REPORTING_HIERARCHY.MAX_DEPTH) {
       console.warn(`User ${id} has hierarchy depth ${maxDepth} exceeding recommended limit ${REPORTING_HIERARCHY.MAX_DEPTH}`);
     }

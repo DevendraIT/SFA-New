@@ -20,13 +20,20 @@ export default function useExecutiveData(executiveId) {
         fieldForceApi.listTasks({ assignedToId: executiveId, take: 50 }),
       ]);
 
-      const vData = visitsRes.data?.data || visitsRes.data;
-      const aData = attendanceRes.data?.data || attendanceRes.data;
-      const tData = tasksRes.data?.data || tasksRes.data;
+      const extractList = (res, key) => {
+        const d = res?.data;
+        if (!d) return [];
+        if (Array.isArray(d[key])) return d[key];
+        if (d.message && Array.isArray(d.message[key])) return d.message[key];
+        if (d.data && Array.isArray(d.data[key])) return d.data[key];
+        if (d.data && Array.isArray(d.data)) return d.data;
+        if (Array.isArray(d)) return d;
+        return [];
+      };
 
-      setVisits(Array.isArray(vData?.visits) ? vData.visits : Array.isArray(vData) ? vData : []);
-      setAttendance(Array.isArray(aData?.attendance) ? aData.attendance : Array.isArray(aData) ? aData : []);
-      setTasks(Array.isArray(tData?.tasks) ? tData.tasks : Array.isArray(tData) ? tData : []);
+      setVisits(extractList(visitsRes, 'visits'));
+      setAttendance(extractList(attendanceRes, 'attendance'));
+      setTasks(extractList(tasksRes, 'tasks'));
     } catch (err) {
       console.error("Executive Data Error:", err);
       setError(err?.response?.data || err);
