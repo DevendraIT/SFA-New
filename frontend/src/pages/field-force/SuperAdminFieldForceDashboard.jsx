@@ -220,7 +220,7 @@ export default function SuperAdminFieldForceDashboard() {
         <div className="lg:col-span-2 space-y-6">
           {/* Today's Tasks Summary (Read-Only Upper Overview, Zero Redirection) */}
           <SectionCard
-            title="Today's Field Execution Tasks Overview"
+            title="Field Execution Tasks Overview"
             subtitle={pendingTasks.length > 0 ? `${pendingTasks.length} tasks currently pending review` : "All field tasks updated"}
             icon={Target}
             iconColor="text-blue-600"

@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 // Guard for Global Inventory Manager Workspace (/inventory/*)
 export function InventoryManagerRoute({ children }) {
   const { user, loading } = useAuth();
-  const isAllowed = isInventoryManagerUser(user);
+  const isAllowed = isInventoryManagerUser(user) || isSuperAdminUser(user) || isCompanyAdminUser(user);
 
   useEffect(() => {
     if (!loading && !isAllowed) {
