@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,6 +17,8 @@ const loginSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required"),
+
+  rememberMe: z.boolean().optional(),
 });
 
 export default function Login() {
@@ -31,10 +33,32 @@ export default function Login() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
   });
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("sfa_remembered_email");
+    const savedPassword = localStorage.getItem("sfa_remembered_password");
+    if (savedEmail) {
+      setValue("email", savedEmail);
+      setValue("rememberMe", true);
+    }
+    if (savedPassword) {
+      try {
+        setValue("password", atob(savedPassword));
+      } catch (e) {
+        setValue("password", savedPassword);
+      }
+    }
+  }, [setValue]);
 
   const onSubmit = async (data) => {
     try {
@@ -45,6 +69,14 @@ export default function Login() {
       if (!response.success) {
         toast.error(response.message || "Login failed");
         return;
+      }
+
+      if (data.rememberMe) {
+        localStorage.setItem("sfa_remembered_email", data.email);
+        localStorage.setItem("sfa_remembered_password", btoa(data.password));
+      } else {
+        localStorage.removeItem("sfa_remembered_email");
+        localStorage.removeItem("sfa_remembered_password");
       }
 
       const payload = response.data;
@@ -263,8 +295,9 @@ export default function Login() {
               <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
 
                 <input
+                  {...register("rememberMe")}
                   type="checkbox"
-                  className="rounded border-gray-300"
+                  className="rounded border-gray-300 cursor-pointer"
                 />
 
                 Remember Me

@@ -225,9 +225,8 @@ export class AuthService {
 
     const deviceString = `${parsedAgent.browser} on ${parsedAgent.os}`;
 
-    const expiresAt = new Date(
-      Date.now() + 24 * 60 * 60 * 1000
-    );
+    const sessionDurationMs = requestMeta.rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+    const expiresAt = new Date(Date.now() + sessionDurationMs);
 
     const session =
       await this.authRepository.createSession({

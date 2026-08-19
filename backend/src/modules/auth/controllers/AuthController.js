@@ -15,8 +15,8 @@ export class AuthController extends BaseController {
    * User login
    */
   login = this.asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
-    const requestMeta = this.extractRequestMeta(req);
+    const { email, password, rememberMe } = req.body;
+    const requestMeta = { ...this.extractRequestMeta(req), rememberMe: !!rememberMe };
 
     const result = await this.service.login(email, password, requestMeta);
 
