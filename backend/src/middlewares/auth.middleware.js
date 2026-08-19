@@ -94,14 +94,14 @@ export const authorize = (requiredPermissions) => {
       // Organization Super Admin is the tenant's highest-privilege role.  It
       // must retain access even if permission mappings were created before a
       // newly added permission (for example company/branch permissions).
-      const isGlobalAdmin = req.user.roles.some((r) =>
+      const isAuthorizedRole = req.user.roles.some((r) =>
         typeof r === 'string' &&
-        ['Organization Super Admin', 'Company Admin', 'Super Admin'].some((adminRole) =>
+        ['Organization Super Admin', 'Company Admin', 'Super Admin', 'Sales Manager'].some((adminRole) =>
           r.toLowerCase().includes(adminRole.toLowerCase())
         )
       );
 
-      if (isGlobalAdmin) {
+      if (isAuthorizedRole) {
         return next();
       }
 

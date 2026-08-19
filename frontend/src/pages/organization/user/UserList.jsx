@@ -121,12 +121,25 @@ export default function UserList() {
     return users.some((u) => isTargetCompanyAdmin(u));
   }, [users]);
 
+  const isTargetSalesExecutive = (userItem) => {
+    if (!userItem) return false;
+    const roleNames = Array.isArray(userItem.roles)
+      ? userItem.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [userItem.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("sales executive"));
+  };
+
   const canManageUserItem = (userItem) => {
     if (!userItem) return false;
 
     if (isCurrentSuperAdmin) {
       // Super Admin can manage (edit/delete) his own account AND Company Admin accounts, none other than
       return userItem.id === user?.id || isTargetCompanyAdmin(userItem);
+    }
+
+    if (isSalesManager) {
+      // Sales Manager CAN delete/edit Sales Executive accounts
+      return isTargetSalesExecutive(userItem) && userItem.id !== user?.id;
     }
 
     // Users cannot edit or delete their own logged-in account

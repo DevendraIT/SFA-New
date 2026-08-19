@@ -11,13 +11,34 @@ import { useAuth } from "../../context/AuthContext";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Name is required").max(100, "Name cannot exceed 100 characters"),
-  email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
-  phone: z.string().trim().max(20, "Phone cannot exceed 20 characters").optional().or(z.literal("")),
+  email: z
+    .string()
+    .trim()
+    .refine((val) => !val || /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val), {
+      message: "Please enter a valid standard email address",
+    })
+    .optional()
+    .or(z.literal("")),
+  phone: z
+    .string()
+    .trim()
+    .refine((val) => !val || /^\d{10}$/.test(val), {
+      message: "Mobile number must be exactly 10 numeric digits",
+    })
+    .optional()
+    .or(z.literal("")),
   address: z.string().trim().max(255, "Address cannot exceed 255 characters").optional().or(z.literal("")),
   city: z.string().trim().max(100, "City cannot exceed 100 characters").optional().or(z.literal("")),
   state: z.string().trim().max(100, "State cannot exceed 100 characters").optional().or(z.literal("")),
   country: z.string().trim().max(100, "Country cannot exceed 100 characters").optional().or(z.literal("")),
-  postalCode: z.string().trim().max(20, "Postal code cannot exceed 20 characters").optional().or(z.literal("")),
+  postalCode: z
+    .string()
+    .trim()
+    .refine((val) => !val || /^\d{6}$/.test(val), {
+      message: "PIN Code must be 6 numeric digits",
+    })
+    .optional()
+    .or(z.literal("")),
   gstNumber: z.string().trim().max(50, "GST number cannot exceed 50 characters").optional().or(z.literal("")),
   panNumber: z.string().trim().max(50, "PAN number cannot exceed 50 characters").optional().or(z.literal("")),
   isActive: z.boolean().default(true),
@@ -457,12 +478,22 @@ export default function OrganizationProfile() {
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-[#475569]">Phone Number</label>
+                  <label className="mb-1.5 block text-sm font-semibold text-[#475569]">Phone Number (10 Digits)</label>
                   <input
-                    {...register("phone")}
-                    placeholder="+91 9876543210"
+                    {...register("phone", {
+                      onChange: (e) => {
+                        const digitsOnly = e.target.value.replace(/\D/g, "").slice(0, 10);
+                        setValue("phone", digitsOnly);
+                      }
+                    })}
+                    type="tel"
+                    maxLength={10}
+                    inputMode="numeric"
+                    pattern="[0-9]{10}"
+                    placeholder="10-digit mobile number (e.g. 9876543210)"
                     className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm outline-none transition focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600"
                   />
+                  {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone.message}</p>}
                 </div>
 
                 <div>

@@ -283,6 +283,23 @@ export class UserService {
     const user = await this.repo.findUserById(id, organizationId);
     if (!user) throw AppError.notFound(USER_ERRORS.NOT_FOUND);
 
+    // If request is from Sales Manager, enforce that target user MUST be a Sales Executive
+    const isSalesManager = req.user?.roles?.some((r) =>
+      typeof r === "string" && r.toLowerCase().includes("sales manager")
+    ) && !req.user?.roles?.some((r) =>
+      typeof r === "string" && (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("company admin"))
+    );
+
+    if (isSalesManager) {
+      const targetRoles = Array.isArray(user.roles)
+        ? user.roles.map((r) => (r.role?.name || r.name || "").toLowerCase())
+        : [];
+      const isTargetSalesExec = targetRoles.some((r) => r.includes("sales executive"));
+      if (!isTargetSalesExec) {
+        throw AppError.forbidden("Sales Managers can only delete Sales Executive accounts.");
+      }
+    }
+
     // Prevent deletion of reserved user types
     // if (user.type && RESERVED_USER_TYPES.includes(user.type.toLowerCase())) {
     //   throw AppError.badRequest('Reserved user types cannot be deleted.');

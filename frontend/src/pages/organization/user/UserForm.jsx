@@ -243,12 +243,29 @@ export default function UserForm({ user, onClose, onSuccess }) {
     e.preventDefault();
 
     const errors = {};
-    if (!form.firstName.trim()) errors.firstName = "First name is required.";
-    if (!form.lastName.trim()) errors.lastName = "Last name is required.";
+    if (!form.firstName.trim()) {
+      errors.firstName = "First name is required.";
+    } else if (form.firstName.trim().length < 2) {
+      errors.firstName = "First name must be at least 2 characters.";
+    }
+
+    if (!form.lastName.trim()) {
+      errors.lastName = "Last name is required.";
+    } else if (form.lastName.trim().length < 2) {
+      errors.lastName = "Last name must be at least 2 characters.";
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!form.email.trim()) {
       errors.email = "Email address is required.";
-    } else if (!/\S+@\S+\.\S+/.test(form.email.trim())) {
-      errors.email = "Please enter a valid email address (e.g. user@example.com).";
+    } else if (!emailRegex.test(form.email.trim())) {
+      errors.email = "Please enter a valid standard email address (e.g. user@example.com).";
+    }
+
+    if (form.phoneNumber && form.phoneNumber.trim().length > 0) {
+      if (!/^\d{10}$/.test(form.phoneNumber.trim())) {
+        errors.phoneNumber = "Mobile number must be exactly 10 numeric digits.";
+      }
     }
 
     if (!isEditMode) {
@@ -418,14 +435,26 @@ export default function UserForm({ user, onClose, onSuccess }) {
 
       {/* Phone */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Phone Number</label>
+        <label className="mb-1.5 block text-sm font-medium text-slate-700">Mobile Number (10 Digits)</label>
         <input
           name="phoneNumber"
+          type="tel"
+          maxLength={10}
+          inputMode="numeric"
+          pattern="[0-9]{10}"
           value={form.phoneNumber}
-          onChange={handleChange}
-          className={inputClass}
-          placeholder="+1 234 567 890"
+          onChange={(e) => {
+            const digitsOnly = e.target.value.replace(/\D/g, "").slice(0, 10);
+            setForm((prev) => ({ ...prev, phoneNumber: digitsOnly }));
+          }}
+          className={inputClass + (fieldErrors.phoneNumber ? " border-red-500 ring-1 ring-red-200" : "")}
+          placeholder="10-digit mobile number (e.g. 9876543210)"
         />
+        {fieldErrors.phoneNumber && (
+          <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
+            <AlertCircle size={12} /> {fieldErrors.phoneNumber}
+          </p>
+        )}
       </div>
 
       {/* Structural Assignments */}

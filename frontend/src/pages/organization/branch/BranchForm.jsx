@@ -21,12 +21,19 @@ const schema = z.object({
     .min(2, "Branch code is required.")
     .max(20, "Branch code cannot exceed 20 characters."),
 
-  email: z.string().trim().email("Invalid email address").optional().or(z.literal("")),
+  email: z
+    .string()
+    .trim()
+    .refine((val) => !val || /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val), {
+      message: "Please enter a valid standard email address (e.g. branch@example.com)",
+    })
+    .optional()
+    .or(z.literal("")),
   phone: z
     .string()
     .trim()
     .refine((val) => !val || /^\d{10}$/.test(val), {
-      message: "Mobile number must be 10 digits",
+      message: "Mobile number must be exactly 10 numeric digits",
     })
     .optional()
     .or(z.literal("")),
@@ -34,7 +41,14 @@ const schema = z.object({
   city: z.string().trim().max(100, "City cannot exceed 100 characters.").optional(),
   state: z.string().trim().max(100, "State cannot exceed 100 characters.").optional(),
   country: z.string().trim().max(100, "Country cannot exceed 100 characters.").optional(),
-  postalCode: z.string().trim().max(20, "Postal Code cannot exceed 20 characters.").optional(),
+  postalCode: z
+    .string()
+    .trim()
+    .refine((val) => !val || /^\d{6}$/.test(val), {
+      message: "PIN Code must be 6 numeric digits",
+    })
+    .optional()
+    .or(z.literal("")),
   latitude: z
     .union([z.string(), z.number()])
     .refine((val) => val !== "" && val != null && !isNaN(parseFloat(val)), {
@@ -241,8 +255,17 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
               Phone
             </label>
             <input
-              {...register("phone")}
-              placeholder="+919876543210"
+              {...register("phone", {
+                onChange: (e) => {
+                  const digitsOnly = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setValue("phone", digitsOnly);
+                }
+              })}
+              type="tel"
+              maxLength={10}
+              inputMode="numeric"
+              pattern="[0-9]{10}"
+              placeholder="10-digit mobile number (e.g. 9876543210)"
               className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
             />
             {errors.phone && (

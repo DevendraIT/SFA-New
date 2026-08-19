@@ -198,20 +198,12 @@ export class UserRepository {
    * Returns flat list with depth level for each node
    */
   async findSubordinatesRecursive(userId) {
-    const managerUser = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { branchId: true },
-    });
-
-    const managerBranchId = managerUser?.branchId || null;
-
     const result = await prisma.$queryRaw`
       WITH RECURSIVE subordinates AS (
         SELECT
           id, "firstName", "lastName", email, "managerId", "isActive", "branchId", "teamId", 0 AS depth
         FROM "User"
-        WHERE ("managerId" = ${userId}::uuid
-               OR (${managerBranchId}::uuid IS NOT NULL AND "branchId" = ${managerBranchId}::uuid AND id != ${userId}::uuid))
+        WHERE "managerId" = ${userId}::uuid
           AND "deletedAt" IS NULL
 
         UNION ALL
