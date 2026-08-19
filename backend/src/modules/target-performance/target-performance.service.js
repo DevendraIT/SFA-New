@@ -54,114 +54,197 @@ export class TargetPerformanceService {
     return Math.min(100, Math.round(score * 100) / 100);
   }
 
-  async getCompanyOverview(organizationId) {
-    const raw = await this.repo.getCompanyOverview(organizationId);
-    const { targets, orders, teams, users, visits } = raw;
+  async getCompanyOverview(organizationId, userContext = null) {
+    const raw = await this.repo.getCompanyOverview(organizationId, userContext);
+    const { targets, orders, branches, users, visits, tasks } = raw;
 
-    let companyTarget = 0;
-    let companyAchieved = 0;
+    // Operational KPI Summaries
+    const totalOrdersCount = orders.length;
+    const completedOrders = orders.filter((o) => ["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status));
+    const completedOrdersCount = completedOrders.length;
 
-    targets.forEach(t => {
-      companyTarget += t.targetValue || 0;
-      companyAchieved += t.achievedValue || 0;
+    const completedVisitsCount = visits.filter((v) => v.status === "COMPLETED").length;
+    const totalVisitsCount = visits.length;
+
+    const completedTasksCount = tasks.filter((t) => t.status === "COMPLETED").length;
+    const totalTasksCount = tasks.length;
+
+    // Revenue & Quantity Fulfillment Metrics from all Sales Orders
+    let totalRevenue = 0;
+    let requestedQuantity = 0;
+    let fulfilledQuantity = 0;
+
+    // Revenue Trend Maps
+    const monthlyRevenueMap = {};
+    const weeklyRevenueMap = {};
+    const dailyRevenueMap = {};
+
+    orders.forEach((o) => {
+      const amt = Number(o.totalAmount || 0);
+      totalRevenue += amt;
+
+      const d = new Date(o.createdAt);
+      const monthKey = d.toLocaleString("default", { month: "short" });
+      const dayKey = d.toISOString().split("T")[0];
+
+      const firstDayOfYear = new Date(d.getFullYear(), 0, 1);
+      const pastDaysOfYear = (d - firstDayOfYear) / 86400000;
+      const weekNum = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+      const weekKey = `W${weekNum}`;
+
+      if (!monthlyRevenueMap[monthKey]) monthlyRevenueMap[monthKey] = { period: monthKey, revenue: 0, orders: 0 };
+      if (!weeklyRevenueMap[weekKey]) weeklyRevenueMap[weekKey] = { period: weekKey, revenue: 0, orders: 0 };
+      if (!dailyRevenueMap[dayKey]) dailyRevenueMap[dayKey] = { period: dayKey, revenue: 0, orders: 0 };
+
+      monthlyRevenueMap[monthKey].orders += 1;
+      monthlyRevenueMap[monthKey].revenue += amt;
+
+      weeklyRevenueMap[weekKey].orders += 1;
+      weeklyRevenueMap[weekKey].revenue += amt;
+
+      dailyRevenueMap[dayKey].orders += 1;
+      dailyRevenueMap[dayKey].revenue += amt;
+
+      (o.items || []).forEach((item) => {
+        const q = item.quantity || 0;
+        requestedQuantity += q;
+        if (["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status)) {
+          fulfilledQuantity += q;
+        }
+      });
     });
 
-    const completionPercentage = companyTarget > 0 ? Math.min(100, Math.round((companyAchieved / companyTarget) * 100)) : 85;
+    const pendingQuantity = Math.max(0, requestedQuantity - fulfilledQuantity);
+    const fulfillmentRate = requestedQuantity > 0 ? Math.round((fulfilledQuantity / requestedQuantity) * 100) : 0;
 
-    // Categorize users by roles
+    const revenueTrends = {
+      monthly: Object.values(monthlyRevenueMap),
+      weekly: Object.values(weeklyRevenueMap),
+      daily: Object.values(dailyRevenueMap),
+    };
+
+    // Categorize Users (Sales Managers vs Sales Executives)
     const executives = [];
     const managers = [];
 
-    users.forEach(u => {
+    users.forEach((u) => {
       const roleNames = Array.isArray(u.roles)
-        ? u.roles.map(r => (r.role?.name || '').toLowerCase())
+        ? u.roles.map((r) => (r.role?.name || r.name || "").toLowerCase())
         : [];
-      
-      const isManager = roleNames.some(r => r.includes('manager') || r.includes('head'));
-      
-      const userTargets = targets.filter(t => t.userId === u.id);
-      const userTargetVal = userTargets.reduce((sum, t) => sum + (t.targetValue || 0), 0);
-      const userAchievedVal = userTargets.reduce((sum, t) => sum + (t.achievedValue || 0), 0);
-      
-      const userOrders = orders.filter(o => o.ownerId === u.id);
-      const userRevenue = userOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-      const userVisits = visits.filter(v => v.userId === u.id && v.status === 'COMPLETED').length;
 
-      const rate = userTargetVal > 0 ? Math.min(100, Math.round((userAchievedVal / userTargetVal) * 100)) : (userOrders.length > 0 ? 90 : 75);
+      const isSalesManager = roleNames.some((r) => r.includes("sales manager") || r.includes("head of sales"));
+      const isSalesExecutive = roleNames.some((r) => r.includes("sales executive"));
+
+      const uOrders = orders.filter((o) => o.ownerId === u.id);
+      const uCompletedOrders = uOrders.filter((o) => ["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status));
+      const uTasks = tasks.filter((t) => t.assignedToId === u.id);
+      const uCompletedTasks = uTasks.filter((t) => t.status === "COMPLETED");
+
+      let uReqQty = 0;
+      let uFulQty = 0;
+      let uOrderVal = 0;
+      uOrders.forEach((o) => {
+        uOrderVal += Number(o.totalAmount || 0);
+        (o.items || []).forEach((item) => {
+          const q = item.quantity || 0;
+          uReqQty += q;
+          if (["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status)) uFulQty += q;
+        });
+      });
 
       const userInfo = {
         id: u.id,
-        name: `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.email,
+        name: `${u.firstName || ""} ${u.lastName || ""}`.trim() || u.email,
         email: u.email,
-        teamName: u.team?.name || 'Field Force Team',
-        targetValue: userTargetVal || 50000,
-        achievedValue: userAchievedVal || (userRevenue > 0 ? userRevenue : 42000),
-        completionRate: rate,
-        totalRevenue: userRevenue,
-        ordersCount: userOrders.length,
-        visitsCompleted: userVisits,
+        branchName: u.branch?.name || "Unassigned",
+        teamName: u.team?.name || u.branch?.name || "Sales Team",
+        roleName: u.roles?.[0]?.role?.name || (isSalesManager ? "Sales Manager" : "Sales Executive"),
+        
+        // Sales Executive Target Metrics (Tasks)
+        assignedTasks: uTasks.length,
+        completedTasks: uCompletedTasks.length,
+        pendingTasks: Math.max(0, uTasks.length - uCompletedTasks.length),
+        taskCompletionRate: uTasks.length > 0 ? Math.round((uCompletedTasks.length / uTasks.length) * 100) : 0,
+
+        // Sales Manager Target Metrics (Orders)
+        ordersReceived: uOrders.length,
+        ordersCompleted: uCompletedOrders.length,
+        totalOrderValue: uOrderVal,
+        pendingOrders: Math.max(0, uOrders.length - uCompletedOrders.length),
+        orderCompletionRate: uOrders.length > 0 ? Math.round((uCompletedOrders.length / uOrders.length) * 100) : 0,
+
+        requestedQty: uReqQty,
+        fulfilledQty: uFulQty,
+        fulfillmentRate: uReqQty > 0 ? Math.round((uFulQty / uReqQty) * 100) : 0,
       };
 
-      if (isManager) {
+      if (isSalesManager) {
         managers.push(userInfo);
-      } else {
+      } else if (isSalesExecutive) {
         executives.push(userInfo);
       }
     });
 
-    // Team comparison
-    const teamComparison = teams.map(t => {
-      const teamTargets = targets.filter(tar => tar.teamId === t.id);
-      let tTarget = teamTargets.reduce((sum, tar) => sum + (tar.targetValue || 0), 0);
-      let tAchieved = teamTargets.reduce((sum, tar) => sum + (tar.achievedValue || 0), 0);
+    // Branch Performance Breakdown
+    const branchPerformance = branches.map((b) => {
+      const branchUsers = users.filter((u) => u.branchId === b.id);
+      const branchUserIds = new Set(branchUsers.map((u) => u.id));
 
-      const teamMemberIds = t.users.map(u => u.id);
-      const teamOrders = orders.filter(o => teamMemberIds.includes(o.ownerId));
-      const teamRevenue = teamOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+      const branchOrders = orders.filter((o) => o.owner?.branchId === b.id || branchUserIds.has(o.ownerId));
+      const branchCompletedOrders = branchOrders.filter((o) => ["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status));
+      const branchTasks = tasks.filter((t) => branchUserIds.has(t.assignedToId));
+      const branchCompletedTasks = branchTasks.filter((t) => t.status === "COMPLETED");
 
-      if (tTarget === 0) tTarget = (t.users.length || 1) * 50000;
-      if (tAchieved === 0) tAchieved = teamRevenue > 0 ? teamRevenue : tTarget * 0.8;
-
-      const rate = tTarget > 0 ? Math.min(100, Math.round((tAchieved / tTarget) * 100)) : 80;
+      let bReqQty = 0;
+      let bFulQty = 0;
+      let bRevenue = 0;
+      branchOrders.forEach((o) => {
+        bRevenue += Number(o.totalAmount || 0);
+        (o.items || []).forEach((item) => {
+          const q = item.quantity || 0;
+          bReqQty += q;
+          if (["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status)) bFulQty += q;
+        });
+      });
 
       return {
-        id: t.id,
-        name: t.name,
-        memberCount: t.users.length,
-        targetValue: tTarget,
-        achievedValue: tAchieved,
-        completionRate: rate,
-        totalRevenue: teamRevenue,
-        ordersCount: teamOrders.length,
+        id: b.id,
+        name: b.name,
+        code: b.code || "BR",
+        memberCount: branchUsers.length,
+        totalOrders: branchOrders.length,
+        completedOrders: branchCompletedOrders.length,
+        pendingOrders: Math.max(0, branchOrders.length - branchCompletedOrders.length),
+        totalTasks: branchTasks.length,
+        completedTasks: branchCompletedTasks.length,
+        pendingTasks: Math.max(0, branchTasks.length - branchCompletedTasks.length),
+        totalRevenue: bRevenue,
+        requestedQty: bReqQty,
+        fulfilledQty: bFulQty,
+        fulfillmentRate: bReqQty > 0 ? Math.round((bFulQty / bReqQty) * 100) : 0,
+        taskCompletionRate: branchTasks.length > 0 ? Math.round((branchCompletedTasks.length / branchTasks.length) * 100) : 0,
+        orderCompletionRate: branchOrders.length > 0 ? Math.round((branchCompletedOrders.length / branchOrders.length) * 100) : 0,
       };
     });
 
-    // Monthly performance trends
-    const performanceTrends = [
-      { period: "Jan", target: 100000, achieved: 85000 },
-      { period: "Feb", target: 120000, achieved: 95000 },
-      { period: "Mar", target: 130000, achieved: 110000 },
-      { period: "Apr", target: 140000, achieved: 125000 },
-      { period: "May", target: 150000, achieved: 140000 },
-      { period: "Jun", target: 160000, achieved: companyAchieved || 155000 },
-    ];
-
     return {
-      companyTarget: companyTarget || 800000,
-      companyAchieved: companyAchieved || 710000,
-      completionPercentage,
-      executivesPerformance: executives.length > 0 ? executives : [
-        { id: "exec-1", name: "Rahul Sharma", email: "rahul@example.com", teamName: "North Team", targetValue: 100000, achievedValue: 92000, completionRate: 92, totalRevenue: 92000, ordersCount: 12, visitsCompleted: 45 },
-        { id: "exec-2", name: "Priya Patel", email: "priya@example.com", teamName: "South Team", targetValue: 90000, achievedValue: 88000, completionRate: 97, totalRevenue: 88000, ordersCount: 15, visitsCompleted: 50 },
-      ],
-      managersPerformance: managers.length > 0 ? managers : [
-        { id: "mgr-1", name: "Anil Kumar", email: "anil@example.com", teamName: "Enterprise Sales", targetValue: 300000, achievedValue: 275000, completionRate: 91, totalRevenue: 275000, ordersCount: 35, visitsCompleted: 120 },
-      ],
-      teamComparison: teamComparison.length > 0 ? teamComparison : [
-        { id: "team-1", name: "North Territory", memberCount: 5, targetValue: 250000, achievedValue: 230000, completionRate: 92, totalRevenue: 230000, ordersCount: 28 },
-        { id: "team-2", name: "South Territory", memberCount: 4, targetValue: 200000, achievedValue: 190000, completionRate: 95, totalRevenue: 190000, ordersCount: 24 },
-      ],
-      performanceTrends,
+      totalRevenue,
+      revenueTrends,
+      kpiSummary: {
+        totalOrders: totalOrdersCount,
+        completedOrders: completedOrdersCount,
+        totalTasks: totalTasksCount,
+        completedTasks: completedTasksCount,
+        fulfillment: {
+          requestedQuantity,
+          fulfilledQuantity,
+          pendingQuantity,
+          fulfillmentRate,
+        },
+      },
+      branchPerformance,
+      executivesPerformance: executives,
+      managersPerformance: managers,
     };
   }
 }

@@ -97,8 +97,12 @@ export default function ProfilePage() {
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 lg:p-8">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
           <div className="relative">
-            <div className="h-28 w-28 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-4xl shadow-xl shadow-blue-500/20 border-4 border-white">
-              {fullName.charAt(0)}
+            <div className="h-28 w-28 rounded-full overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-4xl shadow-xl shadow-blue-500/20 border-4 border-white">
+              {(user?.avatarUrl || profile?.avatarUrl) ? (
+                <img src={user?.avatarUrl || profile?.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <span>{fullName.charAt(0)}</span>
+              )}
             </div>
             <span className="absolute bottom-1 right-1 h-5 w-5 rounded-full bg-emerald-500 border-2 border-white" title="Active Account" />
           </div>

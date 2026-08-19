@@ -30,6 +30,7 @@ export class AuthUserDto {
     this.lastName = user.lastName;
     this.fullName = `${user.firstName} ${user.lastName}`;
     this.phoneNumber = user.phoneNumber || null;
+    this.avatarUrl = user.avatarUrl || null;
     this.isActive = user.isActive;
     
     this.emailVerified = !!user.emailVerifiedAt;

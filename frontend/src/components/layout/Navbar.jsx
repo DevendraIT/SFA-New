@@ -95,10 +95,12 @@ export default function Navbar({
             className="flex items-center gap-3 rounded-xl px-2 py-1 hover:bg-slate-100 transition"
           >
 
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
-
-              {fullName.charAt(0)}
-
+            <div className="flex h-11 w-11 items-center justify-center rounded-full overflow-hidden bg-blue-600 text-white font-bold">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <span>{fullName.charAt(0)}</span>
+              )}
             </div>
 
             <div className="hidden md:block text-left">

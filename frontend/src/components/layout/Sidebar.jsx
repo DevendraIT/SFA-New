@@ -183,7 +183,7 @@ export default function Sidebar({
 
     // Default fallback: Filter out Inventory for any unspecified role
     return navigation.filter((item) => item.title !== "Inventory");
-  }, [isSuperAdmin, isCompanyAdmin, isSalesManager, isSalesExecutive, isInventoryManager, isWarehouseManager]);
+  }, [isSuperAdmin, isCompanyAdmin, isSalesManager, isSalesExecutive, isHeadOfSales, isInventoryManager, isWarehouseManager]);
 
 
 

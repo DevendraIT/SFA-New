@@ -56,7 +56,7 @@ export class ReportsController {
 
       const branchId = (!isSuperOrCompanyAdmin && (isSalesManager || req.user.branchId)) ? req.user.branchId : null;
 
-      const analytics = await this.service.getOrganizationAnalytics(req.user.organizationId, branchId);
+      const analytics = await this.service.getOrganizationAnalytics(req.user.organizationId, req.user);
       return successResponse(res, analytics, 'Reports analytics retrieved.');
     } catch (err) {
       next(err);

@@ -812,6 +812,7 @@ console.log("Password reset email function completed");
       "firstName",
       "lastName",
       "phoneNumber",
+      "avatarUrl",
     ];
 
     const sanitizedData = {};
@@ -845,6 +846,7 @@ console.log("Password reset email function completed");
       firstName: user.firstName,
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
+      avatarUrl: user.avatarUrl || null,
       isActive: user.isActive,
       emailVerifiedAt: user.emailVerifiedAt,
       createdAt: user.createdAt,

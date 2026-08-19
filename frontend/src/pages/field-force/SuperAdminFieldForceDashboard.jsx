@@ -105,6 +105,47 @@ export default function SuperAdminFieldForceDashboard() {
     return `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
   }, [user]);
 
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const weeklyVisitsData = useMemo(() => {
+    const dayCounts = {
+      Mon: { visits: 0, completed: 0 },
+      Tue: { visits: 0, completed: 0 },
+      Wed: { visits: 0, completed: 0 },
+      Thu: { visits: 0, completed: 0 },
+      Fri: { visits: 0, completed: 0 },
+      Sat: { visits: 0, completed: 0 },
+    };
+
+    const allItems = [
+      ...(visits || []).map((v) => ({
+        date: v.scheduledAt || v.createdAt,
+        isCompleted: v.status === "COMPLETED",
+      })),
+      ...(tasks || []).map((t) => ({
+        date: t.dueDate || t.createdAt,
+        isCompleted: t.status === "COMPLETED" || t.status === "CHECKED_OUT",
+      })),
+    ];
+
+    allItems.forEach((item) => {
+      if (!item.date) return;
+      const dayName = dayjs(item.date).format("ddd");
+      if (dayCounts[dayName]) {
+        dayCounts[dayName].visits += 1;
+        if (item.isCompleted) {
+          dayCounts[dayName].completed += 1;
+        }
+      }
+    });
+
+    return daysOfWeek.map((day) => ({
+      day,
+      visits: dayCounts[day].visits,
+      completed: dayCounts[day].completed,
+    }));
+  }, [visits, tasks]);
+
   if (loading) {
     return <DashboardGridSkeleton />;
   }
@@ -113,19 +154,19 @@ export default function SuperAdminFieldForceDashboard() {
     return <ErrorState message="Failed to load dashboard data" onRetry={refresh} />;
   }
 
-  const pendingTasks = tasks.filter((t) => t.status === "PENDING" || t.status === "ASSIGNED" || t.status === "ACCEPTED");
-  const inProgressTasks = tasks.filter((t) => ["IN_PROGRESS", "NAVIGATING", "ARRIVED", "CHECKED_IN", "DELIVERY_IN_PROGRESS", "PAYMENT_COLLECTED", "PHOTO_UPLOADED", "VISIT_NOTES_COMPLETED"].includes(t.status));
-  const completedTasks = tasks.filter((t) => t.status === "COMPLETED" || t.status === "CHECKED_OUT");
-  const todayTasksList = tasks.filter((t) => !t.dueDate || dayjs(t.dueDate).isSame(dayjs(), "day") || dayjs(t.createdAt).isSame(dayjs(), "day"));
+  const pendingTasks = (tasks || []).filter((t) => t.status === "PENDING" || t.status === "ASSIGNED" || t.status === "ACCEPTED");
+  const inProgressTasks = (tasks || []).filter((t) => ["IN_PROGRESS", "NAVIGATING", "ARRIVED", "CHECKED_IN", "DELIVERY_IN_PROGRESS", "PAYMENT_COLLECTED", "PHOTO_UPLOADED", "VISIT_NOTES_COMPLETED"].includes(t.status));
+  const completedTasks = (tasks || []).filter((t) => t.status === "COMPLETED" || t.status === "CHECKED_OUT");
+  const todayTasksList = (tasks || []).filter((t) => !t.dueDate || dayjs(t.dueDate).isSame(dayjs(), "day") || dayjs(t.createdAt).isSame(dayjs(), "day"));
 
   const recentActivities = [
-    ...visits.slice(0, 3).map((v) => ({
+    ...(visits || []).slice(0, 3).map((v) => ({
       title: v.status === "COMPLETED" ? "Visit Completed" : "Visit Planned",
       description: v.title,
       time: dayjs(v.scheduledAt).format("h:mm A"),
       completed: v.status === "COMPLETED",
     })),
-    ...tasks.slice(0, 2).map((t) => ({
+    ...(tasks || []).slice(0, 2).map((t) => ({
       title: `Task: ${t.title}`,
       description: `Status: ${t.status}`,
       time: dayjs(t.createdAt).format("MMM D"),
@@ -134,9 +175,9 @@ export default function SuperAdminFieldForceDashboard() {
   ];
 
   const performanceMetrics = [
-    { label: "Visit Target", value: visitSummary.total > 0 ? Math.round((visitSummary.completed / visitSummary.total) * 100) : 0 },
-    { label: "Task Completion", value: taskSummary.completionRate },
-    { label: "DAR Submission", value: darSummary.total > 0 ? Math.round((darSummary.submitted + darSummary.approved) / darSummary.total * 100) : 0 },
+    { label: "Visit Target", value: visitSummary?.total > 0 ? Math.round((visitSummary.completed / visitSummary.total) * 100) : 0 },
+    { label: "Task Completion", value: taskSummary?.completionRate || 0 },
+    { label: "DAR Submission", value: darSummary?.total > 0 ? Math.round(((darSummary.submitted || 0) + (darSummary.approved || 0)) / darSummary.total * 100) : 0 },
   ];
 
   // Distribution chart data
@@ -153,15 +194,6 @@ export default function SuperAdminFieldForceDashboard() {
   ];
 
   const activeChartData = taskDistributionData.length > 0 ? taskDistributionData : fallbackDistribution;
-
-  const weeklyVisitsData = [
-    { day: "Mon", visits: 14, completed: 12 },
-    { day: "Tue", visits: 18, completed: 15 },
-    { day: "Wed", visits: 22, completed: 20 },
-    { day: "Thu", visits: 19, completed: 17 },
-    { day: "Fri", visits: 25, completed: 22 },
-    { day: "Sat", visits: 10, completed: 9 },
-  ];
 
   return (
     <motion.div
@@ -213,59 +245,59 @@ export default function SuperAdminFieldForceDashboard() {
         })}
       </div>
 
-      {/* Middle Section: Tasks & Operations Analytics Grid (2:1 Ratio) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Left Column (2 Cols) - Tasks & Weekly Operations Trend */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Today's Tasks Summary (Read-Only Upper Overview, Zero Redirection) */}
-          <SectionCard
-            title="Field Execution Tasks Overview"
-            subtitle={pendingTasks.length > 0 ? `${pendingTasks.length} tasks currently pending review` : "All field tasks updated"}
-            icon={Target}
-            iconColor="text-blue-600"
-          >
-            {tasks.length === 0 ? (
-              <EmptyDashboard title="No Tasks Assigned" description="No field force tasks registered for today." />
-            ) : (
-              <div className="space-y-2 text-xs">
-                {tasks.slice(0, 5).map((task) => (
-                  <div
-                    key={task.id}
-                    className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
-                  >
-                    <div className="space-y-0.5">
-                      <span className="font-bold text-slate-800 block text-sm">{task.title}</span>
-                      <span className="text-slate-500 block">
-                        Assigned Executive: <strong className="text-slate-700">{task.assignedTo ? `${task.assignedTo.firstName} ${task.assignedTo.lastName}` : "Unassigned"}</strong>
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 self-start sm:self-auto">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                          task.status === "COMPLETED"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : task.status === "IN_PROGRESS"
-                            ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                            : "bg-amber-50 text-amber-700 border border-amber-200"
-                        }`}
-                      >
-                        {task.status}
-                      </span>
-                      {task.dueDate && (
-                        <span className="text-slate-400 text-[11px] font-mono">
-                          {dayjs(task.dueDate).format("MMM D")}
-                        </span>
-                      )}
-                    </div>
+      {/* Top Section: Field Execution Tasks Overview (Full Width Horizontal Single Card with Larger Readable Text) */}
+      <div>
+        <SectionCard
+          title="Field Execution Tasks Overview"
+          subtitle={pendingTasks.length > 0 ? `${pendingTasks.length} tasks currently pending review` : "All field tasks updated"}
+          icon={Target}
+          iconColor="text-blue-600"
+        >
+          {tasks.length === 0 ? (
+            <EmptyDashboard title="No Tasks Assigned" description="No field force tasks registered for today." />
+          ) : (
+            <div className="space-y-3">
+              {tasks.slice(0, 5).map((task) => (
+                <div
+                  key={task.id}
+                  className="p-4 rounded-xl border border-slate-200/80 bg-slate-50/60 hover:bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition"
+                >
+                  <div className="space-y-1">
+                    <span className="font-bold text-slate-900 block text-base">{task.title}</span>
+                    <span className="text-slate-600 block text-sm">
+                      Assigned Executive: <strong className="text-slate-800 font-semibold">{task.assignedTo ? `${task.assignedTo.firstName} ${task.assignedTo.lastName}` : "Unassigned"}</strong>
+                    </span>
                   </div>
-                ))}
-              </div>
-            )}
-          </SectionCard>
 
-          {/* Weekly Operations Bar Chart */}
+                  <div className="flex items-center gap-3 self-start sm:self-auto">
+                    <span
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
+                        task.status === "COMPLETED"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          : task.status === "IN_PROGRESS"
+                          ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                          : "bg-amber-50 text-amber-700 border border-amber-200"
+                      }`}
+                    >
+                      {task.status}
+                    </span>
+                    {task.dueDate && (
+                      <span className="text-slate-500 text-xs font-mono">
+                        {dayjs(task.dueDate).format("MMM D, YYYY")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </SectionCard>
+      </div>
+
+      {/* Middle Section: Weekly Operations Trend (2/3 Width Left) & Task Execution Breakdown (1/3 Width Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Weekly Field Operations Trend (2:3 Space, Left Side) */}
+        <div className="lg:col-span-2">
           <ChartCard
             title="Weekly Field Operations Trend"
             subtitle="Comparison of total visits scheduled vs completed visits"
@@ -281,7 +313,7 @@ export default function SuperAdminFieldForceDashboard() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
                 <XAxis dataKey="day" tick={{ fontSize: 12, fill: "#64748B" }} />
                 <YAxis tick={{ fontSize: 12, fill: "#64748B" }} />
-                <Tooltip formatter={(val, name) => [val, name === "visits" ? "Scheduled Visits" : "Completed Visits"]} />
+                <Tooltip formatter={(val, _name, item) => [val, (item?.dataKey === "visits" || item?.name === "Scheduled Visits") ? "Visit Scheduled" : "Completed Visit"]} />
                 <Bar dataKey="visits" fill="#93C5FD" radius={[6, 6, 0, 0]} name="Scheduled Visits" />
                 <Bar dataKey="completed" fill="#2563EB" radius={[6, 6, 0, 0]} name="Completed Visits" />
               </BarChart>
@@ -289,27 +321,8 @@ export default function SuperAdminFieldForceDashboard() {
           </ChartCard>
         </div>
 
-        {/* Right Column (1 Col) - Operations Overview & Task Breakdown */}
-        <div className="space-y-6">
-          {/* Operations Overview */}
-          <SectionCard title="Operations Overview" icon={BarChart3} iconColor="text-emerald-600">
-            <div className="space-y-3">
-              {[
-                { label: "Visits Planned", value: visitSummary.planned, color: "text-blue-600 bg-blue-50 border-blue-100" },
-                { label: "Visits Completed", value: visitSummary.completed, color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
-                { label: "Tasks In Progress", value: inProgressTasks.length, color: "text-indigo-600 bg-indigo-50 border-indigo-100" },
-                { label: "Expenses Logged", value: `₹${expenseSummary.total || 0}`, color: "text-cyan-600 bg-cyan-50 border-cyan-100" },
-                { label: "DAR Submission Status", value: darSummary.total > 0 ? (darSummary.approved > 0 ? "Approved" : darSummary.submitted > 0 ? "Submitted" : "Draft") : "Not Created", color: "text-purple-600 bg-purple-50 border-purple-100" },
-              ].map((item, i) => (
-                <div key={i} className="flex justify-between items-center text-sm p-3 rounded-xl border border-slate-100 bg-slate-50/60">
-                  <span className="text-slate-600 font-medium">{item.label}</span>
-                  <span className={`px-3 py-1 rounded-lg text-xs font-bold border ${item.color}`}>{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-
-          {/* Task Status Donut Distribution Chart */}
+        {/* Task Execution Breakdown (1:3 Space, Right Side) */}
+        <div className="lg:col-span-1">
           <ChartCard title="Task Execution Breakdown" subtitle="Distribution by status" delay={0.3}>
             <div className="h-44 w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
@@ -339,22 +352,22 @@ export default function SuperAdminFieldForceDashboard() {
       {/* Bottom Section: Perfectly Balanced 2-Column Row (1:1 Ratio, No Gaps!) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column: Performance Summary */}
-        <PerformanceCard
+        {/* <PerformanceCard
           title="Field Force Achievement & Performance"
           subtitle="Overall target completion status across field teams"
           icon={Target}
           metrics={performanceMetrics}
-        />
+        /> */}
 
         {/* Right Column: Live Field Activity Stream */}
-        <SectionCard
+        {/* <SectionCard
           title="Field Activity Stream"
           subtitle="Real-time log of recent field operations & updates"
           icon={Activity}
           iconColor="text-violet-600"
         >
           <ActivityTimeline activities={recentActivities} emptyMessage="No recent activities recorded." />
-        </SectionCard>
+        </SectionCard> */}
       </div>
     </motion.div>
   );

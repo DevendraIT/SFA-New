@@ -139,7 +139,9 @@ export default function SettingsPage() {
       };
       await authApi.updateProfile(payload);
       if (setUser && user) {
-        setUser({ ...user, ...payload });
+        const updatedUser = { ...user, ...payload };
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
       }
       toast.success("Profile updated successfully!");
     } catch (err) {

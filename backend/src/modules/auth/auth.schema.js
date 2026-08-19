@@ -182,6 +182,11 @@ export const updateProfileSchema = z.object({
     .regex(/^\+?[\d\s\-\(\)]{10,}$/, { message: "Invalid phone number format." })
     .transform(sanitizeText)
     .optional(),
+
+  avatarUrl: z
+    .string()
+    .nullable()
+    .optional(),
 }).refine(
   (data) => Object.values(data).some(v => v !== undefined),
   { message: "At least one field must be provided for update." }

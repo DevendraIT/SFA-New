@@ -158,12 +158,13 @@ export class AuthController extends BaseController {
    */
   updateProfile = this.asyncHandler(async (req, res) => {
     const user = this.extractUser(req);
-    const { firstName, lastName, phoneNumber } = req.body;
+    const { firstName, lastName, phoneNumber, avatarUrl } = req.body;
     
     const updated = await this.service.updateProfile(user.id, {
       firstName,
       lastName,
       phoneNumber,
+      avatarUrl,
     });
     
     return this.handleSuccess(res, updated, 'Profile updated successfully');

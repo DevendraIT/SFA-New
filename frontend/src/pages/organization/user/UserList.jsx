@@ -123,13 +123,14 @@ export default function UserList() {
 
   const canManageUserItem = (userItem) => {
     if (!userItem) return false;
-    // Users cannot edit or delete their own logged-in account
-    if (userItem.id === user?.id) return false;
 
     if (isCurrentSuperAdmin) {
-      // Super Admin can ONLY manage (edit/delete) Company Admin accounts!
-      return isTargetCompanyAdmin(userItem);
+      // Super Admin can manage (edit/delete) his own account AND Company Admin accounts, none other than
+      return userItem.id === user?.id || isTargetCompanyAdmin(userItem);
     }
+
+    // Users cannot edit or delete their own logged-in account
+    if (userItem.id === user?.id) return false;
     if (isHeadOfSales) return false;
     if (isTargetSuperAdmin(userItem)) return false;
     // Company Admin cannot edit/delete Company Admin accounts (only Super Admin manages Company Admin)

@@ -19,16 +19,14 @@ export default function useUsers(options = {}) {
     try {
       setLoading(true);
 
-      const params = {};
+      const params = { limit: options.limit || 100 };
       if (debouncedSearch && debouncedSearch.trim().length >= 2) {
         params.search = debouncedSearch;
       }
 
       const response = await userService.getUsers(params);
-
-      setUsers(
-        response?.data?.users || []
-      );
+      const userList = response?.data?.users || response?.users || response?.data || [];
+      setUsers(Array.isArray(userList) ? userList : []);
     } catch (err) {
       console.error(err);
     } finally {

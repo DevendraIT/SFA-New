@@ -79,40 +79,62 @@ export class TargetPerformanceRepository {
     });
   }
 
-  async getCompanyOverview(organizationId) {
-    const [targets, orders, teams, users, visits] = await Promise.all([
+  async getCompanyOverview(organizationId, userContext = null) {
+    const isSuperAdmin = !userContext || userContext.roles?.some(r => typeof r === 'string' ? r.toLowerCase().includes('super admin') : r.role?.name?.toLowerCase().includes('super admin'));
+    const userBranchId = userContext?.branchId;
+
+    const branchFilter = (!isSuperAdmin && userBranchId) ? { id: userBranchId } : {};
+    const orderBranchFilter = (!isSuperAdmin && userBranchId) ? { owner: { branchId: userBranchId } } : {};
+    const userBranchFilter = (!isSuperAdmin && userBranchId) ? { branchId: userBranchId } : {};
+
+    const [targets, orders, branches, users, visits, tasks] = await Promise.all([
       prisma.target.findMany({
         where: { organizationId },
         include: {
-          user: { select: { id: true, firstName: true, lastName: true, email: true } },
+          user: { select: { id: true, firstName: true, lastName: true, email: true, branchId: true } },
           team: { select: { id: true, name: true } },
         },
       }),
       prisma.order.findMany({
-        where: { organizationId, isDeleted: false },
+        where: {
+          organizationId,
+          isDeleted: false,
+          ...orderBranchFilter,
+        },
         include: {
-          owner: { select: { id: true, firstName: true, lastName: true, email: true } },
+          owner: { select: { id: true, firstName: true, lastName: true, email: true, branchId: true } },
+          items: { include: { product: true } },
+          customer: { select: { id: true, name: true } },
         },
       }),
-      prisma.team.findMany({
-        where: { organizationId },
-        include: {
-          users: { select: { id: true, firstName: true, lastName: true, email: true } },
+      prisma.branch.findMany({
+        where: {
+          organizationId,
+          ...branchFilter,
         },
       }),
       prisma.user.findMany({
-        where: { organizationId, deletedAt: null },
+        where: {
+          organizationId,
+          deletedAt: null,
+          ...userBranchFilter,
+        },
         include: {
           roles: { include: { role: true } },
+          branch: { select: { id: true, name: true } },
           team: { select: { id: true, name: true } },
         },
       }),
       prisma.visit.findMany({
         where: { organizationId },
-        select: { id: true, userId: true, status: true },
+        select: { id: true, userId: true, status: true, scheduledAt: true, createdAt: true },
+      }),
+      prisma.task.findMany({
+        where: { organizationId },
+        select: { id: true, assignedToId: true, status: true, dueDate: true, createdAt: true },
       }),
     ]);
 
-    return { targets, orders, teams, users, visits };
+    return { targets, orders, branches, users, visits, tasks };
   }
 }

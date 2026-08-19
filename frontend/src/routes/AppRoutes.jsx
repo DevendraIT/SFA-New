@@ -69,19 +69,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMemo } from "react";
 
 function PerformanceWrapper() {
-  const { user } = useAuth();
-  const isHeadOfSales = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("head of sales"));
-  }, [user]);
-
-  if (isHeadOfSales) {
-    return <TargetPerformanceAnalytics />;
-  }
-  return <ExecutivePerformance />;
+  return <TargetPerformanceAnalytics />;
 }
 
 export default function AppRoutes() {

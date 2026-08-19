@@ -143,162 +143,244 @@ export class ReportsService {
     };
   }
 
-  async getOrganizationAnalytics(organizationId, branchId = null) {
-    const raw = await this.repo.getOrganizationAnalytics(organizationId, branchId);
-    const { orders, products, customers, targets, visits, teams, users } = raw;
+  async getOrganizationAnalytics(organizationId, userContext = null) {
+    const raw = await this.repo.getOrganizationAnalytics(organizationId, userContext);
+    const { orders, products, customers, targets, visits, branches, users, warehouses, stocks, tasks, dars, attendance } = raw;
 
-    let totalRevenue = 0;
-    let approvedOrdersCount = 0;
-    let pendingOrdersCount = 0;
-    let cancelledOrdersCount = 0;
+    // 1. Branch Report
+    const branchReport = branches.map((b) => {
+      const bUsers = users.filter((u) => u.branchId === b.id);
+      const bUserIds = new Set(bUsers.map((u) => u.id));
+      
+      const bOrders = orders.filter((o) => o.owner?.branchId === b.id || bUserIds.has(o.ownerId));
+      const bCompletedOrders = bOrders.filter((o) => ["COMPLETED", "DELIVERED"].includes(o.status));
+      const bCancelledOrders = bOrders.filter((o) => o.status === "CANCELLED");
 
-    orders.forEach(o => {
-      const amt = Number(o.totalAmount || 0);
-      if (o.status === 'APPROVED' || o.status === 'COMPLETED') {
-        totalRevenue += amt;
-        approvedOrdersCount++;
-      } else if (o.status === 'CANCELLED') {
-        cancelledOrdersCount++;
-      } else {
-        pendingOrdersCount++;
-      }
-    });
+      const bTasks = tasks.filter((t) => bUserIds.has(t.assignedToId) || t.assignedTo?.branchId === b.id);
+      const bCompletedTasks = bTasks.filter((t) => t.status === "COMPLETED");
 
-    // Top Selling Products
-    const productSalesMap = {};
-    orders.forEach(o => {
-      if (Array.isArray(o.items)) {
-        o.items.forEach(item => {
-          const pId = item.productId || item.description;
-          const pName = item.product?.name || item.description || 'Product';
-          const sku = item.product?.sku || 'SKU-001';
-          const qty = item.quantity || 1;
-          const price = item.unitPrice || 0;
-          const revenue = qty * price;
+      const bVisits = visits.filter((v) => bUserIds.has(v.userId) || v.user?.branchId === b.id);
+      const bCompletedVisits = bVisits.filter((v) => v.status === "COMPLETED");
 
-          if (!productSalesMap[pId]) {
-            productSalesMap[pId] = { id: pId, name: pName, sku, unitsSold: 0, totalRevenue: 0 };
-          }
-          productSalesMap[pId].unitsSold += qty;
-          productSalesMap[pId].totalRevenue += revenue;
-        });
-      }
-    });
-
-    const topProducts = Object.values(productSalesMap)
-      .sort((a, b) => b.totalRevenue - a.totalRevenue)
-      .slice(0, 10);
-
-    if (topProducts.length === 0 && products.length > 0) {
-      products.slice(0, 5).forEach(p => {
-        topProducts.push({
-          id: p.id,
-          name: p.name,
-          sku: p.sku,
-          unitsSold: 25,
-          totalRevenue: (p.price || 500) * 25,
+      let bReqQty = 0;
+      let bFulQty = 0;
+      bOrders.forEach((o) => {
+        (o.items || []).forEach((i) => {
+          const q = i.quantity || 0;
+          bReqQty += q;
+          if (["COMPLETED", "DELIVERED"].includes(o.status)) bFulQty += q;
         });
       });
-    }
 
-    // Top Performing Employees (excluding Super Admin & Company Admin)
-    const employeePerformanceMap = {};
-    users.forEach(u => {
-      const roleNames = (u.roles || []).map(r => r.role?.name || r.name || '').map(n => n.toLowerCase());
-      const isSystemAdmin = roleNames.some(n => n.includes('super admin') || n.includes('company admin') || n === 'admin');
-      if (isSystemAdmin) return;
-
-      const name = `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.email;
-      employeePerformanceMap[u.id] = {
-        id: u.id,
-        name,
-        email: u.email,
-        teamName: u.team?.name || 'Sales Team',
-        ordersCount: 0,
-        totalRevenue: 0,
-        visitsCompleted: 0,
-        targetValue: 0,
-        achievedValue: 0,
+      return {
+        id: b.id,
+        name: b.name,
+        code: b.code || "BR",
+        memberCount: bUsers.length,
+        totalOrders: bOrders.length,
+        completedOrders: bCompletedOrders.length,
+        cancelledOrders: bCancelledOrders.length,
+        totalTasks: bTasks.length,
+        completedTasks: bCompletedTasks.length,
+        totalVisits: bVisits.length,
+        completedVisits: bCompletedVisits.length,
+        requestedQuantity: bReqQty,
+        fulfilledQuantity: bFulQty,
+        fulfillmentRate: bReqQty > 0 ? Math.round((bFulQty / bReqQty) * 100) : 0,
       };
     });
 
-    orders.forEach(o => {
-      if (employeePerformanceMap[o.ownerId]) {
-        employeePerformanceMap[o.ownerId].ordersCount++;
-        if (o.status === 'APPROVED' || o.status === 'COMPLETED') {
-          employeePerformanceMap[o.ownerId].totalRevenue += Number(o.totalAmount || 0);
-        }
-      }
+    // 2. Warehouses Report
+    const warehousesReport = warehouses.map((w) => {
+      const managerName = w.warehouseManager
+        ? `${w.warehouseManager.firstName || ""} ${w.warehouseManager.lastName || ""}`.trim()
+        : "Unassigned";
+      const totalStockQty = (w.stocks || []).reduce((sum, s) => sum + (s.quantity || 0), 0);
+      const reservedStockQty = (w.stocks || []).reduce((sum, s) => sum + (s.reservedQuantity || 0), 0);
+      const issueCount = (w.productIssues || []).length;
+      const branchNames = (w.branches || []).map((b) => b.name).join(", ") || "All Branches";
+
+      return {
+        id: w.id,
+        name: w.name,
+        code: w.code || "WH",
+        managerName,
+        location: w.location || "Main Center",
+        totalStockQuantity: totalStockQty,
+        reservedStockQuantity: reservedStockQty,
+        availableStockQuantity: Math.max(0, totalStockQty - reservedStockQty),
+        productIssueCount: issueCount,
+        assignedBranches: branchNames,
+        isActive: w.isActive,
+      };
     });
 
-    visits.forEach(v => {
-      if (v.status === 'COMPLETED' && employeePerformanceMap[v.userId]) {
-        employeePerformanceMap[v.userId].visitsCompleted++;
-      }
+    // 3. Product Report
+    const productReport = products.map((p) => {
+      const pOrders = orders.filter((o) => (o.items || []).some((i) => i.productId === p.id));
+      let unitsSold = 0;
+      orders.forEach((o) => {
+        (o.items || []).forEach((i) => {
+          if (i.productId === p.id) unitsSold += i.quantity || 0;
+        });
+      });
+      const totalStockQty = (p.stocks || []).reduce((sum, s) => sum + (s.quantity || 0), 0);
+
+      return {
+        id: p.id,
+        name: p.name,
+        sku: p.sku || "N/A",
+        category: p.category || "General",
+        price: Number(p.price || 0),
+        totalOrdersCount: pOrders.length,
+        totalUnitsSold: unitsSold,
+        currentStockQuantity: totalStockQty,
+      };
     });
 
-    targets.forEach(t => {
-      if (t.userId && employeePerformanceMap[t.userId]) {
-        employeePerformanceMap[t.userId].targetValue = t.targetValue || 0;
-        employeePerformanceMap[t.userId].achievedValue = t.achievedValue || employeePerformanceMap[t.userId].totalRevenue;
-      }
+    // 4. Stock per Branches Report
+    const stockPerBranchesReport = stocks.map((s) => {
+      const branchNames = (s.warehouse?.branches || []).map((b) => b.name).join(", ") || "General Stock";
+      return {
+        id: s.id,
+        productName: s.product?.name || "Unknown Product",
+        sku: s.product?.sku || "N/A",
+        warehouseName: s.warehouse?.name || "Main Warehouse",
+        branchNames,
+        totalQuantity: s.quantity || 0,
+        reservedQuantity: s.reservedQuantity || 0,
+        availableQuantity: Math.max(0, (s.quantity || 0) - (s.reservedQuantity || 0)),
+      };
     });
 
-    const topEmployees = Object.values(employeePerformanceMap)
-      .map(emp => {
-        const rate = emp.targetValue > 0 ? Math.min(100, Math.round((emp.achievedValue / emp.targetValue) * 100)) : (emp.ordersCount > 0 ? 100 : 0);
-        return { ...emp, achievementPercent: rate };
-      })
-      .sort((a, b) => b.totalRevenue - a.totalRevenue)
-      .slice(0, 10);
-
-    // Sales breakdown by month from actual orders
-    const monthlySalesMap = {};
-    orders.forEach(o => {
-      const monthKey = new Date(o.createdAt).toLocaleString('default', { month: 'short' });
-      if (!monthlySalesMap[monthKey]) monthlySalesMap[monthKey] = { period: monthKey, orders: 0, revenue: 0 };
-      monthlySalesMap[monthKey].orders += 1;
-      if (o.status === 'APPROVED' || o.status === 'COMPLETED') {
-        monthlySalesMap[monthKey].revenue += Number(o.totalAmount || 0);
-      }
+    // 5. Field Force Report (Strictly Sales Executives)
+    const fieldExecutives = users.filter((u) => {
+      const roleNames = Array.isArray(u.roles)
+        ? u.roles.map((r) => (r.role?.name || r.name || "").toLowerCase())
+        : [];
+      return roleNames.some((r) => r.includes("sales executive") || r.includes("field executive"));
     });
-    const monthlySales = Object.values(monthlySalesMap);
 
-    // Order Summary
-    const orderSummary = {
+    const completedTasksCount = tasks.filter((t) => t.status === "COMPLETED").length;
+    const pendingTasksCount = tasks.filter((t) => t.status === "PENDING").length;
+    const inProgressTasksCount = tasks.filter((t) => ["IN_PROGRESS", "DELIVERY_IN_PROGRESS"].includes(t.status)).length;
+
+    const workforceMembers = fieldExecutives.map((u) => {
+      const uTasks = tasks.filter((t) => t.assignedToId === u.id);
+      const uCompleted = uTasks.filter((t) => t.status === "COMPLETED").length;
+      const uInProgress = uTasks.filter((t) => ["IN_PROGRESS", "DELIVERY_IN_PROGRESS"].includes(t.status)).length;
+      const uPending = uTasks.filter((t) => t.status === "PENDING").length;
+
+      return {
+        id: u.id,
+        name: `${u.firstName || ""} ${u.lastName || ""}`.trim() || u.email,
+        email: u.email,
+        branchName: u.branch?.name || "Unassigned",
+        totalTasks: uTasks.length,
+        completedTasks: uCompleted,
+        inProgressTasks: uInProgress,
+        pendingTasks: uPending,
+      };
+    });
+
+    const fieldForceReport = {
+      workforceCount: fieldExecutives.length,
+      tasksSummary: {
+        total: tasks.length,
+        completed: completedTasksCount,
+        inProgress: inProgressTasksCount,
+        pending: pendingTasksCount,
+        completionRate: tasks.length > 0 ? Math.round((completedTasksCount / tasks.length) * 100) : 0,
+      },
+      workforceList: workforceMembers,
+    };
+
+    // 6. Sales Orders Completion Report
+    const draftOrders = orders.filter((o) => o.status === "DRAFT").length;
+    const pendingOrders = orders.filter((o) => ["PENDING", "SUBMITTED", "IN_REVIEW"].includes(o.status)).length;
+    const inProgressOrders = orders.filter((o) => ["APPROVED", "IN_PROGRESS", "DISPATCHED"].includes(o.status)).length;
+    const completedOrders = orders.filter((o) => ["COMPLETED", "DELIVERED"].includes(o.status)).length;
+    const cancelledOrders = orders.filter((o) => o.status === "CANCELLED").length;
+
+    let totalReqQty = 0;
+    let totalFulQty = 0;
+    orders.forEach((o) => {
+      (o.items || []).forEach((i) => {
+        const q = i.quantity || 0;
+        totalReqQty += q;
+        if (["COMPLETED", "DELIVERED"].includes(o.status)) totalFulQty += q;
+      });
+    });
+
+    const salesOrdersCompletionReport = {
       totalOrders: orders.length,
-      approvedOrders: approvedOrdersCount,
-      pendingOrders: pendingOrdersCount,
-      cancelledOrders: cancelledOrdersCount,
+      draftOrders,
+      pendingOrders,
+      inProgressOrders,
+      completedOrders,
+      cancelledOrders,
+      requestedQuantity: totalReqQty,
+      fulfilledQuantity: totalFulQty,
+      pendingQuantity: Math.max(0, totalReqQty - totalFulQty),
+      fulfillmentRate: totalReqQty > 0 ? Math.round((totalFulQty / totalReqQty) * 100) : 0,
+      orderCompletionRate: orders.length > 0 ? Math.round((completedOrders / orders.length) * 100) : 0,
     };
 
-    // Customer Summary
-    const customerSummary = {
-      totalCustomers: customers.length,
-      activeCustomers: customers.filter(c => c.orders && c.orders.length > 0).length,
-      topCustomers: customers.slice(0, 5).map(c => ({ id: c.id, name: c.name, industry: c.industry || 'Standard' })),
-    };
+    // 7. Individual User Report
+    const individualUserReport = users.map((u) => {
+      const roleNames = (u.roles || []).map((r) => r.role?.name || r.name || "");
+      const isManager = roleNames.some((n) => n.toLowerCase().includes("manager") || n.toLowerCase().includes("head"));
+
+      const uOrders = orders.filter((o) => o.ownerId === u.id);
+      const uCompletedOrders = uOrders.filter((o) => ["COMPLETED", "DELIVERED"].includes(o.status));
+      const uTasks = tasks.filter((t) => t.assignedToId === u.id);
+      const uCompletedTasks = uTasks.filter((t) => t.status === "COMPLETED");
+      const uVisits = visits.filter((v) => v.userId === u.id && v.status === "COMPLETED");
+
+      let uReqQty = 0;
+      let uFulQty = 0;
+      uOrders.forEach((o) => {
+        (o.items || []).forEach((i) => {
+          const q = i.quantity || 0;
+          uReqQty += q;
+          if (["COMPLETED", "DELIVERED"].includes(o.status)) uFulQty += q;
+        });
+      });
+
+      return {
+        id: u.id,
+        name: `${u.firstName || ""} ${u.lastName || ""}`.trim() || u.email,
+        email: u.email,
+        branchName: u.branch?.name || "Unassigned",
+        roleName: roleNames[0] || (isManager ? "Sales Manager" : "Sales Executive"),
+        assignedTasksCount: uTasks.length,
+        completedTasksCount: uCompletedTasks.length,
+        completedVisitsCount: uVisits.length,
+        totalOrdersPlaced: uOrders.length,
+        completedOrdersCount: uCompletedOrders.length,
+        requestedQuantity: uReqQty,
+        fulfilledQuantity: uFulQty,
+        fulfillmentRate: uReqQty > 0 ? Math.round((uFulQty / uReqQty) * 100) : 0,
+      };
+    });
 
     return {
-      totalRevenue,
-      yearlyRevenue: totalRevenue,
-      totalOrders: orderSummary.totalOrders,
-      orderSummary,
-      customerSummary,
-      topSellingProducts: topProducts,
-      topPerformingEmployees: topEmployees,
-      monthlySales,
-      teamPerformance: teams.map(t => {
-        const teamRevenue = orders
-          .filter(o => o.owner && o.owner.teamId === t.id && (o.status === 'APPROVED' || o.status === 'COMPLETED'))
-          .reduce((sum, o) => sum + Number(o.totalAmount || 0), 0);
-        return {
-          id: t.id,
-          name: t.name,
-          memberCount: t.users ? t.users.length : 0,
-          totalRevenue: teamRevenue,
-        };
-      }),
+      branchReport,
+      warehousesReport,
+      productReport,
+      stockPerBranchesReport,
+      fieldForceReport,
+      salesOrdersCompletionReport,
+      individualUserReport,
+      summary: {
+        totalBranches: branches.length,
+        totalWarehouses: warehouses.length,
+        totalProducts: products.length,
+        totalUsers: users.length,
+        totalOrders: orders.length,
+        totalVisits: visits.length,
+        totalTasks: tasks.length,
+      },
     };
   }
 }

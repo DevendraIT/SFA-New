@@ -2,6 +2,7 @@ import { useAuth } from "../../context/AuthContext";
 import {
   isSuperAdminUser,
   isCompanyAdminUser,
+  isHeadOfSalesUser,
   isSalesManagerUser,
   isSalesExecutiveUser,
   isInventoryManagerUser,
@@ -34,6 +35,10 @@ export default function Dashboard() {
 
   if (isCompanyAdminUser(user)) {
     return <CompanyAdminDashboard />;
+  }
+
+  if (isHeadOfSalesUser(user)) {
+    return <HeadOfSalesDashboard />;
   }
 
   if (isSalesManagerUser(user)) {

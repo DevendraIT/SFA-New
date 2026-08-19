@@ -1,45 +1,30 @@
 import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
-import dayjs from "dayjs";
-import { BarChart3, TrendingUp, Target, Users, Calendar, RefreshCw, Loader2, FileText, ShoppingCart, IndianRupee, Package, Award } from "lucide-react";
-import fieldForceApi from "../../api/fieldForce.api";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Building2, Warehouse, Package, Boxes, Activity, RefreshCw, Loader2, Target, MapPin
+} from "lucide-react";
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid
+} from "recharts";
 import { getReportsAnalytics } from "../../api/report.api";
 import PageHeader from "../../components/dashboard/PageHeader";
 import SectionCard from "../../components/dashboard/SectionCard";
-import TargetPerformanceAnalytics from "./TargetPerformanceAnalytics";
 import { useAuth } from "../../context/AuthContext";
 
 export default function ReportsPage() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [tasks, setTasks] = useState([]);
-  const [visits, setVisits] = useState([]);
-  const [attendance, setAttendance] = useState([]);
-  const [dars, setDars] = useState([]);
   const [analytics, setAnalytics] = useState(null);
+  const [activeTab, setActiveTab] = useState("branch");
 
   const loadReportsData = async () => {
     try {
       setLoading(true);
-      const [tasksRes, visitsRes, attendanceRes, darsRes, analyticsRes] = await Promise.all([
-        fieldForceApi.listTasks({ take: 100 }).catch(() => ({ data: [] })),
-        fieldForceApi.listVisits({ take: 100 }).catch(() => ({ data: [] })),
-        fieldForceApi.listAttendance({ take: 100 }).catch(() => ({ data: [] })),
-        fieldForceApi.listDars({ take: 100 }).catch(() => ({ data: [] })),
-        getReportsAnalytics().catch(() => ({ data: null })),
-      ]);
-
-      const tData = tasksRes.data?.data || tasksRes.data;
-      const vData = visitsRes.data?.data || visitsRes.data;
-      const aData = attendanceRes.data?.data || attendanceRes.data;
-      const dData = darsRes.data?.data || darsRes.data;
-
-      setTasks(Array.isArray(tData?.tasks) ? tData.tasks : Array.isArray(tData) ? tData : []);
-      setVisits(Array.isArray(vData?.visits) ? vData.visits : Array.isArray(vData) ? vData : []);
-      setAttendance(Array.isArray(aData?.attendance) ? aData.attendance : Array.isArray(aData) ? aData : []);
-      setDars(Array.isArray(dData?.dars) ? dData.dars : Array.isArray(dData) ? dData : []);
-      setAnalytics(analyticsRes.data?.data || analyticsRes.data);
+      const res = await getReportsAnalytics();
+      const data = res.data?.data || res.data;
+      setAnalytics(data);
     } catch (e) {
-      console.warn("Failed to load reports data:", e);
+      console.warn("Failed to load reports analytics:", e);
     } finally {
       setLoading(false);
     }
@@ -49,229 +34,378 @@ export default function ReportsPage() {
     loadReportsData();
   }, []);
 
-  const completedTasks = tasks.filter((t) => t.status === "COMPLETED" || t.status === "CHECKED_OUT").length;
-  const completedVisits = visits.filter((v) => v.status === "COMPLETED").length;
-  const presentAttendance = attendance.filter((a) => a.status === "PRESENT" || a.checkInAt).length;
-  const taskCompletionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
-  const visitCoverageRate = visits.length > 0 ? Math.round((completedVisits / visits.length) * 100) : 0;
+  const reportTabs = [
+    { id: "branch", label: "Branch Report", icon: Building2 },
+    { id: "warehouses", label: "Warehouses", icon: Warehouse },
+    { id: "product", label: "Product Report", icon: Package },
+    { id: "stock", label: "Stock per Branches", icon: Boxes },
+    { id: "fieldforce", label: "Field Force Report", icon: Activity },
+  ];
 
-  const totalRevenue = analytics?.totalRevenue ?? 0;
-  const yearlyRevenue = analytics?.yearlyRevenue ?? totalRevenue;
-  const orderSummary = analytics?.orderSummary || { totalOrders: 0, approvedOrders: 0, pendingOrders: 0, cancelledOrders: 0 };
-  const customerSummary = analytics?.customerSummary || { totalCustomers: 0, activeCustomers: 0 };
-  const topProducts = analytics?.topSellingProducts || [];
-  const topEmployees = analytics?.topPerformingEmployees || [];
-
-  const { user } = useAuth();
-
-  const isSalesManager = useMemo(() => {
-    if (!user) return false;
-    const roleNames = Array.isArray(user.roles)
-      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
-      : [user.role?.name || ""];
-    return roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
-  }, [user]);
-
-  const pageTitle = isSalesManager
-    ? `${user?.branch?.name || "Branch"} Performance & Sales Reports`
-    : "Organization & Sales Reports";
-
-  const pageSubtitle = isSalesManager
-    ? "Branch revenue, sales orders, customer reach, and staff performance analytics"
-    : "System-wide revenue, sales orders, customer, product, and field force reports";
+  // Destructure 5 report datasets from API response
+  const summary = analytics?.summary || {};
+  const branchReport = analytics?.branchReport || [];
+  const warehousesReport = analytics?.warehousesReport || [];
+  const productReport = analytics?.productReport || [];
+  const stockPerBranchesReport = analytics?.stockPerBranchesReport || [];
+  const fieldForceReport = analytics?.fieldForceReport || { tasksSummary: {}, visitsSummary: {} };
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 space-y-4">
-        <Loader2 size={40} className="animate-spin text-blue-600" />
-        <p className="text-sm text-slate-500 font-medium">
-          {isSalesManager ? "Generating branch reports & performance analytics..." : "Generating organization reports & field analytics..."}
-        </p>
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
+        <Loader2 size={42} className="animate-spin text-blue-600" />
+        <p className="text-sm text-slate-500 font-medium">Generating operational business reports & analytics...</p>
       </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-      <PageHeader title={pageTitle} subtitle={pageSubtitle}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={loadReportsData}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-medium hover:bg-slate-50 transition"
-          >
-            <RefreshCw size={16} /> Refresh Reports
-          </button>
-        </div>
+    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-6 pb-12">
+      {/* Header */}
+      <PageHeader
+        title="Operational Reports & Analytics"
+        subtitle="Real-time performance reports across branches, warehouses, stock, products, and field force"
+      >
+        <button
+          onClick={loadReportsData}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-medium hover:bg-slate-50 transition shadow-xs cursor-pointer"
+        >
+          <RefreshCw size={16} /> Refresh Reports
+        </button>
       </PageHeader>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl bg-blue-50 border border-blue-200 p-5">
-          <div className="flex items-center justify-between text-blue-700">
-            <p className="text-xs font-semibold uppercase">Total Sales Revenue</p>
-            <IndianRupee size={18} />
-          </div>
-          <p className="text-2xl font-extrabold text-blue-900 mt-1">₹{Number(totalRevenue).toLocaleString("en-IN")}</p>
-          <p className="text-xs text-blue-600 mt-1">Yearly projection: ₹{Number(yearlyRevenue).toLocaleString("en-IN")}</p>
+      {/* Top Overview KPI Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 block">Branches</span>
+          <span className="text-2xl font-black text-slate-900 mt-1 block">{summary.totalBranches || branchReport.length || 0}</span>
         </div>
-
-        <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-5">
-          <div className="flex items-center justify-between text-emerald-700">
-            <p className="text-xs font-semibold uppercase">Sales Orders Summary</p>
-            <ShoppingCart size={18} />
-          </div>
-          <p className="text-2xl font-extrabold text-emerald-900 mt-1">{orderSummary.totalOrders} Orders</p>
-          <p className="text-xs text-emerald-600 mt-1">{orderSummary.approvedOrders} approved | {orderSummary.pendingOrders} pending</p>
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 block">Warehouses</span>
+          <span className="text-2xl font-black text-slate-900 mt-1 block">{summary.totalWarehouses || warehousesReport.length || 0}</span>
         </div>
-
-        <div className="rounded-2xl bg-purple-50 border border-purple-200 p-5">
-          <div className="flex items-center justify-between text-purple-700">
-            <p className="text-xs font-semibold uppercase">Customer Reach</p>
-            <Users size={18} />
-          </div>
-          <p className="text-2xl font-extrabold text-purple-900 mt-1">{customerSummary.totalCustomers} Accounts</p>
-          <p className="text-xs text-purple-600 mt-1">{customerSummary.activeCustomers} active purchasing clients</p>
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+          <span className="text-xs font-semibold text-slate-500 block">Products</span>
+          <span className="text-2xl font-black text-slate-900 mt-1 block">{summary.totalProducts || productReport.length || 0}</span>
         </div>
-
-        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-5">
-          <div className="flex items-center justify-between text-amber-700">
-            <p className="text-xs font-semibold uppercase">Field Operations Rate</p>
-            <Target size={18} />
-          </div>
-          <p className="text-2xl font-extrabold text-amber-900 mt-1">{taskCompletionRate}%</p>
-          <p className="text-xs text-amber-600 mt-1">{completedVisits} visits & {completedTasks} tasks executed</p>
+        <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-200 shadow-xs">
+          <span className="text-xs font-semibold text-blue-700 block">Stock Entries</span>
+          <span className="text-2xl font-black text-blue-900 mt-1 block">{stockPerBranchesReport.length || 0}</span>
+        </div>
+        <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-200 shadow-xs">
+          <span className="text-xs font-semibold text-purple-700 block">Tasks Completed</span>
+          <span className="text-2xl font-black text-purple-900 mt-1 block">{fieldForceReport.tasksSummary?.completed || 0}</span>
         </div>
       </div>
 
-      {/* Top Performing Employees Table */}
-      {topEmployees.length > 0 && (
-        <SectionCard title="Top Performing Employees" subtitle="Executive & manager achievement ratings" icon={Award} iconColor="text-emerald-600">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-                <tr>
-                  <th className="py-3 px-4">Employee</th>
-                  <th className="py-3 px-4">Team</th>
-                  <th className="py-3 px-4">Orders Placed</th>
-                  <th className="py-3 px-4">Visits Completed</th>
-                  <th className="py-3 px-4">Revenue Generated</th>
-                  <th className="py-3 px-4">Target Achievement</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {topEmployees.map((emp) => (
-                  <tr key={emp.id} className="hover:bg-slate-50/80 transition">
-                    <td className="py-3.5 px-4 font-bold text-slate-900">
-                      {emp.name}
-                      <span className="block text-xs text-slate-400 font-normal">{emp.email}</span>
-                    </td>
-                    <td className="py-3.5 px-4 text-slate-600">{emp.teamName}</td>
-                    <td className="py-3.5 px-4 font-semibold text-slate-800">{emp.ordersCount}</td>
-                    <td className="py-3.5 px-4 text-slate-700">{emp.visitsCompleted}</td>
-                    <td className="py-3.5 px-4 font-bold text-emerald-600">₹{Number(emp.totalRevenue).toLocaleString("en-IN")}</td>
-                    <td className="py-3.5 px-4">
-                      <span className="px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800">
-                        {emp.achievementPercent}%
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </SectionCard>
-      )}
+      {/* Navigation Tabs Bar */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-slate-200">
+        {reportTabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
+                isActive
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900"
+              }`}
+            >
+              <Icon size={16} />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
 
-      {/* Top Selling Products Table */}
-      {topProducts.length > 0 && (
-        <SectionCard title="Top Selling Products" subtitle="Product performance & revenue generation" icon={Package} iconColor="text-purple-600">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-                <tr>
-                  <th className="py-3 px-4">Product Name</th>
-                  <th className="py-3 px-4">SKU</th>
-                  <th className="py-3 px-4">Units Sold</th>
-                  <th className="py-3 px-4">Total Revenue</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {topProducts.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-50/80 transition">
-                    <td className="py-3.5 px-4 font-bold text-slate-900">{p.name}</td>
-                    <td className="py-3.5 px-4 font-mono text-xs text-slate-600">{p.sku}</td>
-                    <td className="py-3.5 px-4 font-semibold text-slate-800">{p.unitsSold}</td>
-                    <td className="py-3.5 px-4 font-bold text-blue-600">₹{Number(p.totalRevenue).toLocaleString("en-IN")}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </SectionCard>
-      )}
+      {/* Tab Content Display */}
+      <AnimatePresence mode="wait">
+        {activeTab === "branch" && (
+          <motion.div key="branch" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+            <SectionCard title="Branch Operational Performance" subtitle="Orders count, fulfillment percentage, and team size per branch" icon={Building2} iconColor="text-blue-600">
+              {branchReport.length > 0 ? (
+                <div className="space-y-6">
+                  <div className="h-72 w-full pt-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={branchReport} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
+                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                        <Legend />
+                        <Bar dataKey="totalOrders" name="Total Orders" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="completedTasks" name="Completed Tasks" fill="#10b981" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="requestedQuantity" name="Requested Quantity" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
 
-      {/* Organization Level Reports Breakdown Table */}
-      <SectionCard title="Organization Level Reports Breakdown" icon={BarChart3} iconColor="text-blue-600">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-              <tr>
-                <th className="py-3 px-4">Report Module</th>
-                <th className="py-3 px-4">Scope / Metrics</th>
-                <th className="py-3 px-4">Key Value</th>
-                <th className="py-3 px-4">Target Achievement / Coverage</th>
-                <th className="py-3 px-4">Data Source</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              <tr className="hover:bg-slate-50/80 transition">
-                <td className="py-3.5 px-4 font-bold text-slate-900">Sales & Revenue Report</td>
-                <td className="py-3.5 px-4 text-slate-700">Daily, Weekly, Monthly & Yearly Revenue</td>
-                <td className="py-3.5 px-4 text-emerald-600 font-bold">₹{Number(totalRevenue).toLocaleString("en-IN")}</td>
-                <td className="py-3.5 px-4 font-extrabold text-blue-600">100% Verified</td>
-                <td className="py-3.5 px-4">
-                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
-                    REAL DATABASE
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-50/80 transition">
-                <td className="py-3.5 px-4 font-bold text-slate-900">Order & Collection Summary</td>
-                <td className="py-3.5 px-4 text-slate-700">Approved, Pending & Cancelled Orders</td>
-                <td className="py-3.5 px-4 text-slate-800 font-bold">{orderSummary.approvedOrders} Approved / {orderSummary.totalOrders} Total</td>
-                <td className="py-3.5 px-4 font-extrabold text-blue-600">92% Approval</td>
-                <td className="py-3.5 px-4">
-                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-                    REAL DATABASE
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-50/80 transition">
-                <td className="py-3.5 px-4 font-bold text-slate-900">Customer & Industry Report</td>
-                <td className="py-3.5 px-4 text-slate-700">Customer Accounts & Accounts Reach</td>
-                <td className="py-3.5 px-4 text-slate-800 font-bold">{customerSummary.totalCustomers} Accounts</td>
-                <td className="py-3.5 px-4 font-extrabold text-blue-600">80% Active</td>
-                <td className="py-3.5 px-4">
-                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
-                    REAL DATABASE
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-50/80 transition">
-                <td className="py-3.5 px-4 font-bold text-slate-900">Field Missions & Visits Coverage</td>
-                <td className="py-3.5 px-4 text-slate-700">Tasks Executed & Customer Visits</td>
-                <td className="py-3.5 px-4 text-slate-800 font-bold">{completedVisits} Visits / {completedTasks} Tasks</td>
-                <td className="py-3.5 px-4 font-extrabold text-blue-600">{taskCompletionRate}% Efficiency</td>
-                <td className="py-3.5 px-4">
-                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
-                    REAL DATABASE
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </SectionCard>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {branchReport.map((b) => (
+                      <div key={b.id} className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-bold text-slate-900 text-lg">{b.name}</h3>
+                          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 font-mono">{b.code}</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="p-2.5 rounded-xl bg-slate-50">
+                            <span className="text-slate-500 block">Total Orders</span>
+                            <span className="font-bold text-slate-900 text-sm">{b.totalOrders ?? 0}</span>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-800">
+                            <span className="block text-emerald-600 font-medium">Completed Tasks</span>
+                            <span className="font-bold text-sm">{b.completedTasks ?? 0}</span>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-blue-50 text-blue-800">
+                            <span className="block text-blue-600 font-medium">Requested Qty</span>
+                            <span className="font-bold text-sm">{b.requestedQuantity ?? 0}</span>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-purple-50 text-purple-800">
+                            <span className="block text-purple-600 font-medium">Staff Members</span>
+                            <span className="font-bold text-sm">{b.memberCount ?? 0}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 py-8 text-center">No branch data available in database.</p>
+              )}
+            </SectionCard>
+          </motion.div>
+        )}
+
+        {activeTab === "warehouses" && (
+          <motion.div key="warehouses" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+            <SectionCard title="Warehouse Inventory & Stock Analytics" subtitle="Stock levels, product issue counts, and assigned branch networks" icon={Warehouse} iconColor="text-indigo-600">
+              {warehousesReport.length > 0 ? (
+                <div className="space-y-6">
+                  <div className="h-72 w-full pt-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={warehousesReport} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
+                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                        <Legend />
+                        <Bar dataKey="totalStockQuantity" name="Total Stock Qty" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="availableStockQuantity" name="Available Qty" fill="#10b981" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="productIssueCount" name="Product Issues" fill="#f59e0b" radius={[6, 6, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {warehousesReport.map((w) => (
+                      <div key={w.id} className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-bold text-slate-900 text-lg">{w.name}</h3>
+                          <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${w.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
+                            {w.isActive ? "Active" : "Inactive"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500">Manager: <span className="font-semibold text-slate-800">{w.managerName}</span></p>
+                        <div className="grid grid-cols-3 gap-2 text-xs">
+                          <div className="p-2 rounded-xl bg-slate-50">
+                            <span className="text-slate-500 block">Total Qty</span>
+                            <span className="font-bold text-slate-900">{w.totalStockQuantity}</span>
+                          </div>
+                          <div className="p-2 rounded-xl bg-emerald-50 text-emerald-800">
+                            <span className="block text-emerald-600">Available</span>
+                            <span className="font-bold">{w.availableStockQuantity}</span>
+                          </div>
+                          <div className="p-2 rounded-xl bg-amber-50 text-amber-800">
+                            <span className="block text-amber-600">Issues</span>
+                            <span className="font-bold">{w.productIssueCount}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 py-8 text-center">No warehouse records found in database.</p>
+              )}
+            </SectionCard>
+          </motion.div>
+        )}
+
+        {activeTab === "product" && (
+          <motion.div key="product" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+            <SectionCard title="Product Catalog & Sales Report" subtitle="Units sold, pricing, order frequency, and inventory stock" icon={Package} iconColor="text-emerald-600">
+              {productReport.length > 0 ? (
+                <div className="space-y-6">
+                  <div className="h-72 w-full pt-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={productReport} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
+                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                        <Legend />
+                        <Bar dataKey="totalUnitsSold" name="Units Sold" fill="#10b981" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="currentStockQuantity" name="Current Stock" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="totalOrdersCount" name="Total Orders" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
+                        <tr>
+                          <th className="p-4">Product Name</th>
+                          <th className="p-4">SKU</th>
+                          <th className="p-4">Category</th>
+                          <th className="p-4 text-right">Base Price</th>
+                          <th className="p-4 text-center">Orders Count</th>
+                          <th className="p-4 text-center">Units Sold</th>
+                          <th className="p-4 text-center">Current Stock</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {productReport.map((p) => (
+                          <tr key={p.id} className="hover:bg-slate-50/50">
+                            <td className="p-4 font-bold text-slate-900">{p.name}</td>
+                            <td className="p-4 font-mono text-xs text-slate-600">{p.sku}</td>
+                            <td className="p-4 text-slate-600">{p.category}</td>
+                            <td className="p-4 text-right font-semibold text-slate-900">₹{p.price.toLocaleString("en-IN")}</td>
+                            <td className="p-4 text-center font-bold text-blue-700">{p.totalOrdersCount}</td>
+                            <td className="p-4 text-center font-bold text-emerald-700">{p.totalUnitsSold}</td>
+                            <td className="p-4 text-center font-bold text-purple-700">{p.currentStockQuantity}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 py-8 text-center">No product records found in database.</p>
+              )}
+            </SectionCard>
+          </motion.div>
+        )}
+
+        {activeTab === "stock" && (
+          <motion.div key="stock" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+            <SectionCard title="Stock per Branches & Warehouses Report" subtitle="Inventory distribution and available quantities across branch networks" icon={Boxes} iconColor="text-amber-600">
+              {stockPerBranchesReport.length > 0 ? (
+                <div className="space-y-6">
+                  <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
+                        <tr>
+                          <th className="p-4">Product</th>
+                          <th className="p-4">SKU</th>
+                          <th className="p-4">Warehouse</th>
+                          <th className="p-4">Assigned Branch(es)</th>
+                          <th className="p-4 text-center">Net Available Quantity</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {stockPerBranchesReport.map((s) => (
+                          <tr key={s.id} className="hover:bg-slate-50/50">
+                            <td className="p-4 font-bold text-slate-900">{s.productName}</td>
+                            <td className="p-4 font-mono text-xs text-slate-600">{s.sku}</td>
+                            <td className="p-4 font-semibold text-slate-700">{s.warehouseName}</td>
+                            <td className="p-4 text-slate-600">{s.branchNames}</td>
+                            <td className="p-4 text-center font-bold text-emerald-700">{s.availableQuantity}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 py-8 text-center">No branch stock entries found in database.</p>
+              )}
+            </SectionCard>
+          </motion.div>
+        )}
+
+        {activeTab === "fieldforce" && (
+          <motion.div key="fieldforce" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+            <SectionCard title="Current Field Force Workforce & Task Execution Report" subtitle="Current working field workforce size, completed tasks, in-progress tasks, and pending tasks" icon={Activity} iconColor="text-purple-600">
+              <div className="space-y-6">
+                {/* Summary Cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-sm">
+                  <div className="p-4 rounded-xl bg-purple-50 border border-purple-100 text-purple-900">
+                    <span className="text-xs font-semibold text-purple-700 block">Current Field Workforce</span>
+                    <span className="text-2xl font-extrabold text-purple-950 mt-1 block">{fieldForceReport.workforceCount || fieldForceReport.workforceList?.length || 0}</span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <span className="text-xs font-semibold text-slate-500 block">Total Tasks</span>
+                    <span className="text-2xl font-extrabold text-slate-900 mt-1 block">{fieldForceReport.tasksSummary?.total || 0}</span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800">
+                    <span className="text-xs font-semibold text-emerald-700 block">Completed Tasks</span>
+                    <span className="text-2xl font-extrabold text-emerald-900 mt-1 block">{fieldForceReport.tasksSummary?.completed || 0}</span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-blue-50 border border-blue-100 text-blue-800">
+                    <span className="text-xs font-semibold text-blue-700 block">In Progress</span>
+                    <span className="text-2xl font-extrabold text-blue-900 mt-1 block">{fieldForceReport.tasksSummary?.inProgress || 0}</span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-amber-50 border border-amber-100 text-amber-800">
+                    <span className="text-xs font-semibold text-amber-700 block">Pending Tasks</span>
+                    <span className="text-2xl font-extrabold text-amber-900 mt-1 block">{fieldForceReport.tasksSummary?.pending || 0}</span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span className="text-slate-600">Overall Field Task Completion Rate ({fieldForceReport.tasksSummary?.completionRate || 0}%)</span>
+                    <span className="text-emerald-700">{fieldForceReport.tasksSummary?.completed || 0} / {fieldForceReport.tasksSummary?.total || 0} Tasks Completed</span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                    <div className="bg-emerald-500 h-3 rounded-full transition-all duration-500" style={{ width: `${fieldForceReport.tasksSummary?.completionRate || 0}%` }} />
+                  </div>
+                </div>
+
+                {/* Field Workforce Member Breakdown Table */}
+                {(fieldForceReport.workforceList || []).length > 0 ? (
+                  <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
+                        <tr>
+                          <th className="p-4">Field Worker Name</th>
+                          <th className="p-4">Branch</th>
+                          <th className="p-4 text-center">Assigned Tasks</th>
+                          <th className="p-4 text-center">Completed Tasks</th>
+                          <th className="p-4 text-center">In Progress</th>
+                          <th className="p-4 text-center">Pending Tasks</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {fieldForceReport.workforceList.map((w) => (
+                          <tr key={w.id} className="hover:bg-slate-50/50">
+                            <td className="p-4 font-bold text-slate-900">
+                              <div>
+                                <p>{w.name}</p>
+                                <p className="text-xs text-slate-500 font-normal">{w.email}</p>
+                              </div>
+                            </td>
+                            <td className="p-4 text-slate-600 font-medium">{w.branchName}</td>
+                            <td className="p-4 text-center font-bold text-slate-900">{w.totalTasks}</td>
+                            <td className="p-4 text-center font-bold text-emerald-700">{w.completedTasks}</td>
+                            <td className="p-4 text-center font-bold text-blue-700">{w.inProgressTasks}</td>
+                            <td className="p-4 text-center font-bold text-amber-700">{w.pendingTasks}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500 py-6 text-center">No field workforce members found.</p>
+                )}
+              </div>
+            </SectionCard>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

@@ -44,7 +44,7 @@ export class TargetPerformanceController {
 
   getCompanyOverview = async (req, res, next) => {
     try {
-      const result = await this.service.getCompanyOverview(req.user.organizationId);
+      const result = await this.service.getCompanyOverview(req.user.organizationId, req.user);
       return successResponse(res, result, 'Company performance overview retrieved successfully.');
     } catch (err) {
       next(err);

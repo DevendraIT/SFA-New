@@ -58,8 +58,8 @@ export const DEFAULT_USER_SETTINGS = {
 // Default Pagination
 export const DEFAULT_PAGINATION = {
   PAGE: 1,
-  LIMIT: 20,
-  MAX_LIMIT: 100,
+  LIMIT: 100,
+  MAX_LIMIT: 1000,
   SORT_BY: 'createdAt',
   SORT_ORDER: 'desc',
 };
