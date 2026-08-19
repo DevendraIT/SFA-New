@@ -36,11 +36,17 @@ export class DepartmentRepository {
       organizationId
     };
     
-    if (search) {
-      where.name = { 
-        contains: search, 
-        mode: 'insensitive' 
-      };
+    if (search && search.trim() !== '') {
+      const term = search.trim();
+      where.OR = [
+        { name: { contains: term, mode: 'insensitive' } },
+        { code: { contains: term, mode: 'insensitive' } },
+        { description: { contains: term, mode: 'insensitive' } },
+        { organization: { name: { contains: term, mode: 'insensitive' } } },
+        { branches: { some: { name: { contains: term, mode: 'insensitive' } } } },
+        { teams: { some: { name: { contains: term, mode: 'insensitive' } } } },
+        { territories: { some: { name: { contains: term, mode: 'insensitive' } } } },
+      ];
     }
     
     return where;

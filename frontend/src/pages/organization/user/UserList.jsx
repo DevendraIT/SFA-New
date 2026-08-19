@@ -355,7 +355,7 @@ export default function UserList() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by name, email..."
+          placeholder="Search by name, email, phone, role, branch, department, team, status..."
           className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>

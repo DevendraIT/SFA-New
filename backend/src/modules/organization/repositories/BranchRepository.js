@@ -40,12 +40,22 @@ export class BranchRepository {
       organizationId
     };
     
-    
-    if (search) {
-      where.name = { 
-        contains: search, 
-        mode: 'insensitive' 
-      };
+    if (search && search.trim() !== '') {
+      const term = search.trim();
+      where.OR = [
+        { name: { contains: term, mode: 'insensitive' } },
+        { code: { contains: term, mode: 'insensitive' } },
+        { address: { contains: term, mode: 'insensitive' } },
+        { city: { contains: term, mode: 'insensitive' } },
+        { state: { contains: term, mode: 'insensitive' } },
+        { phone: { contains: term, mode: 'insensitive' } },
+        { email: { contains: term, mode: 'insensitive' } },
+        { organization: { name: { contains: term, mode: 'insensitive' } } },
+        { department: { name: { contains: term, mode: 'insensitive' } } },
+        { territory: { name: { contains: term, mode: 'insensitive' } } },
+        { teams: { some: { name: { contains: term, mode: 'insensitive' } } } },
+        { warehouses: { some: { name: { contains: term, mode: 'insensitive' } } } },
+      ];
     }
     
     return where;

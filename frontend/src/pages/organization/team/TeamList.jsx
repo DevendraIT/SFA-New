@@ -243,7 +243,7 @@ export default function TeamList() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by team name..."
+          placeholder="Search by team, code, branch, department, territory, members..."
           className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>

@@ -436,7 +436,7 @@ export default function BranchList() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by branch name..."
+          placeholder="Search by branch, code, city, state, phone, email, department, team..."
           className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>

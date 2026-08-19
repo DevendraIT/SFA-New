@@ -39,7 +39,7 @@ export class UserRepository {
 
   // Build where clause for user queries
   #buildWhereClause(organizationId, { isActive, branchId, departmentId, teamId, territoryId, search } = {}) {
-    return {
+    const where = {
       organizationId,
       deletedAt: null,
       ...(isActive !== undefined && { isActive }),
@@ -47,14 +47,37 @@ export class UserRepository {
       ...(departmentId && { departmentId }),
       ...(teamId && { teamId }),
       ...(territoryId && { territoryId }),
-      ...(search && {
-        OR: [
-          { firstName: { contains: search, mode: 'insensitive' } },
-          { lastName: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } },
-        ],
-      }),
     };
+
+    if (search && search.trim() !== '') {
+      const term = search.trim();
+      const lower = term.toLowerCase();
+
+      const searchConditions = [
+        { firstName: { contains: term, mode: 'insensitive' } },
+        { lastName: { contains: term, mode: 'insensitive' } },
+        { email: { contains: term, mode: 'insensitive' } },
+        { phoneNumber: { contains: term, mode: 'insensitive' } },
+        { branch: { name: { contains: term, mode: 'insensitive' } } },
+        { department: { name: { contains: term, mode: 'insensitive' } } },
+        { team: { name: { contains: term, mode: 'insensitive' } } },
+        { territory: { name: { contains: term, mode: 'insensitive' } } },
+        { roles: { some: { role: { name: { contains: term, mode: 'insensitive' } } } } },
+        { manager: { firstName: { contains: term, mode: 'insensitive' } } },
+        { manager: { lastName: { contains: term, mode: 'insensitive' } } },
+        { manager: { email: { contains: term, mode: 'insensitive' } } },
+      ];
+
+      if (lower === 'active' || lower === 'act') {
+        searchConditions.push({ isActive: true });
+      } else if (lower === 'inactive' || lower === 'inact') {
+        searchConditions.push({ isActive: false });
+      }
+
+      where.OR = searchConditions;
+    }
+
+    return where;
   }
 
   async findUsers(organizationId, { skip, take, search, sortBy, sortOrder, isActive, branchId, departmentId, teamId, territoryId }) {

@@ -248,7 +248,7 @@ export default function DepartmentList() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by department name..."
+          placeholder="Search by department, code, organization, branch, team..."
           className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>

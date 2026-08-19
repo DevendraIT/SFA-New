@@ -12,8 +12,26 @@ export class TeamRepository {
       ...(branchId && { branchId }),
       ...(departmentId && { departmentId }),
       ...(territoryId && { territoryId }),
-      ...(search && { name: { contains: search, mode: 'insensitive' } }),
     };
+
+    if (search && search.trim() !== '') {
+      const term = search.trim();
+      where.OR = [
+        { name: { contains: term, mode: 'insensitive' } },
+        { description: { contains: term, mode: 'insensitive' } },
+        { branch: { name: { contains: term, mode: 'insensitive' } } },
+        { branch: { code: { contains: term, mode: 'insensitive' } } },
+        { branch: { organization: { name: { contains: term, mode: 'insensitive' } } } },
+        { department: { name: { contains: term, mode: 'insensitive' } } },
+        { territory: { name: { contains: term, mode: 'insensitive' } } },
+        { users: { some: { OR: [
+          { firstName: { contains: term, mode: 'insensitive' } },
+          { lastName: { contains: term, mode: 'insensitive' } },
+          { email: { contains: term, mode: 'insensitive' } },
+          { roles: { some: { role: { name: { contains: term, mode: 'insensitive' } } } } }
+        ] } } }
+      ];
+    }
 
     const [teams, total] = await Promise.all([
       prisma.team.findMany({

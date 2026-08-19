@@ -102,7 +102,7 @@ export default function TerritoryList() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by territory name..."
+          placeholder="Search by territory, code, department, branch, team..."
           className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
