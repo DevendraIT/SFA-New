@@ -416,7 +416,7 @@ export default function BranchList() {
           </p>
         </div>
 
-        {canManageBranch && (
+        {!search && canManageBranch && (
           <button
             onClick={() => {
               setSelectedBranch(null);
@@ -471,9 +471,9 @@ export default function BranchList() {
                       No Branches Found
                     </h3>
                     <p className="mt-2 text-slate-500">
-                      Create your first branch to get started.
+                      {search ? `No branches matching "${search}".` : "Create your first branch to get started."}
                     </p>
-                    {canManageBranch && (
+                    {!search && canManageBranch && (
                       <button
                         onClick={() => setShowModal(true)}
                         className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"

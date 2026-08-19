@@ -83,7 +83,7 @@ export default function TerritoryList() {
           </p>
         </div>
 
-        {canManageTerritory && (
+        {!search && canManageTerritory && (
           <button
             onClick={() => {
               setSelectedTerritory(null);
@@ -135,9 +135,9 @@ export default function TerritoryList() {
                       No Territories Found
                     </h3>
                     <p className="mt-2 text-slate-500">
-                      No territory records assigned to your branch.
+                      {search ? `No territories matching "${search}".` : "No territory records assigned to your branch."}
                     </p>
-                    {canManageTerritory && (
+                    {!search && canManageTerritory && (
                       <button
                         onClick={() => setShowModal(true)}
                         className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"

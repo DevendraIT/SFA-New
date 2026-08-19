@@ -228,7 +228,7 @@ export default function DepartmentList() {
           </p>
         </div>
 
-        {canManageDepartment && (
+        {!search && canManageDepartment && (
           <button
             onClick={() => {
               setSelectedDepartment(null);
@@ -282,9 +282,9 @@ export default function DepartmentList() {
                       No Departments Found
                     </h3>
                     <p className="mt-2 text-slate-500">
-                      Create your first department to get started.
+                      {search ? `No departments matching "${search}".` : "Create your first department to get started."}
                     </p>
-                    {canManageDepartment && (
+                    {!search && canManageDepartment && (
                       <button
                         onClick={() => setShowModal(true)}
                         className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"

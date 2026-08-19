@@ -223,7 +223,7 @@ export default function TeamList() {
           </p>
         </div>
 
-        {canManageTeam && (
+        {!search && canManageTeam && (
           <button
             onClick={() => {
               setSelectedTeam(null);
@@ -277,9 +277,9 @@ export default function TeamList() {
                       No Teams Found
                     </h3>
                     <p className="mt-2 text-slate-500">
-                      Create your first team to get started.
+                      {search ? `No teams matching "${search}".` : "Create your first team to get started."}
                     </p>
-                    {canManageTeam && (
+                    {!search && canManageTeam && (
                       <button
                         onClick={() => setShowModal(true)}
                         className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"

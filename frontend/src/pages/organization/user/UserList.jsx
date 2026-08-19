@@ -318,7 +318,7 @@ export default function UserList() {
           </p>
         </div>
 
-        {isCurrentSuperAdmin ? (
+        {!search && (isCurrentSuperAdmin ? (
           !hasCompanyAdmin ? (
             <button
               onClick={() => {
@@ -330,11 +330,7 @@ export default function UserList() {
               <Plus size={18} />
               Create Company Admin
             </button>
-          ) : (
-            <div className="flex items-center gap-2 rounded-xl bg-slate-100 border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600">
-              Company Admin Created (1 Max)
-            </div>
-          )
+          ) : null
         ) : (
           <button
             onClick={() => {
@@ -346,7 +342,7 @@ export default function UserList() {
             <Plus size={18} />
             Create User
           </button>
-        )}
+        ))}
       </div>
 
       {/* Search */}
@@ -389,9 +385,9 @@ export default function UserList() {
                       No Users Found
                     </h3>
                     <p className="mt-2 text-slate-500">
-                      No user records found in your operating branch.
+                      {search ? `No user records matching "${search}".` : "No user records found."}
                     </p>
-                    {!isCurrentSuperAdmin ? (
+                    {!search && (!isCurrentSuperAdmin ? (
                       <button
                         onClick={() => setShowModal(true)}
                         className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
@@ -405,7 +401,7 @@ export default function UserList() {
                       >
                         Create Company Admin
                       </button>
-                    ) : null}
+                    ) : null)}
                   </div>
                 </td>
               </tr>
