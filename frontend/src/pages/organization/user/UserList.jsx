@@ -331,7 +331,7 @@ export default function UserList() {
           </p>
         </div>
 
-        {!search && (isCurrentSuperAdmin ? (
+        {!search && !loading && (isCurrentSuperAdmin ? (
           !hasCompanyAdmin ? (
             <button
               onClick={() => {

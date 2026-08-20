@@ -49,13 +49,14 @@ export const createUserSchema = z.object({
 export const updateUserSchema = z.object({
   firstName: z.string().trim().min(USER_VALIDATION.FIRST_NAME_MIN_LENGTH).max(USER_VALIDATION.FIRST_NAME_MAX_LENGTH).optional(),
   lastName: z.string().trim().min(USER_VALIDATION.LAST_NAME_MIN_LENGTH).max(USER_VALIDATION.LAST_NAME_MAX_LENGTH).optional(),
+  email: z.string().trim().toLowerCase().email('Invalid email address.').max(USER_VALIDATION.EMAIL_MAX_LENGTH, `Email cannot exceed ${USER_VALIDATION.EMAIL_MAX_LENGTH} characters.`).optional(),
   phoneNumber: z.string().trim().max(USER_VALIDATION.PHONE_MAX_LENGTH).optional().nullable(),
-  // type: z.enum(Object.values(USER_TYPES)).optional(),
   branchId: uuidSchema('Branch').optional().nullable(),
   departmentId: uuidSchema('Department').optional().nullable(),
   teamId: uuidSchema('Team').optional().nullable(),
   territoryId: uuidSchema('Territory').optional().nullable(),
   managerId: uuidSchema('Manager').optional().nullable(),
+  roleIds: z.array(uuidSchema('Role')).optional(),
   isActive: z.boolean().optional(),
 });
 

@@ -67,7 +67,10 @@ console.log("=================================");
 
     next();
   } catch (error) {
-    next(error);
+    if (error instanceof AppError) {
+      return next(error);
+    }
+    return next(AppError.unauthorized(error.message || 'Authentication failed.'));
   }
 };
 

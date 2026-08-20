@@ -20,8 +20,8 @@ export const logAudit = async ({
   req = null
 }) => {
   try {
-    const ipAddress = req ? (req.ip || req.headers['x-forwarded-for'] || req.socket?.remoteAddress || null) : null;
-    const userAgent = req ? (req.headers['user-agent'] || null) : null;
+    const ipAddress = req ? (req.ip || req.headers?.['x-forwarded-for'] || req.socket?.remoteAddress || null) : null;
+    const userAgent = req ? (req.headers?.['user-agent'] || null) : null;
 
     await prisma.auditLog.create({
       data: {

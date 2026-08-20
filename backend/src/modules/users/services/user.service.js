@@ -147,53 +147,61 @@ export class UserService {
     const user = await this.repo.findUserById(id, organizationId);
     if (!user) throw AppError.notFound(USER_ERRORS.NOT_FOUND);
 
+    // Extract roleIds from payload to prevent Prisma unknown field errors
+    const { roleIds, ...userData } = data;
+
     // Validate field lengths if provided
-    if (data.firstName && data.firstName.length > USER_VALIDATION.FIRST_NAME_MAX_LENGTH) {
+    if (userData.firstName && userData.firstName.length > USER_VALIDATION.FIRST_NAME_MAX_LENGTH) {
       throw AppError.badRequest(`First name must not exceed ${USER_VALIDATION.FIRST_NAME_MAX_LENGTH} characters.`);
     }
-    if (data.lastName && data.lastName.length > USER_VALIDATION.LAST_NAME_MAX_LENGTH) {
+    if (userData.lastName && userData.lastName.length > USER_VALIDATION.LAST_NAME_MAX_LENGTH) {
       throw AppError.badRequest(`Last name must not exceed ${USER_VALIDATION.LAST_NAME_MAX_LENGTH} characters.`);
     }
-    if (data.email && data.email.length > USER_VALIDATION.EMAIL_MAX_LENGTH) {
+    if (userData.email && userData.email.length > USER_VALIDATION.EMAIL_MAX_LENGTH) {
       throw AppError.badRequest(`Email must not exceed ${USER_VALIDATION.EMAIL_MAX_LENGTH} characters.`);
     }
 
     // Email uniqueness check if changing email
-    if (data.email && data.email !== user.email) {
-      const existingUser = await this.repo.findUserByEmail(data.email, organizationId);
-      if (existingUser && !existingUser.deletedAt) {
+    if (userData.email && userData.email !== user.email) {
+      const existingUser = await this.repo.findUserByEmail(userData.email, organizationId);
+      if (existingUser && existingUser.id !== id && !existingUser.deletedAt) {
         throw AppError.badRequest(USER_ERRORS.EMAIL_EXISTS);
       }
     }
 
     // Prevent modification of reserved user types
-    if (data.type && RESERVED_USER_TYPES.includes(data.type.toLowerCase()) && !user.type || 
+    if (userData.type && RESERVED_USER_TYPES.includes(userData.type.toLowerCase()) && !user.type || 
         user.type && RESERVED_USER_TYPES.includes(user.type.toLowerCase())) {
       throw AppError.badRequest('Reserved user type cannot be modified.');
     }
 
     // Validate structural assignments if changing
-    await this._validateStructuralAssignments(data, organizationId);
+    await this._validateStructuralAssignments(userData, organizationId);
 
     // Validate new manager — must not create circular reporting chain
-    if (data.managerId !== undefined) {
-      if (data.managerId !== null) {
-        await this._validateManager(data.managerId, organizationId, id);
+    if (userData.managerId !== undefined) {
+      if (userData.managerId !== null) {
+        await this._validateManager(userData.managerId, organizationId, id);
       }
     }
 
-    const updated = await this.repo.updateUser(id, data);
+    const updated = await this.repo.updateUser(id, userData);
+
+    if (roleIds && Array.isArray(roleIds) && roleIds.length > 0) {
+      await this._validateRoles(roleIds, organizationId, req);
+      await this.repo.updateUserRoles(id, roleIds);
+    }
 
     await logAudit({
       organizationId,
       userId: req.user.id,
       action: 'user.update',
       moduleName: 'users',
-      details: { targetUserId: id, changes: Object.keys(data) },
+      details: { targetUserId: id, changes: Object.keys(userData) },
       req,
     });
 
-    return updated;
+    return this.repo.findUserById(id, organizationId);
   }
 
   async updateUserRoles(id, organizationId, roleIds, req) {

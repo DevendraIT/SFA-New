@@ -22,6 +22,14 @@ const authApi = {
   logout() {
     return api.post(`${BASE_URL}/logout`);
   },
+
+  forgotPassword(email) {
+    return api.post(`${BASE_URL}/forgot-password`, { email });
+  },
+
+  resetPassword(data) {
+    return api.post(`${BASE_URL}/reset-password`, data);
+  },
 };
 
 export default authApi;
