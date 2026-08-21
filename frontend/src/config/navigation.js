@@ -145,11 +145,6 @@ const navigation = [
         icon: LayoutDashboard,
       },
       {
-        title: "Attendance",
-        path: "/field-force/attendance",
-        icon: LogIn,
-      },
-      {
         title: "Beat Plans",
         path: "/field-force/beat-plans",
         icon: Map,
