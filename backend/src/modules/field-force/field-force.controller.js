@@ -98,17 +98,17 @@ export class FieldForceController {
     }
   };
 
-//   testTomTom = async (req, res, next) => {
-//   try {
-//     const result = await this.service.testTomTom();
+  //   testTomTom = async (req, res, next) => {
+  //   try {
+  //     const result = await this.service.testTomTom();
 
-//     return successResponse(res, result, "TomTom API Working");
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+  //     return successResponse(res, result, "TomTom API Working");
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // };
 
-createTask = async (req, res, next) => {
+  createTask = async (req, res, next) => {
     try {
       const result = await this.service.createTask(req.user.organizationId, req.user.id, req.body);
       return successResponse(res, 'Task created successfully.', result, 201);

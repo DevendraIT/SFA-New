@@ -461,18 +461,12 @@ export class SalesOrderService {
       // Check access permissions
       this.validateUserAccess(order, userContext, 'read');
 
-      // Add note
-      const note = await this.salesOrderRepository.addNote(orderId, noteText, userContext.userId);
-
-      // Log activity
-      await this.logActivity(orderId, ACTIVITY_TYPE.NOTE_ADDED, 'Note added to order', userContext.userId, {
-        noteId: note.id,
-        noteText,
-      });
+      // Add note (creates an OrderActivity record)
+      const noteActivity = await this.salesOrderRepository.addNote(orderId, noteText, userContext.userId);
 
       return {
         success: true,
-        data: note,
+        data: noteActivity,
         message: 'Note added successfully',
       };
     } catch (error) {

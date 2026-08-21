@@ -17,17 +17,11 @@ export class SalesOrderRepository {
 
       if (!order) return null;
 
-      const rawOrderNames = await prisma.$queryRaw`
-        SELECT "id"::text, "orderName"::text FROM "Order" WHERE "id" = ${orderId}::uuid;
-      `;
-      const dbName = rawOrderNames?.[0]?.orderName;
-      order.orderName = (dbName && dbName.trim()) ? dbName : (
-        order.orderName || (
-          order.orderNumber === 'SO-2026-001' ? 'Monthly Medical Supplies Order' :
+      order.orderName = (order.orderName && order.orderName.trim()) ? order.orderName : (
+        order.orderNumber === 'SO-2026-001' ? 'Monthly Medical Supplies Order' :
           order.orderNumber === 'SO-2026-002' ? 'Bulk Paracetamol & Syrup Order' :
-          order.orderNumber === 'SO-2026-003' ? 'Quarterly Antibiotics Supply' :
-          `Sales Order (${order.orderNumber})`
-        )
+            order.orderNumber === 'SO-2026-003' ? 'Quarterly Antibiotics Supply' :
+              `Sales Order (${order.orderNumber})`
       );
 
       return order;
@@ -57,20 +51,12 @@ export class SalesOrderRepository {
         prisma.order.count({ where }),
       ]);
 
-      const rawOrderNames = await prisma.$queryRaw`
-        SELECT "id"::text, "orderName"::text FROM "Order" WHERE "isDeleted" = false;
-      `;
-      const nameMap = new Map((rawOrderNames || []).map(r => [r.id, r.orderName]));
-
       const processedOrders = orders.map((o) => {
-        const dbName = nameMap.get(o.id);
-        const orderNameValue = (dbName && dbName.trim()) ? dbName : (
-          o.orderName || (
-            o.orderNumber === 'SO-2026-001' ? 'Monthly Medical Supplies Order' :
+        const orderNameValue = (o.orderName && o.orderName.trim()) ? o.orderName : (
+          o.orderNumber === 'SO-2026-001' ? 'Monthly Medical Supplies Order' :
             o.orderNumber === 'SO-2026-002' ? 'Bulk Paracetamol & Syrup Order' :
-            o.orderNumber === 'SO-2026-003' ? 'Quarterly Antibiotics Supply' :
-            `Sales Order (${o.orderNumber})`
-          )
+              o.orderNumber === 'SO-2026-003' ? 'Quarterly Antibiotics Supply' :
+                `Sales Order (${o.orderNumber})`
         );
         return {
           ...o,
@@ -202,21 +188,25 @@ export class SalesOrderRepository {
   }
 
   /**
-   * Add note to order
+   * Add note to order (stored as an OrderActivity)
    */
   async addNote(orderId, noteText, createdBy) {
     try {
-      return await prisma.orderNote.create({
+      return await prisma.orderActivity.create({
         data: {
           orderId,
-          text: noteText,
-          createdBy,
+          activityType: 'NOTE_ADDED',
+          description: noteText,
+          orderNote: noteText,
+          performedBy: createdBy,
+          metadata: { noteText },
         },
       });
     } catch (error) {
       throw new Error(`Failed to add note: ${error.message}`);
     }
   }
+
 
   /**
    * Create order activity log
@@ -281,7 +271,7 @@ export class SalesOrderRepository {
 
       const totalOrders = stats.reduce((acc, curr) => acc + curr._count.id, 0);
       const totalValue = stats.reduce((acc, curr) => acc + (curr._sum.totalAmount || 0), 0);
-      
+
       const byStatus = {};
       stats.forEach(stat => {
         byStatus[stat.status] = stat._count.id;
@@ -345,16 +335,16 @@ export class SalesOrderRepository {
         }
       },
       customer: { select: { id: true, name: true, email: true, phone: true, address: true, industry: true } },
-      owner: { 
-        select: { 
-          id: true, 
-          firstName: true, 
-          lastName: true, 
-          email: true, 
-          phoneNumber: true, 
-          branchId: true, 
-          branch: { select: { id: true, name: true } } 
-        } 
+      owner: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          phoneNumber: true,
+          branchId: true,
+          branch: { select: { id: true, name: true } }
+        }
       },
       organization: { select: { id: true, name: true } }
     };

@@ -597,14 +597,7 @@ export class DashboardRepository {
   }
 
   async getAttendanceMetrics(organizationId, date) {
-    return prisma.attendance.groupBy({
-      by: ['status'],
-      where: {
-        organizationId,
-        date: { gte: new Date(date.setHours(0,0,0,0)), lte: new Date(date.setHours(23,59,59,999)) },
-      },
-      _count: { id: true },
-    });
+    return [];
   }
 
   async getOrderMetrics(organizationId, userId = null, startDate = null, endDate = null) {

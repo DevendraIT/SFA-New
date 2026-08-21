@@ -104,16 +104,6 @@ export type OrderItem = $Result.DefaultSelection<Prisma.$OrderItemPayload>
  */
 export type OrderActivity = $Result.DefaultSelection<Prisma.$OrderActivityPayload>
 /**
- * Model OrderNote
- * 
- */
-export type OrderNote = $Result.DefaultSelection<Prisma.$OrderNotePayload>
-/**
- * Model Attendance
- * 
- */
-export type Attendance = $Result.DefaultSelection<Prisma.$AttendancePayload>
-/**
  * Model Visit
  * 
  */
@@ -203,17 +193,7 @@ export type CRMImportRow = $Result.DefaultSelection<Prisma.$CRMImportRowPayload>
  * Enums
  */
 export namespace $Enums {
-  export const AttendanceStatus: {
-  PRESENT: 'PRESENT',
-  ABSENT: 'ABSENT',
-  LEAVE: 'LEAVE',
-  HALFDAY: 'HALFDAY'
-};
-
-export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]
-
-
-export const VisitType: {
+  export const VisitType: {
   COLD_CALL: 'COLD_CALL',
   FOLLOW_UP: 'FOLLOW_UP',
   MEETING: 'MEETING',
@@ -359,10 +339,6 @@ export const ProductIssueStatus: {
 export type ProductIssueStatus = (typeof ProductIssueStatus)[keyof typeof ProductIssueStatus]
 
 }
-
-export type AttendanceStatus = $Enums.AttendanceStatus
-
-export const AttendanceStatus: typeof $Enums.AttendanceStatus
 
 export type VisitType = $Enums.VisitType
 
@@ -720,26 +696,6 @@ export class PrismaClient<
     * ```
     */
   get orderActivity(): Prisma.OrderActivityDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.orderNote`: Exposes CRUD operations for the **OrderNote** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more OrderNotes
-    * const orderNotes = await prisma.orderNote.findMany()
-    * ```
-    */
-  get orderNote(): Prisma.OrderNoteDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.attendance`: Exposes CRUD operations for the **Attendance** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Attendances
-    * const attendances = await prisma.attendance.findMany()
-    * ```
-    */
-  get attendance(): Prisma.AttendanceDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.visit`: Exposes CRUD operations for the **Visit** model.
@@ -1362,8 +1318,6 @@ export namespace Prisma {
     Order: 'Order',
     OrderItem: 'OrderItem',
     OrderActivity: 'OrderActivity',
-    OrderNote: 'OrderNote',
-    Attendance: 'Attendance',
     Visit: 'Visit',
     Target: 'Target',
     Notification: 'Notification',
@@ -1396,7 +1350,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "orderNote" | "attendance" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement" | "productIssue" | "cRMImport" | "cRMImportRow"
+      modelProps: "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement" | "productIssue" | "cRMImport" | "cRMImportRow"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2729,154 +2683,6 @@ export namespace Prisma {
           count: {
             args: Prisma.OrderActivityCountArgs<ExtArgs>
             result: $Utils.Optional<OrderActivityCountAggregateOutputType> | number
-          }
-        }
-      }
-      OrderNote: {
-        payload: Prisma.$OrderNotePayload<ExtArgs>
-        fields: Prisma.OrderNoteFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.OrderNoteFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.OrderNoteFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>
-          }
-          findFirst: {
-            args: Prisma.OrderNoteFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.OrderNoteFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>
-          }
-          findMany: {
-            args: Prisma.OrderNoteFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>[]
-          }
-          create: {
-            args: Prisma.OrderNoteCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>
-          }
-          createMany: {
-            args: Prisma.OrderNoteCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.OrderNoteCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>[]
-          }
-          delete: {
-            args: Prisma.OrderNoteDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>
-          }
-          update: {
-            args: Prisma.OrderNoteUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>
-          }
-          deleteMany: {
-            args: Prisma.OrderNoteDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.OrderNoteUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.OrderNoteUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>[]
-          }
-          upsert: {
-            args: Prisma.OrderNoteUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$OrderNotePayload>
-          }
-          aggregate: {
-            args: Prisma.OrderNoteAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateOrderNote>
-          }
-          groupBy: {
-            args: Prisma.OrderNoteGroupByArgs<ExtArgs>
-            result: $Utils.Optional<OrderNoteGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.OrderNoteCountArgs<ExtArgs>
-            result: $Utils.Optional<OrderNoteCountAggregateOutputType> | number
-          }
-        }
-      }
-      Attendance: {
-        payload: Prisma.$AttendancePayload<ExtArgs>
-        fields: Prisma.AttendanceFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.AttendanceFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.AttendanceFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
-          }
-          findFirst: {
-            args: Prisma.AttendanceFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.AttendanceFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
-          }
-          findMany: {
-            args: Prisma.AttendanceFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>[]
-          }
-          create: {
-            args: Prisma.AttendanceCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
-          }
-          createMany: {
-            args: Prisma.AttendanceCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.AttendanceCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>[]
-          }
-          delete: {
-            args: Prisma.AttendanceDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
-          }
-          update: {
-            args: Prisma.AttendanceUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
-          }
-          deleteMany: {
-            args: Prisma.AttendanceDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.AttendanceUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.AttendanceUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>[]
-          }
-          upsert: {
-            args: Prisma.AttendanceUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
-          }
-          aggregate: {
-            args: Prisma.AttendanceAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateAttendance>
-          }
-          groupBy: {
-            args: Prisma.AttendanceGroupByArgs<ExtArgs>
-            result: $Utils.Optional<AttendanceGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.AttendanceCountArgs<ExtArgs>
-            result: $Utils.Optional<AttendanceCountAggregateOutputType> | number
           }
         }
       }
@@ -4264,8 +4070,6 @@ export namespace Prisma {
     order?: OrderOmit
     orderItem?: OrderItemOmit
     orderActivity?: OrderActivityOmit
-    orderNote?: OrderNoteOmit
-    attendance?: AttendanceOmit
     visit?: VisitOmit
     target?: TargetOmit
     notification?: NotificationOmit
@@ -4370,7 +4174,6 @@ export namespace Prisma {
     users: number
     sessions: number
     auditLogs: number
-    attendances: number
     visits: number
     expenses: number
     dailyActivities: number
@@ -4401,7 +4204,6 @@ export namespace Prisma {
     users?: boolean | OrganizationCountOutputTypeCountUsersArgs
     sessions?: boolean | OrganizationCountOutputTypeCountSessionsArgs
     auditLogs?: boolean | OrganizationCountOutputTypeCountAuditLogsArgs
-    attendances?: boolean | OrganizationCountOutputTypeCountAttendancesArgs
     visits?: boolean | OrganizationCountOutputTypeCountVisitsArgs
     expenses?: boolean | OrganizationCountOutputTypeCountExpensesArgs
     dailyActivities?: boolean | OrganizationCountOutputTypeCountDailyActivitiesArgs
@@ -4482,13 +4284,6 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AuditLogWhereInput
-  }
-
-  /**
-   * OrganizationCountOutputType without action
-   */
-  export type OrganizationCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AttendanceWhereInput
   }
 
   /**
@@ -4936,7 +4731,6 @@ export namespace Prisma {
     sessions: number
     auditLogs: number
     passwordHistories: number
-    attendances: number
     visits: number
     expenses: number
     dailyActivities: number
@@ -4961,7 +4755,6 @@ export namespace Prisma {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
     passwordHistories?: boolean | UserCountOutputTypeCountPasswordHistoriesArgs
-    attendances?: boolean | UserCountOutputTypeCountAttendancesArgs
     visits?: boolean | UserCountOutputTypeCountVisitsArgs
     expenses?: boolean | UserCountOutputTypeCountExpensesArgs
     dailyActivities?: boolean | UserCountOutputTypeCountDailyActivitiesArgs
@@ -5024,13 +4817,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPasswordHistoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PasswordHistoryWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AttendanceWhereInput
   }
 
   /**
@@ -5269,14 +5055,12 @@ export namespace Prisma {
   export type OrderCountOutputType = {
     items: number
     activities: number
-    notes: number
     productIssues: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | OrderCountOutputTypeCountItemsArgs
     activities?: boolean | OrderCountOutputTypeCountActivitiesArgs
-    notes?: boolean | OrderCountOutputTypeCountNotesArgs
     productIssues?: boolean | OrderCountOutputTypeCountProductIssuesArgs
   }
 
@@ -5303,13 +5087,6 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountActivitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderActivityWhereInput
-  }
-
-  /**
-   * OrderCountOutputType without action
-   */
-  export type OrderCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OrderNoteWhereInput
   }
 
   /**
@@ -5664,7 +5441,6 @@ export namespace Prisma {
     users?: boolean | Organization$usersArgs<ExtArgs>
     sessions?: boolean | Organization$sessionsArgs<ExtArgs>
     auditLogs?: boolean | Organization$auditLogsArgs<ExtArgs>
-    attendances?: boolean | Organization$attendancesArgs<ExtArgs>
     visits?: boolean | Organization$visitsArgs<ExtArgs>
     expenses?: boolean | Organization$expensesArgs<ExtArgs>
     dailyActivities?: boolean | Organization$dailyActivitiesArgs<ExtArgs>
@@ -5751,7 +5527,6 @@ export namespace Prisma {
     users?: boolean | Organization$usersArgs<ExtArgs>
     sessions?: boolean | Organization$sessionsArgs<ExtArgs>
     auditLogs?: boolean | Organization$auditLogsArgs<ExtArgs>
-    attendances?: boolean | Organization$attendancesArgs<ExtArgs>
     visits?: boolean | Organization$visitsArgs<ExtArgs>
     expenses?: boolean | Organization$expensesArgs<ExtArgs>
     dailyActivities?: boolean | Organization$dailyActivitiesArgs<ExtArgs>
@@ -5787,7 +5562,6 @@ export namespace Prisma {
       users: Prisma.$UserPayload<ExtArgs>[]
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
-      attendances: Prisma.$AttendancePayload<ExtArgs>[]
       visits: Prisma.$VisitPayload<ExtArgs>[]
       expenses: Prisma.$ExpensePayload<ExtArgs>[]
       dailyActivities: Prisma.$DailyActivityReportPayload<ExtArgs>[]
@@ -6226,7 +6000,6 @@ export namespace Prisma {
     users<T extends Organization$usersArgs<ExtArgs> = {}>(args?: Subset<T, Organization$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends Organization$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends Organization$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    attendances<T extends Organization$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     visits<T extends Organization$visitsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends Organization$expensesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dailyActivities<T extends Organization$dailyActivitiesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$dailyActivitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyActivityReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6849,30 +6622,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
-  }
-
-  /**
-   * Organization.attendances
-   */
-  export type Organization$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    where?: AttendanceWhereInput
-    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
-    cursor?: AttendanceWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
   }
 
   /**
@@ -16245,7 +15994,6 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     passwordHistories?: boolean | User$passwordHistoriesArgs<ExtArgs>
-    attendances?: boolean | User$attendancesArgs<ExtArgs>
     visits?: boolean | User$visitsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     dailyActivities?: boolean | User$dailyActivitiesArgs<ExtArgs>
@@ -16375,7 +16123,6 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     passwordHistories?: boolean | User$passwordHistoriesArgs<ExtArgs>
-    attendances?: boolean | User$attendancesArgs<ExtArgs>
     visits?: boolean | User$visitsArgs<ExtArgs>
     expenses?: boolean | User$expensesArgs<ExtArgs>
     dailyActivities?: boolean | User$dailyActivitiesArgs<ExtArgs>
@@ -16426,7 +16173,6 @@ export namespace Prisma {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
       passwordHistories: Prisma.$PasswordHistoryPayload<ExtArgs>[]
-      attendances: Prisma.$AttendancePayload<ExtArgs>[]
       visits: Prisma.$VisitPayload<ExtArgs>[]
       expenses: Prisma.$ExpensePayload<ExtArgs>[]
       dailyActivities: Prisma.$DailyActivityReportPayload<ExtArgs>[]
@@ -16876,7 +16622,6 @@ export namespace Prisma {
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     passwordHistories<T extends User$passwordHistoriesArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    attendances<T extends User$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, User$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     visits<T extends User$visitsArgs<ExtArgs> = {}>(args?: Subset<T, User$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     expenses<T extends User$expensesArgs<ExtArgs> = {}>(args?: Subset<T, User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dailyActivities<T extends User$dailyActivitiesArgs<ExtArgs> = {}>(args?: Subset<T, User$dailyActivitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyActivityReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -17561,30 +17306,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PasswordHistoryScalarFieldEnum | PasswordHistoryScalarFieldEnum[]
-  }
-
-  /**
-   * User.attendances
-   */
-  export type User$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    where?: AttendanceWhereInput
-    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
-    cursor?: AttendanceWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
   }
 
   /**
@@ -25409,7 +25130,6 @@ export namespace Prisma {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     activities?: boolean | Order$activitiesArgs<ExtArgs>
-    notes?: boolean | Order$notesArgs<ExtArgs>
     productIssues?: boolean | Order$productIssuesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -25493,7 +25213,6 @@ export namespace Prisma {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     activities?: boolean | Order$activitiesArgs<ExtArgs>
-    notes?: boolean | Order$notesArgs<ExtArgs>
     productIssues?: boolean | Order$productIssuesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -25516,7 +25235,6 @@ export namespace Prisma {
       owner: Prisma.$UserPayload<ExtArgs>
       items: Prisma.$OrderItemPayload<ExtArgs>[]
       activities: Prisma.$OrderActivityPayload<ExtArgs>[]
-      notes: Prisma.$OrderNotePayload<ExtArgs>[]
       productIssues: Prisma.$ProductIssuePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -25938,7 +25656,6 @@ export namespace Prisma {
     owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activities<T extends Order$activitiesArgs<ExtArgs> = {}>(args?: Subset<T, Order$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notes<T extends Order$notesArgs<ExtArgs> = {}>(args?: Subset<T, Order$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     productIssues<T extends Order$productIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Order$productIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -26434,30 +26151,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderActivityScalarFieldEnum | OrderActivityScalarFieldEnum[]
-  }
-
-  /**
-   * Order.notes
-   */
-  export type Order$notesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    where?: OrderNoteWhereInput
-    orderBy?: OrderNoteOrderByWithRelationInput | OrderNoteOrderByWithRelationInput[]
-    cursor?: OrderNoteWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: OrderNoteScalarFieldEnum | OrderNoteScalarFieldEnum[]
   }
 
   /**
@@ -27693,6 +27386,7 @@ export namespace Prisma {
     orderId: string | null
     activityType: string | null
     description: string | null
+    orderNote: string | null
     performedBy: string | null
     performedAt: Date | null
   }
@@ -27702,6 +27396,7 @@ export namespace Prisma {
     orderId: string | null
     activityType: string | null
     description: string | null
+    orderNote: string | null
     performedBy: string | null
     performedAt: Date | null
   }
@@ -27711,6 +27406,7 @@ export namespace Prisma {
     orderId: number
     activityType: number
     description: number
+    orderNote: number
     performedBy: number
     performedAt: number
     metadata: number
@@ -27723,6 +27419,7 @@ export namespace Prisma {
     orderId?: true
     activityType?: true
     description?: true
+    orderNote?: true
     performedBy?: true
     performedAt?: true
   }
@@ -27732,6 +27429,7 @@ export namespace Prisma {
     orderId?: true
     activityType?: true
     description?: true
+    orderNote?: true
     performedBy?: true
     performedAt?: true
   }
@@ -27741,6 +27439,7 @@ export namespace Prisma {
     orderId?: true
     activityType?: true
     description?: true
+    orderNote?: true
     performedBy?: true
     performedAt?: true
     metadata?: true
@@ -27824,6 +27523,7 @@ export namespace Prisma {
     orderId: string
     activityType: string
     description: string
+    orderNote: string | null
     performedBy: string | null
     performedAt: Date
     metadata: JsonValue | null
@@ -27851,6 +27551,7 @@ export namespace Prisma {
     orderId?: boolean
     activityType?: boolean
     description?: boolean
+    orderNote?: boolean
     performedBy?: boolean
     performedAt?: boolean
     metadata?: boolean
@@ -27862,6 +27563,7 @@ export namespace Prisma {
     orderId?: boolean
     activityType?: boolean
     description?: boolean
+    orderNote?: boolean
     performedBy?: boolean
     performedAt?: boolean
     metadata?: boolean
@@ -27873,6 +27575,7 @@ export namespace Prisma {
     orderId?: boolean
     activityType?: boolean
     description?: boolean
+    orderNote?: boolean
     performedBy?: boolean
     performedAt?: boolean
     metadata?: boolean
@@ -27884,12 +27587,13 @@ export namespace Prisma {
     orderId?: boolean
     activityType?: boolean
     description?: boolean
+    orderNote?: boolean
     performedBy?: boolean
     performedAt?: boolean
     metadata?: boolean
   }
 
-  export type OrderActivityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "activityType" | "description" | "performedBy" | "performedAt" | "metadata", ExtArgs["result"]["orderActivity"]>
+  export type OrderActivityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "activityType" | "description" | "orderNote" | "performedBy" | "performedAt" | "metadata", ExtArgs["result"]["orderActivity"]>
   export type OrderActivityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
   }
@@ -27910,6 +27614,7 @@ export namespace Prisma {
       orderId: string
       activityType: string
       description: string
+      orderNote: string | null
       performedBy: string | null
       performedAt: Date
       metadata: Prisma.JsonValue | null
@@ -28341,6 +28046,7 @@ export namespace Prisma {
     readonly orderId: FieldRef<"OrderActivity", 'String'>
     readonly activityType: FieldRef<"OrderActivity", 'String'>
     readonly description: FieldRef<"OrderActivity", 'String'>
+    readonly orderNote: FieldRef<"OrderActivity", 'String'>
     readonly performedBy: FieldRef<"OrderActivity", 'String'>
     readonly performedAt: FieldRef<"OrderActivity", 'DateTime'>
     readonly metadata: FieldRef<"OrderActivity", 'Json'>
@@ -28760,2257 +28466,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OrderActivityInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model OrderNote
-   */
-
-  export type AggregateOrderNote = {
-    _count: OrderNoteCountAggregateOutputType | null
-    _min: OrderNoteMinAggregateOutputType | null
-    _max: OrderNoteMaxAggregateOutputType | null
-  }
-
-  export type OrderNoteMinAggregateOutputType = {
-    id: string | null
-    orderId: string | null
-    text: string | null
-    createdBy: string | null
-    createdAt: Date | null
-  }
-
-  export type OrderNoteMaxAggregateOutputType = {
-    id: string | null
-    orderId: string | null
-    text: string | null
-    createdBy: string | null
-    createdAt: Date | null
-  }
-
-  export type OrderNoteCountAggregateOutputType = {
-    id: number
-    orderId: number
-    text: number
-    createdBy: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type OrderNoteMinAggregateInputType = {
-    id?: true
-    orderId?: true
-    text?: true
-    createdBy?: true
-    createdAt?: true
-  }
-
-  export type OrderNoteMaxAggregateInputType = {
-    id?: true
-    orderId?: true
-    text?: true
-    createdBy?: true
-    createdAt?: true
-  }
-
-  export type OrderNoteCountAggregateInputType = {
-    id?: true
-    orderId?: true
-    text?: true
-    createdBy?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type OrderNoteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which OrderNote to aggregate.
-     */
-    where?: OrderNoteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of OrderNotes to fetch.
-     */
-    orderBy?: OrderNoteOrderByWithRelationInput | OrderNoteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: OrderNoteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` OrderNotes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` OrderNotes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned OrderNotes
-    **/
-    _count?: true | OrderNoteCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: OrderNoteMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: OrderNoteMaxAggregateInputType
-  }
-
-  export type GetOrderNoteAggregateType<T extends OrderNoteAggregateArgs> = {
-        [P in keyof T & keyof AggregateOrderNote]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateOrderNote[P]>
-      : GetScalarType<T[P], AggregateOrderNote[P]>
-  }
-
-
-
-
-  export type OrderNoteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OrderNoteWhereInput
-    orderBy?: OrderNoteOrderByWithAggregationInput | OrderNoteOrderByWithAggregationInput[]
-    by: OrderNoteScalarFieldEnum[] | OrderNoteScalarFieldEnum
-    having?: OrderNoteScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: OrderNoteCountAggregateInputType | true
-    _min?: OrderNoteMinAggregateInputType
-    _max?: OrderNoteMaxAggregateInputType
-  }
-
-  export type OrderNoteGroupByOutputType = {
-    id: string
-    orderId: string
-    text: string
-    createdBy: string | null
-    createdAt: Date
-    _count: OrderNoteCountAggregateOutputType | null
-    _min: OrderNoteMinAggregateOutputType | null
-    _max: OrderNoteMaxAggregateOutputType | null
-  }
-
-  type GetOrderNoteGroupByPayload<T extends OrderNoteGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<OrderNoteGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof OrderNoteGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], OrderNoteGroupByOutputType[P]>
-            : GetScalarType<T[P], OrderNoteGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type OrderNoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    orderId?: boolean
-    text?: boolean
-    createdBy?: boolean
-    createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["orderNote"]>
-
-  export type OrderNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    orderId?: boolean
-    text?: boolean
-    createdBy?: boolean
-    createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["orderNote"]>
-
-  export type OrderNoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    orderId?: boolean
-    text?: boolean
-    createdBy?: boolean
-    createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["orderNote"]>
-
-  export type OrderNoteSelectScalar = {
-    id?: boolean
-    orderId?: boolean
-    text?: boolean
-    createdBy?: boolean
-    createdAt?: boolean
-  }
-
-  export type OrderNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "text" | "createdBy" | "createdAt", ExtArgs["result"]["orderNote"]>
-  export type OrderNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }
-  export type OrderNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }
-  export type OrderNoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }
-
-  export type $OrderNotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "OrderNote"
-    objects: {
-      order: Prisma.$OrderPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      orderId: string
-      text: string
-      createdBy: string | null
-      createdAt: Date
-    }, ExtArgs["result"]["orderNote"]>
-    composites: {}
-  }
-
-  type OrderNoteGetPayload<S extends boolean | null | undefined | OrderNoteDefaultArgs> = $Result.GetResult<Prisma.$OrderNotePayload, S>
-
-  type OrderNoteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<OrderNoteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: OrderNoteCountAggregateInputType | true
-    }
-
-  export interface OrderNoteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderNote'], meta: { name: 'OrderNote' } }
-    /**
-     * Find zero or one OrderNote that matches the filter.
-     * @param {OrderNoteFindUniqueArgs} args - Arguments to find a OrderNote
-     * @example
-     * // Get one OrderNote
-     * const orderNote = await prisma.orderNote.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends OrderNoteFindUniqueArgs>(args: SelectSubset<T, OrderNoteFindUniqueArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one OrderNote that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {OrderNoteFindUniqueOrThrowArgs} args - Arguments to find a OrderNote
-     * @example
-     * // Get one OrderNote
-     * const orderNote = await prisma.orderNote.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends OrderNoteFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderNoteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first OrderNote that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {OrderNoteFindFirstArgs} args - Arguments to find a OrderNote
-     * @example
-     * // Get one OrderNote
-     * const orderNote = await prisma.orderNote.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends OrderNoteFindFirstArgs>(args?: SelectSubset<T, OrderNoteFindFirstArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first OrderNote that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {OrderNoteFindFirstOrThrowArgs} args - Arguments to find a OrderNote
-     * @example
-     * // Get one OrderNote
-     * const orderNote = await prisma.orderNote.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends OrderNoteFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderNoteFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more OrderNotes that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {OrderNoteFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all OrderNotes
-     * const orderNotes = await prisma.orderNote.findMany()
-     * 
-     * // Get first 10 OrderNotes
-     * const orderNotes = await prisma.orderNote.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const orderNoteWithIdOnly = await prisma.orderNote.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends OrderNoteFindManyArgs>(args?: SelectSubset<T, OrderNoteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a OrderNote.
-     * @param {OrderNoteCreateArgs} args - Arguments to create a OrderNote.
-     * @example
-     * // Create one OrderNote
-     * const OrderNote = await prisma.orderNote.create({
-     *   data: {
-     *     // ... data to create a OrderNote
-     *   }
-     * })
-     * 
-     */
-    create<T extends OrderNoteCreateArgs>(args: SelectSubset<T, OrderNoteCreateArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many OrderNotes.
-     * @param {OrderNoteCreateManyArgs} args - Arguments to create many OrderNotes.
-     * @example
-     * // Create many OrderNotes
-     * const orderNote = await prisma.orderNote.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends OrderNoteCreateManyArgs>(args?: SelectSubset<T, OrderNoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many OrderNotes and returns the data saved in the database.
-     * @param {OrderNoteCreateManyAndReturnArgs} args - Arguments to create many OrderNotes.
-     * @example
-     * // Create many OrderNotes
-     * const orderNote = await prisma.orderNote.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many OrderNotes and only return the `id`
-     * const orderNoteWithIdOnly = await prisma.orderNote.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends OrderNoteCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderNoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a OrderNote.
-     * @param {OrderNoteDeleteArgs} args - Arguments to delete one OrderNote.
-     * @example
-     * // Delete one OrderNote
-     * const OrderNote = await prisma.orderNote.delete({
-     *   where: {
-     *     // ... filter to delete one OrderNote
-     *   }
-     * })
-     * 
-     */
-    delete<T extends OrderNoteDeleteArgs>(args: SelectSubset<T, OrderNoteDeleteArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one OrderNote.
-     * @param {OrderNoteUpdateArgs} args - Arguments to update one OrderNote.
-     * @example
-     * // Update one OrderNote
-     * const orderNote = await prisma.orderNote.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends OrderNoteUpdateArgs>(args: SelectSubset<T, OrderNoteUpdateArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more OrderNotes.
-     * @param {OrderNoteDeleteManyArgs} args - Arguments to filter OrderNotes to delete.
-     * @example
-     * // Delete a few OrderNotes
-     * const { count } = await prisma.orderNote.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends OrderNoteDeleteManyArgs>(args?: SelectSubset<T, OrderNoteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more OrderNotes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {OrderNoteUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many OrderNotes
-     * const orderNote = await prisma.orderNote.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends OrderNoteUpdateManyArgs>(args: SelectSubset<T, OrderNoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more OrderNotes and returns the data updated in the database.
-     * @param {OrderNoteUpdateManyAndReturnArgs} args - Arguments to update many OrderNotes.
-     * @example
-     * // Update many OrderNotes
-     * const orderNote = await prisma.orderNote.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more OrderNotes and only return the `id`
-     * const orderNoteWithIdOnly = await prisma.orderNote.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends OrderNoteUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderNoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one OrderNote.
-     * @param {OrderNoteUpsertArgs} args - Arguments to update or create a OrderNote.
-     * @example
-     * // Update or create a OrderNote
-     * const orderNote = await prisma.orderNote.upsert({
-     *   create: {
-     *     // ... data to create a OrderNote
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the OrderNote we want to update
-     *   }
-     * })
-     */
-    upsert<T extends OrderNoteUpsertArgs>(args: SelectSubset<T, OrderNoteUpsertArgs<ExtArgs>>): Prisma__OrderNoteClient<$Result.GetResult<Prisma.$OrderNotePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of OrderNotes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {OrderNoteCountArgs} args - Arguments to filter OrderNotes to count.
-     * @example
-     * // Count the number of OrderNotes
-     * const count = await prisma.orderNote.count({
-     *   where: {
-     *     // ... the filter for the OrderNotes we want to count
-     *   }
-     * })
-    **/
-    count<T extends OrderNoteCountArgs>(
-      args?: Subset<T, OrderNoteCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], OrderNoteCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a OrderNote.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {OrderNoteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends OrderNoteAggregateArgs>(args: Subset<T, OrderNoteAggregateArgs>): Prisma.PrismaPromise<GetOrderNoteAggregateType<T>>
-
-    /**
-     * Group by OrderNote.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {OrderNoteGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends OrderNoteGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: OrderNoteGroupByArgs['orderBy'] }
-        : { orderBy?: OrderNoteGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, OrderNoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderNoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the OrderNote model
-   */
-  readonly fields: OrderNoteFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for OrderNote.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__OrderNoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the OrderNote model
-   */
-  interface OrderNoteFieldRefs {
-    readonly id: FieldRef<"OrderNote", 'String'>
-    readonly orderId: FieldRef<"OrderNote", 'String'>
-    readonly text: FieldRef<"OrderNote", 'String'>
-    readonly createdBy: FieldRef<"OrderNote", 'String'>
-    readonly createdAt: FieldRef<"OrderNote", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * OrderNote findUnique
-   */
-  export type OrderNoteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * Filter, which OrderNote to fetch.
-     */
-    where: OrderNoteWhereUniqueInput
-  }
-
-  /**
-   * OrderNote findUniqueOrThrow
-   */
-  export type OrderNoteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * Filter, which OrderNote to fetch.
-     */
-    where: OrderNoteWhereUniqueInput
-  }
-
-  /**
-   * OrderNote findFirst
-   */
-  export type OrderNoteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * Filter, which OrderNote to fetch.
-     */
-    where?: OrderNoteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of OrderNotes to fetch.
-     */
-    orderBy?: OrderNoteOrderByWithRelationInput | OrderNoteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for OrderNotes.
-     */
-    cursor?: OrderNoteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` OrderNotes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` OrderNotes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of OrderNotes.
-     */
-    distinct?: OrderNoteScalarFieldEnum | OrderNoteScalarFieldEnum[]
-  }
-
-  /**
-   * OrderNote findFirstOrThrow
-   */
-  export type OrderNoteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * Filter, which OrderNote to fetch.
-     */
-    where?: OrderNoteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of OrderNotes to fetch.
-     */
-    orderBy?: OrderNoteOrderByWithRelationInput | OrderNoteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for OrderNotes.
-     */
-    cursor?: OrderNoteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` OrderNotes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` OrderNotes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of OrderNotes.
-     */
-    distinct?: OrderNoteScalarFieldEnum | OrderNoteScalarFieldEnum[]
-  }
-
-  /**
-   * OrderNote findMany
-   */
-  export type OrderNoteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * Filter, which OrderNotes to fetch.
-     */
-    where?: OrderNoteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of OrderNotes to fetch.
-     */
-    orderBy?: OrderNoteOrderByWithRelationInput | OrderNoteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing OrderNotes.
-     */
-    cursor?: OrderNoteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` OrderNotes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` OrderNotes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of OrderNotes.
-     */
-    distinct?: OrderNoteScalarFieldEnum | OrderNoteScalarFieldEnum[]
-  }
-
-  /**
-   * OrderNote create
-   */
-  export type OrderNoteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * The data needed to create a OrderNote.
-     */
-    data: XOR<OrderNoteCreateInput, OrderNoteUncheckedCreateInput>
-  }
-
-  /**
-   * OrderNote createMany
-   */
-  export type OrderNoteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many OrderNotes.
-     */
-    data: OrderNoteCreateManyInput | OrderNoteCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * OrderNote createManyAndReturn
-   */
-  export type OrderNoteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * The data used to create many OrderNotes.
-     */
-    data: OrderNoteCreateManyInput | OrderNoteCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * OrderNote update
-   */
-  export type OrderNoteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * The data needed to update a OrderNote.
-     */
-    data: XOR<OrderNoteUpdateInput, OrderNoteUncheckedUpdateInput>
-    /**
-     * Choose, which OrderNote to update.
-     */
-    where: OrderNoteWhereUniqueInput
-  }
-
-  /**
-   * OrderNote updateMany
-   */
-  export type OrderNoteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update OrderNotes.
-     */
-    data: XOR<OrderNoteUpdateManyMutationInput, OrderNoteUncheckedUpdateManyInput>
-    /**
-     * Filter which OrderNotes to update
-     */
-    where?: OrderNoteWhereInput
-    /**
-     * Limit how many OrderNotes to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * OrderNote updateManyAndReturn
-   */
-  export type OrderNoteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * The data used to update OrderNotes.
-     */
-    data: XOR<OrderNoteUpdateManyMutationInput, OrderNoteUncheckedUpdateManyInput>
-    /**
-     * Filter which OrderNotes to update
-     */
-    where?: OrderNoteWhereInput
-    /**
-     * Limit how many OrderNotes to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * OrderNote upsert
-   */
-  export type OrderNoteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * The filter to search for the OrderNote to update in case it exists.
-     */
-    where: OrderNoteWhereUniqueInput
-    /**
-     * In case the OrderNote found by the `where` argument doesn't exist, create a new OrderNote with this data.
-     */
-    create: XOR<OrderNoteCreateInput, OrderNoteUncheckedCreateInput>
-    /**
-     * In case the OrderNote was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<OrderNoteUpdateInput, OrderNoteUncheckedUpdateInput>
-  }
-
-  /**
-   * OrderNote delete
-   */
-  export type OrderNoteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-    /**
-     * Filter which OrderNote to delete.
-     */
-    where: OrderNoteWhereUniqueInput
-  }
-
-  /**
-   * OrderNote deleteMany
-   */
-  export type OrderNoteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which OrderNotes to delete
-     */
-    where?: OrderNoteWhereInput
-    /**
-     * Limit how many OrderNotes to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * OrderNote without action
-   */
-  export type OrderNoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OrderNote
-     */
-    select?: OrderNoteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OrderNote
-     */
-    omit?: OrderNoteOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OrderNoteInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Attendance
-   */
-
-  export type AggregateAttendance = {
-    _count: AttendanceCountAggregateOutputType | null
-    _avg: AttendanceAvgAggregateOutputType | null
-    _sum: AttendanceSumAggregateOutputType | null
-    _min: AttendanceMinAggregateOutputType | null
-    _max: AttendanceMaxAggregateOutputType | null
-  }
-
-  export type AttendanceAvgAggregateOutputType = {
-    durationMins: number | null
-  }
-
-  export type AttendanceSumAggregateOutputType = {
-    durationMins: number | null
-  }
-
-  export type AttendanceMinAggregateOutputType = {
-    id: string | null
-    organizationId: string | null
-    userId: string | null
-    date: Date | null
-    checkInAt: Date | null
-    checkOutAt: Date | null
-    status: $Enums.AttendanceStatus | null
-    durationMins: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type AttendanceMaxAggregateOutputType = {
-    id: string | null
-    organizationId: string | null
-    userId: string | null
-    date: Date | null
-    checkInAt: Date | null
-    checkOutAt: Date | null
-    status: $Enums.AttendanceStatus | null
-    durationMins: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type AttendanceCountAggregateOutputType = {
-    id: number
-    organizationId: number
-    userId: number
-    date: number
-    checkInAt: number
-    checkOutAt: number
-    checkInLoc: number
-    checkOutLoc: number
-    status: number
-    durationMins: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type AttendanceAvgAggregateInputType = {
-    durationMins?: true
-  }
-
-  export type AttendanceSumAggregateInputType = {
-    durationMins?: true
-  }
-
-  export type AttendanceMinAggregateInputType = {
-    id?: true
-    organizationId?: true
-    userId?: true
-    date?: true
-    checkInAt?: true
-    checkOutAt?: true
-    status?: true
-    durationMins?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type AttendanceMaxAggregateInputType = {
-    id?: true
-    organizationId?: true
-    userId?: true
-    date?: true
-    checkInAt?: true
-    checkOutAt?: true
-    status?: true
-    durationMins?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type AttendanceCountAggregateInputType = {
-    id?: true
-    organizationId?: true
-    userId?: true
-    date?: true
-    checkInAt?: true
-    checkOutAt?: true
-    checkInLoc?: true
-    checkOutLoc?: true
-    status?: true
-    durationMins?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type AttendanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Attendance to aggregate.
-     */
-    where?: AttendanceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Attendances to fetch.
-     */
-    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: AttendanceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Attendances from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Attendances.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Attendances
-    **/
-    _count?: true | AttendanceCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: AttendanceAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: AttendanceSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: AttendanceMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: AttendanceMaxAggregateInputType
-  }
-
-  export type GetAttendanceAggregateType<T extends AttendanceAggregateArgs> = {
-        [P in keyof T & keyof AggregateAttendance]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateAttendance[P]>
-      : GetScalarType<T[P], AggregateAttendance[P]>
-  }
-
-
-
-
-  export type AttendanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AttendanceWhereInput
-    orderBy?: AttendanceOrderByWithAggregationInput | AttendanceOrderByWithAggregationInput[]
-    by: AttendanceScalarFieldEnum[] | AttendanceScalarFieldEnum
-    having?: AttendanceScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: AttendanceCountAggregateInputType | true
-    _avg?: AttendanceAvgAggregateInputType
-    _sum?: AttendanceSumAggregateInputType
-    _min?: AttendanceMinAggregateInputType
-    _max?: AttendanceMaxAggregateInputType
-  }
-
-  export type AttendanceGroupByOutputType = {
-    id: string
-    organizationId: string
-    userId: string
-    date: Date
-    checkInAt: Date | null
-    checkOutAt: Date | null
-    checkInLoc: JsonValue | null
-    checkOutLoc: JsonValue | null
-    status: $Enums.AttendanceStatus
-    durationMins: number | null
-    createdAt: Date
-    updatedAt: Date
-    _count: AttendanceCountAggregateOutputType | null
-    _avg: AttendanceAvgAggregateOutputType | null
-    _sum: AttendanceSumAggregateOutputType | null
-    _min: AttendanceMinAggregateOutputType | null
-    _max: AttendanceMaxAggregateOutputType | null
-  }
-
-  type GetAttendanceGroupByPayload<T extends AttendanceGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<AttendanceGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof AttendanceGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], AttendanceGroupByOutputType[P]>
-            : GetScalarType<T[P], AttendanceGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type AttendanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    organizationId?: boolean
-    userId?: boolean
-    date?: boolean
-    checkInAt?: boolean
-    checkOutAt?: boolean
-    checkInLoc?: boolean
-    checkOutLoc?: boolean
-    status?: boolean
-    durationMins?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["attendance"]>
-
-  export type AttendanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    organizationId?: boolean
-    userId?: boolean
-    date?: boolean
-    checkInAt?: boolean
-    checkOutAt?: boolean
-    checkInLoc?: boolean
-    checkOutLoc?: boolean
-    status?: boolean
-    durationMins?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["attendance"]>
-
-  export type AttendanceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    organizationId?: boolean
-    userId?: boolean
-    date?: boolean
-    checkInAt?: boolean
-    checkOutAt?: boolean
-    checkInLoc?: boolean
-    checkOutLoc?: boolean
-    status?: boolean
-    durationMins?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["attendance"]>
-
-  export type AttendanceSelectScalar = {
-    id?: boolean
-    organizationId?: boolean
-    userId?: boolean
-    date?: boolean
-    checkInAt?: boolean
-    checkOutAt?: boolean
-    checkInLoc?: boolean
-    checkOutLoc?: boolean
-    status?: boolean
-    durationMins?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type AttendanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "userId" | "date" | "checkInAt" | "checkOutAt" | "checkInLoc" | "checkOutLoc" | "status" | "durationMins" | "createdAt" | "updatedAt", ExtArgs["result"]["attendance"]>
-  export type AttendanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type AttendanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type AttendanceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $AttendancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Attendance"
-    objects: {
-      organization: Prisma.$OrganizationPayload<ExtArgs>
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      organizationId: string
-      userId: string
-      date: Date
-      checkInAt: Date | null
-      checkOutAt: Date | null
-      checkInLoc: Prisma.JsonValue | null
-      checkOutLoc: Prisma.JsonValue | null
-      status: $Enums.AttendanceStatus
-      durationMins: number | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["attendance"]>
-    composites: {}
-  }
-
-  type AttendanceGetPayload<S extends boolean | null | undefined | AttendanceDefaultArgs> = $Result.GetResult<Prisma.$AttendancePayload, S>
-
-  type AttendanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AttendanceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: AttendanceCountAggregateInputType | true
-    }
-
-  export interface AttendanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Attendance'], meta: { name: 'Attendance' } }
-    /**
-     * Find zero or one Attendance that matches the filter.
-     * @param {AttendanceFindUniqueArgs} args - Arguments to find a Attendance
-     * @example
-     * // Get one Attendance
-     * const attendance = await prisma.attendance.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends AttendanceFindUniqueArgs>(args: SelectSubset<T, AttendanceFindUniqueArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Attendance that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {AttendanceFindUniqueOrThrowArgs} args - Arguments to find a Attendance
-     * @example
-     * // Get one Attendance
-     * const attendance = await prisma.attendance.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends AttendanceFindUniqueOrThrowArgs>(args: SelectSubset<T, AttendanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Attendance that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AttendanceFindFirstArgs} args - Arguments to find a Attendance
-     * @example
-     * // Get one Attendance
-     * const attendance = await prisma.attendance.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends AttendanceFindFirstArgs>(args?: SelectSubset<T, AttendanceFindFirstArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Attendance that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AttendanceFindFirstOrThrowArgs} args - Arguments to find a Attendance
-     * @example
-     * // Get one Attendance
-     * const attendance = await prisma.attendance.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends AttendanceFindFirstOrThrowArgs>(args?: SelectSubset<T, AttendanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Attendances that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AttendanceFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Attendances
-     * const attendances = await prisma.attendance.findMany()
-     * 
-     * // Get first 10 Attendances
-     * const attendances = await prisma.attendance.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const attendanceWithIdOnly = await prisma.attendance.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends AttendanceFindManyArgs>(args?: SelectSubset<T, AttendanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Attendance.
-     * @param {AttendanceCreateArgs} args - Arguments to create a Attendance.
-     * @example
-     * // Create one Attendance
-     * const Attendance = await prisma.attendance.create({
-     *   data: {
-     *     // ... data to create a Attendance
-     *   }
-     * })
-     * 
-     */
-    create<T extends AttendanceCreateArgs>(args: SelectSubset<T, AttendanceCreateArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Attendances.
-     * @param {AttendanceCreateManyArgs} args - Arguments to create many Attendances.
-     * @example
-     * // Create many Attendances
-     * const attendance = await prisma.attendance.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends AttendanceCreateManyArgs>(args?: SelectSubset<T, AttendanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Attendances and returns the data saved in the database.
-     * @param {AttendanceCreateManyAndReturnArgs} args - Arguments to create many Attendances.
-     * @example
-     * // Create many Attendances
-     * const attendance = await prisma.attendance.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Attendances and only return the `id`
-     * const attendanceWithIdOnly = await prisma.attendance.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends AttendanceCreateManyAndReturnArgs>(args?: SelectSubset<T, AttendanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Attendance.
-     * @param {AttendanceDeleteArgs} args - Arguments to delete one Attendance.
-     * @example
-     * // Delete one Attendance
-     * const Attendance = await prisma.attendance.delete({
-     *   where: {
-     *     // ... filter to delete one Attendance
-     *   }
-     * })
-     * 
-     */
-    delete<T extends AttendanceDeleteArgs>(args: SelectSubset<T, AttendanceDeleteArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Attendance.
-     * @param {AttendanceUpdateArgs} args - Arguments to update one Attendance.
-     * @example
-     * // Update one Attendance
-     * const attendance = await prisma.attendance.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends AttendanceUpdateArgs>(args: SelectSubset<T, AttendanceUpdateArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Attendances.
-     * @param {AttendanceDeleteManyArgs} args - Arguments to filter Attendances to delete.
-     * @example
-     * // Delete a few Attendances
-     * const { count } = await prisma.attendance.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends AttendanceDeleteManyArgs>(args?: SelectSubset<T, AttendanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Attendances.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AttendanceUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Attendances
-     * const attendance = await prisma.attendance.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends AttendanceUpdateManyArgs>(args: SelectSubset<T, AttendanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Attendances and returns the data updated in the database.
-     * @param {AttendanceUpdateManyAndReturnArgs} args - Arguments to update many Attendances.
-     * @example
-     * // Update many Attendances
-     * const attendance = await prisma.attendance.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Attendances and only return the `id`
-     * const attendanceWithIdOnly = await prisma.attendance.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends AttendanceUpdateManyAndReturnArgs>(args: SelectSubset<T, AttendanceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Attendance.
-     * @param {AttendanceUpsertArgs} args - Arguments to update or create a Attendance.
-     * @example
-     * // Update or create a Attendance
-     * const attendance = await prisma.attendance.upsert({
-     *   create: {
-     *     // ... data to create a Attendance
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Attendance we want to update
-     *   }
-     * })
-     */
-    upsert<T extends AttendanceUpsertArgs>(args: SelectSubset<T, AttendanceUpsertArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Attendances.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AttendanceCountArgs} args - Arguments to filter Attendances to count.
-     * @example
-     * // Count the number of Attendances
-     * const count = await prisma.attendance.count({
-     *   where: {
-     *     // ... the filter for the Attendances we want to count
-     *   }
-     * })
-    **/
-    count<T extends AttendanceCountArgs>(
-      args?: Subset<T, AttendanceCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], AttendanceCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Attendance.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AttendanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends AttendanceAggregateArgs>(args: Subset<T, AttendanceAggregateArgs>): Prisma.PrismaPromise<GetAttendanceAggregateType<T>>
-
-    /**
-     * Group by Attendance.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AttendanceGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends AttendanceGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: AttendanceGroupByArgs['orderBy'] }
-        : { orderBy?: AttendanceGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, AttendanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttendanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Attendance model
-   */
-  readonly fields: AttendanceFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Attendance.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__AttendanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Attendance model
-   */
-  interface AttendanceFieldRefs {
-    readonly id: FieldRef<"Attendance", 'String'>
-    readonly organizationId: FieldRef<"Attendance", 'String'>
-    readonly userId: FieldRef<"Attendance", 'String'>
-    readonly date: FieldRef<"Attendance", 'DateTime'>
-    readonly checkInAt: FieldRef<"Attendance", 'DateTime'>
-    readonly checkOutAt: FieldRef<"Attendance", 'DateTime'>
-    readonly checkInLoc: FieldRef<"Attendance", 'Json'>
-    readonly checkOutLoc: FieldRef<"Attendance", 'Json'>
-    readonly status: FieldRef<"Attendance", 'AttendanceStatus'>
-    readonly durationMins: FieldRef<"Attendance", 'Int'>
-    readonly createdAt: FieldRef<"Attendance", 'DateTime'>
-    readonly updatedAt: FieldRef<"Attendance", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Attendance findUnique
-   */
-  export type AttendanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * Filter, which Attendance to fetch.
-     */
-    where: AttendanceWhereUniqueInput
-  }
-
-  /**
-   * Attendance findUniqueOrThrow
-   */
-  export type AttendanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * Filter, which Attendance to fetch.
-     */
-    where: AttendanceWhereUniqueInput
-  }
-
-  /**
-   * Attendance findFirst
-   */
-  export type AttendanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * Filter, which Attendance to fetch.
-     */
-    where?: AttendanceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Attendances to fetch.
-     */
-    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Attendances.
-     */
-    cursor?: AttendanceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Attendances from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Attendances.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Attendances.
-     */
-    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
-  }
-
-  /**
-   * Attendance findFirstOrThrow
-   */
-  export type AttendanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * Filter, which Attendance to fetch.
-     */
-    where?: AttendanceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Attendances to fetch.
-     */
-    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Attendances.
-     */
-    cursor?: AttendanceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Attendances from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Attendances.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Attendances.
-     */
-    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
-  }
-
-  /**
-   * Attendance findMany
-   */
-  export type AttendanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * Filter, which Attendances to fetch.
-     */
-    where?: AttendanceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Attendances to fetch.
-     */
-    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Attendances.
-     */
-    cursor?: AttendanceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Attendances from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Attendances.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Attendances.
-     */
-    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
-  }
-
-  /**
-   * Attendance create
-   */
-  export type AttendanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Attendance.
-     */
-    data: XOR<AttendanceCreateInput, AttendanceUncheckedCreateInput>
-  }
-
-  /**
-   * Attendance createMany
-   */
-  export type AttendanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Attendances.
-     */
-    data: AttendanceCreateManyInput | AttendanceCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Attendance createManyAndReturn
-   */
-  export type AttendanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * The data used to create many Attendances.
-     */
-    data: AttendanceCreateManyInput | AttendanceCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Attendance update
-   */
-  export type AttendanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Attendance.
-     */
-    data: XOR<AttendanceUpdateInput, AttendanceUncheckedUpdateInput>
-    /**
-     * Choose, which Attendance to update.
-     */
-    where: AttendanceWhereUniqueInput
-  }
-
-  /**
-   * Attendance updateMany
-   */
-  export type AttendanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Attendances.
-     */
-    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyInput>
-    /**
-     * Filter which Attendances to update
-     */
-    where?: AttendanceWhereInput
-    /**
-     * Limit how many Attendances to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Attendance updateManyAndReturn
-   */
-  export type AttendanceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * The data used to update Attendances.
-     */
-    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyInput>
-    /**
-     * Filter which Attendances to update
-     */
-    where?: AttendanceWhereInput
-    /**
-     * Limit how many Attendances to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Attendance upsert
-   */
-  export type AttendanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Attendance to update in case it exists.
-     */
-    where: AttendanceWhereUniqueInput
-    /**
-     * In case the Attendance found by the `where` argument doesn't exist, create a new Attendance with this data.
-     */
-    create: XOR<AttendanceCreateInput, AttendanceUncheckedCreateInput>
-    /**
-     * In case the Attendance was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<AttendanceUpdateInput, AttendanceUncheckedUpdateInput>
-  }
-
-  /**
-   * Attendance delete
-   */
-  export type AttendanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
-    /**
-     * Filter which Attendance to delete.
-     */
-    where: AttendanceWhereUniqueInput
-  }
-
-  /**
-   * Attendance deleteMany
-   */
-  export type AttendanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Attendances to delete
-     */
-    where?: AttendanceWhereInput
-    /**
-     * Limit how many Attendances to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Attendance without action
-   */
-  export type AttendanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attendance
-     */
-    select?: AttendanceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attendance
-     */
-    omit?: AttendanceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttendanceInclude<ExtArgs> | null
   }
 
 
@@ -52032,41 +49487,13 @@ export namespace Prisma {
     orderId: 'orderId',
     activityType: 'activityType',
     description: 'description',
+    orderNote: 'orderNote',
     performedBy: 'performedBy',
     performedAt: 'performedAt',
     metadata: 'metadata'
   };
 
   export type OrderActivityScalarFieldEnum = (typeof OrderActivityScalarFieldEnum)[keyof typeof OrderActivityScalarFieldEnum]
-
-
-  export const OrderNoteScalarFieldEnum: {
-    id: 'id',
-    orderId: 'orderId',
-    text: 'text',
-    createdBy: 'createdBy',
-    createdAt: 'createdAt'
-  };
-
-  export type OrderNoteScalarFieldEnum = (typeof OrderNoteScalarFieldEnum)[keyof typeof OrderNoteScalarFieldEnum]
-
-
-  export const AttendanceScalarFieldEnum: {
-    id: 'id',
-    organizationId: 'organizationId',
-    userId: 'userId',
-    date: 'date',
-    checkInAt: 'checkInAt',
-    checkOutAt: 'checkOutAt',
-    checkInLoc: 'checkInLoc',
-    checkOutLoc: 'checkOutLoc',
-    status: 'status',
-    durationMins: 'durationMins',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
 
 
   export const VisitScalarFieldEnum: {
@@ -52513,20 +49940,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'AttendanceStatus'
-   */
-  export type EnumAttendanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttendanceStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'AttendanceStatus[]'
-   */
-  export type ListEnumAttendanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttendanceStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'VisitType'
    */
   export type EnumVisitTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VisitType'>
@@ -52709,7 +50122,6 @@ export namespace Prisma {
     users?: UserListRelationFilter
     sessions?: SessionListRelationFilter
     auditLogs?: AuditLogListRelationFilter
-    attendances?: AttendanceListRelationFilter
     visits?: VisitListRelationFilter
     expenses?: ExpenseListRelationFilter
     dailyActivities?: DailyActivityReportListRelationFilter
@@ -52755,7 +50167,6 @@ export namespace Prisma {
     users?: UserOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
-    attendances?: AttendanceOrderByRelationAggregateInput
     visits?: VisitOrderByRelationAggregateInput
     expenses?: ExpenseOrderByRelationAggregateInput
     dailyActivities?: DailyActivityReportOrderByRelationAggregateInput
@@ -52804,7 +50215,6 @@ export namespace Prisma {
     users?: UserListRelationFilter
     sessions?: SessionListRelationFilter
     auditLogs?: AuditLogListRelationFilter
-    attendances?: AttendanceListRelationFilter
     visits?: VisitListRelationFilter
     expenses?: ExpenseListRelationFilter
     dailyActivities?: DailyActivityReportListRelationFilter
@@ -53513,7 +50923,6 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     auditLogs?: AuditLogListRelationFilter
     passwordHistories?: PasswordHistoryListRelationFilter
-    attendances?: AttendanceListRelationFilter
     visits?: VisitListRelationFilter
     expenses?: ExpenseListRelationFilter
     dailyActivities?: DailyActivityReportListRelationFilter
@@ -53570,7 +50979,6 @@ export namespace Prisma {
     sessions?: SessionOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
     passwordHistories?: PasswordHistoryOrderByRelationAggregateInput
-    attendances?: AttendanceOrderByRelationAggregateInput
     visits?: VisitOrderByRelationAggregateInput
     expenses?: ExpenseOrderByRelationAggregateInput
     dailyActivities?: DailyActivityReportOrderByRelationAggregateInput
@@ -53631,7 +51039,6 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     auditLogs?: AuditLogListRelationFilter
     passwordHistories?: PasswordHistoryListRelationFilter
-    attendances?: AttendanceListRelationFilter
     visits?: VisitListRelationFilter
     expenses?: ExpenseListRelationFilter
     dailyActivities?: DailyActivityReportListRelationFilter
@@ -54251,7 +51658,6 @@ export namespace Prisma {
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
     activities?: OrderActivityListRelationFilter
-    notes?: OrderNoteListRelationFilter
     productIssues?: ProductIssueListRelationFilter
   }
 
@@ -54280,7 +51686,6 @@ export namespace Prisma {
     owner?: UserOrderByWithRelationInput
     items?: OrderItemOrderByRelationAggregateInput
     activities?: OrderActivityOrderByRelationAggregateInput
-    notes?: OrderNoteOrderByRelationAggregateInput
     productIssues?: ProductIssueOrderByRelationAggregateInput
   }
 
@@ -54312,7 +51717,6 @@ export namespace Prisma {
     owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
     activities?: OrderActivityListRelationFilter
-    notes?: OrderNoteListRelationFilter
     productIssues?: ProductIssueListRelationFilter
   }, "id" | "orderNumber">
 
@@ -54451,6 +51855,7 @@ export namespace Prisma {
     orderId?: UuidFilter<"OrderActivity"> | string
     activityType?: StringFilter<"OrderActivity"> | string
     description?: StringFilter<"OrderActivity"> | string
+    orderNote?: StringNullableFilter<"OrderActivity"> | string | null
     performedBy?: UuidNullableFilter<"OrderActivity"> | string | null
     performedAt?: DateTimeFilter<"OrderActivity"> | Date | string
     metadata?: JsonNullableFilter<"OrderActivity">
@@ -54462,6 +51867,7 @@ export namespace Prisma {
     orderId?: SortOrder
     activityType?: SortOrder
     description?: SortOrder
+    orderNote?: SortOrderInput | SortOrder
     performedBy?: SortOrderInput | SortOrder
     performedAt?: SortOrder
     metadata?: SortOrderInput | SortOrder
@@ -54476,6 +51882,7 @@ export namespace Prisma {
     orderId?: UuidFilter<"OrderActivity"> | string
     activityType?: StringFilter<"OrderActivity"> | string
     description?: StringFilter<"OrderActivity"> | string
+    orderNote?: StringNullableFilter<"OrderActivity"> | string | null
     performedBy?: UuidNullableFilter<"OrderActivity"> | string | null
     performedAt?: DateTimeFilter<"OrderActivity"> | Date | string
     metadata?: JsonNullableFilter<"OrderActivity">
@@ -54487,6 +51894,7 @@ export namespace Prisma {
     orderId?: SortOrder
     activityType?: SortOrder
     description?: SortOrder
+    orderNote?: SortOrderInput | SortOrder
     performedBy?: SortOrderInput | SortOrder
     performedAt?: SortOrder
     metadata?: SortOrderInput | SortOrder
@@ -54503,160 +51911,10 @@ export namespace Prisma {
     orderId?: UuidWithAggregatesFilter<"OrderActivity"> | string
     activityType?: StringWithAggregatesFilter<"OrderActivity"> | string
     description?: StringWithAggregatesFilter<"OrderActivity"> | string
+    orderNote?: StringNullableWithAggregatesFilter<"OrderActivity"> | string | null
     performedBy?: UuidNullableWithAggregatesFilter<"OrderActivity"> | string | null
     performedAt?: DateTimeWithAggregatesFilter<"OrderActivity"> | Date | string
     metadata?: JsonNullableWithAggregatesFilter<"OrderActivity">
-  }
-
-  export type OrderNoteWhereInput = {
-    AND?: OrderNoteWhereInput | OrderNoteWhereInput[]
-    OR?: OrderNoteWhereInput[]
-    NOT?: OrderNoteWhereInput | OrderNoteWhereInput[]
-    id?: UuidFilter<"OrderNote"> | string
-    orderId?: UuidFilter<"OrderNote"> | string
-    text?: StringFilter<"OrderNote"> | string
-    createdBy?: UuidNullableFilter<"OrderNote"> | string | null
-    createdAt?: DateTimeFilter<"OrderNote"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
-  }
-
-  export type OrderNoteOrderByWithRelationInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    text?: SortOrder
-    createdBy?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    order?: OrderOrderByWithRelationInput
-  }
-
-  export type OrderNoteWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: OrderNoteWhereInput | OrderNoteWhereInput[]
-    OR?: OrderNoteWhereInput[]
-    NOT?: OrderNoteWhereInput | OrderNoteWhereInput[]
-    orderId?: UuidFilter<"OrderNote"> | string
-    text?: StringFilter<"OrderNote"> | string
-    createdBy?: UuidNullableFilter<"OrderNote"> | string | null
-    createdAt?: DateTimeFilter<"OrderNote"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
-  }, "id">
-
-  export type OrderNoteOrderByWithAggregationInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    text?: SortOrder
-    createdBy?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    _count?: OrderNoteCountOrderByAggregateInput
-    _max?: OrderNoteMaxOrderByAggregateInput
-    _min?: OrderNoteMinOrderByAggregateInput
-  }
-
-  export type OrderNoteScalarWhereWithAggregatesInput = {
-    AND?: OrderNoteScalarWhereWithAggregatesInput | OrderNoteScalarWhereWithAggregatesInput[]
-    OR?: OrderNoteScalarWhereWithAggregatesInput[]
-    NOT?: OrderNoteScalarWhereWithAggregatesInput | OrderNoteScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"OrderNote"> | string
-    orderId?: UuidWithAggregatesFilter<"OrderNote"> | string
-    text?: StringWithAggregatesFilter<"OrderNote"> | string
-    createdBy?: UuidNullableWithAggregatesFilter<"OrderNote"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"OrderNote"> | Date | string
-  }
-
-  export type AttendanceWhereInput = {
-    AND?: AttendanceWhereInput | AttendanceWhereInput[]
-    OR?: AttendanceWhereInput[]
-    NOT?: AttendanceWhereInput | AttendanceWhereInput[]
-    id?: UuidFilter<"Attendance"> | string
-    organizationId?: UuidFilter<"Attendance"> | string
-    userId?: UuidFilter<"Attendance"> | string
-    date?: DateTimeFilter<"Attendance"> | Date | string
-    checkInAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
-    checkOutAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
-    checkInLoc?: JsonNullableFilter<"Attendance">
-    checkOutLoc?: JsonNullableFilter<"Attendance">
-    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
-    durationMins?: IntNullableFilter<"Attendance"> | number | null
-    createdAt?: DateTimeFilter<"Attendance"> | Date | string
-    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }
-
-  export type AttendanceOrderByWithRelationInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    checkInAt?: SortOrderInput | SortOrder
-    checkOutAt?: SortOrderInput | SortOrder
-    checkInLoc?: SortOrderInput | SortOrder
-    checkOutLoc?: SortOrderInput | SortOrder
-    status?: SortOrder
-    durationMins?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    organization?: OrganizationOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    userId_date?: AttendanceUserIdDateCompoundUniqueInput
-    AND?: AttendanceWhereInput | AttendanceWhereInput[]
-    OR?: AttendanceWhereInput[]
-    NOT?: AttendanceWhereInput | AttendanceWhereInput[]
-    organizationId?: UuidFilter<"Attendance"> | string
-    userId?: UuidFilter<"Attendance"> | string
-    date?: DateTimeFilter<"Attendance"> | Date | string
-    checkInAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
-    checkOutAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
-    checkInLoc?: JsonNullableFilter<"Attendance">
-    checkOutLoc?: JsonNullableFilter<"Attendance">
-    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
-    durationMins?: IntNullableFilter<"Attendance"> | number | null
-    createdAt?: DateTimeFilter<"Attendance"> | Date | string
-    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "userId_date">
-
-  export type AttendanceOrderByWithAggregationInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    checkInAt?: SortOrderInput | SortOrder
-    checkOutAt?: SortOrderInput | SortOrder
-    checkInLoc?: SortOrderInput | SortOrder
-    checkOutLoc?: SortOrderInput | SortOrder
-    status?: SortOrder
-    durationMins?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: AttendanceCountOrderByAggregateInput
-    _avg?: AttendanceAvgOrderByAggregateInput
-    _max?: AttendanceMaxOrderByAggregateInput
-    _min?: AttendanceMinOrderByAggregateInput
-    _sum?: AttendanceSumOrderByAggregateInput
-  }
-
-  export type AttendanceScalarWhereWithAggregatesInput = {
-    AND?: AttendanceScalarWhereWithAggregatesInput | AttendanceScalarWhereWithAggregatesInput[]
-    OR?: AttendanceScalarWhereWithAggregatesInput[]
-    NOT?: AttendanceScalarWhereWithAggregatesInput | AttendanceScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"Attendance"> | string
-    organizationId?: UuidWithAggregatesFilter<"Attendance"> | string
-    userId?: UuidWithAggregatesFilter<"Attendance"> | string
-    date?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
-    checkInAt?: DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
-    checkOutAt?: DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
-    checkInLoc?: JsonNullableWithAggregatesFilter<"Attendance">
-    checkOutLoc?: JsonNullableWithAggregatesFilter<"Attendance">
-    status?: EnumAttendanceStatusWithAggregatesFilter<"Attendance"> | $Enums.AttendanceStatus
-    durationMins?: IntNullableWithAggregatesFilter<"Attendance"> | number | null
-    createdAt?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
   }
 
   export type VisitWhereInput = {
@@ -56405,7 +53663,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -56451,7 +53708,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -56497,7 +53753,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -56543,7 +53798,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -57290,7 +54544,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -57341,7 +54594,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -57392,7 +54644,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -57443,7 +54694,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -58118,7 +55368,6 @@ export namespace Prisma {
     owner: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -58144,7 +55393,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -58170,7 +55418,6 @@ export namespace Prisma {
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -58196,7 +55443,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -58342,6 +55588,7 @@ export namespace Prisma {
     id?: string
     activityType: string
     description: string
+    orderNote?: string | null
     performedBy?: string | null
     performedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -58353,6 +55600,7 @@ export namespace Prisma {
     orderId: string
     activityType: string
     description: string
+    orderNote?: string | null
     performedBy?: string | null
     performedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -58362,6 +55610,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     activityType?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    orderNote?: NullableStringFieldUpdateOperationsInput | string | null
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -58373,6 +55622,7 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     activityType?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    orderNote?: NullableStringFieldUpdateOperationsInput | string | null
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -58383,6 +55633,7 @@ export namespace Prisma {
     orderId: string
     activityType: string
     description: string
+    orderNote?: string | null
     performedBy?: string | null
     performedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -58392,6 +55643,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     activityType?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    orderNote?: NullableStringFieldUpdateOperationsInput | string | null
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -58402,167 +55654,10 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     activityType?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    orderNote?: NullableStringFieldUpdateOperationsInput | string | null
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type OrderNoteCreateInput = {
-    id?: string
-    text: string
-    createdBy?: string | null
-    createdAt?: Date | string
-    order: OrderCreateNestedOneWithoutNotesInput
-  }
-
-  export type OrderNoteUncheckedCreateInput = {
-    id?: string
-    orderId: string
-    text: string
-    createdBy?: string | null
-    createdAt?: Date | string
-  }
-
-  export type OrderNoteUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneRequiredWithoutNotesNestedInput
-  }
-
-  export type OrderNoteUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderId?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OrderNoteCreateManyInput = {
-    id?: string
-    orderId: string
-    text: string
-    createdBy?: string | null
-    createdAt?: Date | string
-  }
-
-  export type OrderNoteUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OrderNoteUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderId?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AttendanceCreateInput = {
-    id?: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutAttendancesInput
-    user: UserCreateNestedOneWithoutAttendancesInput
-  }
-
-  export type AttendanceUncheckedCreateInput = {
-    id?: string
-    organizationId: string
-    userId: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AttendanceUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutAttendancesNestedInput
-    user?: UserUpdateOneRequiredWithoutAttendancesNestedInput
-  }
-
-  export type AttendanceUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AttendanceCreateManyInput = {
-    id?: string
-    organizationId: string
-    userId: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AttendanceUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AttendanceUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitCreateInput = {
@@ -60522,12 +57617,6 @@ export namespace Prisma {
     none?: AuditLogWhereInput
   }
 
-  export type AttendanceListRelationFilter = {
-    every?: AttendanceWhereInput
-    some?: AttendanceWhereInput
-    none?: AttendanceWhereInput
-  }
-
   export type VisitListRelationFilter = {
     every?: VisitWhereInput
     some?: VisitWhereInput
@@ -60678,10 +57767,6 @@ export namespace Prisma {
   }
 
   export type AuditLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type AttendanceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -61877,17 +58962,7 @@ export namespace Prisma {
     none?: OrderActivityWhereInput
   }
 
-  export type OrderNoteListRelationFilter = {
-    every?: OrderNoteWhereInput
-    some?: OrderNoteWhereInput
-    none?: OrderNoteWhereInput
-  }
-
   export type OrderActivityOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type OrderNoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -62027,6 +59102,7 @@ export namespace Prisma {
     orderId?: SortOrder
     activityType?: SortOrder
     description?: SortOrder
+    orderNote?: SortOrder
     performedBy?: SortOrder
     performedAt?: SortOrder
     metadata?: SortOrder
@@ -62037,6 +59113,7 @@ export namespace Prisma {
     orderId?: SortOrder
     activityType?: SortOrder
     description?: SortOrder
+    orderNote?: SortOrder
     performedBy?: SortOrder
     performedAt?: SortOrder
   }
@@ -62046,103 +59123,9 @@ export namespace Prisma {
     orderId?: SortOrder
     activityType?: SortOrder
     description?: SortOrder
+    orderNote?: SortOrder
     performedBy?: SortOrder
     performedAt?: SortOrder
-  }
-
-  export type OrderNoteCountOrderByAggregateInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    text?: SortOrder
-    createdBy?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type OrderNoteMaxOrderByAggregateInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    text?: SortOrder
-    createdBy?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type OrderNoteMinOrderByAggregateInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    text?: SortOrder
-    createdBy?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type EnumAttendanceStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumAttendanceStatusFilter<$PrismaModel> | $Enums.AttendanceStatus
-  }
-
-  export type AttendanceUserIdDateCompoundUniqueInput = {
-    userId: string
-    date: Date | string
-  }
-
-  export type AttendanceCountOrderByAggregateInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    checkInAt?: SortOrder
-    checkOutAt?: SortOrder
-    checkInLoc?: SortOrder
-    checkOutLoc?: SortOrder
-    status?: SortOrder
-    durationMins?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AttendanceAvgOrderByAggregateInput = {
-    durationMins?: SortOrder
-  }
-
-  export type AttendanceMaxOrderByAggregateInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    checkInAt?: SortOrder
-    checkOutAt?: SortOrder
-    status?: SortOrder
-    durationMins?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AttendanceMinOrderByAggregateInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    checkInAt?: SortOrder
-    checkOutAt?: SortOrder
-    status?: SortOrder
-    durationMins?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AttendanceSumOrderByAggregateInput = {
-    durationMins?: SortOrder
-  }
-
-  export type EnumAttendanceStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumAttendanceStatusFilter<$PrismaModel>
-    _max?: NestedEnumAttendanceStatusFilter<$PrismaModel>
   }
 
   export type EnumVisitTypeFilter<$PrismaModel = never> = {
@@ -63300,13 +60283,6 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
-  export type AttendanceCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<AttendanceCreateWithoutOrganizationInput, AttendanceUncheckedCreateWithoutOrganizationInput> | AttendanceCreateWithoutOrganizationInput[] | AttendanceUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutOrganizationInput | AttendanceCreateOrConnectWithoutOrganizationInput[]
-    createMany?: AttendanceCreateManyOrganizationInputEnvelope
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-  }
-
   export type VisitCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<VisitCreateWithoutOrganizationInput, VisitUncheckedCreateWithoutOrganizationInput> | VisitCreateWithoutOrganizationInput[] | VisitUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: VisitCreateOrConnectWithoutOrganizationInput | VisitCreateOrConnectWithoutOrganizationInput[]
@@ -63494,13 +60470,6 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutOrganizationInput | AuditLogCreateOrConnectWithoutOrganizationInput[]
     createMany?: AuditLogCreateManyOrganizationInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-  }
-
-  export type AttendanceUncheckedCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<AttendanceCreateWithoutOrganizationInput, AttendanceUncheckedCreateWithoutOrganizationInput> | AttendanceCreateWithoutOrganizationInput[] | AttendanceUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutOrganizationInput | AttendanceCreateOrConnectWithoutOrganizationInput[]
-    createMany?: AttendanceCreateManyOrganizationInputEnvelope
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
   }
 
   export type VisitUncheckedCreateNestedManyWithoutOrganizationInput = {
@@ -63755,20 +60724,6 @@ export namespace Prisma {
     update?: AuditLogUpdateWithWhereUniqueWithoutOrganizationInput | AuditLogUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: AuditLogUpdateManyWithWhereWithoutOrganizationInput | AuditLogUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-  }
-
-  export type AttendanceUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<AttendanceCreateWithoutOrganizationInput, AttendanceUncheckedCreateWithoutOrganizationInput> | AttendanceCreateWithoutOrganizationInput[] | AttendanceUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutOrganizationInput | AttendanceCreateOrConnectWithoutOrganizationInput[]
-    upsert?: AttendanceUpsertWithWhereUniqueWithoutOrganizationInput | AttendanceUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: AttendanceCreateManyOrganizationInputEnvelope
-    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    update?: AttendanceUpdateWithWhereUniqueWithoutOrganizationInput | AttendanceUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: AttendanceUpdateManyWithWhereWithoutOrganizationInput | AttendanceUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
   export type VisitUpdateManyWithoutOrganizationNestedInput = {
@@ -64147,20 +61102,6 @@ export namespace Prisma {
     update?: AuditLogUpdateWithWhereUniqueWithoutOrganizationInput | AuditLogUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: AuditLogUpdateManyWithWhereWithoutOrganizationInput | AuditLogUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-  }
-
-  export type AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<AttendanceCreateWithoutOrganizationInput, AttendanceUncheckedCreateWithoutOrganizationInput> | AttendanceCreateWithoutOrganizationInput[] | AttendanceUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutOrganizationInput | AttendanceCreateOrConnectWithoutOrganizationInput[]
-    upsert?: AttendanceUpsertWithWhereUniqueWithoutOrganizationInput | AttendanceUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: AttendanceCreateManyOrganizationInputEnvelope
-    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    update?: AttendanceUpdateWithWhereUniqueWithoutOrganizationInput | AttendanceUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: AttendanceUpdateManyWithWhereWithoutOrganizationInput | AttendanceUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
   export type VisitUncheckedUpdateManyWithoutOrganizationNestedInput = {
@@ -65486,13 +62427,6 @@ export namespace Prisma {
     connect?: PasswordHistoryWhereUniqueInput | PasswordHistoryWhereUniqueInput[]
   }
 
-  export type AttendanceCreateNestedManyWithoutUserInput = {
-    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
-    createMany?: AttendanceCreateManyUserInputEnvelope
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-  }
-
   export type VisitCreateNestedManyWithoutUserInput = {
     create?: XOR<VisitCreateWithoutUserInput, VisitUncheckedCreateWithoutUserInput> | VisitCreateWithoutUserInput[] | VisitUncheckedCreateWithoutUserInput[]
     connectOrCreate?: VisitCreateOrConnectWithoutUserInput | VisitCreateOrConnectWithoutUserInput[]
@@ -65644,13 +62578,6 @@ export namespace Prisma {
     connectOrCreate?: PasswordHistoryCreateOrConnectWithoutUserInput | PasswordHistoryCreateOrConnectWithoutUserInput[]
     createMany?: PasswordHistoryCreateManyUserInputEnvelope
     connect?: PasswordHistoryWhereUniqueInput | PasswordHistoryWhereUniqueInput[]
-  }
-
-  export type AttendanceUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
-    createMany?: AttendanceCreateManyUserInputEnvelope
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
   }
 
   export type VisitUncheckedCreateNestedManyWithoutUserInput = {
@@ -65909,20 +62836,6 @@ export namespace Prisma {
     update?: PasswordHistoryUpdateWithWhereUniqueWithoutUserInput | PasswordHistoryUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PasswordHistoryUpdateManyWithWhereWithoutUserInput | PasswordHistoryUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PasswordHistoryScalarWhereInput | PasswordHistoryScalarWhereInput[]
-  }
-
-  export type AttendanceUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
-    upsert?: AttendanceUpsertWithWhereUniqueWithoutUserInput | AttendanceUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AttendanceCreateManyUserInputEnvelope
-    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    update?: AttendanceUpdateWithWhereUniqueWithoutUserInput | AttendanceUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AttendanceUpdateManyWithWhereWithoutUserInput | AttendanceUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
   export type VisitUpdateManyWithoutUserNestedInput = {
@@ -66227,20 +63140,6 @@ export namespace Prisma {
     update?: PasswordHistoryUpdateWithWhereUniqueWithoutUserInput | PasswordHistoryUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PasswordHistoryUpdateManyWithWhereWithoutUserInput | PasswordHistoryUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PasswordHistoryScalarWhereInput | PasswordHistoryScalarWhereInput[]
-  }
-
-  export type AttendanceUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
-    upsert?: AttendanceUpsertWithWhereUniqueWithoutUserInput | AttendanceUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AttendanceCreateManyUserInputEnvelope
-    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
-    update?: AttendanceUpdateWithWhereUniqueWithoutUserInput | AttendanceUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AttendanceUpdateManyWithWhereWithoutUserInput | AttendanceUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
   export type VisitUncheckedUpdateManyWithoutUserNestedInput = {
@@ -66981,13 +63880,6 @@ export namespace Prisma {
     connect?: OrderActivityWhereUniqueInput | OrderActivityWhereUniqueInput[]
   }
 
-  export type OrderNoteCreateNestedManyWithoutOrderInput = {
-    create?: XOR<OrderNoteCreateWithoutOrderInput, OrderNoteUncheckedCreateWithoutOrderInput> | OrderNoteCreateWithoutOrderInput[] | OrderNoteUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: OrderNoteCreateOrConnectWithoutOrderInput | OrderNoteCreateOrConnectWithoutOrderInput[]
-    createMany?: OrderNoteCreateManyOrderInputEnvelope
-    connect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-  }
-
   export type ProductIssueCreateNestedManyWithoutSalesOrderInput = {
     create?: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput> | ProductIssueCreateWithoutSalesOrderInput[] | ProductIssueUncheckedCreateWithoutSalesOrderInput[]
     connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesOrderInput | ProductIssueCreateOrConnectWithoutSalesOrderInput[]
@@ -67007,13 +63899,6 @@ export namespace Prisma {
     connectOrCreate?: OrderActivityCreateOrConnectWithoutOrderInput | OrderActivityCreateOrConnectWithoutOrderInput[]
     createMany?: OrderActivityCreateManyOrderInputEnvelope
     connect?: OrderActivityWhereUniqueInput | OrderActivityWhereUniqueInput[]
-  }
-
-  export type OrderNoteUncheckedCreateNestedManyWithoutOrderInput = {
-    create?: XOR<OrderNoteCreateWithoutOrderInput, OrderNoteUncheckedCreateWithoutOrderInput> | OrderNoteCreateWithoutOrderInput[] | OrderNoteUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: OrderNoteCreateOrConnectWithoutOrderInput | OrderNoteCreateOrConnectWithoutOrderInput[]
-    createMany?: OrderNoteCreateManyOrderInputEnvelope
-    connect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
   }
 
   export type ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput = {
@@ -67075,20 +63960,6 @@ export namespace Prisma {
     deleteMany?: OrderActivityScalarWhereInput | OrderActivityScalarWhereInput[]
   }
 
-  export type OrderNoteUpdateManyWithoutOrderNestedInput = {
-    create?: XOR<OrderNoteCreateWithoutOrderInput, OrderNoteUncheckedCreateWithoutOrderInput> | OrderNoteCreateWithoutOrderInput[] | OrderNoteUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: OrderNoteCreateOrConnectWithoutOrderInput | OrderNoteCreateOrConnectWithoutOrderInput[]
-    upsert?: OrderNoteUpsertWithWhereUniqueWithoutOrderInput | OrderNoteUpsertWithWhereUniqueWithoutOrderInput[]
-    createMany?: OrderNoteCreateManyOrderInputEnvelope
-    set?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    disconnect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    delete?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    connect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    update?: OrderNoteUpdateWithWhereUniqueWithoutOrderInput | OrderNoteUpdateWithWhereUniqueWithoutOrderInput[]
-    updateMany?: OrderNoteUpdateManyWithWhereWithoutOrderInput | OrderNoteUpdateManyWithWhereWithoutOrderInput[]
-    deleteMany?: OrderNoteScalarWhereInput | OrderNoteScalarWhereInput[]
-  }
-
   export type ProductIssueUpdateManyWithoutSalesOrderNestedInput = {
     create?: XOR<ProductIssueCreateWithoutSalesOrderInput, ProductIssueUncheckedCreateWithoutSalesOrderInput> | ProductIssueCreateWithoutSalesOrderInput[] | ProductIssueUncheckedCreateWithoutSalesOrderInput[]
     connectOrCreate?: ProductIssueCreateOrConnectWithoutSalesOrderInput | ProductIssueCreateOrConnectWithoutSalesOrderInput[]
@@ -67129,20 +64000,6 @@ export namespace Prisma {
     update?: OrderActivityUpdateWithWhereUniqueWithoutOrderInput | OrderActivityUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderActivityUpdateManyWithWhereWithoutOrderInput | OrderActivityUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderActivityScalarWhereInput | OrderActivityScalarWhereInput[]
-  }
-
-  export type OrderNoteUncheckedUpdateManyWithoutOrderNestedInput = {
-    create?: XOR<OrderNoteCreateWithoutOrderInput, OrderNoteUncheckedCreateWithoutOrderInput> | OrderNoteCreateWithoutOrderInput[] | OrderNoteUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: OrderNoteCreateOrConnectWithoutOrderInput | OrderNoteCreateOrConnectWithoutOrderInput[]
-    upsert?: OrderNoteUpsertWithWhereUniqueWithoutOrderInput | OrderNoteUpsertWithWhereUniqueWithoutOrderInput[]
-    createMany?: OrderNoteCreateManyOrderInputEnvelope
-    set?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    disconnect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    delete?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    connect?: OrderNoteWhereUniqueInput | OrderNoteWhereUniqueInput[]
-    update?: OrderNoteUpdateWithWhereUniqueWithoutOrderInput | OrderNoteUpdateWithWhereUniqueWithoutOrderInput[]
-    updateMany?: OrderNoteUpdateManyWithWhereWithoutOrderInput | OrderNoteUpdateManyWithWhereWithoutOrderInput[]
-    deleteMany?: OrderNoteScalarWhereInput | OrderNoteScalarWhereInput[]
   }
 
   export type ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput = {
@@ -67201,52 +64058,6 @@ export namespace Prisma {
     upsert?: OrderUpsertWithoutActivitiesInput
     connect?: OrderWhereUniqueInput
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutActivitiesInput, OrderUpdateWithoutActivitiesInput>, OrderUncheckedUpdateWithoutActivitiesInput>
-  }
-
-  export type OrderCreateNestedOneWithoutNotesInput = {
-    create?: XOR<OrderCreateWithoutNotesInput, OrderUncheckedCreateWithoutNotesInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutNotesInput
-    connect?: OrderWhereUniqueInput
-  }
-
-  export type OrderUpdateOneRequiredWithoutNotesNestedInput = {
-    create?: XOR<OrderCreateWithoutNotesInput, OrderUncheckedCreateWithoutNotesInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutNotesInput
-    upsert?: OrderUpsertWithoutNotesInput
-    connect?: OrderWhereUniqueInput
-    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutNotesInput, OrderUpdateWithoutNotesInput>, OrderUncheckedUpdateWithoutNotesInput>
-  }
-
-  export type OrganizationCreateNestedOneWithoutAttendancesInput = {
-    create?: XOR<OrganizationCreateWithoutAttendancesInput, OrganizationUncheckedCreateWithoutAttendancesInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutAttendancesInput
-    connect?: OrganizationWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutAttendancesInput = {
-    create?: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAttendancesInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type EnumAttendanceStatusFieldUpdateOperationsInput = {
-    set?: $Enums.AttendanceStatus
-  }
-
-  export type OrganizationUpdateOneRequiredWithoutAttendancesNestedInput = {
-    create?: XOR<OrganizationCreateWithoutAttendancesInput, OrganizationUncheckedCreateWithoutAttendancesInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutAttendancesInput
-    upsert?: OrganizationUpsertWithoutAttendancesInput
-    connect?: OrganizationWhereUniqueInput
-    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutAttendancesInput, OrganizationUpdateWithoutAttendancesInput>, OrganizationUncheckedUpdateWithoutAttendancesInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutAttendancesNestedInput = {
-    create?: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAttendancesInput
-    upsert?: UserUpsertWithoutAttendancesInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAttendancesInput, UserUpdateWithoutAttendancesInput>, UserUncheckedUpdateWithoutAttendancesInput>
   }
 
   export type OrganizationCreateNestedOneWithoutVisitsInput = {
@@ -68473,23 +65284,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type NestedEnumAttendanceStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumAttendanceStatusFilter<$PrismaModel> | $Enums.AttendanceStatus
-  }
-
-  export type NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumAttendanceStatusFilter<$PrismaModel>
-    _max?: NestedEnumAttendanceStatusFilter<$PrismaModel>
-  }
-
   export type NestedEnumVisitTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.VisitType | EnumVisitTypeFieldRefInput<$PrismaModel>
     in?: $Enums.VisitType[] | ListEnumVisitTypeFieldRefInput<$PrismaModel>
@@ -68877,7 +65671,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -68927,7 +65720,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -69024,44 +65816,6 @@ export namespace Prisma {
 
   export type AuditLogCreateManyOrganizationInputEnvelope = {
     data: AuditLogCreateManyOrganizationInput | AuditLogCreateManyOrganizationInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type AttendanceCreateWithoutOrganizationInput = {
-    id?: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutAttendancesInput
-  }
-
-  export type AttendanceUncheckedCreateWithoutOrganizationInput = {
-    id?: string
-    userId: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AttendanceCreateOrConnectWithoutOrganizationInput = {
-    where: AttendanceWhereUniqueInput
-    create: XOR<AttendanceCreateWithoutOrganizationInput, AttendanceUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type AttendanceCreateManyOrganizationInputEnvelope = {
-    data: AttendanceCreateManyOrganizationInput | AttendanceCreateManyOrganizationInput[]
     skipDuplicates?: boolean
   }
 
@@ -69620,7 +66374,6 @@ export namespace Prisma {
     owner: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -69645,7 +66398,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -70125,40 +66877,6 @@ export namespace Prisma {
     ipAddress?: StringNullableFilter<"AuditLog"> | string | null
     userAgent?: StringNullableFilter<"AuditLog"> | string | null
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
-  }
-
-  export type AttendanceUpsertWithWhereUniqueWithoutOrganizationInput = {
-    where: AttendanceWhereUniqueInput
-    update: XOR<AttendanceUpdateWithoutOrganizationInput, AttendanceUncheckedUpdateWithoutOrganizationInput>
-    create: XOR<AttendanceCreateWithoutOrganizationInput, AttendanceUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type AttendanceUpdateWithWhereUniqueWithoutOrganizationInput = {
-    where: AttendanceWhereUniqueInput
-    data: XOR<AttendanceUpdateWithoutOrganizationInput, AttendanceUncheckedUpdateWithoutOrganizationInput>
-  }
-
-  export type AttendanceUpdateManyWithWhereWithoutOrganizationInput = {
-    where: AttendanceScalarWhereInput
-    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutOrganizationInput>
-  }
-
-  export type AttendanceScalarWhereInput = {
-    AND?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
-    OR?: AttendanceScalarWhereInput[]
-    NOT?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
-    id?: UuidFilter<"Attendance"> | string
-    organizationId?: UuidFilter<"Attendance"> | string
-    userId?: UuidFilter<"Attendance"> | string
-    date?: DateTimeFilter<"Attendance"> | Date | string
-    checkInAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
-    checkOutAt?: DateTimeNullableFilter<"Attendance"> | Date | string | null
-    checkInLoc?: JsonNullableFilter<"Attendance">
-    checkOutLoc?: JsonNullableFilter<"Attendance">
-    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
-    durationMins?: IntNullableFilter<"Attendance"> | number | null
-    createdAt?: DateTimeFilter<"Attendance"> | Date | string
-    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
   }
 
   export type VisitUpsertWithWhereUniqueWithoutOrganizationInput = {
@@ -70871,7 +67589,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -70916,7 +67633,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -71078,7 +67794,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -71128,7 +67843,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -71298,7 +68012,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -71343,7 +68056,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -71566,7 +68278,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -71611,7 +68322,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -71800,7 +68510,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -71850,7 +68559,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -71914,7 +68622,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -71959,7 +68666,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -72067,7 +68773,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -72112,7 +68817,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -72295,7 +68999,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -72345,7 +69048,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -72476,7 +69178,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -72521,7 +69222,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -72669,7 +69369,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -72714,7 +69413,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -72891,7 +69589,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -72941,7 +69638,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -73044,7 +69740,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -73089,7 +69784,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -73303,7 +69997,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -73348,7 +70041,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -73520,7 +70212,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -73565,7 +70256,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -73879,7 +70569,6 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -73924,7 +70613,6 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -74132,7 +70820,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -74182,7 +70869,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -74237,7 +70923,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -74287,7 +70972,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -74426,44 +71110,6 @@ export namespace Prisma {
 
   export type PasswordHistoryCreateManyUserInputEnvelope = {
     data: PasswordHistoryCreateManyUserInput | PasswordHistoryCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type AttendanceCreateWithoutUserInput = {
-    id?: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutAttendancesInput
-  }
-
-  export type AttendanceUncheckedCreateWithoutUserInput = {
-    id?: string
-    organizationId: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AttendanceCreateOrConnectWithoutUserInput = {
-    where: AttendanceWhereUniqueInput
-    create: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput>
-  }
-
-  export type AttendanceCreateManyUserInputEnvelope = {
-    data: AttendanceCreateManyUserInput | AttendanceCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -74988,7 +71634,6 @@ export namespace Prisma {
     customer: CustomerCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -75013,7 +71658,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -75249,7 +71893,6 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -75294,7 +71937,6 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -75532,7 +72174,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -75582,7 +72223,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -75690,22 +72330,6 @@ export namespace Prisma {
     userId?: UuidFilter<"PasswordHistory"> | string
     passwordHash?: StringFilter<"PasswordHistory"> | string
     createdAt?: DateTimeFilter<"PasswordHistory"> | Date | string
-  }
-
-  export type AttendanceUpsertWithWhereUniqueWithoutUserInput = {
-    where: AttendanceWhereUniqueInput
-    update: XOR<AttendanceUpdateWithoutUserInput, AttendanceUncheckedUpdateWithoutUserInput>
-    create: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput>
-  }
-
-  export type AttendanceUpdateWithWhereUniqueWithoutUserInput = {
-    where: AttendanceWhereUniqueInput
-    data: XOR<AttendanceUpdateWithoutUserInput, AttendanceUncheckedUpdateWithoutUserInput>
-  }
-
-  export type AttendanceUpdateManyWithWhereWithoutUserInput = {
-    where: AttendanceScalarWhereInput
-    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutUserInput>
   }
 
   export type VisitUpsertWithWhereUniqueWithoutUserInput = {
@@ -76039,7 +72663,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -76089,7 +72712,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -76188,7 +72810,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -76238,7 +72859,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -76319,7 +72939,6 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutOrganizationInput
     users?: UserCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -76364,7 +72983,6 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -76422,7 +73040,6 @@ export namespace Prisma {
     roles?: UserRoleCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -76472,7 +73089,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -76530,7 +73146,6 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
     users?: UserUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -76575,7 +73190,6 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -76639,7 +73253,6 @@ export namespace Prisma {
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -76689,7 +73302,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -76731,7 +73343,6 @@ export namespace Prisma {
     roles?: RoleCreateNestedManyWithoutOrganizationInput
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -76776,7 +73387,6 @@ export namespace Prisma {
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -76834,7 +73444,6 @@ export namespace Prisma {
     roles?: UserRoleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -76884,7 +73493,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -76942,7 +73550,6 @@ export namespace Prisma {
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -76987,7 +73594,6 @@ export namespace Prisma {
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -77051,7 +73657,6 @@ export namespace Prisma {
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -77101,7 +73706,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -77151,7 +73755,6 @@ export namespace Prisma {
     roles?: UserRoleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -77201,7 +73804,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -77267,7 +73869,6 @@ export namespace Prisma {
     roles?: UserRoleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -77317,7 +73918,6 @@ export namespace Prisma {
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -77360,7 +73960,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -77405,7 +74004,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -77453,7 +74051,6 @@ export namespace Prisma {
     owner: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -77478,7 +74075,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -77636,7 +74232,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -77681,7 +74276,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -77774,7 +74368,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -77819,7 +74412,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -78080,7 +74672,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -78125,7 +74716,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -78264,7 +74854,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -78309,7 +74898,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -78408,7 +74996,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -78458,7 +75045,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -78516,6 +75102,7 @@ export namespace Prisma {
     id?: string
     activityType: string
     description: string
+    orderNote?: string | null
     performedBy?: string | null
     performedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -78525,6 +75112,7 @@ export namespace Prisma {
     id?: string
     activityType: string
     description: string
+    orderNote?: string | null
     performedBy?: string | null
     performedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -78537,30 +75125,6 @@ export namespace Prisma {
 
   export type OrderActivityCreateManyOrderInputEnvelope = {
     data: OrderActivityCreateManyOrderInput | OrderActivityCreateManyOrderInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type OrderNoteCreateWithoutOrderInput = {
-    id?: string
-    text: string
-    createdBy?: string | null
-    createdAt?: Date | string
-  }
-
-  export type OrderNoteUncheckedCreateWithoutOrderInput = {
-    id?: string
-    text: string
-    createdBy?: string | null
-    createdAt?: Date | string
-  }
-
-  export type OrderNoteCreateOrConnectWithoutOrderInput = {
-    where: OrderNoteWhereUniqueInput
-    create: XOR<OrderNoteCreateWithoutOrderInput, OrderNoteUncheckedCreateWithoutOrderInput>
-  }
-
-  export type OrderNoteCreateManyOrderInputEnvelope = {
-    data: OrderNoteCreateManyOrderInput | OrderNoteCreateManyOrderInput[]
     skipDuplicates?: boolean
   }
 
@@ -78636,7 +75200,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -78681,7 +75244,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -78792,7 +75354,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -78842,7 +75403,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -78901,36 +75461,10 @@ export namespace Prisma {
     orderId?: UuidFilter<"OrderActivity"> | string
     activityType?: StringFilter<"OrderActivity"> | string
     description?: StringFilter<"OrderActivity"> | string
+    orderNote?: StringNullableFilter<"OrderActivity"> | string | null
     performedBy?: UuidNullableFilter<"OrderActivity"> | string | null
     performedAt?: DateTimeFilter<"OrderActivity"> | Date | string
     metadata?: JsonNullableFilter<"OrderActivity">
-  }
-
-  export type OrderNoteUpsertWithWhereUniqueWithoutOrderInput = {
-    where: OrderNoteWhereUniqueInput
-    update: XOR<OrderNoteUpdateWithoutOrderInput, OrderNoteUncheckedUpdateWithoutOrderInput>
-    create: XOR<OrderNoteCreateWithoutOrderInput, OrderNoteUncheckedCreateWithoutOrderInput>
-  }
-
-  export type OrderNoteUpdateWithWhereUniqueWithoutOrderInput = {
-    where: OrderNoteWhereUniqueInput
-    data: XOR<OrderNoteUpdateWithoutOrderInput, OrderNoteUncheckedUpdateWithoutOrderInput>
-  }
-
-  export type OrderNoteUpdateManyWithWhereWithoutOrderInput = {
-    where: OrderNoteScalarWhereInput
-    data: XOR<OrderNoteUpdateManyMutationInput, OrderNoteUncheckedUpdateManyWithoutOrderInput>
-  }
-
-  export type OrderNoteScalarWhereInput = {
-    AND?: OrderNoteScalarWhereInput | OrderNoteScalarWhereInput[]
-    OR?: OrderNoteScalarWhereInput[]
-    NOT?: OrderNoteScalarWhereInput | OrderNoteScalarWhereInput[]
-    id?: UuidFilter<"OrderNote"> | string
-    orderId?: UuidFilter<"OrderNote"> | string
-    text?: StringFilter<"OrderNote"> | string
-    createdBy?: UuidNullableFilter<"OrderNote"> | string | null
-    createdAt?: DateTimeFilter<"OrderNote"> | Date | string
   }
 
   export type ProductIssueUpsertWithWhereUniqueWithoutSalesOrderInput = {
@@ -78970,7 +75504,6 @@ export namespace Prisma {
     customer: CustomerCreateNestedOneWithoutOrdersInput
     owner: UserCreateNestedOneWithoutOrdersInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -78995,7 +75528,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -79089,7 +75621,6 @@ export namespace Prisma {
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -79114,7 +75645,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -79198,7 +75728,6 @@ export namespace Prisma {
     customer: CustomerCreateNestedOneWithoutOrdersInput
     owner: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -79223,7 +75752,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
     productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
   }
 
@@ -79264,7 +75792,6 @@ export namespace Prisma {
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -79289,536 +75816,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
-  }
-
-  export type OrderCreateWithoutNotesInput = {
-    id?: string
-    orderNumber: string
-    orderName?: string | null
-    branchId?: string | null
-    territoryId?: string | null
-    status?: string
-    totalAmount?: number
-    currency?: string
-    statusChangedAt?: Date | string | null
-    statusChangedBy?: string | null
-    statusChangeReason?: string | null
-    isDeleted?: boolean
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutOrdersInput
-    customer: CustomerCreateNestedOneWithoutOrdersInput
-    owner: UserCreateNestedOneWithoutOrdersInput
-    items?: OrderItemCreateNestedManyWithoutOrderInput
-    activities?: OrderActivityCreateNestedManyWithoutOrderInput
-    productIssues?: ProductIssueCreateNestedManyWithoutSalesOrderInput
-  }
-
-  export type OrderUncheckedCreateWithoutNotesInput = {
-    id?: string
-    organizationId: string
-    orderNumber: string
-    orderName?: string | null
-    customerId: string
-    ownerId: string
-    branchId?: string | null
-    territoryId?: string | null
-    status?: string
-    totalAmount?: number
-    currency?: string
-    statusChangedAt?: Date | string | null
-    statusChangedBy?: string | null
-    statusChangeReason?: string | null
-    isDeleted?: boolean
-    deletedAt?: Date | string | null
-    deletedBy?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
-    activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
-    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutSalesOrderInput
-  }
-
-  export type OrderCreateOrConnectWithoutNotesInput = {
-    where: OrderWhereUniqueInput
-    create: XOR<OrderCreateWithoutNotesInput, OrderUncheckedCreateWithoutNotesInput>
-  }
-
-  export type OrderUpsertWithoutNotesInput = {
-    update: XOR<OrderUpdateWithoutNotesInput, OrderUncheckedUpdateWithoutNotesInput>
-    create: XOR<OrderCreateWithoutNotesInput, OrderUncheckedCreateWithoutNotesInput>
-    where?: OrderWhereInput
-  }
-
-  export type OrderUpdateToOneWithWhereWithoutNotesInput = {
-    where?: OrderWhereInput
-    data: XOR<OrderUpdateWithoutNotesInput, OrderUncheckedUpdateWithoutNotesInput>
-  }
-
-  export type OrderUpdateWithoutNotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderNumber?: StringFieldUpdateOperationsInput | string
-    orderName?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableStringFieldUpdateOperationsInput | string | null
-    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    statusChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    statusChangedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    statusChangeReason?: NullableStringFieldUpdateOperationsInput | string | null
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutOrdersNestedInput
-    customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
-    owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    items?: OrderItemUpdateManyWithoutOrderNestedInput
-    activities?: OrderActivityUpdateManyWithoutOrderNestedInput
-    productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
-  }
-
-  export type OrderUncheckedUpdateWithoutNotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    orderNumber?: StringFieldUpdateOperationsInput | string
-    orderName?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: StringFieldUpdateOperationsInput | string
-    ownerId?: StringFieldUpdateOperationsInput | string
-    branchId?: NullableStringFieldUpdateOperationsInput | string | null
-    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
-    currency?: StringFieldUpdateOperationsInput | string
-    statusChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    statusChangedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    statusChangeReason?: NullableStringFieldUpdateOperationsInput | string | null
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
-    activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
-    productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
-  }
-
-  export type OrganizationCreateWithoutAttendancesInput = {
-    id?: string
-    name: string
-    slug: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    email?: string | null
-    phone?: string | null
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    country?: string | null
-    postalCode?: string | null
-    gstNumber?: string | null
-    panNumber?: string | null
-    branches?: BranchCreateNestedManyWithoutOrganizationInput
-    territories?: TerritoryCreateNestedManyWithoutOrganizationInput
-    teams?: TeamCreateNestedManyWithoutOrganizationInput
-    roles?: RoleCreateNestedManyWithoutOrganizationInput
-    users?: UserCreateNestedManyWithoutOrganizationInput
-    sessions?: SessionCreateNestedManyWithoutOrganizationInput
-    auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    visits?: VisitCreateNestedManyWithoutOrganizationInput
-    expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
-    dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
-    targets?: TargetCreateNestedManyWithoutOrganizationInput
-    notifications?: NotificationCreateNestedManyWithoutOrganizationInput
-    notificationTemplates?: NotificationTemplateCreateNestedManyWithoutOrganizationInput
-    tasks?: TaskCreateNestedManyWithoutOrganizationInput
-    beatPlans?: BeatPlanCreateNestedManyWithoutOrganizationInput
-    calendarEvents?: CalendarEventCreateNestedManyWithoutOrganizationInput
-    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutOrganizationInput
-    businessRules?: BusinessRuleConfigCreateNestedManyWithoutOrganizationInput
-    customers?: CustomerCreateNestedManyWithoutOrganizationInput
-    products?: ProductCreateNestedManyWithoutOrganizationInput
-    orders?: OrderCreateNestedManyWithoutOrganizationInput
-    departments?: DepartmentCreateNestedManyWithoutOrganizationInput
-    warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
-    stocks?: StockCreateNestedManyWithoutOrganizationInput
-    stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
-    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
-    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
-  }
-
-  export type OrganizationUncheckedCreateWithoutAttendancesInput = {
-    id?: string
-    name: string
-    slug: string
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    email?: string | null
-    phone?: string | null
-    address?: string | null
-    city?: string | null
-    state?: string | null
-    country?: string | null
-    postalCode?: string | null
-    gstNumber?: string | null
-    panNumber?: string | null
-    branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
-    territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
-    teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
-    roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
-    users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
-    expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
-    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
-    targets?: TargetUncheckedCreateNestedManyWithoutOrganizationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutOrganizationInput
-    notificationTemplates?: NotificationTemplateUncheckedCreateNestedManyWithoutOrganizationInput
-    tasks?: TaskUncheckedCreateNestedManyWithoutOrganizationInput
-    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutOrganizationInput
-    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
-    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
-    businessRules?: BusinessRuleConfigUncheckedCreateNestedManyWithoutOrganizationInput
-    customers?: CustomerUncheckedCreateNestedManyWithoutOrganizationInput
-    products?: ProductUncheckedCreateNestedManyWithoutOrganizationInput
-    orders?: OrderUncheckedCreateNestedManyWithoutOrganizationInput
-    departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
-    warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
-    stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
-    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
-    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
-    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
-  }
-
-  export type OrganizationCreateOrConnectWithoutAttendancesInput = {
-    where: OrganizationWhereUniqueInput
-    create: XOR<OrganizationCreateWithoutAttendancesInput, OrganizationUncheckedCreateWithoutAttendancesInput>
-  }
-
-  export type UserCreateWithoutAttendancesInput = {
-    id?: string
-    email: string
-    passwordHash: string
-    firstName: string
-    lastName: string
-    phoneNumber?: string | null
-    isActive?: boolean
-    emailVerifiedAt?: Date | string | null
-    emailVerificationOtp?: string | null
-    emailVerificationExpiresAt?: Date | string | null
-    failedLoginAttempts?: number
-    lockoutExpiresAt?: Date | string | null
-    passwordResetOtp?: string | null
-    passwordResetExpiresAt?: Date | string | null
-    lastLoginAt?: Date | string | null
-    lastPasswordChangedAt?: Date | string | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutUsersInput
-    branch?: BranchCreateNestedOneWithoutUsersInput
-    department?: DepartmentCreateNestedOneWithoutUsersInput
-    team?: TeamCreateNestedOneWithoutUsersInput
-    territory?: TerritoryCreateNestedOneWithoutUsersInput
-    manager?: UserCreateNestedOneWithoutSubordinatesInput
-    subordinates?: UserCreateNestedManyWithoutManagerInput
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    sessions?: SessionCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    visits?: VisitCreateNestedManyWithoutUserInput
-    expenses?: ExpenseCreateNestedManyWithoutUserInput
-    dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
-    targets?: TargetCreateNestedManyWithoutUserInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    expensesApproved?: ExpenseCreateNestedManyWithoutApproverInput
-    tasksAssigned?: TaskCreateNestedManyWithoutAssignedByInput
-    tasksReceived?: TaskCreateNestedManyWithoutAssignedToInput
-    beatPlans?: BeatPlanCreateNestedManyWithoutUserInput
-    calendarEvents?: CalendarEventCreateNestedManyWithoutUserInput
-    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutUserInput
-    orders?: OrderCreateNestedManyWithoutOwnerInput
-    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
-    crmImports?: CRMImportCreateNestedManyWithoutUploaderInput
-    managedWarehouse?: WarehouseCreateNestedOneWithoutWarehouseManagerInput
-    productIssuesWarehouseManaged?: ProductIssueCreateNestedManyWithoutWarehouseManagerInput
-    productIssuesReceived?: ProductIssueCreateNestedManyWithoutSalesExecutiveInput
-  }
-
-  export type UserUncheckedCreateWithoutAttendancesInput = {
-    id?: string
-    organizationId: string
-    branchId?: string | null
-    departmentId?: string | null
-    teamId?: string | null
-    territoryId?: string | null
-    managerId?: string | null
-    email: string
-    passwordHash: string
-    firstName: string
-    lastName: string
-    phoneNumber?: string | null
-    isActive?: boolean
-    emailVerifiedAt?: Date | string | null
-    emailVerificationOtp?: string | null
-    emailVerificationExpiresAt?: Date | string | null
-    failedLoginAttempts?: number
-    lockoutExpiresAt?: Date | string | null
-    passwordResetOtp?: string | null
-    passwordResetExpiresAt?: Date | string | null
-    lastLoginAt?: Date | string | null
-    lastPasswordChangedAt?: Date | string | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    subordinates?: UserUncheckedCreateNestedManyWithoutManagerInput
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    visits?: VisitUncheckedCreateNestedManyWithoutUserInput
-    expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
-    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
-    targets?: TargetUncheckedCreateNestedManyWithoutUserInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    expensesApproved?: ExpenseUncheckedCreateNestedManyWithoutApproverInput
-    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssignedByInput
-    tasksReceived?: TaskUncheckedCreateNestedManyWithoutAssignedToInput
-    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutUserInput
-    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutUserInput
-    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-    orders?: OrderUncheckedCreateNestedManyWithoutOwnerInput
-    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
-    crmImports?: CRMImportUncheckedCreateNestedManyWithoutUploaderInput
-    managedWarehouse?: WarehouseUncheckedCreateNestedOneWithoutWarehouseManagerInput
-    productIssuesWarehouseManaged?: ProductIssueUncheckedCreateNestedManyWithoutWarehouseManagerInput
-    productIssuesReceived?: ProductIssueUncheckedCreateNestedManyWithoutSalesExecutiveInput
-  }
-
-  export type UserCreateOrConnectWithoutAttendancesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
-  }
-
-  export type OrganizationUpsertWithoutAttendancesInput = {
-    update: XOR<OrganizationUpdateWithoutAttendancesInput, OrganizationUncheckedUpdateWithoutAttendancesInput>
-    create: XOR<OrganizationCreateWithoutAttendancesInput, OrganizationUncheckedCreateWithoutAttendancesInput>
-    where?: OrganizationWhereInput
-  }
-
-  export type OrganizationUpdateToOneWithWhereWithoutAttendancesInput = {
-    where?: OrganizationWhereInput
-    data: XOR<OrganizationUpdateWithoutAttendancesInput, OrganizationUncheckedUpdateWithoutAttendancesInput>
-  }
-
-  export type OrganizationUpdateWithoutAttendancesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    branches?: BranchUpdateManyWithoutOrganizationNestedInput
-    territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
-    teams?: TeamUpdateManyWithoutOrganizationNestedInput
-    roles?: RoleUpdateManyWithoutOrganizationNestedInput
-    users?: UserUpdateManyWithoutOrganizationNestedInput
-    sessions?: SessionUpdateManyWithoutOrganizationNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    visits?: VisitUpdateManyWithoutOrganizationNestedInput
-    expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
-    dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
-    targets?: TargetUpdateManyWithoutOrganizationNestedInput
-    notifications?: NotificationUpdateManyWithoutOrganizationNestedInput
-    notificationTemplates?: NotificationTemplateUpdateManyWithoutOrganizationNestedInput
-    tasks?: TaskUpdateManyWithoutOrganizationNestedInput
-    beatPlans?: BeatPlanUpdateManyWithoutOrganizationNestedInput
-    calendarEvents?: CalendarEventUpdateManyWithoutOrganizationNestedInput
-    notificationPrefs?: NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
-    businessRules?: BusinessRuleConfigUpdateManyWithoutOrganizationNestedInput
-    customers?: CustomerUpdateManyWithoutOrganizationNestedInput
-    products?: ProductUpdateManyWithoutOrganizationNestedInput
-    orders?: OrderUpdateManyWithoutOrganizationNestedInput
-    departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
-    warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
-    stocks?: StockUpdateManyWithoutOrganizationNestedInput
-    stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
-    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
-    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
-  }
-
-  export type OrganizationUncheckedUpdateWithoutAttendancesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
-    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
-    territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
-    teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
-    roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
-    users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
-    expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
-    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
-    targets?: TargetUncheckedUpdateManyWithoutOrganizationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
-    notificationTemplates?: NotificationTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
-    tasks?: TaskUncheckedUpdateManyWithoutOrganizationNestedInput
-    beatPlans?: BeatPlanUncheckedUpdateManyWithoutOrganizationNestedInput
-    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
-    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
-    businessRules?: BusinessRuleConfigUncheckedUpdateManyWithoutOrganizationNestedInput
-    customers?: CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
-    products?: ProductUncheckedUpdateManyWithoutOrganizationNestedInput
-    orders?: OrderUncheckedUpdateManyWithoutOrganizationNestedInput
-    departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
-    warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
-    stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
-    stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
-    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
-    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
-  }
-
-  export type UserUpsertWithoutAttendancesInput = {
-    update: XOR<UserUpdateWithoutAttendancesInput, UserUncheckedUpdateWithoutAttendancesInput>
-    create: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAttendancesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAttendancesInput, UserUncheckedUpdateWithoutAttendancesInput>
-  }
-
-  export type UserUpdateWithoutAttendancesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutUsersNestedInput
-    branch?: BranchUpdateOneWithoutUsersNestedInput
-    department?: DepartmentUpdateOneWithoutUsersNestedInput
-    team?: TeamUpdateOneWithoutUsersNestedInput
-    territory?: TerritoryUpdateOneWithoutUsersNestedInput
-    manager?: UserUpdateOneWithoutSubordinatesNestedInput
-    subordinates?: UserUpdateManyWithoutManagerNestedInput
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    sessions?: SessionUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    visits?: VisitUpdateManyWithoutUserNestedInput
-    expenses?: ExpenseUpdateManyWithoutUserNestedInput
-    dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
-    targets?: TargetUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    expensesApproved?: ExpenseUpdateManyWithoutApproverNestedInput
-    tasksAssigned?: TaskUpdateManyWithoutAssignedByNestedInput
-    tasksReceived?: TaskUpdateManyWithoutAssignedToNestedInput
-    beatPlans?: BeatPlanUpdateManyWithoutUserNestedInput
-    calendarEvents?: CalendarEventUpdateManyWithoutUserNestedInput
-    notificationPrefs?: NotificationPreferenceUpdateManyWithoutUserNestedInput
-    orders?: OrderUpdateManyWithoutOwnerNestedInput
-    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
-    crmImports?: CRMImportUpdateManyWithoutUploaderNestedInput
-    managedWarehouse?: WarehouseUpdateOneWithoutWarehouseManagerNestedInput
-    productIssuesWarehouseManaged?: ProductIssueUpdateManyWithoutWarehouseManagerNestedInput
-    productIssuesReceived?: ProductIssueUpdateManyWithoutSalesExecutiveNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutAttendancesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    branchId?: NullableStringFieldUpdateOperationsInput | string | null
-    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    teamId?: NullableStringFieldUpdateOperationsInput | string | null
-    territoryId?: NullableStringFieldUpdateOperationsInput | string | null
-    managerId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    emailVerificationOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    emailVerificationExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockoutExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetOtp?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordResetExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    lastPasswordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    subordinates?: UserUncheckedUpdateManyWithoutManagerNestedInput
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
-    expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
-    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
-    targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    expensesApproved?: ExpenseUncheckedUpdateManyWithoutApproverNestedInput
-    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssignedByNestedInput
-    tasksReceived?: TaskUncheckedUpdateManyWithoutAssignedToNestedInput
-    beatPlans?: BeatPlanUncheckedUpdateManyWithoutUserNestedInput
-    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutUserNestedInput
-    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-    orders?: OrderUncheckedUpdateManyWithoutOwnerNestedInput
-    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
-    crmImports?: CRMImportUncheckedUpdateManyWithoutUploaderNestedInput
-    managedWarehouse?: WarehouseUncheckedUpdateOneWithoutWarehouseManagerNestedInput
-    productIssuesWarehouseManaged?: ProductIssueUncheckedUpdateManyWithoutWarehouseManagerNestedInput
-    productIssuesReceived?: ProductIssueUncheckedUpdateManyWithoutSalesExecutiveNestedInput
   }
 
   export type OrganizationCreateWithoutVisitsInput = {
@@ -79844,7 +75842,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
     targets?: TargetCreateNestedManyWithoutOrganizationInput
@@ -79889,7 +75886,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
     targets?: TargetUncheckedCreateNestedManyWithoutOrganizationInput
@@ -79947,7 +75943,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
     targets?: TargetCreateNestedManyWithoutUserInput
@@ -79997,7 +75992,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
     targets?: TargetUncheckedCreateNestedManyWithoutUserInput
@@ -80096,7 +76090,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
     targets?: TargetUpdateManyWithoutOrganizationNestedInput
@@ -80141,7 +76134,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
     targets?: TargetUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -80205,7 +76197,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
     targets?: TargetUpdateManyWithoutUserNestedInput
@@ -80255,7 +76246,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
     targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
@@ -80344,7 +76334,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -80389,7 +76378,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -80447,7 +76435,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -80497,7 +76484,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -80586,7 +76572,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -80631,7 +76616,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -80695,7 +76679,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -80745,7 +76728,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -80824,7 +76806,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -80869,7 +76850,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -80927,7 +76907,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -80977,7 +76956,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -81035,7 +77013,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -81080,7 +77057,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -81144,7 +77120,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -81194,7 +77169,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -81236,7 +77210,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -81281,7 +77254,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -81342,7 +77314,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -81387,7 +77358,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -81432,7 +77402,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -81477,7 +77446,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -81535,7 +77503,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -81585,7 +77552,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -81640,7 +77606,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -81690,7 +77655,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -81748,7 +77712,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -81793,7 +77756,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -81857,7 +77819,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -81907,7 +77868,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -81968,7 +77928,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -82018,7 +77977,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -82060,7 +78018,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -82105,7 +78062,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -82163,7 +78119,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -82213,7 +78168,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -82271,7 +78225,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -82316,7 +78269,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -82380,7 +78332,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -82430,7 +78381,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -82472,7 +78422,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -82517,7 +78466,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -82575,7 +78523,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -82625,7 +78572,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -82683,7 +78629,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -82728,7 +78673,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -82792,7 +78736,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -82842,7 +78785,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -82884,7 +78826,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -82929,7 +78870,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -82987,7 +78927,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -83037,7 +78976,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -83095,7 +79033,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -83140,7 +79077,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -83204,7 +79140,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -83254,7 +79189,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -83296,7 +79230,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -83341,7 +79274,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -83402,7 +79334,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -83447,7 +79378,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -83492,7 +79422,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
     targets?: TargetCreateNestedManyWithoutOrganizationInput
@@ -83537,7 +79466,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
     targets?: TargetUncheckedCreateNestedManyWithoutOrganizationInput
@@ -83595,7 +79523,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
     targets?: TargetCreateNestedManyWithoutUserInput
@@ -83645,7 +79572,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
     targets?: TargetUncheckedCreateNestedManyWithoutUserInput
@@ -83700,7 +79626,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -83750,7 +79675,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -83808,7 +79732,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
     targets?: TargetUpdateManyWithoutOrganizationNestedInput
@@ -83853,7 +79776,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
     targets?: TargetUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -83917,7 +79839,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
     targets?: TargetUpdateManyWithoutUserNestedInput
@@ -83967,7 +79888,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
     targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
@@ -84028,7 +79948,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -84078,7 +79997,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -84120,7 +80038,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     targets?: TargetCreateNestedManyWithoutOrganizationInput
@@ -84165,7 +80082,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     targets?: TargetUncheckedCreateNestedManyWithoutOrganizationInput
@@ -84223,7 +80139,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     targets?: TargetCreateNestedManyWithoutUserInput
@@ -84273,7 +80188,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     targets?: TargetUncheckedCreateNestedManyWithoutUserInput
@@ -84331,7 +80245,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     targets?: TargetUpdateManyWithoutOrganizationNestedInput
@@ -84376,7 +80289,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     targets?: TargetUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -84440,7 +80352,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     targets?: TargetUpdateManyWithoutUserNestedInput
@@ -84490,7 +80401,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     targets?: TargetUncheckedUpdateManyWithoutUserNestedInput
@@ -84532,7 +80442,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -84577,7 +80486,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -84635,7 +80543,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -84685,7 +80592,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -84896,7 +80802,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -84941,7 +80846,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -85005,7 +80909,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -85055,7 +80958,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -85161,7 +81063,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -85206,7 +81107,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -85359,7 +81259,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -85404,7 +81303,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -85553,7 +81451,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -85598,7 +81495,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -85748,7 +81644,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -85798,7 +81693,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -85856,7 +81750,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -85901,7 +81794,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -86069,7 +81961,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -86119,7 +82010,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -86161,7 +82051,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -86206,7 +82095,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -86356,7 +82244,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -86406,7 +82293,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -86461,7 +82347,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -86511,7 +82396,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -86557,7 +82441,6 @@ export namespace Prisma {
     owner: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
     activities?: OrderActivityCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutProductIssuesInput = {
@@ -86582,7 +82465,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
     activities?: OrderActivityUncheckedCreateNestedManyWithoutOrderInput
-    notes?: OrderNoteUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutProductIssuesInput = {
@@ -86624,7 +82506,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -86669,7 +82550,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -86837,7 +82717,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -86887,7 +82766,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -86948,7 +82826,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -86998,7 +82875,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -87050,7 +82926,6 @@ export namespace Prisma {
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutProductIssuesInput = {
@@ -87075,7 +82950,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrganizationCreateWithoutCrmImportsInput = {
@@ -87101,7 +82975,6 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutOrganizationInput
     sessions?: SessionCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceCreateNestedManyWithoutOrganizationInput
     visits?: VisitCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
@@ -87146,7 +83019,6 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
     sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutOrganizationInput
     visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
@@ -87204,7 +83076,6 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryCreateNestedManyWithoutUserInput
-    attendances?: AttendanceCreateNestedManyWithoutUserInput
     visits?: VisitCreateNestedManyWithoutUserInput
     expenses?: ExpenseCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportCreateNestedManyWithoutUserInput
@@ -87254,7 +83125,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     passwordHistories?: PasswordHistoryUncheckedCreateNestedManyWithoutUserInput
-    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     visits?: VisitUncheckedCreateNestedManyWithoutUserInput
     expenses?: ExpenseUncheckedCreateNestedManyWithoutUserInput
     dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutUserInput
@@ -87380,7 +83250,6 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
@@ -87425,7 +83294,6 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutOrganizationNestedInput
     visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -87489,7 +83357,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -87539,7 +83406,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -88138,20 +84004,6 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type AttendanceCreateManyOrganizationInput = {
-    id?: string
-    userId: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type VisitCreateManyOrganizationInput = {
     id?: string
     userId: string
@@ -88652,7 +84504,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -88702,7 +84553,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -88822,48 +84672,6 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AttendanceUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutAttendancesNestedInput
-  }
-
-  export type AttendanceUncheckedUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AttendanceUncheckedUpdateManyWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitUpdateWithoutOrganizationInput = {
@@ -89485,7 +85293,6 @@ export namespace Prisma {
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -89510,7 +85317,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -89906,7 +85712,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -89956,7 +85761,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -90379,7 +86183,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -90429,7 +86232,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -90694,7 +86496,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -90744,7 +86545,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -90950,7 +86750,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -91000,7 +86799,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -91263,20 +87061,6 @@ export namespace Prisma {
     id?: string
     passwordHash: string
     createdAt?: Date | string
-  }
-
-  export type AttendanceCreateManyUserInput = {
-    id?: string
-    organizationId: string
-    date: Date | string
-    checkInAt?: Date | string | null
-    checkOutAt?: Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.AttendanceStatus
-    durationMins?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type VisitCreateManyUserInput = {
@@ -91579,7 +87363,6 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUpdateManyWithoutUserNestedInput
     visits?: VisitUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUpdateManyWithoutUserNestedInput
@@ -91629,7 +87412,6 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     passwordHistories?: PasswordHistoryUncheckedUpdateManyWithoutUserNestedInput
-    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     visits?: VisitUncheckedUpdateManyWithoutUserNestedInput
     expenses?: ExpenseUncheckedUpdateManyWithoutUserNestedInput
     dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutUserNestedInput
@@ -91782,48 +87564,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AttendanceUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutAttendancesNestedInput
-  }
-
-  export type AttendanceUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AttendanceUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    checkInAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkOutAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    checkInLoc?: NullableJsonNullValueInput | InputJsonValue
-    checkOutLoc?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-    durationMins?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitUpdateWithoutUserInput = {
@@ -92432,7 +88172,6 @@ export namespace Prisma {
     customer?: CustomerUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -92457,7 +88196,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -92733,7 +88471,6 @@ export namespace Prisma {
     owner?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -92758,7 +88495,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     activities?: OrderActivityUncheckedUpdateManyWithoutOrderNestedInput
-    notes?: OrderNoteUncheckedUpdateManyWithoutOrderNestedInput
     productIssues?: ProductIssueUncheckedUpdateManyWithoutSalesOrderNestedInput
   }
 
@@ -93232,16 +88968,10 @@ export namespace Prisma {
     id?: string
     activityType: string
     description: string
+    orderNote?: string | null
     performedBy?: string | null
     performedAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type OrderNoteCreateManyOrderInput = {
-    id?: string
-    text: string
-    createdBy?: string | null
-    createdAt?: Date | string
   }
 
   export type ProductIssueCreateManySalesOrderInput = {
@@ -93292,6 +89022,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     activityType?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    orderNote?: NullableStringFieldUpdateOperationsInput | string | null
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -93301,6 +89032,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     activityType?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    orderNote?: NullableStringFieldUpdateOperationsInput | string | null
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
@@ -93310,30 +89042,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     activityType?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
+    orderNote?: NullableStringFieldUpdateOperationsInput | string | null
     performedBy?: NullableStringFieldUpdateOperationsInput | string | null
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type OrderNoteUpdateWithoutOrderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OrderNoteUncheckedUpdateWithoutOrderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OrderNoteUncheckedUpdateManyWithoutOrderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductIssueUpdateWithoutSalesOrderInput = {

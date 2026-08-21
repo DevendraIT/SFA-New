@@ -58,25 +58,25 @@ export class AuthRepository {
     });
 
 
-  if (!user) return null;
+    if (!user) return null;
 
-  return {
-    userId: user.id,
-    email: user.email,
-    organizationId: user.organizationId,
-    passwordHash: user.passwordHash,
-    failedLoginAttempts: user.failedLoginAttempts,
-    lockoutExpiresAt: user.lockoutExpiresAt,
-    emailVerifiedAt: user.emailVerifiedAt,
-    emailVerificationOtp: user.emailVerificationOtp,
-    emailVerificationExpiresAt: user.emailVerificationExpiresAt,
-    passwordResetOtp: user.passwordResetOtp,
-    passwordResetExpiresAt: user.passwordResetExpiresAt,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-    user,
-  };
-}
+    return {
+      userId: user.id,
+      email: user.email,
+      organizationId: user.organizationId,
+      passwordHash: user.passwordHash,
+      failedLoginAttempts: user.failedLoginAttempts,
+      lockoutExpiresAt: user.lockoutExpiresAt,
+      emailVerifiedAt: user.emailVerifiedAt,
+      emailVerificationOtp: user.emailVerificationOtp,
+      emailVerificationExpiresAt: user.emailVerificationExpiresAt,
+      passwordResetOtp: user.passwordResetOtp,
+      passwordResetExpiresAt: user.passwordResetExpiresAt,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      user,
+    };
+  }
 
   /**
    * Find user by ID with full role/permission graph

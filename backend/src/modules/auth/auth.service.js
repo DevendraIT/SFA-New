@@ -38,7 +38,7 @@ export class AuthService {
       : passwordInput;
 
     const authRecord = await this.authRepository.findAuthByEmail(email);
-     
+
 
     if (!authRecord || !authRecord.user) {
       throw AppError.unauthorized("Invalid email or password.");
@@ -86,7 +86,7 @@ export class AuthService {
       ) {
         updateData.lockoutExpiresAt = new Date(
           Date.now() +
-            AUTH_CONSTANTS.LOCKOUT.DURATION_MS
+          AUTH_CONSTANTS.LOCKOUT.DURATION_MS
         );
 
         updateData.failedLoginAttempts = 0;
@@ -152,14 +152,14 @@ export class AuthService {
       if (
         !authRecord.emailVerificationExpiresAt ||
         authRecord.emailVerificationExpiresAt <
-          new Date()
+        new Date()
       ) {
         otp = generateNumericOtp();
 
         const expiry = new Date(
           Date.now() +
-            AUTH_CONSTANTS.OTP.EXPIRY
-              .EMAIL_VERIFICATION_MS
+          AUTH_CONSTANTS.OTP.EXPIRY
+            .EMAIL_VERIFICATION_MS
         );
 
         await this.authRepository.updateUserAuth(
@@ -291,76 +291,76 @@ export class AuthService {
   /**
  * Refresh access token
  */
-async refresh(tokenValue) {
-  const session =
-    await this.authRepository.findSessionByRefreshToken(tokenValue);
+  async refresh(tokenValue) {
+    const session =
+      await this.authRepository.findSessionByRefreshToken(tokenValue);
 
-  if (!session) {
-    throw AppError.unauthorized("Invalid refresh token.");
+    if (!session) {
+      throw AppError.unauthorized("Invalid refresh token.");
+    }
+
+    if (session.expiresAt < new Date()) {
+      await this.authRepository.deleteSession(session.id);
+      throw AppError.unauthorized("Refresh token expired.");
+    }
+
+    const user = await this.authRepository.findUserById(session.userId);
+
+    if (!user) {
+      throw AppError.unauthorized("User not found.");
+    }
+
+    const accessPayload = {
+      userId: user.id,
+      organizationId: user.organizationId,
+      roleId: user.roles[0]?.roleId || null,
+      roleName: user.roles[0]?.role.name || null,
+      permissions: user.roles.flatMap((ur) =>
+        ur.role.permissions.map((rp) => rp.permission.slug)
+      ),
+    };
+
+    const accessToken = generateAccessToken(accessPayload);
+
+    const refreshToken = generateRefreshToken({
+      userId: user.id,
+    });
+
+    await this.authRepository.updateSession(session.id, {
+      refreshToken,
+    });
+
+    return {
+      user,
+      accessToken,
+      refreshToken,
+    };
   }
 
-  if (session.expiresAt < new Date()) {
+  /**
+   * Logout user
+   */
+  async logout(tokenValue, requestMeta = {}) {
+    const session =
+      await this.authRepository.findSessionByRefreshToken(tokenValue);
+
+    if (!session) {
+      return true;
+    }
+
     await this.authRepository.deleteSession(session.id);
-    throw AppError.unauthorized("Refresh token expired.");
-  }
 
-  const user = await this.authRepository.findUserById(session.userId);
+    await this.authRepository.createAuditLog({
+      organizationId: session.organizationId,
+      userId: session.userId,
+      action: AUTH_CONSTANTS.AUDIT.ACTIONS.LOGOUT,
+      moduleName: AUTH_CONSTANTS.AUDIT.MODULE,
+      ipAddress: requestMeta.ipAddress,
+      userAgent: requestMeta.userAgent,
+    });
 
-  if (!user) {
-    throw AppError.unauthorized("User not found.");
-  }
-
-  const accessPayload = {
-    userId: user.id,
-    organizationId: user.organizationId,
-    roleId: user.roles[0]?.roleId || null,
-    roleName: user.roles[0]?.role.name || null,
-    permissions: user.roles.flatMap((ur) =>
-      ur.role.permissions.map((rp) => rp.permission.slug)
-    ),
-  };
-
-  const accessToken = generateAccessToken(accessPayload);
-
-  const refreshToken = generateRefreshToken({
-    userId: user.id,
-  });
-
-  await this.authRepository.updateSession(session.id, {
-    refreshToken,
-  });
-
-  return {
-    user,
-    accessToken,
-    refreshToken,
-  };
-}
-
-/**
- * Logout user
- */
-async logout(tokenValue, requestMeta = {}) {
-  const session =
-    await this.authRepository.findSessionByRefreshToken(tokenValue);
-
-  if (!session) {
     return true;
   }
-
-  await this.authRepository.deleteSession(session.id);
-
-  await this.authRepository.createAuditLog({
-    organizationId: session.organizationId,
-    userId: session.userId,
-    action: AUTH_CONSTANTS.AUDIT.ACTIONS.LOGOUT,
-    moduleName: AUTH_CONSTANTS.AUDIT.MODULE,
-    ipAddress: requestMeta.ipAddress,
-    userAgent: requestMeta.userAgent,
-  });
-
-  return true;
-}
   /**
    * Logout User
    */
@@ -430,7 +430,7 @@ async logout(tokenValue, requestMeta = {}) {
    */
   async resendVerificationOtp(email) {
     const authRecord = await this.authRepository.findAuthByEmail(email);
-   
+
 
     if (!authRecord) {
       throw AppError.badRequest("Invalid request.");
@@ -452,9 +452,9 @@ async logout(tokenValue, requestMeta = {}) {
     });
 
     await EmailService.sendMail({
-  to: authRecord.email,
-  subject: "Verify Your Email",
-  html: `
+      to: authRecord.email,
+      subject: "Verify Your Email",
+      html: `
       <h2>Email Verification</h2>
 
       <p>Your verification OTP is:</p>
@@ -463,7 +463,7 @@ async logout(tokenValue, requestMeta = {}) {
 
       <p>This OTP expires in 10 minutes.</p>
   `,
-});
+    });
 
     await this.authRepository.createAuditLog({
       organizationId: authRecord.organizationId,
@@ -474,13 +474,13 @@ async logout(tokenValue, requestMeta = {}) {
 
     return true;
   }
-    /**
-   * Request forgot password OTP
-   */
+  /**
+ * Request forgot password OTP
+ */
   async forgotPassword(email) {
-  console.log("Email received:", email);
+    console.log("Email received:", email);
     const authRecord = await this.authRepository.findAuthByEmail(email);
-   
+
 
     // Do not reveal whether the email exists
     if (!authRecord) {
@@ -498,12 +498,12 @@ async logout(tokenValue, requestMeta = {}) {
     });
 
     console.log("OTP:", otp);
-console.log("Sending password reset email to:", authRecord.email);
+    console.log("Sending password reset email to:", authRecord.email);
 
     await EmailService.sendMail({
-  to: authRecord.email,
-  subject: "SFA Password Reset OTP",
-  html: `
+      to: authRecord.email,
+      subject: "SFA Password Reset OTP",
+      html: `
       <h2>Password Reset</h2>
 
       <p>Your OTP is:</p>
@@ -514,9 +514,9 @@ console.log("Sending password reset email to:", authRecord.email);
 
       <p>If you didn't request this, ignore this email.</p>
   `,
-});
+    });
 
-console.log("Password reset email function completed");
+    console.log("Password reset email function completed");
 
     await this.authRepository.createAuditLog({
       organizationId: authRecord.organizationId,
@@ -674,10 +674,10 @@ console.log("Password reset email function completed");
       expiresAt: session.expiresAt,
     }));
   }
-    /**
-   * Get user profile
-   * @param {string} userId
-   */
+  /**
+ * Get user profile
+ * @param {string} userId
+ */
   async getProfile(userId) {
     const user = await this.authRepository.findUserById(userId);
 

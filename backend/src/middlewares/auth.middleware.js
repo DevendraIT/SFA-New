@@ -17,17 +17,32 @@ export const authenticate = async (req, res, next) => {
     const token = authHeader.substring(7);
     const decoded = verifyAccessToken(token);
 
-    // Fetch user from database matching multi-role relational schema
+    // Fetch user from database matching multi-role relational schema with targeted field selection
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      include: {
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        isActive: true,
+        deletedAt: true,
+        organizationId: true,
+        branchId: true,
+        departmentId: true,
+        teamId: true,
         roles: {
-          include: {
+          select: {
             role: {
-              include: {
+              select: {
+                name: true,
                 permissions: {
-                  include: {
-                    permission: true,
+                  select: {
+                    permission: {
+                      select: {
+                        slug: true,
+                      },
+                    },
                   },
                 },
               },
@@ -58,12 +73,6 @@ export const authenticate = async (req, res, next) => {
       departmentId: user.departmentId,
       teamId: user.teamId,
     };
-
-    console.log("=================================");
-console.log("Logged User :", req.user.email);
-console.log("Roles :", req.user.roles);
-console.log("Permissions :", req.user.permissions);
-console.log("=================================");
 
     next();
   } catch (error) {
