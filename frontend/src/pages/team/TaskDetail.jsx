@@ -5,7 +5,7 @@ import {
   ArrowLeft, RefreshCw, Loader2, CheckCircle2, Clock, User, CalendarDays, FileText,
   MapPin, ShoppingCart, Building2, Package, Route, Target, Camera, FileSignature,
   DollarSign, Map, Info, BookOpen, Flag, Phone, Mail, Globe, Navigation, Settings,
-  Check, X as XIcon
+  Check, X as XIcon, KeyRound, ShieldCheck
 } from "lucide-react";
 import toast from "react-hot-toast";
 import fieldForceApi from "../../api/fieldForce.api";
@@ -286,7 +286,7 @@ export default function TaskDetail() {
           )}
 
           {/* Execution History & Audit Logs */}
-          <Section title="Execution Audit Log & GPS Timestamps" icon={Clock}>
+          <Section title="Execution Audit Log & Activity Timestamps" icon={Clock}>
             {Array.isArray(task.executionHistory) && task.executionHistory.length > 0 ? (
               <div className="space-y-3">
                 {task.executionHistory.map((hist, idx) => (
@@ -297,7 +297,11 @@ export default function TaskDetail() {
                         <span className="text-[10px] text-slate-400">{dayjs(hist.timestamp).format("MMM D, YYYY h:mm A")}</span>
                       </div>
                       {hist.location && (
-                        <p className="text-[11px] text-slate-500 mt-0.5">GPS: {hist.location.lat?.toFixed(5)}, {hist.location.lng?.toFixed(5)}</p>
+                        <div className="mt-1">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                            <ShieldCheck size={12} /> Geo-Verified Location
+                          </span>
+                        </div>
                       )}
                       {hist.notes && <p className="text-xs text-slate-600 mt-1 italic">{hist.notes}</p>}
                     </div>
@@ -369,15 +373,21 @@ export default function TaskDetail() {
                 { key: "payment", label: "Payment Collection", icon: DollarSign },
                 { key: "checkIn", label: "Geo Check-In", icon: Map },
                 { key: "checkOut", label: "Geo Check-Out", icon: Map },
-              ].map((req) => (
-                <div key={req.key} className={`flex items-center justify-between p-2.5 rounded-lg ${requirements[req.key] ? "bg-emerald-50" : "bg-slate-50"}`}>
-                  <div className="flex items-center gap-2">
-                    <req.icon size={14} className={requirements[req.key] ? "text-emerald-600" : "text-slate-400"} />
-                    <span className={`text-xs font-medium ${requirements[req.key] ? "text-emerald-700" : "text-slate-500"}`}>{req.label}</span>
+                { key: "otp", label: "Customer Delivery OTP", icon: KeyRound },
+              ].map((req) => {
+                const isMet = req.key === 'otp'
+                  ? (requirements.otp || requirements.requireOtp || metadata?.deliveryOtpVerified === true || task.status === 'CUSTOMER_OTP_VERIFIED')
+                  : !!requirements[req.key];
+                return (
+                  <div key={req.key} className={`flex items-center justify-between p-2.5 rounded-lg ${isMet ? "bg-emerald-50" : "bg-slate-50"}`}>
+                    <div className="flex items-center gap-2">
+                      <req.icon size={14} className={isMet ? "text-emerald-600" : "text-slate-400"} />
+                      <span className={`text-xs font-medium ${isMet ? "text-emerald-700" : "text-slate-500"}`}>{req.label}</span>
+                    </div>
+                    {isMet ? <Check size={14} className="text-emerald-600" /> : <XIcon size={14} className="text-slate-300" />}
                   </div>
-                  {requirements[req.key] ? <Check size={14} className="text-emerald-600" /> : <XIcon size={14} className="text-slate-300" />}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Section>
 

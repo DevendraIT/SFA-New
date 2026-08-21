@@ -7,6 +7,7 @@ import { formatImportSummary, formatImportRow } from '../dto/crm-integration.dto
 import { IMPORT_STATUS, ROW_STATUS } from '../constants/crm-integration.constants.js';
 import { CustomerService } from '../../customers/customers.service.js';
 import { CustomerRepository } from '../../customers/customers.repository.js';
+import cacheService from '../../../shared/cache/cache.service.js';
 
 export class CRMIntegrationService {
   constructor(repository) {
@@ -16,12 +17,44 @@ export class CRMIntegrationService {
   }
 
   /**
-   * Find existing Customer or Create new Customer from Excel Row
+   * Find existing Customer or Create/Update Customer from Excel Row
    */
   async getOrCreateCustomer(organizationId, row) {
     // 1. Try to find an existing customer match by crmId, phone, or email
     let customer = await findCustomerMatch(organizationId, row);
     if (customer) {
+      // If the Excel row contains an updated email, phone, name, or CRM ID, update the existing customer record!
+      const updates = {};
+      if (row.email && typeof row.email === 'string' && row.email.trim()) {
+        const newEmail = row.email.trim();
+        if (!customer.email || customer.email.toLowerCase() !== newEmail.toLowerCase()) {
+          updates.email = newEmail;
+        }
+      }
+      if (row.phoneNumber && typeof row.phoneNumber === 'string' && row.phoneNumber.trim()) {
+        const newPhone = row.phoneNumber.trim();
+        if (!customer.phone || customer.phone !== newPhone) {
+          updates.phone = newPhone;
+        }
+      }
+      if (row.customerName && typeof row.customerName === 'string' && row.customerName.trim()) {
+        const newName = row.customerName.trim();
+        if (!customer.name || customer.name !== newName) {
+          updates.name = newName;
+        }
+      }
+      if (row.crmCustomerId && !customer.crmId) {
+        updates.crmId = row.crmCustomerId;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        try {
+          customer = await this.customerService.update(customer.id, organizationId, updates);
+        } catch (err) {
+          customer = await this.customerRepo.update(customer.id, organizationId, updates);
+        }
+      }
+
       return customer;
     }
 
@@ -478,6 +511,12 @@ export class CRMIntegrationService {
         },
       });
     });
+
+    cacheService.invalidatePrefixes([
+      `${organizationId}:customers:`,
+      `${organizationId}:sales:`,
+      `${organizationId}:dashboard:`,
+    ]);
 
     return {
       importId,

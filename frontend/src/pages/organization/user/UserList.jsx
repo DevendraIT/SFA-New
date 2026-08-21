@@ -94,7 +94,7 @@ export default function UserList() {
     return users;
   }, [users, isSalesManager, user]);
 
-  const { dashboard } = useHeadOfSalesDashboard();
+  const { dashboard } = useHeadOfSalesDashboard({ enabled: isHeadOfSales });
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);

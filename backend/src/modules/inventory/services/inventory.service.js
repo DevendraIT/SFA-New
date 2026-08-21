@@ -2,6 +2,7 @@ import { AppError } from '../../../shared/response.js';
 import { ProductListDto, ProductDetailsDto, WarehouseDto, StockMovementDto } from '../dto/inventory.dto.js';
 import { InventoryEventPublisher } from '../events/inventory.events.js';
 import { STOCK_MOVEMENT_TYPE, PRODUCT_STATUS } from '../constants/inventory.constants.js';
+import cacheService from '../../../shared/cache/cache.service.js';
 
 export class InventoryService {
   constructor(inventoryRepository) {
@@ -24,46 +25,66 @@ export class InventoryService {
       !roles.some(r => ['super admin', 'company admin', 'inventory manager', 'organization super admin'].includes(r));
   }
 
+  _invalidateInventoryCache(orgId) {
+    if (!orgId) return;
+    cacheService.invalidatePrefixes([
+      `${orgId}:inventory:`,
+      `${orgId}:dashboard:`,
+      `${orgId}:sales:`,
+    ]);
+  }
+
   // ==========================================
   // PRODUCTS
   // ==========================================
 
   async getProductsList(queryParams, userContext) {
-    const filters = {
-      organizationId: userContext.organizationId,
-      isActive: queryParams.isActive !== undefined ? queryParams.isActive === 'true' : undefined,
-      category: queryParams.category,
-      brand: queryParams.brand,
-    };
+    const orgId = userContext.organizationId;
+    const cacheKey = cacheService.buildKey({
+      orgId,
+      module: 'inventory',
+      resource: 'products',
+      params: queryParams,
+    });
 
-    const pagination = {
-      page: parseInt(queryParams.page) || 1,
-      limit: parseInt(queryParams.limit) || 20,
-    };
+    return cacheService.getOrSet(cacheKey, async () => {
+      const filters = {
+        organizationId: userContext.organizationId,
+        isActive: queryParams.isActive !== undefined ? queryParams.isActive === 'true' : undefined,
+        category: queryParams.category,
+        brand: queryParams.brand,
+      };
 
-    const sorting = {
-      sortBy: queryParams.sortBy || 'createdAt',
-      sortOrder: queryParams.sortOrder || 'desc',
-    };
+      const pagination = {
+        page: parseInt(queryParams.page) || 1,
+        limit: parseInt(queryParams.limit) || 20,
+      };
 
-    const { products, total } = await this.inventoryRepository.findProducts(
-      filters,
-      pagination,
-      sorting,
-      queryParams.q
-    );
+      const sorting = {
+        sortBy: queryParams.sortBy || 'createdAt',
+        sortOrder: queryParams.sortOrder || 'desc',
+      };
 
-    return {
-      success: true,
-      data: {
-        products: products.map(p => new ProductListDto(p)),
-        pagination: {
-          ...pagination,
-          total,
-          totalPages: Math.ceil(total / pagination.limit),
+      const { products, total } = await this.inventoryRepository.findProducts(
+        filters,
+        pagination,
+        sorting,
+        queryParams.q
+      );
+
+      return {
+        success: true,
+        data: {
+          products: products.map(p => new ProductListDto(p)),
+          pagination: {
+            page: pagination.page,
+            limit: pagination.limit,
+            total,
+            totalPages: Math.ceil(total / pagination.limit),
+          },
         },
-      },
-    };
+      };
+    }, 180); // 3 minutes TTL
   }
 
   async getProductById(productId, userContext) {
@@ -88,6 +109,7 @@ export class InventoryService {
     const product = await this.inventoryRepository.createProduct(data);
 
     InventoryEventPublisher.emitProductCreated(product, userContext.userId, userContext.organizationId);
+    this._invalidateInventoryCache(userContext.organizationId);
 
     return {
       success: true,
@@ -105,6 +127,7 @@ export class InventoryService {
     const product = await this.inventoryRepository.updateProduct(productId, userContext.organizationId, updateData);
 
     InventoryEventPublisher.emitProductUpdated(product, updateData, userContext.userId, userContext.organizationId);
+    this._invalidateInventoryCache(userContext.organizationId);
 
     return {
       success: true,
@@ -117,6 +140,7 @@ export class InventoryService {
     const product = await this.inventoryRepository.findProductById(productId, userContext.organizationId);
     if (!product) throw AppError.notFound('Product not found');
     await this.inventoryRepository.deleteProduct(productId, userContext.organizationId);
+    this._invalidateInventoryCache(userContext.organizationId);
     return {
       success: true,
       message: 'Product deleted successfully',

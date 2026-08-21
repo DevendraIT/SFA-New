@@ -10,13 +10,27 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthenticated = !!user;
 
+  const getStoredItem = (key) => {
+    return sessionStorage.getItem(key) || localStorage.getItem(key);
+  };
+
+  const setStoredItem = (key, value) => {
+    sessionStorage.setItem(key, value);
+    localStorage.setItem(key, value);
+  };
+
+  const removeStoredItem = (key) => {
+    sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
+  };
+
   useEffect(() => {
     initializeAuth();
   }, []);
 
-const initializeAuth = async () => {
+  const initializeAuth = async () => {
     try {
-      const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+      const token = getStoredItem(STORAGE_KEYS.ACCESS_TOKEN);
 
       if (!token) {
         setLoading(false);
@@ -24,82 +38,75 @@ const initializeAuth = async () => {
       }
 
       // Restore the cached user (with roles) immediately so the UI doesn't
-      // lose the role context on refresh before the profile request completes.
-      const cachedUser = localStorage.getItem(STORAGE_KEYS.USER);
-      if (cachedUser) {
+      // lose context or redirect to login on page refresh before network request finishes.
+      const cachedUserRaw = getStoredItem(STORAGE_KEYS.USER);
+      let parsedCachedUser = null;
+      if (cachedUserRaw) {
         try {
-          setUser(JSON.parse(cachedUser));
+          parsedCachedUser = JSON.parse(cachedUserRaw);
+          setUser(parsedCachedUser);
         } catch (e) {
-          localStorage.removeItem(STORAGE_KEYS.USER);
+          removeStoredItem(STORAGE_KEYS.USER);
         }
       }
 
       const response = await authService.getProfile();
-
-      // AuthController.getMe uses handleSuccess(response.data.data = user object)
-      // response = { success, message, data: { id, email, firstName, ... } }
       const profileData = response.data || response;
 
-      // The getMe endpoint returns a slim DTO without roles. Merge the fresh
-      // profile data with the cached user (which contains roles) so that
-      // role-based navigation and routing keep working after a refresh.
       let mergedUser = { ...profileData };
-      if (profileData && profileData.id) {
-        if (cachedUser) {
-          try {
-            const cached = JSON.parse(cachedUser);
-            mergedUser = { ...cached, ...profileData };
-          } catch (e) {
-            /* ignore */
-          }
+      if (profileData && (profileData.id || profileData.email)) {
+        if (parsedCachedUser) {
+          mergedUser = {
+            ...parsedCachedUser,
+            ...profileData,
+            roles: profileData.roles?.length ? profileData.roles : parsedCachedUser.roles,
+          };
         }
         setUser(mergedUser);
-        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(mergedUser));
+        setStoredItem(STORAGE_KEYS.USER, JSON.stringify(mergedUser));
       }
     } catch (error) {
-      console.error(error);
+      console.error("Auth initialization error:", error);
 
-      localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-      localStorage.removeItem(STORAGE_KEYS.USER);
-
-      setUser(null);
+      // ONLY wipe session if server explicitly returned 401 Unauthorized
+      if (error?.response?.status === 401) {
+        removeStoredItem(STORAGE_KEYS.ACCESS_TOKEN);
+        removeStoredItem(STORAGE_KEYS.USER);
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const login = async (credentials) => {
-  const response = await authService.login(credentials);
+    const response = await authService.login(credentials);
 
-  // AuthController.login uses handleSuccess() which wraps data in ApiResponse
-  // response = { success, message, data: { user, tokens: { accessToken } } }
-  const loginData = response.data || response;
-  const user = loginData.user || response.user;
-  const accessToken = loginData.tokens?.accessToken || response.tokens?.accessToken;
+    const loginData = response.data || response;
+    const userObj = loginData.user || response.user;
+    const accessToken = loginData.tokens?.accessToken || response.tokens?.accessToken;
 
-  if (accessToken) {
-    localStorage.setItem(
-      STORAGE_KEYS.ACCESS_TOKEN,
-      accessToken
-    );
-  }
+    if (accessToken) {
+      setStoredItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+    }
 
-  if (user) {
-    setUser(user);
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
-  }
+    if (userObj) {
+      setUser(userObj);
+      setStoredItem(STORAGE_KEYS.USER, JSON.stringify(userObj));
+    }
 
-  return response;
-};
+    return response;
+  };
 
   const logout = async () => {
     try {
       await authService.logout();
-    } catch (e) {}
+    } catch (e) {
+      /* ignore */
+    }
 
-    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.USER);
-
+    removeStoredItem(STORAGE_KEYS.ACCESS_TOKEN);
+    removeStoredItem(STORAGE_KEYS.USER);
     setUser(null);
   };
 

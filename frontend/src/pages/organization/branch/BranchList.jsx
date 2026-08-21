@@ -65,7 +65,7 @@ export default function BranchList() {
     debounce: true,
   });
 
-  const { dashboard } = useHeadOfSalesDashboard();
+  const { dashboard } = useHeadOfSalesDashboard({ enabled: isHeadOfSales });
 
   const [showModal, setShowModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);

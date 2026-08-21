@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, RefreshCw, Loader2, CheckCircle2, Navigation, MapPin, Building2,
   ShoppingCart, Package, DollarSign, Camera, FileText, FileSignature, Check,
-  Compass, Clock, AlertCircle, ShieldCheck, Phone, Mail, ChevronRight, XCircle, Warehouse
+  Compass, Clock, AlertCircle, ShieldCheck, Phone, Mail, ChevronRight, XCircle, Warehouse,
+  KeyRound, Send
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -64,6 +65,11 @@ export default function TaskExecutionPage() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [visitNotes, setVisitNotes] = useState("");
   const [signatureData, setSignatureData] = useState("");
+
+  // Customer Delivery OTP Inputs
+  const [deliveryOtpInput, setDeliveryOtpInput] = useState("");
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
 
   // Get current GPS Location on mount
   useEffect(() => {
@@ -172,7 +178,9 @@ export default function TaskExecutionPage() {
   const requiresCheckOut = requirements.checkOut === true || requirements.requireCheckOut === true;
   const requiresPhoto = requirements.photo === true || requirements.requirePhoto === true;
   const requiresVisitNotes = requirements.visitNotes === true || requirements.requireVisitNotes === true;
-  const requiresPhotoOrNotes = requiresPhoto || requiresVisitNotes || (!requiresSignature && !requiresInvoice && !requiresPayment && !requiresCheckOut);
+  const requiresOtp = requirements.otp === true || requirements.requireOtp === true || metadata.requireOtp === true;
+  const isOtpVerified = metadata.deliveryOtpVerified === true || task?.status === 'CUSTOMER_OTP_VERIFIED';
+  const requiresPhotoOrNotes = requiresPhoto || requiresVisitNotes || (!requiresSignature && !requiresInvoice && !requiresPayment && !requiresCheckOut && !requiresOtp);
 
   const hasProductsToPickup = products.length > 0;
 
@@ -193,6 +201,9 @@ export default function TaskExecutionPage() {
     if (requiresSignature) {
       steps.push({ status: "SIGNATURE_CAPTURED", label: "Digital Signature", icon: FileSignature });
     }
+    if (requiresOtp) {
+      steps.push({ status: "CUSTOMER_OTP_VERIFIED", label: "Customer OTP", icon: KeyRound });
+    }
     if (requiresInvoice) {
       steps.push({ status: "INVOICE_GENERATED", label: "Generate Invoice", icon: FileText });
     }
@@ -204,7 +215,7 @@ export default function TaskExecutionPage() {
     }
     steps.push({ status: "COMPLETED", label: "Completed", icon: CheckCircle2 });
     return steps;
-  }, [hasProductsToPickup, requiresPhotoOrNotes, requiresSignature, requiresInvoice, requiresPayment, requiresCheckOut]);
+  }, [hasProductsToPickup, requiresPhotoOrNotes, requiresSignature, requiresOtp, requiresInvoice, requiresPayment, requiresCheckOut]);
 
   const handleStatusTransition = async (nextStatus, extraData = {}) => {
     try {
@@ -264,6 +275,36 @@ export default function TaskExecutionPage() {
       toast.error("Failed to save digital signature");
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleResendOtpAction = async () => {
+    try {
+      setSendingOtp(true);
+      const res = await fieldForceApi.sendDeliveryOtp(id);
+      toast.success(res.data?.message || "Delivery OTP sent to customer email!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to send Delivery OTP.");
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtpAction = async () => {
+    if (!deliveryOtpInput || deliveryOtpInput.trim().length !== 6) {
+      toast.error("Please enter the 6-digit Delivery OTP.");
+      return;
+    }
+    try {
+      setVerifyingOtp(true);
+      const res = await fieldForceApi.verifyDeliveryOtp(id, { otp: deliveryOtpInput.trim() });
+      toast.success("✓ Customer Delivery OTP verified successfully!");
+      setDeliveryOtpInput("");
+      await loadTaskData();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Invalid Delivery OTP. Please ask customer for correct code.");
+    } finally {
+      setVerifyingOtp(false);
     }
   };
 
@@ -581,6 +622,46 @@ export default function TaskExecutionPage() {
               Skip Signature & Continue
             </button>
           </div>
+        ) : requiresOtp && !isOtpVerified ? (
+          <div className="bg-orange-50/90 border border-orange-200/90 rounded-2xl p-6 space-y-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <KeyRound size={20} className="text-orange-600" />
+                <h4 className="font-bold text-orange-950 text-base">Customer Delivery OTP Verification</h4>
+              </div>
+              <span className="text-xs font-semibold px-2.5 py-1 bg-orange-100 text-orange-800 rounded-full">Required</span>
+            </div>
+            <p className="text-xs text-orange-800 leading-relaxed">
+              Please ask the customer for the 6-digit Delivery OTP sent to their registered email address (<strong>{customer.email || metadata.customerEmail || task.customerEmail || "customer email"}</strong>).
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
+              <input
+                type="text"
+                maxLength={6}
+                value={deliveryOtpInput}
+                onChange={(e) => setDeliveryOtpInput(e.target.value.replace(/\D/g, ''))}
+                placeholder="Enter 6-Digit OTP"
+                className="w-full sm:w-56 px-4 py-3 rounded-xl border border-orange-300 text-center font-mono font-bold text-lg tracking-widest text-orange-950 focus:ring-2 focus:ring-orange-500 bg-white shadow-inner"
+              />
+              <button
+                onClick={handleVerifyOtpAction}
+                disabled={verifyingOtp || deliveryOtpInput.length !== 6}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-md transition disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {verifyingOtp ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
+                Verify OTP & Complete Delivery
+              </button>
+              <button
+                onClick={handleResendOtpAction}
+                disabled={sendingOtp}
+                className="w-full sm:w-auto px-4 py-3 rounded-xl border border-orange-300 bg-white hover:bg-orange-100 text-orange-800 font-semibold text-xs transition disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                {sendingOtp ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                Resend OTP Email
+              </button>
+            </div>
+          </div>
         ) : (task.status === "CHECKED_IN" || task.status === "PHOTO_UPLOADED" || task.status === "SIGNATURE_CAPTURED" || task.status === "INVOICE_GENERATED") && requiresInvoice && !invoiceGeneratedAt ? (
           <div className="bg-purple-50 border border-purple-200 rounded-2xl p-6 space-y-5">
             <div className="flex items-center gap-2 border-b border-purple-200 pb-3">
@@ -809,7 +890,7 @@ export default function TaskExecutionPage() {
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <Clock size={20} className="text-indigo-600" />
-              <h3 className="text-base font-bold text-slate-900">Audit Trail & GPS Logs</h3>
+              <h3 className="text-base font-bold text-slate-900">Audit Trail & Activity Logs</h3>
             </div>
             {Array.isArray(task.executionHistory) && task.executionHistory.length > 0 ? (
               <div className="space-y-3">
@@ -821,7 +902,11 @@ export default function TaskExecutionPage() {
                         <span className="text-[10px] text-slate-400">{dayjs(hist.timestamp).format("MMM D, h:mm A")}</span>
                       </div>
                       {hist.location && (
-                        <p className="text-[11px] text-slate-500 mt-0.5">GPS: {hist.location.lat?.toFixed(4)}, {hist.location.lng?.toFixed(4)}</p>
+                        <div className="mt-1">
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                            <ShieldCheck size={12} /> Geo-Verified Location
+                          </span>
+                        </div>
                       )}
                       {hist.notes && <p className="text-xs text-slate-600 mt-1 italic">{hist.notes}</p>}
                     </div>
@@ -848,7 +933,8 @@ export default function TaskExecutionPage() {
                 { key: "payment", label: "Payment Collection", value: requirements.payment || !!task.paymentCollectedAt },
                 { key: "signature", label: "Digital Signature", value: requirements.signature || !!task.signatureCapturedAt },
                 { key: "visitNotes", label: "Visit Notes", value: requirements.visitNotes || !!task.visitNotesCompletedAt },
-              ].map((req) => (
+                { key: "otp", label: "Customer Delivery OTP", value: isOtpVerified || metadata?.deliveryOtpVerified === true || task.status === 'CUSTOMER_OTP_VERIFIED' },
+              ].filter(req => req.key !== 'otp' || requiresOtp).map((req) => (
                 <div key={req.key} className={`flex items-center justify-between p-3 rounded-xl ${req.value ? "bg-emerald-50 text-emerald-800" : "bg-slate-50 text-slate-600"}`}>
                   <span className="text-xs font-semibold">{req.label}</span>
                   {req.value ? <Check size={16} className="text-emerald-600" /> : <Clock size={14} className="text-slate-400" />}

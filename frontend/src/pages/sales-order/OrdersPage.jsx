@@ -88,7 +88,12 @@ export default function OrdersPage() {
     return <ErrorState message="Failed to load Sales Orders" onRetry={loadOrders} />;
   }
 
-  const filteredOrders = filter === "ALL" ? orders : orders.filter((o) => o.status === filter);
+  const filteredOrders = filter === "ALL"
+    ? orders
+    : filter === "COMPLETED"
+      ? orders.filter((o) => String(o.status).toUpperCase().includes("DELIVERED") || String(o.status).toUpperCase().includes("COMPLETED"))
+      : orders.filter((o) => o.status === filter || (filter === "DRAFT" && (o.status === "DRAFT" || o.status === "PENDING")));
+
   const totalRevenue = orders.reduce((sum, o) => {
     const val = typeof o.totalAmount === "object" ? o.totalAmount?.amount : o.totalAmount;
     return sum + (Number(val) || 0);
@@ -133,12 +138,33 @@ export default function OrdersPage() {
           <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Total Orders</p>
           <p className="text-2xl font-extrabold text-emerald-950 mt-1">{orders.length}</p>
         </div>
-        <div className="rounded-2xl bg-purple-50/80 border border-purple-200 p-5 shadow-sm">
+        <div className="rounded-2xl bg-purple-50/80 border border-purple-200 p-5 shadow-sm cursor-pointer" onClick={() => setFilter("COMPLETED")}>
           <p className="text-xs font-semibold text-purple-700 uppercase tracking-wider">Completed Orders</p>
           <p className="text-2xl font-extrabold text-purple-950 mt-1">
             {orders.filter((o) => String(o.status).toUpperCase().includes("DELIVERED") || String(o.status).toUpperCase().includes("COMPLETED")).length}
           </p>
         </div>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
+        {[
+          { key: "ALL", label: `All Orders (${orders.length})` },
+          { key: "DRAFT", label: `Pending / Draft (${orders.filter(o => o.status === 'DRAFT' || o.status === 'PENDING').length})` },
+          { key: "COMPLETED", label: `Completed Orders (${orders.filter(o => String(o.status).toUpperCase().includes('COMPLETED') || String(o.status).toUpperCase().includes('DELIVERED')).length})` },
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setFilter(tab.key)}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filter === tab.key
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* Orders Table */}

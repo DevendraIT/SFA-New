@@ -117,6 +117,12 @@ const fieldForceApi = {
   completeTask(id, data = {}) {
     return api.patch(`${BASE_URL}/tasks/${id}/complete`, data);
   },
+  sendDeliveryOtp(id) {
+    return api.post(`${BASE_URL}/tasks/${id}/send-delivery-otp`);
+  },
+  verifyDeliveryOtp(id, data) {
+    return api.post(`${BASE_URL}/tasks/${id}/verify-delivery-otp`, data);
+  },
 
   // ---- Beat Plans ----
   createBeatPlan(data) {

@@ -1,14 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
-import toast from "react-hot-toast";
 import branchService from "../services/branch.service";
 
 export default function useBranches(options = {}) {
   const debounceEnabled = options.debounce ?? false;
-
-  const [branches, setBranches] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
 
   const [debouncedSearch] = useDebounce(
@@ -16,36 +12,22 @@ export default function useBranches(options = {}) {
     debounceEnabled ? 500 : 0
   );
 
-  const loadBranches = async () => {
-    try {
-      setLoading(true);
-
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["branches", debouncedSearch],
+    queryFn: async () => {
       const response = await branchService.getBranches({
         search: debouncedSearch,
       });
-
-      setBranches(
-        response?.data?.branches || []
-      );
-    } catch (err) {
-      console.error(err);
-      const message = err?.response?.data?.message || err?.message || "Failed to load branches";
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadBranches();
-  }, [debouncedSearch]);
+      return response?.data?.branches || response?.data || [];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   return {
-    branches,
-    loading,
+    branches: data || [],
+    loading: isLoading,
     search,
     setSearch,
-    reload: loadBranches,
+    reload: refetch,
   };
 }
-

@@ -76,6 +76,8 @@ router.get('/tasks/:id', controller.getTaskDetail);
 router.get('/tasks/:id/route', controller.getTaskRoute);
 router.patch('/tasks/:id/status', validate(updateTaskStatusSchema), controller.updateTaskStatus);
 router.patch('/tasks/:id/complete', controller.completeTaskDetail);
+router.post('/tasks/:id/send-delivery-otp', controller.sendDeliveryOtp);
+router.post('/tasks/:id/verify-delivery-otp', controller.verifyDeliveryOtp);
 
 // ===== BEAT PLANS =====
 router.post('/beat-plans', controller.createBeatPlan);

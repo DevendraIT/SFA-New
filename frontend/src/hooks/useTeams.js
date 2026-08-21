@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 import teamService from "../services/team.service";
 
 export default function useTeams(options = {}) {
   const debounceEnabled = options.debounce ?? false;
-
-  const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
 
   const [debouncedSearch] = useDebounce(
@@ -15,34 +12,25 @@ export default function useTeams(options = {}) {
     debounceEnabled ? 500 : 0
   );
 
-  const loadTeams = async () => {
-    try {
-      setLoading(true);
-
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["teams", debouncedSearch],
+    queryFn: async () => {
       const response = await teamService.getTeams({
         search: debouncedSearch,
       });
-
-      setTeams(
-        response?.data?.teams || []
-      );
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadTeams();
-  }, [debouncedSearch]);
+      return response?.data?.teams || response?.data || [];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   return {
-    teams,
-    loading,
+    teams: data || [],
+    loading: isLoading,
     search,
     setSearch,
-    reload: loadTeams,
+    reload: refetch,
   };
 }
-

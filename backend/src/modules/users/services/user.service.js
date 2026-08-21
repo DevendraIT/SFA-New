@@ -1,6 +1,7 @@
 import { AppError } from '../../../shared/response.js';
 import { hashPassword } from '../../auth/auth.utils.js';
 import { logAudit } from '../../../utils/audit.js';
+import cacheService from '../../../shared/cache/cache.service.js';
 import { 
   DEFAULT_USER_SETTINGS, 
   USER_ERRORS, 
@@ -140,6 +141,7 @@ export class UserService {
       req,
     });
 
+    cacheService.flushByPrefix("dashboard:");
     return user;
   }
 
@@ -201,6 +203,7 @@ export class UserService {
       req,
     });
 
+    cacheService.flushByPrefix("dashboard:");
     return this.repo.findUserById(id, organizationId);
   }
 

@@ -61,7 +61,7 @@ export default function DepartmentList() {
     debounce: true,
   });
 
-  const { dashboard } = useHeadOfSalesDashboard();
+  const { dashboard } = useHeadOfSalesDashboard({ enabled: isHeadOfSales });
 
   const [showModal, setShowModal] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState(null);

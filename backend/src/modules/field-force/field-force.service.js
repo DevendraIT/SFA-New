@@ -1,5 +1,6 @@
 import { AppError } from '../../shared/response.js';
 import config from "../../config/env.js";
+import cacheService from '../../shared/cache/cache.service.js';
 
 export function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
   if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) return 0;
@@ -21,39 +22,46 @@ export class FieldForceService {
     this.repo = fieldForceRepository;
   }
 
+  _invalidateFieldForce(orgId, userId = null) {
+    if (!orgId) return;
+    cacheService.invalidatePrefixes([
+      `${orgId}:fieldforce:`,
+      `${orgId}:dashboard:`,
+      `${orgId}:inventory:`,
+    ]);
+  }
+
   async checkIn(organizationId, userId, data) {
     if (!data.location || !data.location.lat || !data.location.lng) {
       throw AppError.badRequest('GPS Verification Failed: Location coordinates are required to check in.');
     }
     
     const attendance = await this.repo.checkIn(organizationId, userId, data);
-
-    
+    this._invalidateFieldForce(organizationId, userId);
     return attendance;
   }
 
   async checkOut(organizationId, userId, data) {
     const attendance = await this.repo.checkOut(organizationId, userId, data);
-
-    
+    this._invalidateFieldForce(organizationId, userId);
     return attendance;
   }
 
   async planVisit(organizationId, userId, data) {
-    return this.repo.createVisit(organizationId, userId, data);
+    const visit = await this.repo.createVisit(organizationId, userId, data);
+    this._invalidateFieldForce(organizationId, userId);
+    return visit;
   }
 
   async startVisit(visitId, organizationId, userId) {
     const visit = await this.repo.updateVisitStatus(visitId, organizationId, 'IN_PROGRESS');
-
-    
+    this._invalidateFieldForce(organizationId, userId);
     return visit;
   }
 
   async completeVisit(visitId, organizationId, userId, data) {
     const visit = await this.repo.updateVisitStatus(visitId, organizationId, 'COMPLETED', data);
-
-    
+    this._invalidateFieldForce(organizationId, userId);
     return visit;
   }
 
@@ -296,7 +304,200 @@ export class FieldForceService {
     } catch (e) {
       console.warn('Failed to send task assignment notification:', e);
     }
+
+    // 3. Automated Customer Delivery OTP Generation & Email Dispatch if required
+    try {
+      const metaReqs = (typeof taskPayload.metadata === 'object' && taskPayload.metadata) ? (taskPayload.metadata.requirements || {}) : {};
+      const requiresOtp = data.requireOtp === true || 
+                          taskPayload.requireOtp === true ||
+                          taskPayload.requirements?.requireOtp === true || 
+                          taskPayload.requirements?.otp === true || 
+                          metaReqs.requireOtp === true || 
+                          metaReqs.otp === true || 
+                          taskPayload.metadata?.requireOtp === true;
+
+      if (requiresOtp) {
+        const deliveryOtp = String(Math.floor(100000 + Math.random() * 900000));
+        let customerEmail = data.customerEmail || taskPayload.metadata?.customer?.email || taskPayload.customerEmail;
+        let customerName = data.customerName || taskPayload.metadata?.customer?.name || 'Customer';
+
+        const targetCustomerId = data.customerId || taskPayload.customerId || (task.referenceType === 'CUSTOMER' ? task.referenceId : taskPayload.metadata?.customer?.id);
+        const targetOrderId = data.orderId || taskPayload.orderId || (task.referenceType === 'ORDER' ? task.referenceId : taskPayload.metadata?.orderId);
+
+        if ((!customerEmail || !customerEmail.includes('@')) && targetCustomerId) {
+          const dbCust = await prisma.customer.findUnique({
+            where: { id: targetCustomerId },
+            select: { email: true, name: true }
+          });
+          if (dbCust?.email) {
+            customerEmail = dbCust.email;
+            if (dbCust.name) customerName = dbCust.name;
+          }
+        }
+
+        if ((!customerEmail || !customerEmail.includes('@')) && targetOrderId) {
+          const dbOrder = await prisma.order.findUnique({
+            where: { id: targetOrderId },
+            include: { customer: true }
+          });
+          if (dbOrder?.customer?.email) {
+            customerEmail = dbOrder.customer.email;
+            if (dbOrder.customer.name) customerName = dbOrder.customer.name;
+          }
+        }
+
+        const existingMeta = (typeof task.metadata === 'object' && task.metadata) ? task.metadata : {};
+        const existingReqs = (typeof existingMeta.requirements === 'object' && existingMeta.requirements) ? existingMeta.requirements : {};
+
+        const updatedMetadata = {
+          ...existingMeta,
+          requireOtp: true,
+          requirements: {
+            ...existingReqs,
+            requireOtp: true,
+            otp: true,
+          },
+          customer: {
+            ...(existingMeta.customer || {}),
+            email: customerEmail || existingMeta.customer?.email,
+            name: customerName || existingMeta.customer?.name,
+          },
+          deliveryOtp,
+          deliveryOtpStatus: 'SENT',
+          deliveryOtpVerified: false,
+          deliveryOtpExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        };
+
+        const updatedTask = await prisma.task.update({
+          where: { id: task.id },
+          data: { metadata: updatedMetadata }
+        });
+
+        if (customerEmail && customerEmail.includes('@')) {
+          const emailService = (await import('../../shared/email/email.service.js')).default;
+          await emailService.sendDeliveryOtpEmail(customerEmail, customerName, deliveryOtp, task.title)
+            .catch(err => console.warn('Customer delivery OTP email dispatch warning:', err.message));
+        }
+
+        return updatedTask;
+      }
+    } catch (e) {
+      console.warn('Delivery OTP initialization warning:', e.message);
+    }
+
     return task;
+  }
+
+  async sendDeliveryOtp(taskId, organizationId) {
+    const { prisma } = await import('../../config/database.js');
+    const task = await prisma.task.findFirst({
+      where: { id: taskId, organizationId }
+    });
+
+    if (!task) throw AppError.notFound('Task not found.');
+
+    const metadata = typeof task.metadata === 'object' && task.metadata !== null ? task.metadata : {};
+    let customerEmail = metadata.customer?.email || task.customerEmail;
+    let customerName = metadata.customer?.name || task.customerName || 'Customer';
+
+    const targetCustomerId = metadata.customer?.id || (task.referenceType === 'CUSTOMER' ? task.referenceId : null);
+    const targetOrderId = metadata.orderId || (task.referenceType === 'ORDER' ? task.referenceId : null);
+
+    if ((!customerEmail || !customerEmail.includes('@')) && targetCustomerId) {
+      const dbCust = await prisma.customer.findUnique({
+        where: { id: targetCustomerId },
+        select: { email: true, name: true }
+      });
+      if (dbCust?.email) {
+        customerEmail = dbCust.email;
+        if (dbCust.name) customerName = dbCust.name;
+      }
+    }
+
+    if ((!customerEmail || !customerEmail.includes('@')) && targetOrderId) {
+      const dbOrder = await prisma.order.findUnique({
+        where: { id: targetOrderId },
+        include: { customer: true }
+      });
+      if (dbOrder?.customer?.email) {
+        customerEmail = dbOrder.customer.email;
+        if (dbOrder.customer.name) customerName = dbOrder.customer.name;
+      }
+    }
+
+    if (!customerEmail || !customerEmail.includes('@')) {
+      throw AppError.badRequest('No valid customer email address found for this task. Please update customer email.');
+    }
+
+    const deliveryOtp = String(Math.floor(100000 + Math.random() * 900000));
+    const updatedMetadata = {
+      ...metadata,
+      deliveryOtp,
+      deliveryOtpStatus: 'SENT',
+      deliveryOtpVerified: false,
+      deliveryOtpExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    await prisma.task.update({
+      where: { id: taskId },
+      data: { metadata: updatedMetadata }
+    });
+
+    const emailService = (await import('../../shared/email/email.service.js')).default;
+    await emailService.sendDeliveryOtpEmail(customerEmail, customerName, deliveryOtp, task.title);
+
+    return {
+      success: true,
+      message: `Delivery OTP sent successfully to ${customerEmail}`,
+      customerEmail,
+    };
+  }
+
+  async verifyDeliveryOtp(taskId, organizationId, otp) {
+    const { prisma } = await import('../../config/database.js');
+    const task = await prisma.task.findFirst({
+      where: { id: taskId, organizationId }
+    });
+
+    if (!task) throw AppError.notFound('Task not found.');
+
+    const metadata = typeof task.metadata === 'object' && task.metadata !== null ? task.metadata : {};
+    const storedOtp = metadata.deliveryOtp;
+
+    if (!storedOtp || String(storedOtp).trim() !== String(otp).trim()) {
+      throw AppError.badRequest('Invalid Delivery OTP. Please ask the customer for the correct code.');
+    }
+
+    const existingHistory = Array.isArray(metadata.executionHistory) ? metadata.executionHistory : [];
+    const newHistoryEntry = {
+      status: 'CUSTOMER_OTP_VERIFIED',
+      timestamp: new Date().toISOString(),
+      notes: 'Customer Delivery OTP verified successfully',
+    };
+
+    const updatedMetadata = {
+      ...metadata,
+      deliveryOtpVerified: true,
+      deliveryOtpVerifiedAt: new Date().toISOString(),
+      deliveryOtpStatus: 'VERIFIED',
+      executionHistory: [...existingHistory, newHistoryEntry],
+    };
+
+    const updatedTask = await prisma.task.update({
+      where: { id: taskId },
+      data: {
+        metadata: updatedMetadata
+      }
+    });
+
+    this._invalidateFieldForce(organizationId);
+
+    return {
+      success: true,
+      verified: true,
+      message: 'Customer Delivery OTP verified successfully!',
+      task: updatedTask,
+    };
   }
 
   async generateDar(organizationId, userId, data) {
@@ -741,6 +942,30 @@ export class FieldForceService {
     if (status === 'COMPLETED') {
       updateFields.completedAt = now;
       if (completionNotes || notes) updateFields.completionNotes = completionNotes || notes;
+
+      // Automatically update linked Sales Order status to COMPLETED
+      const metadata = typeof task.metadata === 'object' && task.metadata !== null ? task.metadata : {};
+      const linkedOrderId = (task.referenceType === 'ORDER' ? task.referenceId : null) || metadata.orderId || metadata.order?.id;
+      if (linkedOrderId) {
+        try {
+          const { prisma } = await import('../../config/database.js');
+          await prisma.order.update({
+            where: { id: linkedOrderId },
+            data: {
+              status: 'COMPLETED',
+              updatedAt: now,
+            }
+          });
+          const cacheService = (await import('../../shared/cache/cache.service.js')).default;
+          cacheService.invalidatePrefixes([
+            `${organizationId}:sales:`,
+            `${organizationId}:dashboard:`,
+            `${organizationId}:customers:`,
+          ]);
+        } catch (err) {
+          console.warn('Warning: Failed to update linked sales order status to COMPLETED:', err.message);
+        }
+      }
     }
 
     const historyEntry = {

@@ -62,7 +62,7 @@ export default function TeamList() {
     debounce: true,
   });
 
-  const { dashboard } = useHeadOfSalesDashboard();
+  const { dashboard } = useHeadOfSalesDashboard({ enabled: isHeadOfSales });
 
   const [showModal, setShowModal] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);

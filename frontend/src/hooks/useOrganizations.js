@@ -1,35 +1,23 @@
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 import organizationService from "../services/organization.service";
 
-export default function useOrganizations() {
-  const [organization, setOrganization] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const loadOrganization = async () => {
-    try {
-      setLoading(true);
+export default function useOrganizations(options = {}) {
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["organization", "current"],
+    queryFn: async () => {
       const response = await organizationService.getCurrentOrganization();
-      const orgData = response?.data?.organization || (response?.data && typeof response.data === 'object' && response.data.id ? response.data : null);
-      setOrganization(orgData);
-    } catch (err) {
-      console.error(err);
-      if (err?.response?.status !== 404) {
-        toast.error("Failed to load organization");
-      }
-      setOrganization(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadOrganization();
-  }, []);
+      return response?.data?.organization || (response?.data && typeof response.data === 'object' && response.data.id ? response.data : null);
+    },
+    enabled: options.enabled ?? true,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 15 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   return {
-    organization,
-    loading,
-    reload: loadOrganization,
+    organization: data || null,
+    loading: isLoading,
+    reload: refetch,
   };
 }

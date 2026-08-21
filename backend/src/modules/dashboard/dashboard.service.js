@@ -1,9 +1,15 @@
+import cacheService from '../../shared/cache/cache.service.js';
+
 export class DashboardService {
   constructor(dashboardRepository) {
     this.repo = dashboardRepository;
   }
 
   async getSuperAdminDashboard(organizationId = null) {
+    const cacheKey = `dashboard:super_admin:${organizationId || 'all'}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
@@ -56,7 +62,7 @@ export class DashboardService {
     const todayVisitsCount = Object.values(formattedTodayVisits).reduce((a, b) => a + b, 0);
     const totalVisits = completedVisits + pendingVisits + todayVisitsCount;
 
-    return {
+    const result = {
       organizationOverview: {
         organizations: organizationCount,
         companies: companyCount,
@@ -91,6 +97,9 @@ export class DashboardService {
       recentUsers,
       recentOrders,
     };
+
+    cacheService.set(cacheKey, result, 120);
+    return result;
   }
 
   async getExecutiveDashboard(user) {
@@ -264,6 +273,9 @@ export class DashboardService {
 
   async getHeadOfSalesDashboard(user) {
     const { organizationId } = user;
+    const cacheKey = `dashboard:head_of_sales:${organizationId || 'all'}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
@@ -329,7 +341,7 @@ export class DashboardService {
     const revenue = (formattedOrders['APPROVED']?.revenue || 0) + (formattedOrders['COMPLETED']?.revenue || 0);
     const totalSalesOrders = Object.values(formattedOrders).reduce((sum, item) => sum + (item.count || 0), 0);
 
-    return {
+    const result = {
       totalSalesManagers,
       presentSalesManagers,
       totalSalesExecutives,
@@ -370,6 +382,9 @@ export class DashboardService {
         { title: "Field Operations Active", description: `${todayVisitsCount} scheduled visits and ${totalSalesOrders} active sales orders`, time: "Today" },
       ],
     };
+
+    cacheService.set(cacheKey, result, 120);
+    return result;
   }
 
 

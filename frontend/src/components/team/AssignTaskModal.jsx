@@ -6,7 +6,7 @@ import {
   ChevronLeft, Check, Target, Calendar,
   Camera, FileSignature, DollarSign,
   Clock, Users, Building2, Type, AlignLeft, Flag, Plus, Minus,
-  Mail, Phone, Globe
+  Mail, Phone, Globe, ShieldCheck, KeyRound
 } from "lucide-react";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
@@ -28,6 +28,7 @@ const INITIAL_TASK_CATEGORIES = [
 ];
 
 const INITIAL_REQUIREMENTS = [
+  { key: "requireOtp", label: "Customer Delivery OTP", icon: KeyRound, desc: "Send delivery OTP email to customer & require verification at delivery" },
   { key: "requireGps", label: "GPS Tracking", icon: MapPin, desc: "Require real-time GPS tracking during execution" },
   { key: "requirePhoto", label: "Photo Capture", icon: Camera, desc: "Require photo evidence at location" },
   { key: "requireSignature", label: "Digital Signature", icon: FileSignature, desc: "Require customer digital signature" },
@@ -330,13 +331,16 @@ function OrderSection({ data, onChange, customerOrders, allOrders = [], loadingO
 
   const combinedOrders = (customerOrders && customerOrders.length > 0) ? customerOrders : (allOrders || []);
 
-  const availableOrders = combinedOrders.filter((o) => {
+  const pendingUnfilledOrders = combinedOrders.filter((o) => {
+    const isCompleted = String(o.status || '').toUpperCase().includes('COMPLETED') ||
+                        String(o.status || '').toUpperCase().includes('DELIVERED');
+    if (isCompleted) return false; // Exclude completed orders from task assignment dropdown
     if (!data.customerId) return true;
     const cid = o.customerId || o.customer?.id || (typeof o.customer === 'string' ? o.customer : undefined);
     return cid === data.customerId;
   });
 
-  const displayOrders = availableOrders.length > 0 ? availableOrders : combinedOrders;
+  const displayOrders = pendingUnfilledOrders;
 
   const rawSelected = combinedOrders.find((o) => o.id === data.orderId);
   const selectedOrder = rawSelected ? { ...rawSelected, ...orderDetailsMap[data.orderId] } : null;
@@ -973,14 +977,19 @@ export default function AssignTaskModal({
         .filter((req) => !!formData[req.key])
         .map((req) => ({ key: req.key, label: req.label }));
 
+      const selectedCustomer = customers.find((c) => c.id === formData.customerId);
+      const resolvedCustomerEmail = formData.customerEmail || selectedCustomer?.email || selectedOrder?.customer?.email || undefined;
+      const resolvedCustomerName = formData.customerName || selectedCustomer?.name || selectedOrder?.customer?.name || "Customer";
+
       const metadata = {
         category: formData.category,
+        requireOtp: !!formData.requireOtp,
         customer: (formData.customerId || formData.customerAddress)
           ? {
               id: formData.customerId || undefined,
-              name: formData.customerName || "Customer Location",
-              email: formData.customerEmail || undefined,
-              phone: formData.customerPhone || undefined,
+              name: resolvedCustomerName,
+              email: resolvedCustomerEmail,
+              phone: formData.customerPhone || selectedCustomer?.phone || selectedOrder?.customer?.phone || undefined,
               address: formData.customerAddress || undefined,
             }
           : undefined,
@@ -1022,6 +1031,8 @@ export default function AssignTaskModal({
           payment: formData.requirePayment,
           checkIn: formData.requireCheckIn,
           checkOut: formData.requireCheckOut,
+          otp: !!formData.requireOtp,
+          requireOtp: !!formData.requireOtp,
         },
       };
 
@@ -1034,9 +1045,12 @@ export default function AssignTaskModal({
         priority: formData.priority,
         dueDate: dueDateValue,
         customerId: resolvedCustomerId,
+        customerEmail: resolvedCustomerEmail,
+        customerName: resolvedCustomerName,
         branchId: formData.branchId || undefined,
         referenceType: formData.orderId ? "ORDER" : (resolvedCustomerId ? "CUSTOMER" : undefined),
         referenceId: formData.orderId || resolvedCustomerId || undefined,
+        requireOtp: !!formData.requireOtp,
         metadata,
       };
 

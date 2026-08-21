@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 import userService from "../services/user.service";
 
 export default function useUsers(options = {}) {
   const debounceEnabled = options.debounce ?? false;
-
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
 
   const [debouncedSearch] = useDebounce(
@@ -15,35 +12,30 @@ export default function useUsers(options = {}) {
     debounceEnabled ? 500 : 0
   );
 
-  const loadUsers = async () => {
-    try {
-      setLoading(true);
+  const limitParam = options.limit || 100;
 
-      const params = { limit: options.limit || 100 };
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["users", debouncedSearch, limitParam],
+    queryFn: async () => {
+      const params = { limit: limitParam };
       if (debouncedSearch && debouncedSearch.trim().length >= 2) {
         params.search = debouncedSearch;
       }
-
       const response = await userService.getUsers(params);
       const userList = response?.data?.users || response?.users || response?.data || [];
-      setUsers(Array.isArray(userList) ? userList : []);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadUsers();
-  }, [debouncedSearch]);
+      return Array.isArray(userList) ? userList : [];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   return {
-    users,
-    loading,
+    users: data || [],
+    loading: isLoading,
     search,
     setSearch,
-    reload: loadUsers,
+    reload: refetch,
   };
 }
-

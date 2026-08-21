@@ -1,5 +1,6 @@
 import { AppError } from '../../shared/response.js';
 import { locationService } from '../../services/location.service.js';
+import cacheService from '../../shared/cache/cache.service.js';
 
 function formatAddressString(address) {
   if (!address) return null;
@@ -22,22 +23,41 @@ export class CustomerService {
     this.repo = customerRepository;
   }
 
+  _invalidateCustomerCache(orgId) {
+    if (!orgId) return;
+    cacheService.invalidatePrefixes([
+      `${orgId}:customers:`,
+      `${orgId}:sales:`,
+      `${orgId}:dashboard:`,
+    ]);
+  }
+
   async list(organizationId, query = {}, userContext = null) {
-    const page = parseInt(query.page) || 1;
-    const limit = Math.min(100, parseInt(query.limit) || 50);
-    const skip = (page - 1) * limit;
-    const search = query.search;
+    const cacheKey = cacheService.buildKey({
+      orgId: organizationId,
+      module: 'customers',
+      resource: 'list',
+      userId: userContext?.id,
+      params: query,
+    });
 
-    const userRoles = (userContext?.roles || []).map(r => 
-      typeof r === 'string' ? r : (r.role?.name || r.name || '')
-    );
-    const isGlobalAdmin = userRoles.some(r => 
-      ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
-    );
+    return cacheService.getOrSet(cacheKey, async () => {
+      const page = parseInt(query.page) || 1;
+      const limit = Math.min(100, parseInt(query.limit) || 50);
+      const skip = (page - 1) * limit;
+      const search = query.search;
 
-    const branchId = !isGlobalAdmin ? (userContext?.branchId || query.branchId) : query.branchId;
+      const userRoles = (userContext?.roles || []).map(r => 
+        typeof r === 'string' ? r : (r.role?.name || r.name || '')
+      );
+      const isGlobalAdmin = userRoles.some(r => 
+        ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
+      );
 
-    return this.repo.findAll(organizationId, { skip, take: limit, search, branchId, userId: userContext?.id });
+      const branchId = !isGlobalAdmin ? (userContext?.branchId || query.branchId) : query.branchId;
+
+      return this.repo.findAll(organizationId, { skip, take: limit, search, branchId, userId: userContext?.id });
+    }, 180); // 3 minutes TTL
   }
 
   async getById(id, organizationId) {
@@ -57,12 +77,15 @@ export class CustomerService {
       lng = geo.longitude;
     }
 
-    return this.repo.create({
+    const created = await this.repo.create({
       ...data,
       organizationId,
       latitude: lat,
       longitude: lng,
     });
+
+    this._invalidateCustomerCache(organizationId);
+    return created;
   }
 
   async update(id, organizationId, data) {
@@ -78,19 +101,26 @@ export class CustomerService {
 
     if ((addressChanged || missingCoords) && newAddressStr) {
       const geo = await locationService.geocodeAddress(newAddressStr);
-      lat = geo.latitude;
-      lng = geo.longitude;
+      if (geo?.latitude && geo?.longitude) {
+        if (lat == null) lat = geo.latitude;
+        if (lng == null) lng = geo.longitude;
+      }
     }
 
-    return this.repo.update(id, organizationId, {
+    const updated = await this.repo.update(id, organizationId, {
       ...data,
       latitude: lat,
       longitude: lng,
     });
+
+    this._invalidateCustomerCache(organizationId);
+    return updated;
   }
 
   async delete(id, organizationId) {
     await this.getById(id, organizationId);
-    return this.repo.delete(id, organizationId);
+    const deleted = await this.repo.delete(id, organizationId);
+    this._invalidateCustomerCache(organizationId);
+    return deleted;
   }
 }

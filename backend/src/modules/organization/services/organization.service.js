@@ -1,6 +1,7 @@
 import { AppError } from '../../../shared/response.js';
 import { logAudit } from '../../../utils/audit.js';
 import { prisma } from '../../../config/database.js';
+import cacheService from '../../../shared/cache/cache.service.js';
 import { BranchRepository } from '../repositories/BranchRepository.js';
 import { DepartmentRepository } from '../repositories/DepartmentRepository.js';
 import { TerritoryRepository } from '../repositories/TerritoryRepository.js';
@@ -285,12 +286,17 @@ export class OrganizationService {
   // --------------------------------------------------
 
   async listBranches(organizationId, query) {
+    const cacheKey = `org:branches:${organizationId}:${JSON.stringify(query || {})}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const options = this._buildListOptions(query);
     const { branches, total } = await this.branchRepo.findAll(organizationId, {
       ...options,
-
     });
-    return { branches, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    const result = { branches, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    cacheService.set(cacheKey, result, 300);
+    return result;
   }
 
   async getBranch(id, organizationId) {
@@ -376,6 +382,7 @@ export class OrganizationService {
       }).catch(err => console.warn('Audit log warning:', err.message));
     }
 
+    cacheService.flushByPrefix("org:branches:");
     return branch;
   }
 

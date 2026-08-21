@@ -1,43 +1,29 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import dashboardService from "../services/dashboard.service";
 
-export default function useDashboard() {
-  const [dashboard, setDashboard] = useState({
-    myLeads: {},
-    myVisits: {},
-    myTargets: [],
+export default function useDashboard(options = {}) {
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["dashboard", "executive"],
+    queryFn: async () => {
+      try {
+        const response = await dashboardService.getExecutiveDashboard();
+        return response?.data?.data || response?.data || response || {};
+      } catch (err) {
+        console.error("Executive Dashboard API Error:", err);
+        const fallback = await dashboardService.getUserDashboard();
+        return fallback?.data?.data || fallback?.data || fallback || {};
+      }
+    },
+    enabled: options.enabled ?? true,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadDashboard();
-  }, []);
-
-  const loadDashboard = async () => {
-    try {
-      setLoading(true);
-
-      const response = await dashboardService.getExecutiveDashboard();
-
-      setDashboard(response?.data?.data || response?.data || response || {});
-    } catch (err) {
-      console.error("Executive Dashboard API Error:", err);
-      try {
-        const fallback = await dashboardService.getUserDashboard();
-        setDashboard(fallback?.data?.data || fallback?.data || fallback || {});
-      } catch {
-        setDashboard({});
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
   return {
-    dashboard,
-    loading,
-    refresh: loadDashboard,
+    dashboard: data || { myLeads: {}, myVisits: {}, myTargets: [] },
+    loading: isLoading,
+    reload: refetch,
   };
 }

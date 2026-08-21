@@ -144,6 +144,25 @@ createTask = async (req, res, next) => {
     }
   };
 
+  sendDeliveryOtp = async (req, res, next) => {
+    try {
+      const result = await this.service.sendDeliveryOtp(req.params.id, req.user.organizationId);
+      return successResponse(res, result, 'Delivery OTP sent to customer email successfully.');
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  verifyDeliveryOtp = async (req, res, next) => {
+    try {
+      const { otp } = req.body;
+      const result = await this.service.verifyDeliveryOtp(req.params.id, req.user.organizationId, otp);
+      return successResponse(res, result, 'Customer Delivery OTP verified successfully.');
+    } catch (err) {
+      next(err);
+    }
+  };
+
   createCalendarEvent = async (req, res, next) => {
     try {
       const result = await this.service.createCalendarEvent(req.user.organizationId, req.user.id, req.body);
