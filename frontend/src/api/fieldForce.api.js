@@ -3,25 +3,24 @@ import api from "./axios";
 const BASE_URL = "/field-force";
 
 const fieldForceApi = {
-  // ---- Attendance ----
-  checkIn(data) {
-    return api.post(`${BASE_URL}/attendance/check-in`, data);
+  // ---- Attendance (Disabled) ----
+  checkIn() {
+    return Promise.resolve({ data: { success: true, message: "Attendance endpoint disabled" } });
   },
-  checkOut(data) {
-    return api.post(`${BASE_URL}/attendance/check-out`, data);
+  checkOut() {
+    return Promise.resolve({ data: { success: true, message: "Attendance endpoint disabled" } });
   },
-  getAttendance(params = {}) {
-    return api.get(`${BASE_URL}/attendance`, { params });
+  getAttendance() {
+    return Promise.resolve({ data: { success: true, data: null } });
   },
-  listAttendance(params = {}) {
-    return api.get(`${BASE_URL}/attendance/list`, { params });
+  listAttendance() {
+    return Promise.resolve({ data: { success: true, data: { attendance: [], total: 0 } } });
   },
-  getAttendanceSummary(params = {}) {
-    return api.get(`${BASE_URL}/attendance/summary`, { params });
+  getAttendanceSummary() {
+    return Promise.resolve({ data: { success: true, data: { totalDays: 0, present: 0, absent: 0, leave: 0, halfday: 0 } } });
   },
   getTodayAttendance() {
-    const today = new Date().toISOString().split('T')[0];
-    return api.get(`${BASE_URL}/attendance/today`, { params: { date: today } });
+    return Promise.resolve({ data: { success: true, data: null } });
   },
 
   // ---- Visits ----
@@ -152,8 +151,8 @@ const fieldForceApi = {
   },
 
   // ---- Analytics ----
-  getAnalyticsAttendance(params = {}) {
-    return api.get(`${BASE_URL}/analytics/attendance`, { params });
+  getAnalyticsAttendance() {
+    return Promise.resolve({ data: { success: true, data: { totalDays: 0, present: 0, absent: 0, leave: 0, halfday: 0 } } });
   },
   getAnalyticsVisits(params = {}) {
     return api.get(`${BASE_URL}/analytics/visits`, { params });

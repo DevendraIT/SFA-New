@@ -159,10 +159,8 @@ export default function AppRoutes() {
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
 
-        {/* ===== FIELD FORCE AUTOMATION ROUTES ===== */}
         <Route path="/field-force" element={<FieldForceRoute><FieldForceDashboardWrapper /></FieldForceRoute>} />
         <Route path="/field-force/dashboard" element={<FieldForceRoute><FieldForceDashboardWrapper /></FieldForceRoute>} />
-        <Route path="/field-force/attendance" element={<FieldForceRoute><AttendancePage /></FieldForceRoute>} />
         <Route path="/field-force/tasks" element={<FieldForceRoute><TasksPage /></FieldForceRoute>} />
         <Route path="/field-force/tasks/:id/execute" element={<TaskExecutionRoute><TaskExecutionPage /></TaskExecutionRoute>} />
         <Route path="/field-force/visits" element={<FieldForceRoute><VisitsPage /></FieldForceRoute>} />
