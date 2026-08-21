@@ -96,18 +96,6 @@ export class BranchRepository {
               _count: { select: { users: true } }
             }
           },
-          users: {
-            where: { deletedAt: null },
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-              phoneNumber: true,
-              isActive: true,
-              roles: { include: { role: { select: { name: true } } } }
-            }
-          },
           _count: { 
             select: { 
               users: true, 

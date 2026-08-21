@@ -524,26 +524,13 @@ export class FieldForceRepository {
 
   // Analytics & Aggregations
   async getAttendanceSummary(organizationId, userId, startDate, endDate) {
-    const where = { organizationId };
-    if (userId) where.userId = userId;
-    if (startDate && endDate) {
-      where.date = {
-        gte: new Date(startDate),
-        lte: new Date(endDate),
-      };
-    }
-
-    const records = await prisma.attendance.findMany({ where });
-
-    const summary = {
-      totalDays: records.length,
-      present: records.filter(r => r.status === 'PRESENT').length,
-      absent: records.filter(r => r.status === 'ABSENT').length,
-      leave: records.filter(r => r.status === 'LEAVE').length,
-      halfday: records.filter(r => r.status === 'HALFDAY').length,
+    return {
+      totalDays: 0,
+      present: 0,
+      absent: 0,
+      leave: 0,
+      halfday: 0,
     };
-
-    return summary;
   }
 
   async getVisitsSummary(organizationId, userId, startDate, endDate) {
@@ -556,17 +543,27 @@ export class FieldForceRepository {
       };
     }
 
-    const visits = await prisma.visit.findMany({ where });
+    const groupCounts = await prisma.visit.groupBy({
+      by: ['status'],
+      where,
+      _count: { _all: true },
+    });
 
-    const summary = {
-      total: visits.length,
-      planned: visits.filter(v => v.status === 'PLANNED').length,
-      inProgress: visits.filter(v => v.status === 'IN_PROGRESS').length,
-      completed: visits.filter(v => v.status === 'COMPLETED').length,
-      cancelled: visits.filter(v => v.status === 'CANCELLED').length,
+    const countsByStatus = {};
+    let total = 0;
+    for (const item of groupCounts) {
+      const cnt = item._count._all || 0;
+      countsByStatus[item.status] = cnt;
+      total += cnt;
+    }
+
+    return {
+      total,
+      planned: countsByStatus['PLANNED'] || 0,
+      inProgress: countsByStatus['IN_PROGRESS'] || 0,
+      completed: countsByStatus['COMPLETED'] || 0,
+      cancelled: countsByStatus['CANCELLED'] || 0,
     };
-
-    return summary;
   }
 
   async getVisitSummary(organizationId, userId, startDate, endDate) {

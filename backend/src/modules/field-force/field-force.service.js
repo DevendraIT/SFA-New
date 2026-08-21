@@ -10,9 +10,9 @@ export function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return Math.round(R * c);
 }
@@ -35,15 +35,25 @@ export class FieldForceService {
     if (!data.location || !data.location.lat || !data.location.lng) {
       throw AppError.badRequest('GPS Verification Failed: Location coordinates are required to check in.');
     }
-    
+
     const attendance = await this.repo.checkIn(organizationId, userId, data);
+<<<<<<< HEAD
     this._invalidateFieldForce(organizationId, userId);
+=======
+
+
+>>>>>>> origin/Adarsh
     return attendance;
   }
 
   async checkOut(organizationId, userId, data) {
     const attendance = await this.repo.checkOut(organizationId, userId, data);
+<<<<<<< HEAD
     this._invalidateFieldForce(organizationId, userId);
+=======
+
+
+>>>>>>> origin/Adarsh
     return attendance;
   }
 
@@ -55,13 +65,23 @@ export class FieldForceService {
 
   async startVisit(visitId, organizationId, userId) {
     const visit = await this.repo.updateVisitStatus(visitId, organizationId, 'IN_PROGRESS');
+<<<<<<< HEAD
     this._invalidateFieldForce(organizationId, userId);
+=======
+
+
+>>>>>>> origin/Adarsh
     return visit;
   }
 
   async completeVisit(visitId, organizationId, userId, data) {
     const visit = await this.repo.updateVisitStatus(visitId, organizationId, 'COMPLETED', data);
+<<<<<<< HEAD
     this._invalidateFieldForce(organizationId, userId);
+=======
+
+
+>>>>>>> origin/Adarsh
     return visit;
   }
 
@@ -221,8 +241,8 @@ export class FieldForceService {
       const meta = (taskPayload.metadata && typeof taskPayload.metadata === 'object')
         ? taskPayload.metadata
         : ((data.metadata && typeof data.metadata === 'object')
-            ? data.metadata
-            : (task.metadata && typeof task.metadata === 'object' ? task.metadata : (typeof task.metadata === 'string' ? JSON.parse(task.metadata) : {})));
+          ? data.metadata
+          : (task.metadata && typeof task.metadata === 'object' ? task.metadata : (typeof task.metadata === 'string' ? JSON.parse(task.metadata) : {})));
       let prods = Array.isArray(meta?.products) ? meta.products : (typeof meta === 'string' ? JSON.parse(meta)?.products : []);
       const targetOrderId = data.orderId || data.referenceId || task.referenceId || task.orderId;
       if ((!prods || prods.length === 0) && targetOrderId) {
@@ -525,7 +545,7 @@ export class FieldForceService {
     //   })
     // ]);
 
-      const visitsCount = await prisma.visit.count({
+    const visitsCount = await prisma.visit.count({
       where: {
         organizationId,
         userId,
@@ -574,7 +594,7 @@ export class FieldForceService {
 
   async optimizeRoute(organizationId, userId, visitIds) {
     const { prisma } = await import('../../config/database.js');
-    
+
     // Sort visits chronologically based on database records instead of faking a map route
     const visits = await prisma.visit.findMany({
       where: {
@@ -592,24 +612,24 @@ export class FieldForceService {
     };
   }
 
-//   async testTomTom() {
+  //   async testTomTom() {
 
-//   const address = "Indore";
+  //   const address = "Indore";
 
-//   const url =
-//     `https://api.tomtom.com/search/2/geocode/${encodeURIComponent(address)}.json?key=${config.TOMTOM_API_KEY}`;
+  //   const url =
+  //     `https://api.tomtom.com/search/2/geocode/${encodeURIComponent(address)}.json?key=${config.TOMTOM_API_KEY}`;
 
-//   console.log("TomTom API Key:", config.TOMTOM_API_KEY);
-//   console.log("URL:", url);
+  //   console.log("TomTom API Key:", config.TOMTOM_API_KEY);
+  //   console.log("URL:", url);
 
-//   const response = await fetch(url);
+  //   const response = await fetch(url);
 
-//   const data = await response.json();
+  //   const data = await response.json();
 
-//   console.log(data);
+  //   console.log(data);
 
-//   return data;
-// }
+  //   return data;
+  // }
 
 
   // ===== GET/LIST SERVICE METHODS =====
@@ -645,8 +665,8 @@ export class FieldForceService {
   async approveExpense(expenseId, organizationId, userId) {
     const expense = await this.getExpense(expenseId, organizationId);
     const updated = await this.repo.updateExpenseStatus(expenseId, organizationId, 'APPROVED', userId);
-    
-    
+
+
     return updated;
   }
 
@@ -668,7 +688,7 @@ export class FieldForceService {
     const dar = await this.getDailyActivityReport(darId, organizationId);
     const updated = await this.repo.updateDarStatus(darId, organizationId, 'SUBMITTED');
 
-    
+
     return updated;
   }
 
@@ -827,7 +847,7 @@ export class FieldForceService {
                 pickupLatitude: task.pickupLatitude,
                 pickupLongitude: task.pickupLongitude
               }
-            }).catch(() => {}); // fire-and-forget, don't block response
+            }).catch(() => { }); // fire-and-forget, don't block response
           }
         }
       }

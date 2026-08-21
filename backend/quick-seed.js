@@ -15,7 +15,7 @@ async function main() {
   try {
     // 1. Get or create Organization
     let org = await prisma.organization.findFirst({ where: { slug: 'acme-corp' } });
-    
+
     if (!org) {
       org = await prisma.organization.create({
         data: {
@@ -81,7 +81,7 @@ async function main() {
               roleId_permissionId: { roleId: role.id, permissionId: permission.id },
             },
           });
-          
+
           if (!rolePermExists) {
             await prisma.rolePermission.create({
               data: { roleId: role.id, permissionId: permission.id },

@@ -151,129 +151,129 @@ async function main() {
   // const adminRole = rolesMap[ENTERPRISE_ROLES.ORGANIZATION_SUPER_ADMIN];
 
   const ROLE_PERMISSION_MAP = {
-  [ENTERPRISE_ROLES.ORGANIZATION_SUPER_ADMIN]: permissionsData.map(p => p.slug),
+    [ENTERPRISE_ROLES.ORGANIZATION_SUPER_ADMIN]: permissionsData.map(p => p.slug),
 
-  [ENTERPRISE_ROLES.COMPANY_ADMIN]: [
-    "organization:read",
+    [ENTERPRISE_ROLES.COMPANY_ADMIN]: [
+      "organization:read",
 
-    "company:read",
-    "company:create",
-    "company:update",
+      "company:read",
+      "company:create",
+      "company:update",
 
-    "branch:read",
-    "branch:create",
-    "branch:update",
+      "branch:read",
+      "branch:create",
+      "branch:update",
 
-    "department:read",
-    "department:create",
-    "department:update",
+      "department:read",
+      "department:create",
+      "department:update",
 
-    "territory:read",
-    "territory:create",
-    "territory:update",
+      "territory:read",
+      "territory:create",
+      "territory:update",
 
-    "read:users",
-    "create:users",
-    "update:users"
-  ],
+      "read:users",
+      "create:users",
+      "update:users"
+    ],
 
-  [ENTERPRISE_ROLES.HEAD_OF_SALES]: [
-    "company:read",
-    "branch:read",
-    "department:read",
-    "territory:read",
-    "lead:read",
-    "lead:create",
-    "lead:update",
-    "order:read"
-  ],
+    [ENTERPRISE_ROLES.HEAD_OF_SALES]: [
+      "company:read",
+      "branch:read",
+      "department:read",
+      "territory:read",
+      "lead:read",
+      "lead:create",
+      "lead:update",
+      "order:read"
+    ],
 
-  [ENTERPRISE_ROLES.SALES_MANAGER]: [
-    "company:read",
-    "branch:read",
-    "department:read",
-    "territory:read",
-    "lead:read",
-    "order:read",
-    "read:product_issues",
-    "manage:product_issues"
-  ],
+    [ENTERPRISE_ROLES.SALES_MANAGER]: [
+      "company:read",
+      "branch:read",
+      "department:read",
+      "territory:read",
+      "lead:read",
+      "order:read",
+      "read:product_issues",
+      "manage:product_issues"
+    ],
 
-  [ENTERPRISE_ROLES.SALES_EXECUTIVE]: [
-    "company:read",
-    "branch:read",
-    "department:read",
-    "territory:read",
-    "lead:read",
-    "lead:create",
-    "order:create",
-    "order:read"
-  ],
+    [ENTERPRISE_ROLES.SALES_EXECUTIVE]: [
+      "company:read",
+      "branch:read",
+      "department:read",
+      "territory:read",
+      "lead:read",
+      "lead:create",
+      "order:create",
+      "order:read"
+    ],
 
-  [ENTERPRISE_ROLES.INVENTORY_MANAGER]: [
-    "company:read",
-    "branch:read",
-    "read:products",
-    "create:products",
-    "update:products",
-    "delete:products",
-    "read:warehouses",
-    "create:warehouses",
-    "update:warehouses",
-    "delete:warehouses",
-    "read:stock",
-    "manage:stock"
-  ]
-};
+    [ENTERPRISE_ROLES.INVENTORY_MANAGER]: [
+      "company:read",
+      "branch:read",
+      "read:products",
+      "create:products",
+      "update:products",
+      "delete:products",
+      "read:warehouses",
+      "create:warehouses",
+      "update:warehouses",
+      "delete:warehouses",
+      "read:stock",
+      "manage:stock"
+    ]
+  };
 
 
-const permissionMap = {};
+  const permissionMap = {};
 
-// 1. Create all permissions
-for (const permData of permissionsData) {
-  const permission = await prisma.permission.upsert({
-    where: { slug: permData.slug },
-    update: {},
-    create: permData,
-  });
+  // 1. Create all permissions
+  for (const permData of permissionsData) {
+    const permission = await prisma.permission.upsert({
+      where: { slug: permData.slug },
+      update: {},
+      create: permData,
+    });
 
-  createdPermissions.push(permission);
-  permissionMap[permission.slug] = permission;
-}
+    createdPermissions.push(permission);
+    permissionMap[permission.slug] = permission;
+  }
 
-// 2. Assign permissions to every role
-for (const [roleName, permissionSlugs] of Object.entries(ROLE_PERMISSION_MAP)) {
-  const role = rolesMap[roleName];
+  // 2. Assign permissions to every role
+  for (const [roleName, permissionSlugs] of Object.entries(ROLE_PERMISSION_MAP)) {
+    const role = rolesMap[roleName];
 
-  if (!role) continue;
+    if (!role) continue;
 
-  for (const slug of permissionSlugs) {
-    const permission = permissionMap[slug];
+    for (const slug of permissionSlugs) {
+      const permission = permissionMap[slug];
 
-    if (!permission) {
-      console.warn(`⚠ Permission not found: ${slug}`);
-      continue;
-    }
+      if (!permission) {
+        console.warn(`⚠ Permission not found: ${slug}`);
+        continue;
+      }
 
-    await prisma.rolePermission.upsert({
-      where: {
-        roleId_permissionId: {
+      await prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: {
+            roleId: role.id,
+            permissionId: permission.id,
+          },
+        },
+        update: {},
+        create: {
           roleId: role.id,
           permissionId: permission.id,
         },
-      },
-      update: {},
-      create: {
-        roleId: role.id,
-        permissionId: permission.id,
-      },
-    });
+      });
+    }
+
+    console.log(`✅ Permissions assigned to ${role.name}`);
   }
 
-  console.log(`✅ Permissions assigned to ${role.name}`);
-}
-
-console.log(`🔒 Seeded ${createdPermissions.length} permissions successfully`);
+  console.log(`🔒 Seeded ${createdPermissions.length} permissions successfully`);
 
   // for (const permData of permissionsData) {
   //   const permission = await prisma.permission.upsert({
@@ -392,21 +392,21 @@ console.log(`🔒 Seeded ${createdPermissions.length} permissions successfully`)
 
     // Only create password history if we created a new user to prevent spamming
     if (!user.managerId && user.email === 'devendradangi9174@gmail.com') { // simple check to avoid too many entries
-        // just add it for all for now but don't error
+      // just add it for all for now but don't error
     }
-    
+
     // We'll skip password history creation here to avoid duplicate errors since we are re-running seed
     // Or we can just check if it exists
     const existingHist = await prisma.passwordHistory.findFirst({
-        where: { userId: user.id }
+      where: { userId: user.id }
     });
     if (!existingHist) {
-        await prisma.passwordHistory.create({
-          data: {
-            userId: user.id,
-            passwordHash,
-          },
-        });
+      await prisma.passwordHistory.create({
+        data: {
+          userId: user.id,
+          passwordHash,
+        },
+      });
     }
 
     managerId = user.id; // Next user reports to this user

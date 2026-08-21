@@ -25,22 +25,6 @@ router.use(authenticate, requireOrganization);
 // ===== FILE UPLOAD =====
 router.post('/upload', uploadPhoto.single('photo'), controller.uploadFile);
 
-// ===== ATTENDANCE =====
-router.post('/attendance/check-in', validate(checkInSchema), controller.checkIn);
-router.post('/attendance/check-out', validate(checkInSchema), controller.checkOut);
-router.get('/attendance', controller.listAttendance);
-router.get(
-  '/attendance/list',
-  authenticate,
-  controller.listAttendance
-);
-
-router.get(
-  '/attendance/summary',
-  controller.getAttendanceSummary
-);
-router.get('/attendance/today', controller.getAttendance);
-
 // ===== VISITS =====
 router.post('/visits', validate(planVisitSchema), controller.planVisit);
 router.get('/visits', controller.listVisitsData);
@@ -97,7 +81,6 @@ router.post('/route/optimize', controller.optimizeRoute);
 // router.get("/tomtom-test", authenticate, controller.testTomTom);
 
 // ===== ANALYTICS & SUMMARIES =====
-router.get('/analytics/attendance', controller.getAttendanceSummary);
 router.get('/analytics/visits', controller.getVisitsSummary);
 router.get('/analytics/expenses', controller.getExpenseSummary);
 

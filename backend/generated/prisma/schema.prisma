@@ -39,7 +39,6 @@ model Organization {
   sessions    Session[]
   auditLogs   AuditLog[]
 
-  attendances           Attendance[]
   visits                Visit[]
   expenses              Expense[]
   dailyActivities       DailyActivityReport[]
@@ -258,7 +257,6 @@ model User {
   auditLogs         AuditLog[]
   passwordHistories PasswordHistory[]
 
-  attendances       Attendance[]
   visits            Visit[]
   expenses          Expense[]
   dailyActivities   DailyActivityReport[]
@@ -430,7 +428,6 @@ model Order {
 
   items         OrderItem[]
   activities    OrderActivity[]
-  notes         OrderNote[]
   productIssues ProductIssue[]
 }
 
@@ -453,6 +450,7 @@ model OrderActivity {
   orderId      String   @db.Uuid
   activityType String
   description  String
+  orderNote    String?
   performedBy  String?  @db.Uuid
   performedAt  DateTime @default(now())
   metadata     Json?
@@ -460,41 +458,9 @@ model OrderActivity {
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
-model OrderNote {
-  id        String   @id @default(uuid()) @db.Uuid
-  orderId   String   @db.Uuid
-  text      String
-  createdBy String?  @db.Uuid
-  createdAt DateTime @default(now())
-
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-}
-
 // ==================================================
 // PHASE 6 — Field Force
 // ==================================================
-
-model Attendance {
-  id             String           @id @default(uuid()) @db.Uuid
-  organizationId String           @db.Uuid
-  userId         String           @db.Uuid
-  date           DateTime         @db.Date
-  checkInAt      DateTime?
-  checkOutAt     DateTime?
-  checkInLoc     Json?
-  checkOutLoc    Json?
-  status         AttendanceStatus @default(ABSENT)
-  durationMins   Int?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, date])
-  @@index([organizationId, date])
-}
 
 model Visit {
   id             String      @id @default(uuid()) @db.Uuid
@@ -518,13 +484,6 @@ model Visit {
   customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
 
   @@index([organizationId, userId])
-}
-
-enum AttendanceStatus {
-  PRESENT
-  ABSENT
-  LEAVE
-  HALFDAY
 }
 
 enum VisitType {

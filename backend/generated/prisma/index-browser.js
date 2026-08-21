@@ -364,32 +364,10 @@ exports.Prisma.OrderActivityScalarFieldEnum = {
   orderId: 'orderId',
   activityType: 'activityType',
   description: 'description',
+  orderNote: 'orderNote',
   performedBy: 'performedBy',
   performedAt: 'performedAt',
   metadata: 'metadata'
-};
-
-exports.Prisma.OrderNoteScalarFieldEnum = {
-  id: 'id',
-  orderId: 'orderId',
-  text: 'text',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.AttendanceScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  userId: 'userId',
-  date: 'date',
-  checkInAt: 'checkInAt',
-  checkOutAt: 'checkOutAt',
-  checkInLoc: 'checkInLoc',
-  checkOutLoc: 'checkOutLoc',
-  status: 'status',
-  durationMins: 'durationMins',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.VisitScalarFieldEnum = {
@@ -686,13 +664,6 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
-  PRESENT: 'PRESENT',
-  ABSENT: 'ABSENT',
-  LEAVE: 'LEAVE',
-  HALFDAY: 'HALFDAY'
-};
-
 exports.VisitType = exports.$Enums.VisitType = {
   COLD_CALL: 'COLD_CALL',
   FOLLOW_UP: 'FOLLOW_UP',
@@ -797,8 +768,6 @@ exports.Prisma.ModelName = {
   Order: 'Order',
   OrderItem: 'OrderItem',
   OrderActivity: 'OrderActivity',
-  OrderNote: 'OrderNote',
-  Attendance: 'Attendance',
   Visit: 'Visit',
   Target: 'Target',
   Notification: 'Notification',
