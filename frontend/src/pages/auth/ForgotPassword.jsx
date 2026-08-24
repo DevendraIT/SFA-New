@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, KeyRound, ArrowLeft, Loader2, CheckCircle, ShieldCheck, Check, X } from "lucide-react";
+import { Mail, KeyRound, ArrowLeft, Loader2, CheckCircle, ShieldCheck, Check, X, AlertCircle } from "lucide-react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
 import authService from "../../services/auth.service";
@@ -11,6 +11,7 @@ export default function ForgotPassword() {
 
   const [step, setStep] = useState(1); // 1: Send OTP, 2: Reset Password
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -56,15 +57,20 @@ export default function ForgotPassword() {
   // Step 1: Send OTP
   const handleSendOtp = async (e) => {
     e.preventDefault();
+    setEmailError("");
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanEmail) {
-      toast.error("Please enter your registered email address.");
+      const msg = "Please enter your registered email address.";
+      setEmailError(msg);
+      toast.error(msg);
       return;
     }
 
     if (!validateEmail(cleanEmail)) {
-      toast.error("Please enter a valid email address (e.g. user@example.com).");
+      const msg = "Please enter a valid email address (e.g. user@example.com).";
+      setEmailError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -76,7 +82,9 @@ export default function ForgotPassword() {
       setResendTimer(60);
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Failed to send reset OTP. Please check your email.");
+      const msg = err?.response?.data?.message || "No registered account found with this email address.";
+      setEmailError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -209,12 +217,27 @@ export default function ForgotPassword() {
                     type="email"
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (emailError) setEmailError("");
+                    }}
                     placeholder="Enter your registered email"
-                    className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 text-slate-800 placeholder-slate-400 outline-none transition focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                    className={`w-full rounded-xl border py-3 pl-11 pr-4 text-slate-800 placeholder-slate-400 outline-none transition focus:ring-2 focus:ring-indigo-600 focus:border-transparent ${
+                      emailError ? "border-red-500 ring-1 ring-red-200" : "border-slate-300"
+                    }`}
                   />
                 </div>
               </div>
+
+              {emailError && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700 flex items-start gap-2.5 shadow-sm">
+                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold block text-sm text-red-800 mb-0.5">Account Validation Alert:</span>
+                    {emailError}
+                  </div>
+                </div>
+              )}
 
               <button
                 type="submit"

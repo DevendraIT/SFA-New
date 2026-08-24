@@ -296,8 +296,8 @@ export default function ManagerDashboard() {
           color="bg-emerald-500"
         />
         <StatCard
-          title="Today's Revenue"
-          value={todaysRevenue}
+          title="Total Revenue"
+          value={revenue}
           icon={IndianRupee}
           color="bg-green-600"
           format="currency"

@@ -56,6 +56,14 @@ export default function UserForm({ user, onClose, onSuccess }) {
     return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
   }, [currentUser]);
 
+  const isEditingSuperAdmin = useMemo(() => {
+    if (!isEditMode || !user) return false;
+    const roleNames = Array.isArray(user.roles)
+      ? user.roles.map((r) => (typeof r === "string" ? r : r.role?.name || r.name))
+      : [user.role?.name || ""];
+    return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
+  }, [isEditMode, user]);
+
   const filteredRoles = useMemo(() => {
     if (!roles) return [];
     let list = roles;
@@ -273,7 +281,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
       if (pwdErr) errors.password = pwdErr;
     }
 
-    if (form.roleIds.length !== 1) {
+    if (!isEditingSuperAdmin && form.roleIds.length !== 1) {
       errors.roles = "Please select exactly one role for the user.";
     }
 
@@ -290,19 +298,26 @@ export default function UserForm({ user, onClose, onSuccess }) {
     setSubmitting(true);
 
     try {
-      const payload = {
-        firstName: form.firstName.trim(),
-        lastName: form.lastName.trim(),
-        email: form.email.trim().toLowerCase(),
-        phoneNumber: form.phoneNumber.trim() || undefined,
-        branchId: form.branchId || undefined,
-        departmentId: form.departmentId || undefined,
-        teamId: form.teamId || undefined,
-        territoryId: form.territoryId || undefined,
-        managerId: form.managerId || undefined,
-        roleIds: form.roleIds,
-        isActive: form.isActive,
-      };
+      const payload = isEditingSuperAdmin
+        ? {
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            email: form.email.trim().toLowerCase(),
+            phoneNumber: form.phoneNumber.trim() || undefined,
+          }
+        : {
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            email: form.email.trim().toLowerCase(),
+            phoneNumber: form.phoneNumber.trim() || undefined,
+            branchId: form.branchId || undefined,
+            departmentId: form.departmentId || undefined,
+            teamId: form.teamId || undefined,
+            territoryId: form.territoryId || undefined,
+            managerId: form.managerId || undefined,
+            roleIds: form.roleIds,
+            isActive: form.isActive,
+          };
 
       if (!isEditMode) {
         payload.password = form.password;
@@ -457,149 +472,154 @@ export default function UserForm({ user, onClose, onSuccess }) {
         )}
       </div>
 
-      {/* Structural Assignments */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Department */}
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Department</label>
-          <select
-            name="departmentId"
-            value={form.departmentId}
-            onChange={handleChange}
-            className={inputClass}
-          >
-            <option value="">Select Department</option>
-            {departments.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Branch */}
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
-          <select
-            name="branchId"
-            value={form.branchId}
-            onChange={handleChange}
-            disabled={isSalesManager}
-            className={inputClass + (isSalesManager ? " bg-slate-100 cursor-not-allowed" : "")}
-          >
-            <option value="">Select Branch</option>
-            {branches.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Team */}
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Team</label>
-          <select
-            name="teamId"
-            value={form.teamId}
-            onChange={handleChange}
-            className={inputClass}
-          >
-            <option value="">Select Team</option>
-            {teams.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Manager */}
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Manager</label>
-        {isSalesManager ? (
-          <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-3.5 flex items-center justify-between">
+      {/* Non-SuperAdmin Fields */}
+      {!isEditingSuperAdmin && (
+        <>
+          {/* Structural Assignments */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Department */}
             <div>
-              <span className="block text-xs font-bold uppercase text-indigo-700">Assigned Manager (Default)</span>
-              <span className="text-sm font-bold text-slate-900">
-                {currentUser?.firstName} {currentUser?.lastName} (Sales Manager)
-              </span>
-            </div>
-            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
-              Selected by Default
-            </span>
-          </div>
-        ) : (
-          <select
-            name="managerId"
-            value={form.managerId}
-            onChange={handleChange}
-            className={inputClass}
-          >
-            <option value="">No Manager</option>
-            {users
-              .filter((u) => u.id !== user?.id)
-              .map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.firstName} {u.lastName} ({u.email})
-                </option>
-              ))}
-          </select>
-        )}
-      </div>
-
-      {/* Roles - Single Role Selection */}
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">
-          Role Designation <span className="text-red-500">*</span>{" "}
-          <span className="text-xs text-slate-400 font-normal">(Select 1 Role)</span>
-        </label>
-        <div className={`flex flex-wrap gap-3 rounded-xl border p-4 ${fieldErrors.roles ? "border-red-500 bg-red-50/20" : "border-slate-200"}`}>
-          {filteredRoles.length === 0 && (
-            <p className="text-sm text-slate-400">No roles available</p>
-          )}
-          {filteredRoles.map((role) => {
-            const isSelected = form.roleIds.includes(role.id);
-            return (
-              <label
-                key={role.id}
-                className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-2.5 text-sm font-semibold transition ${
-                  isSelected
-                    ? "border-indigo-600 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-200 shadow-xs"
-                    : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                }`}
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Department</label>
+              <select
+                name="departmentId"
+                value={form.departmentId}
+                onChange={handleChange}
+                className={inputClass}
               >
-                <input
-                  type="radio"
-                  name="userSingleRole"
-                  checked={isSelected}
-                  onChange={() => handleRoleSelect(role.id)}
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
-                />
-                {role.name}
-              </label>
-            );
-          })}
-        </div>
-        {fieldErrors.roles && (
-          <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
-            <AlertCircle size={12} /> {fieldErrors.roles}
-          </p>
-        )}
-      </div>
+                <option value="">Select Department</option>
+                {departments.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-      {/* Active Status */}
-      <div className="flex items-center gap-3">
-        <input
-          type="checkbox"
-          name="isActive"
-          checked={form.isActive}
-          onChange={handleChange}
-          className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label className="text-sm font-medium text-slate-700">Active</label>
-      </div>
+            {/* Branch */}
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Branch</label>
+              <select
+                name="branchId"
+                value={form.branchId}
+                onChange={handleChange}
+                disabled={isSalesManager}
+                className={inputClass + (isSalesManager ? " bg-slate-100 cursor-not-allowed" : "")}
+              >
+                <option value="">Select Branch</option>
+                {branches.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Team */}
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Team</label>
+              <select
+                name="teamId"
+                value={form.teamId}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                <option value="">Select Team</option>
+                {teams.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Manager */}
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-slate-700">Manager</label>
+            {isSalesManager ? (
+              <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-3.5 flex items-center justify-between">
+                <div>
+                  <span className="block text-xs font-bold uppercase text-indigo-700">Assigned Manager (Default)</span>
+                  <span className="text-sm font-bold text-slate-900">
+                    {currentUser?.firstName} {currentUser?.lastName} (Sales Manager)
+                  </span>
+                </div>
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
+                  Selected by Default
+                </span>
+              </div>
+            ) : (
+              <select
+                name="managerId"
+                value={form.managerId}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                <option value="">No Manager</option>
+                {users
+                  .filter((u) => u.id !== user?.id)
+                  .map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.firstName} {u.lastName} ({u.email})
+                    </option>
+                  ))}
+              </select>
+            )}
+          </div>
+
+          {/* Roles - Single Role Selection */}
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              Role Designation <span className="text-red-500">*</span>{" "}
+              <span className="text-xs text-slate-400 font-normal">(Select 1 Role)</span>
+            </label>
+            <div className={`flex flex-wrap gap-3 rounded-xl border p-4 ${fieldErrors.roles ? "border-red-500 bg-red-50/20" : "border-slate-200"}`}>
+              {filteredRoles.length === 0 && (
+                <p className="text-sm text-slate-400">No roles available</p>
+              )}
+              {filteredRoles.map((role) => {
+                const isSelected = form.roleIds.includes(role.id);
+                return (
+                  <label
+                    key={role.id}
+                    className={`flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-2.5 text-sm font-semibold transition ${
+                      isSelected
+                        ? "border-indigo-600 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-200 shadow-xs"
+                        : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="userSingleRole"
+                      checked={isSelected}
+                      onChange={() => handleRoleSelect(role.id)}
+                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    {role.name}
+                  </label>
+                );
+              })}
+            </div>
+            {fieldErrors.roles && (
+              <p className="mt-1 text-xs font-semibold text-red-600 flex items-center gap-1">
+                <AlertCircle size={12} /> {fieldErrors.roles}
+              </p>
+            )}
+          </div>
+
+          {/* Active Status */}
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              name="isActive"
+              checked={form.isActive}
+              onChange={handleChange}
+              className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label className="text-sm font-medium text-slate-700">Active</label>
+          </div>
+        </>
+      )}
 
       {/* Validation Error Banner at End of Form */}
       {formErrorMessage && (

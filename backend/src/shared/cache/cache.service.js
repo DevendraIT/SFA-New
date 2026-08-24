@@ -114,6 +114,13 @@ class CacheService {
   }
 
   /**
+   * Alias for invalidatePrefix
+   */
+  flushByPrefix(prefix) {
+    this.invalidatePrefix(prefix);
+  }
+
+  /**
    * Invalidate multiple prefixes at once (Cascade Invalidation)
    */
   invalidatePrefixes(prefixes = []) {

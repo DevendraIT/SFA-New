@@ -14,8 +14,12 @@ api.interceptors.request.use((config) => {
     sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) ||
     localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (token && token !== "undefined" && token !== "null") {
+    if (config.headers?.set) {
+      config.headers.set("Authorization", `Bearer ${token}`);
+    } else if (config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
 
   return config;

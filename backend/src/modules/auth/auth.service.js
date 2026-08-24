@@ -475,9 +475,12 @@ export class AuthService {
     const authRecord = await this.authRepository.findAuthByEmail(email);
 
 
-    // Do not reveal whether the email exists
-    if (!authRecord) {
-      return true;
+    if (!authRecord || !authRecord.user) {
+      throw AppError.notFound("No registered account found with this email address.");
+    }
+
+    if (authRecord.user.isActive === false) {
+      throw AppError.forbidden("Your account is deactivated. Please contact your administrator.");
     }
 
     const otp = generateNumericOtp();

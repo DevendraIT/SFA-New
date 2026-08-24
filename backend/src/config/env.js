@@ -14,7 +14,7 @@ const envSchema = z.object({
   
   // JWT Configuration
   JWT_SECRET: z.string().default("your-super-secret-access-token-key-should-be-at-least-32-characters"),
-  JWT_EXPIRY: z.string().default("15m"),
+  JWT_EXPIRY: z.string().default("8h"),
   JWT_REFRESH_SECRET: z.string().default("your-super-secret-refresh-token-key-should-be-at-least-32-characters"),
   JWT_REFRESH_EXPIRY: z.string().default("7d"),
   
