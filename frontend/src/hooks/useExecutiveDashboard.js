@@ -1,41 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import dashboardService from "../services/dashboard.service";
 
 export default function useExecutiveDashboard() {
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const loadDashboard = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await dashboardService.getSuperAdminDashboard();
-      setDashboard(response?.data?.data || response?.data || response);
-    } catch (err) {
-      console.error("Super Admin Dashboard fetch error:", err);
+  const {
+    data: dashboard = null,
+    isLoading: loading,
+    error,
+    refetch: refresh,
+  } = useQuery({
+    queryKey: ["superAdminDashboard"],
+    queryFn: async () => {
       try {
+        const response = await dashboardService.getSuperAdminDashboard();
+        return response?.data?.data || response?.data || response;
+      } catch (err) {
+        console.error("Super Admin Dashboard fetch error:", err);
         const fallback = await dashboardService.getExecutiveDashboard();
-        setDashboard(fallback?.data?.data || fallback?.data || fallback);
-      } catch (fallbackErr) {
-        console.error(fallbackErr);
-        setError(fallbackErr);
+        return fallback?.data?.data || fallback?.data || fallback;
       }
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-
-  useEffect(() => {
-    loadDashboard();
-  }, [loadDashboard]);
+    },
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   return {
     dashboard,
     loading,
     error,
-    refresh: loadDashboard,
+    refresh,
   };
 }

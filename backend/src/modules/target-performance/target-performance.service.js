@@ -93,7 +93,7 @@ export class TargetPerformanceService {
     const completedVisitsCount = visits.filter((v) => v.status === "COMPLETED").length;
     const totalVisitsCount = visits.length;
 
-    const completedTasksCount = tasks.filter((t) => t.status === "COMPLETED").length;
+    const completedTasksCount = tasks.filter((t) => ["COMPLETED", "CHECKED_OUT"].includes(t.status)).length;
     const totalTasksCount = tasks.length;
 
     // Revenue & Quantity Fulfillment Metrics from all Sales Orders
@@ -165,7 +165,7 @@ export class TargetPerformanceService {
       const uOrders = orders.filter((o) => o.ownerId === u.id);
       const uCompletedOrders = uOrders.filter((o) => ["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status));
       const uTasks = tasks.filter((t) => t.assignedToId === u.id);
-      const uCompletedTasks = uTasks.filter((t) => t.status === "COMPLETED");
+      const uCompletedTasks = uTasks.filter((t) => ["COMPLETED", "CHECKED_OUT"].includes(t.status));
 
       let uReqQty = 0;
       let uFulQty = 0;

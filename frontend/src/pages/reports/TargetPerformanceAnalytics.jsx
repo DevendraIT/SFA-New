@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp, Target, Award, Users, ShoppingCart, IndianRupee,
@@ -19,26 +20,21 @@ import { getOrganizationOverview } from "../../api/targetPerformance.api";
 
 export default function TargetPerformanceAnalytics() {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [analytics, setAnalytics] = useState(null);
   const [trendPeriod, setTrendPeriod] = useState("monthly");
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
+  const {
+    data: analytics = null,
+    isLoading: loading,
+    refetch: loadData,
+  } = useQuery({
+    queryKey: ["targetPerformanceAnalytics"],
+    queryFn: async () => {
       const res = await getOrganizationOverview();
-      const data = res?.data?.data || res?.data;
-      setAnalytics(data);
-    } catch (e) {
-      console.warn("Failed to load target & performance analytics:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
+      return res?.data?.data || res?.data;
+    },
+    staleTime: 120 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   const overview = analytics?.companyOverview || analytics || {};
   const kpiSummary = overview?.kpiSummary || {};
@@ -103,7 +99,7 @@ export default function TargetPerformanceAnalytics() {
           </div>
           <span className="text-2xl font-black text-slate-900 block">₹{totalRevenue.toLocaleString("en-IN")}</span>
           <span className="text-xs font-medium text-emerald-600 flex items-center gap-1">
-            <CheckCircle2 size={14} /> Sum of 11 live DB orders
+            <CheckCircle2 size={14} /> Sum of live DB orders
           </span>
         </div>
 
@@ -112,9 +108,9 @@ export default function TargetPerformanceAnalytics() {
             <span className="text-xs font-semibold text-slate-500">Total Sales Orders Count</span>
             <div className="p-2 rounded-xl bg-blue-50 text-blue-600"><ShoppingCart size={18} /></div>
           </div>
-          <span className="text-2xl font-black text-slate-900 block">{totalOrders} Orders Placed</span>
+          <span className="text-2xl font-black text-slate-900 block">{totalOrders} Orders</span>
           <span className="text-xs font-medium text-blue-600 flex items-center gap-1">
-            <Building2 size={14} /> Across Airtel, Mahu & Indore
+            <Building2 size={14} /> Across branch
           </span>
         </div>
 
@@ -140,7 +136,7 @@ export default function TargetPerformanceAnalytics() {
       </div>
 
       {/* GRAPH 1: Overall Organization Sales Revenue Trend */}
-      <SectionCard title="Organization Sales Order Revenue & Orders Trajectory" subtitle="Sum of all sales orders placed across Daily, Weekly, and Monthly timelines" icon={TrendingUp} iconColor="text-emerald-600">
+      <SectionCard title="Organization Sales Order Revenue & Orders Trajectory" subtitle="Sum of all sales orders across Daily, Weekly, and Monthly timelines" icon={TrendingUp} iconColor="text-emerald-600">
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <span className="text-xs font-semibold text-slate-500">Timeline Filter:</span>
@@ -250,7 +246,7 @@ export default function TargetPerformanceAnalytics() {
                   <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                   <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                   <Legend />
-                  <Bar dataKey="ordersReceived" name="Orders Placed" fill="#f97316" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="ordersReceived" name="Orders" fill="#f97316" radius={[6, 6, 0, 0]} />
                   <Bar dataKey="totalOrderValue" name="Order Value (₹)" fill="#10b981" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -263,7 +259,7 @@ export default function TargetPerformanceAnalytics() {
                   <tr>
                     <th className="p-3">Sales Manager ({managers.length})</th>
                     <th className="p-3">Branch</th>
-                    <th className="p-3 text-center">Orders Placed</th>
+                    <th className="p-3 text-center">Orders</th>
                     <th className="p-3 text-right">Total Order Value</th>
                   </tr>
                 </thead>

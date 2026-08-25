@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, Warehouse, Package, Boxes, Activity, RefreshCw, Loader2, Target, MapPin
@@ -13,26 +14,21 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function ReportsPage() {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [analytics, setAnalytics] = useState(null);
   const [activeTab, setActiveTab] = useState("branch");
 
-  const loadReportsData = async () => {
-    try {
-      setLoading(true);
+  const {
+    data: analytics = null,
+    isLoading: loading,
+    refetch: loadReportsData,
+  } = useQuery({
+    queryKey: ["reportsAnalytics"],
+    queryFn: async () => {
       const res = await getReportsAnalytics();
-      const data = res.data?.data || res.data;
-      setAnalytics(data);
-    } catch (e) {
-      console.warn("Failed to load reports analytics:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadReportsData();
-  }, []);
+      return res.data?.data || res.data;
+    },
+    staleTime: 120 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   const reportTabs = [
     { id: "branch", label: "Branch Report", icon: Building2 },

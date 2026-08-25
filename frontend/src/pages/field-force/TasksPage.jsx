@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { RefreshCw, Loader2, Target, Clock, AlertCircle, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -17,32 +18,26 @@ const TASK_FILTERS = ["ALL", "PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"]
 
 export default function TasksPage() {
   const { user } = useAuth();
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState("ALL");
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      // Pass assignedToId to fetch tasks assigned TO this executive
+  const {
+    data: tasks = [],
+    isLoading: loading,
+    error,
+    refetch: loadData,
+  } = useQuery({
+    queryKey: ["tasks", user?.id],
+    queryFn: async () => {
       const params = { take: 100 };
       if (user?.id) params.assignedToId = user.id;
       const res = await fieldForceApi.listTasks(params);
       const resp = res.data;
-      // After fixing successResponse: response.data = { success, message, data: { tasks, total } }
-      // So the actual data is at resp.data.tasks
       const data = resp?.data?.tasks || resp?.message?.tasks || resp?.tasks || [];
-      setTasks(Array.isArray(data) ? data : []);
-    } catch (err) {
-      setError(err?.response?.data || err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadData(); }, []);
+      return Array.isArray(data) ? data : [];
+    },
+    staleTime: 30 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   const filteredTasks = activeFilter === "ALL"
     ? tasks
