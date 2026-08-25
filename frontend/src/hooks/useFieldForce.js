@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import fieldForceApi from "../api/fieldForce.api";
 import dayjs from "dayjs";
 
@@ -16,7 +17,7 @@ function safeArray(value) {
     const vals = Object.values(value);
     if (vals.length > 0 && typeof vals[0] === 'object') return vals;
   }
-return [];
+  return [];
 }
 
 function safeExtract(res) {
@@ -29,29 +30,12 @@ function safeExtract(res) {
 }
 
 export default function useFieldForce(userId) {
-  const [todayAttendance, setTodayAttendance] = useState(null);
-  const [attendanceHistory, setAttendanceHistory] = useState([]);
-  const [todayVisits, setTodayVisits] = useState([]);
-  const [visits, setVisits] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [expenses, setExpenses] = useState([]);
-  const [dars, setDars] = useState([]);
-  const [beatPlans, setBeatPlans] = useState([]);
-  const [calendarEvents, setCalendarEvents] = useState([]);
-  const [attendanceSummary, setAttendanceSummary] = useState(null);
-  const [visitsSummary, setVisitsSummary] = useState(null);
-  const [expenseSummary, setExpenseSummary] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
   const startOfMonth = dayjs().startOf("month").format("YYYY-MM-DD");
   const endOfMonth = dayjs().endOf("month").format("YYYY-MM-DD");
 
-  const loadAll = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["fieldForceData", userId, startOfMonth, endOfMonth],
+    queryFn: async () => {
       const results = await Promise.allSettled([
         fieldForceApi.getTodayAttendance().catch(() => ({ data: null })),
         fieldForceApi.listAttendance({ startDate: startOfMonth, endDate: endOfMonth, take: 50 }).catch(() => ({ data: { attendance: [] } })),
@@ -66,52 +50,32 @@ export default function useFieldForce(userId) {
         fieldForceApi.getAnalyticsExpenses({ startDate: startOfMonth, endDate: endOfMonth }).catch(() => ({ data: null })),
       ]);
 
-      // Today attendance
-      const att = safeExtract(results[0]);
-      setTodayAttendance(att ?? null);
-
-      // Attendance history
-      const attHist = safeExtract(results[1]);
-      setAttendanceHistory(safeArray(attHist));
-
-      // Visits
-      const visitsData = safeExtract(results[2]);
-      const visitsArr = safeArray(visitsData);
-      setVisits(visitsArr);
+      const visitsArr = safeArray(safeExtract(results[2]));
       const todayStr = dayjs().format("YYYY-MM-DD");
-      setTodayVisits(visitsArr.filter((v) => v?.scheduledAt && dayjs(v.scheduledAt).format("YYYY-MM-DD") === todayStr));
 
-      // Tasks
-      setTasks(safeArray(safeExtract(results[3])));
+      return {
+        todayAttendance: safeExtract(results[0]) ?? null,
+        attendanceHistory: safeArray(safeExtract(results[1])),
+        visits: visitsArr,
+        todayVisits: visitsArr.filter((v) => v?.scheduledAt && dayjs(v.scheduledAt).format("YYYY-MM-DD") === todayStr),
+        tasks: safeArray(safeExtract(results[3])),
+        expenses: safeArray(safeExtract(results[4])),
+        dars: safeArray(safeExtract(results[5])),
+        beatPlans: safeArray(safeExtract(results[6])),
+        calendarEvents: safeArray(safeExtract(results[7])),
+        attendanceSummary: safeExtract(results[8]) ?? null,
+        visitsSummary: safeExtract(results[9]) ?? null,
+        expenseSummary: safeExtract(results[10]) ?? null,
+      };
+    },
+    staleTime: 30 * 1000, // 30s cache
+    gcTime: 5 * 60 * 1000,
+  });
 
-      // Expenses
-      setExpenses(safeArray(safeExtract(results[4])));
-
-      // DARs
-      setDars(safeArray(safeExtract(results[5])));
-
-      // Beat Plans
-      setBeatPlans(safeArray(safeExtract(results[6])));
-
-      // Calendar Events
-      setCalendarEvents(safeArray(safeExtract(results[7])));
-
-      // Summaries
-      setAttendanceSummary(safeExtract(results[8]) ?? null);
-      setVisitsSummary(safeExtract(results[9]) ?? null);
-      setExpenseSummary(safeExtract(results[10]) ?? null);
-
-    } catch (err) {
-      console.error("Field Force Data Error:", err);
-      setError(err?.response?.data || err);
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, startOfMonth, endOfMonth]);
-
-  useEffect(() => {
-    loadAll();
-  }, [loadAll]);
+  const visits = data?.visits || [];
+  const tasks = data?.tasks || [];
+  const expenses = data?.expenses || [];
+  const dars = data?.dars || [];
 
   const visitSummary = useMemo(() => {
     const v = Array.isArray(visits) ? visits : [];
@@ -160,25 +124,25 @@ export default function useFieldForce(userId) {
   }, [dars]);
 
   return {
-    todayAttendance,
-    attendanceHistory,
-    todayVisits,
+    todayAttendance: data?.todayAttendance ?? null,
+    attendanceHistory: data?.attendanceHistory || [],
+    todayVisits: data?.todayVisits || [],
     visits,
     tasks,
     expenses,
     dars,
-    beatPlans,
-    calendarEvents,
-    loading,
+    beatPlans: data?.beatPlans || [],
+    calendarEvents: data?.calendarEvents || [],
+    loading: isLoading,
     error,
-    refresh: loadAll,
+    refresh: refetch,
     visitSummary,
     taskSummary,
     expenseSummary: expenseSummaryData,
     darSummary,
-    attendanceSummary,
-    visitsSummary,
-    expenseAnalytics: expenseSummary,
+    attendanceSummary: data?.attendanceSummary ?? null,
+    visitsSummary: data?.visitsSummary ?? null,
+    expenseAnalytics: data?.expenseSummary ?? null,
   };
 }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import userService from "../../../services/user.service";
@@ -9,6 +10,7 @@ import teamService from "../../../services/team.service";
 import { useAuth } from "../../../context/AuthContext";
 
 export default function UserForm({ user, onClose, onSuccess }) {
+  const queryClient = useQueryClient();
   const { user: currentUser } = useAuth();
   const isEditMode = !!user;
 
@@ -331,6 +333,7 @@ export default function UserForm({ user, onClose, onSuccess }) {
         toast.success("User created successfully");
       }
 
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       onSuccess?.();
       onClose?.();
     } catch (err) {

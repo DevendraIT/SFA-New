@@ -104,6 +104,10 @@ export class DashboardService {
 
   async getExecutiveDashboard(user) {
     const { organizationId, id: userId, branchId } = user;
+    const cacheKey = `dashboard:executive:${organizationId || 'all'}:${userId}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
@@ -185,6 +189,9 @@ export class DashboardService {
         { title: "Tasks & Orders", description: `${taskSummary.completed || 0} task(s) completed, ${totalOrdersCount} order(s) active`, time: "Today" },
       ],
     };
+
+    cacheService.set(cacheKey, result, 60);
+    return result;
   }
 
   async getTeamDashboard(organizationId, managerId) {
@@ -390,6 +397,10 @@ export class DashboardService {
 
   async getManagerDashboard(user) {
     let { organizationId, id: userId, branchId, departmentId } = user;
+    const cacheKey = `dashboard:manager:${organizationId || 'all'}:${branchId || 'nobranch'}:${userId}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
@@ -479,6 +490,9 @@ export class DashboardService {
         { title: "Orders Overview", description: `${approvedOrders} approved orders generating revenue`, time: "Today" },
       ],
     };
+
+    cacheService.set(cacheKey, result, 60);
+    return result;
   }
 
   _formatAttendance(data, totalUsers) {

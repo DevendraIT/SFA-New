@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
@@ -62,7 +63,9 @@ const schema = z.object({
 });
 
 export default function BranchForm({ branch, onClose, onSuccess }) {
+  const queryClient = useQueryClient();
   const { departments } = useDepartments();
+  const { territories } = useTerritories({ debounce: false });
 
   const {
     register,
@@ -91,40 +94,41 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
   });
 
   const selectedDepartmentId = watch("departmentId");
-  const { territories } = useTerritories({ debounce: false });
   const filteredTerritories = territories.filter(t => t.departmentId === selectedDepartmentId);
 
   useEffect(() => {
-    if (!branch) return;
-
-    reset({
-      departmentId: branch.departmentId || "",
-      territoryId: branch.territoryId || "",
-      name: branch.name || "",
-      code: branch.code || "",
-      email: branch.email || "",
-      phone: branch.phone || "",
-      address: branch.address || "",
-      city: branch.city || "",
-      state: branch.state || "",
-      country: branch.country || "",
-      postalCode: branch.postalCode || "",
-      latitude: branch.latitude != null ? branch.latitude : "",
-      longitude: branch.longitude != null ? branch.longitude : "",
-    });
+    if (branch) {
+      reset({
+        departmentId: branch.departmentId || "",
+        territoryId: branch.territoryId || "",
+        name: branch.name || "",
+        code: branch.code || "",
+        email: branch.email || "",
+        phone: branch.phone || "",
+        address: branch.address || "",
+        city: branch.city || "",
+        state: branch.state || "",
+        country: branch.country || "",
+        postalCode: branch.postalCode || "",
+        latitude: branch.latitude != null ? branch.latitude : "",
+        longitude: branch.longitude != null ? branch.longitude : "",
+      });
+    }
   }, [branch, reset]);
 
   const onSubmit = async (values) => {
     const payload = {
-      ...values,
-      code: values.code?.toUpperCase(),
-      email: values.email || undefined,
-      phone: values.phone || undefined,
-      address: values.address || undefined,
-      city: values.city || undefined,
-      state: values.state || undefined,
-      country: values.country || undefined,
-      postalCode: values.postalCode || undefined,
+      departmentId: values.departmentId,
+      territoryId: values.territoryId,
+      name: values.name.trim(),
+      code: values.code ? values.code.trim().toUpperCase() : undefined,
+      email: values.email ? values.email.trim().toLowerCase() : undefined,
+      phone: values.phone ? values.phone.trim() : undefined,
+      address: values.address ? values.address.trim() : undefined,
+      city: values.city ? values.city.trim() : undefined,
+      state: values.state ? values.state.trim() : undefined,
+      country: values.country ? values.country.trim() : undefined,
+      postalCode: values.postalCode ? values.postalCode.trim() : undefined,
       latitude: values.latitude !== "" && values.latitude != null ? parseFloat(values.latitude) : undefined,
       longitude: values.longitude !== "" && values.longitude != null ? parseFloat(values.longitude) : undefined,
     };
@@ -137,6 +141,7 @@ export default function BranchForm({ branch, onClose, onSuccess }) {
         await branchService.createBranch(payload);
         toast.success("Branch created successfully.");
       }
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
       onSuccess?.();
       onClose?.();
     } catch (error) {

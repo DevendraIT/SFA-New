@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import territoryService from "../../../services/territory.service";
 import useDepartments from "../../../hooks/useDepartments";
 import { Loader2 } from "lucide-react";
 
 export default function TerritoryForm({ territory, onClose, onSuccess }) {
+  const queryClient = useQueryClient();
   const isEdit = !!territory;
 
   const [form, setForm] = useState({
@@ -54,6 +56,7 @@ export default function TerritoryForm({ territory, onClose, onSuccess }) {
         await territoryService.createTerritory(form);
         toast.success("Territory created successfully");
       }
+      queryClient.invalidateQueries({ queryKey: ["territories"] });
       onSuccess?.();
       onClose?.();
     } catch (err) {

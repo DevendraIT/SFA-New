@@ -1,12 +1,25 @@
+import cacheService from '../../shared/cache/cache.service.js';
+
 export class TargetPerformanceService {
   constructor(targetPerformanceRepository) {
     this.repo = targetPerformanceRepository;
   }
 
+  _invalidate(orgId) {
+    if (!orgId) return;
+    cacheService.invalidatePrefixes([
+      `target:list:${orgId}:`,
+      `target:overview:${orgId}:`,
+    ]);
+  }
+
   async getTargets(organizationId, query) {
+    const cacheKey = `target:list:${organizationId}:${JSON.stringify(query || {})}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const targets = await this.repo.getTargets(organizationId, query);
-    // Dynamically calculate achievement %
-    return targets.map(t => {
+    const result = targets.map(t => {
       const achievementPercent = t.targetValue > 0 ? (t.achievedValue / t.targetValue) * 100 : 0;
       return {
         ...t,
@@ -14,17 +27,26 @@ export class TargetPerformanceService {
         performanceScore: this.calculatePerformanceScore(t)
       };
     });
+
+    cacheService.set(cacheKey, result, 300);
+    return result;
   }
 
   async createTarget(organizationId, data) {
-    return this.repo.createTarget(organizationId, data);
+    const target = await this.repo.createTarget(organizationId, data);
+    this._invalidate(organizationId);
+    return target;
   }
 
   async planTargets(organizationId, data) {
+    let result;
     if (Array.isArray(data.targets)) {
-      return Promise.all(data.targets.map(t => this.repo.createTarget(organizationId, t)));
+      result = await Promise.all(data.targets.map(t => this.repo.createTarget(organizationId, t)));
+    } else {
+      result = await this.repo.createTarget(organizationId, data);
     }
-    return this.repo.createTarget(organizationId, data);
+    this._invalidate(organizationId);
+    return result;
   }
 
   async getLeaderboard(organizationId, metric) {
@@ -55,6 +77,11 @@ export class TargetPerformanceService {
   }
 
   async getCompanyOverview(organizationId, userContext = null) {
+    const userId = userContext?.id || userContext?.userId;
+    const cacheKey = `target:overview:${organizationId}:${userId || 'all'}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const raw = await this.repo.getCompanyOverview(organizationId, userContext);
     const { targets, orders, branches, users, visits, tasks } = raw;
 
@@ -227,7 +254,7 @@ export class TargetPerformanceService {
       };
     });
 
-    return {
+    const result = {
       totalRevenue,
       revenueTrends,
       kpiSummary: {
@@ -246,5 +273,8 @@ export class TargetPerformanceService {
       executivesPerformance: executives,
       managersPerformance: managers,
     };
+
+    cacheService.set(cacheKey, result, 300);
+    return result;
   }
 }

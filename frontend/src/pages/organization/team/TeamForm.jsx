@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import teamService from "../../../services/team.service";
 import branchService from "../../../services/branch.service";
@@ -7,6 +8,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 
 export default function TeamForm({ team, onClose, onSuccess }) {
+  const queryClient = useQueryClient();
   const { user: currentUser } = useAuth();
   const isEdit = !!team;
 
@@ -135,6 +137,7 @@ export default function TeamForm({ team, onClose, onSuccess }) {
         await teamService.createTeam(payload);
         toast.success("Team created successfully");
       }
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
       onSuccess?.();
       onClose?.();
     } catch (err) {

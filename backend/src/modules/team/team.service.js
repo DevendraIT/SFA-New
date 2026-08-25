@@ -1,5 +1,6 @@
 import { AppError } from '../../shared/response.js';
 import { logAudit } from '../../utils/audit.js';
+import cacheService from '../../shared/cache/cache.service.js';
 
 /**
  * Team Service
@@ -30,6 +31,10 @@ export class TeamService {
   }
 
   async listTeams(organizationId, query, user = null) {
+    const cacheKey = `org:teams:${organizationId}:${user?.id || 'all'}:${JSON.stringify(query || {})}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const options = this._buildListOptions(query);
 
     let branchId = query.branchId;
@@ -51,7 +56,9 @@ export class TeamService {
       departmentId: query.departmentId,
       territoryId: query.territoryId,
     });
-    return { teams, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    const result = { teams, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    cacheService.set(cacheKey, result, 300);
+    return result;
   }
 
   async getTeam(id, organizationId, user = null) {
@@ -97,6 +104,7 @@ export class TeamService {
       req,
     });
 
+    cacheService.invalidatePrefix("org:teams:");
     return team;
   }
 
@@ -130,6 +138,7 @@ export class TeamService {
       req,
     });
 
+    cacheService.invalidatePrefix("org:teams:");
     return updated;
   }
 

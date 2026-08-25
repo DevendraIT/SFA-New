@@ -182,7 +182,7 @@ export default function TargetPerformanceAnalytics() {
                   <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                   <Legend />
                   <Area type="monotone" dataKey="revenue" name="Sales Order Revenue (₹)" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
-                  <Line type="monotone" dataKey="orders" name="Orders Count" stroke="#3b82f6" strokeWidth={2} />
+                  <Line type="monotone" dataKey="orders" name="Orders Count" stroke="#f97316" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
@@ -205,7 +205,7 @@ export default function TargetPerformanceAnalytics() {
                   <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                   <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                   <Legend />
-                  <Bar dataKey="assignedTasks" name="Tasks Assigned" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="assignedTasks" name="Tasks Assigned" fill="#f97316" radius={[6, 6, 0, 0]} />
                   <Bar dataKey="completedTasks" name="Tasks Completed" fill="#10b981" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -250,7 +250,7 @@ export default function TargetPerformanceAnalytics() {
                   <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                   <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                   <Legend />
-                  <Bar dataKey="ordersReceived" name="Orders Placed" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="ordersReceived" name="Orders Placed" fill="#f97316" radius={[6, 6, 0, 0]} />
                   <Bar dataKey="totalOrderValue" name="Order Value (₹)" fill="#10b981" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -295,7 +295,7 @@ export default function TargetPerformanceAnalytics() {
                   <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                   <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                   <Legend />
-                  <Bar dataKey="totalOrders" name="Total Orders" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="totalOrders" name="Total Orders" fill="#f97316" radius={[6, 6, 0, 0]} />
                   <Bar dataKey="completedTasks" name="Completed Tasks" fill="#10b981" radius={[6, 6, 0, 0]} />
                   <Bar dataKey="requestedQty" name="Requested Qty" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                 </BarChart>

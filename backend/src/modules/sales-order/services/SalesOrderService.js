@@ -21,6 +21,7 @@ import {
 import { SalesOrderEventEmitter } from '../events/sales-order.events.js';
 import { ORDER_STATUS, ACTIVITY_TYPE } from '../constants/sales-order.constants.js';
 import { AppError } from '../../../shared/response.js';
+import cacheService from '../../../shared/cache/cache.service.js';
 
 export class SalesOrderService {
   constructor(salesOrderRepository, inventoryService = null) {
@@ -28,11 +29,26 @@ export class SalesOrderService {
     this.inventoryService = inventoryService;
   }
 
+  _invalidateOrdersCache(orgId) {
+    if (!orgId) return;
+    cacheService.invalidatePrefixes([
+      `sales:orders:${orgId}:`,
+      `${orgId}:dashboard:`,
+      `dashboard:`,
+    ]);
+  }
+
   /**
    * Get paginated orders list with filters and search
    */
   async getOrdersList(queryParams, userContext) {
     try {
+      const orgId = userContext.organizationId;
+      const userId = userContext.userId || userContext.id;
+      const cacheKey = `sales:orders:${orgId}:${userId || 'all'}:${JSON.stringify(queryParams || {})}`;
+      const cached = cacheService.get(cacheKey);
+      if (cached) return cached;
+
       // Build filters based on user context and permissions
       const filters = this.buildUserFilters(queryParams, userContext);
       
@@ -53,7 +69,7 @@ export class SalesOrderService {
       // Transform to DTOs
       const orderDtos = orders.map(order => new OrderListDto(order));
 
-      return {
+      const result = {
         success: true,
         data: {
           orders: orderDtos,
@@ -65,6 +81,9 @@ export class SalesOrderService {
           },
         },
       };
+
+      cacheService.set(cacheKey, result, 60);
+      return result;
     } catch (error) {
       throw AppError.internal('Failed to fetch orders list', error);
     }
@@ -188,6 +207,7 @@ export class SalesOrderService {
         await this.changeOrderStatus(createdOrder.id, ORDER_STATUS.APPROVED, 'Auto-approved', userContext);
       }
 
+      this._invalidateOrdersCache(userContext.organizationId);
       return {
         success: true,
         data: new OrderDetailsDto(createdOrder),
@@ -254,6 +274,7 @@ export class SalesOrderService {
       // Emit events
       await SalesOrderEventEmitter.emitOrderUpdated(updatedOrder, dataToUpdate, userContext.userId, userContext.organizationId);
 
+      this._invalidateOrdersCache(userContext.organizationId);
       return {
         success: true,
         data: new OrderDetailsDto(updatedOrder),
@@ -358,6 +379,7 @@ export class SalesOrderService {
       // Emit events
       await SalesOrderEventEmitter.emitOrderStatusChanged(updatedOrder, currentStatus, newStatus, reason, userContext.userId, userContext.organizationId);
 
+      this._invalidateOrdersCache(userContext.organizationId);
       return {
         success: true,
         data: new OrderStatusDto({ ...updatedOrder, previousStatus: currentStatus }),

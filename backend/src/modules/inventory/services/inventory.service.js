@@ -29,6 +29,8 @@ export class InventoryService {
     if (!orgId) return;
     cacheService.invalidatePrefixes([
       `${orgId}:inventory:`,
+      `org:warehouses:${orgId}:`,
+      `inventory:movements:${orgId}:`,
       `${orgId}:dashboard:`,
       `${orgId}:sales:`,
     ]);
@@ -153,21 +155,30 @@ export class InventoryService {
 
   async getWarehouses(userContext) {
     const userId = this._getUserId(userContext);
+    const cacheKey = `org:warehouses:${userContext.organizationId}:${userId || 'all'}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
+    let result;
     if (this._isWarehouseManagerOnly(userContext) && userId) {
       const assignedWh = await this.inventoryRepository.findWarehouseByManagerId(userId, userContext.organizationId);
       if (assignedWh) {
-        return {
+        result = {
           success: true,
           data: [new WarehouseDto(assignedWh)],
         };
+        cacheService.set(cacheKey, result, 300);
+        return result;
       }
     }
 
     const warehouses = await this.inventoryRepository.findWarehouses(userContext.organizationId);
-    return {
+    result = {
       success: true,
       data: warehouses.map(w => new WarehouseDto(w)),
     };
+    cacheService.set(cacheKey, result, 300);
+    return result;
   }
 
   async createWarehouse(data, userContext) {
@@ -695,6 +706,12 @@ export class InventoryService {
   // ==========================================
 
   async getStockMovements(queryParams, userContext) {
+    const orgId = userContext.organizationId;
+    const userId = this._getUserId(userContext);
+    const cacheKey = `inventory:movements:${orgId}:${userId || 'all'}:${JSON.stringify(queryParams || {})}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const pagination = {
       page: parseInt(queryParams.page) || 1,
       limit: parseInt(queryParams.limit) || 100,
@@ -708,7 +725,6 @@ export class InventoryService {
       ...queryParams
     };
 
-    const userId = this._getUserId(userContext);
     if (this._isWarehouseManagerOnly(userContext) && userId) {
       const assignedWh = await this.inventoryRepository.findWarehouseByManagerId(userId, userContext.organizationId);
       if (assignedWh) {
@@ -717,6 +733,8 @@ export class InventoryService {
     }
 
     const result = await this.inventoryRepository.getStockMovements(filters, pagination, sorting);
-    return { success: true, data: result };
+    const response = { success: true, data: result };
+    cacheService.set(cacheKey, response, 30);
+    return response;
   }
 }

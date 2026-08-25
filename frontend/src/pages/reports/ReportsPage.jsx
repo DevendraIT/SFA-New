@@ -135,7 +135,7 @@ export default function ReportsPage() {
                         <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                         <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                         <Legend />
-                        <Bar dataKey="totalOrders" name="Total Orders" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="totalOrders" name="Total Orders" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="completedTasks" name="Completed Tasks" fill="#10b981" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="requestedQuantity" name="Requested Quantity" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                       </BarChart>
@@ -191,7 +191,7 @@ export default function ReportsPage() {
                         <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                         <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                         <Legend />
-                        <Bar dataKey="totalStockQuantity" name="Total Stock Qty" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="totalStockQuantity" name="Total Stock Qty" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="availableStockQuantity" name="Available Qty" fill="#10b981" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="productIssueCount" name="Product Issues" fill="#f59e0b" radius={[6, 6, 0, 0]} />
                       </BarChart>
@@ -247,7 +247,7 @@ export default function ReportsPage() {
                         <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                         <Legend />
                         <Bar dataKey="totalUnitsSold" name="Units Sold" fill="#10b981" radius={[6, 6, 0, 0]} />
-                        <Bar dataKey="currentStockQuantity" name="Current Stock" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="currentStockQuantity" name="Current Stock" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="totalOrdersCount" name="Total Orders" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>

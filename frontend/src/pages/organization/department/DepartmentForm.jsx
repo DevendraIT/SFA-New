@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import departmentService from "../../../services/department.service";
 import branchService from "../../../services/branch.service";
 import { Loader2 } from "lucide-react";
 
 export default function DepartmentForm({ department, onClose, onSuccess }) {
+  const queryClient = useQueryClient();
   const isEdit = !!department;
 
   const [form, setForm] = useState({
@@ -47,6 +49,7 @@ export default function DepartmentForm({ department, onClose, onSuccess }) {
         await departmentService.createDepartment(payload);
         toast.success("Department created successfully");
       }
+      queryClient.invalidateQueries({ queryKey: ["departments"] });
       onSuccess?.();
       onClose?.();
     } catch (err) {
