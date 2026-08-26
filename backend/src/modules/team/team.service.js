@@ -146,20 +146,23 @@ export class TeamService {
     const team = await this.repo.findTeamById(id, organizationId);
     if (!team) throw AppError.notFound('Team not found.');
 
-    if (team._count.users > 0) {
-      throw AppError.conflict('Cannot delete team while users are assigned.');
+    if (team._count?.users > 0) {
+      throw AppError.conflict('Cannot delete team while active users are assigned to it. Please reassign team members first.');
     }
+
+    const deleted = await this.repo.deleteTeam(id);
 
     await logAudit({
       organizationId,
       userId: req.user.id,
-      action: 'team.delete.rejected',
+      action: 'team.delete',
       moduleName: 'team',
-      details: { teamId: id, reason: 'Soft delete fields unavailable in Prisma schema.' },
+      details: { teamId: id, name: team.name },
       req,
-    });
+    }).catch((err) => console.warn('Audit log error:', err.message));
 
-    throw AppError.conflict('Team cannot be deleted because the current Prisma schema does not provide soft-delete fields for this resource.');
+    cacheService.invalidatePrefix("org:teams:");
+    return deleted;
   }
 
   async restoreTeam(id, organizationId, req) {

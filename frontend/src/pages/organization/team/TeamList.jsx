@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Plus,
   Search,
@@ -41,6 +42,7 @@ import SectionCard from "../../../components/dashboard/SectionCard";
 import ChartCard from "../../../components/dashboard/ChartCard";
 
 export default function TeamList() {
+  const queryClient = useQueryClient();
   const { user } = useAuth();
   const isHeadOfSales = useMemo(() => {
     if (!user) return false;
@@ -75,11 +77,12 @@ export default function TeamList() {
 
     try {
       await teamService.deleteTeam(team.id);
-      toast.success("Team deleted");
+      toast.success("Team deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
       reload();
     } catch (err) {
-      console.log(err);
-      toast.error("Unable to delete team");
+      console.error(err);
+      toast.error(err?.response?.data?.message || err?.message || "Unable to delete team");
     }
   };
 
