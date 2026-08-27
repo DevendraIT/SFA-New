@@ -187,9 +187,6 @@ export default function StockMovements() {
               <option value="ALL">All Movement Types</option>
               <option value="ADD">ADD (+)</option>
               <option value="REDUCE">REDUCE (-)</option>
-              <option value="ISSUE">ISSUE (Dispatch)</option>
-              <option value="RETURN">RETURN</option>
-              <option value="RESERVE">RESERVE</option>
             </select>
           </div>
 
