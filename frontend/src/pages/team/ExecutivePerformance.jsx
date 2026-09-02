@@ -240,7 +240,7 @@ export default function ExecutivePerformance() {
 
           <div className="p-4 overflow-x-auto">
             {activeTab === "executives" && (
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-left text-sm min-w-[600px]">
                 <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                   <tr>
                     <th className="py-3 px-4">Sales Executive</th>
@@ -276,7 +276,7 @@ export default function ExecutivePerformance() {
             )}
 
             {activeTab === "managers" && (
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-left text-sm min-w-[600px]">
                 <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                   <tr>
                     <th className="py-3 px-4">Sales Manager</th>
@@ -308,7 +308,7 @@ export default function ExecutivePerformance() {
             )}
 
             {activeTab === "teams" && (
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-left text-sm min-w-[600px]">
                 <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
                   <tr>
                     <th className="py-3 px-4">Team Name</th>

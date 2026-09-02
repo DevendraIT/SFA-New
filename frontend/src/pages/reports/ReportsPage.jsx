@@ -250,7 +250,7 @@ export default function ReportsPage() {
                   </div>
 
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left text-sm min-w-[700px]">
                       <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
                         <tr>
                           <th className="p-4">Product Name</th>
@@ -291,7 +291,7 @@ export default function ReportsPage() {
               {stockPerBranchesReport.length > 0 ? (
                 <div className="space-y-6">
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left text-sm min-w-[700px]">
                       <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
                         <tr>
                           <th className="p-4">Product</th>
@@ -364,7 +364,7 @@ export default function ReportsPage() {
                 {/* Field Workforce Member Breakdown Table */}
                 {(fieldForceReport.workforceList || []).length > 0 ? (
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left text-sm min-w-[700px]">
                       <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
                         <tr>
                           <th className="p-4">Field Worker Name</th>

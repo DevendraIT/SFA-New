@@ -59,47 +59,49 @@ export default function DashboardHeader({
   }, [user]);
 
   return (
-    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-      <div>
-        <div className="flex items-center gap-3 flex-wrap">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {welcomeText && (
-            <p className="text-sm text-slate-500 font-medium">{welcomeText}</p>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium">{welcomeText}</p>
           )}
           {scopeBadge && (
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-xs ${scopeBadge.bgClass}`}>
-              <scopeBadge.icon size={13} />
-              {scopeBadge.label}: {scopeBadge.value}
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold border shadow-xs ${scopeBadge.bgClass}`}>
+              <scopeBadge.icon size={13} className="shrink-0" />
+              <span className="truncate">{scopeBadge.label}: {scopeBadge.value}</span>
             </span>
           )}
         </div>
-        <h1 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-1.5 tracking-tight">
+        <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-slate-900 mt-1 sm:mt-1.5 tracking-tight truncate">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-slate-500 mt-1.5 text-base">{subtitle}</p>
+          <p className="text-xs sm:text-base text-slate-500 mt-0.5 sm:mt-1.5 truncate">{subtitle}</p>
         )}
       </div>
 
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
         {actions}
 
         {onRefresh && (
           <button
+            type="button"
             onClick={onRefresh}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all text-sm font-medium text-slate-700"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl border border-slate-200 bg-white shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all text-xs sm:text-sm font-medium text-slate-700"
           >
-            <RefreshCcw size={16} />
-            Refresh
+            <RefreshCcw size={15} />
+            <span>Refresh</span>
           </button>
         )}
 
         {showExport && onExport && (
           <button
+            type="button"
             onClick={onExport}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white shadow-sm hover:bg-blue-700 transition-all text-sm font-medium"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-blue-600 text-white shadow-sm hover:bg-blue-700 transition-all text-xs sm:text-sm font-medium"
           >
-            <Download size={16} />
-            Export
+            <Download size={15} />
+            <span>Export</span>
           </button>
         )}
       </div>

@@ -520,12 +520,12 @@ export default function UserList() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl">
-            <button type="button" onClick={() => { setShowModal(false); setSelectedUser(null); }} className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-              <X size={22} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl bg-white p-4 sm:p-8 shadow-2xl my-auto">
+            <button type="button" onClick={() => { setShowModal(false); setSelectedUser(null); }} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
+              <X size={20} />
             </button>
-            <h2 className="mb-6 text-2xl font-bold">{selectedUser ? "Edit User" : "Create User"}</h2>
+            <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold">{selectedUser ? "Edit User" : "Create User"}</h2>
             <UserForm user={selectedUser} onClose={() => { setShowModal(false); setSelectedUser(null); }} onSuccess={reload} />
           </div>
         </div>
@@ -533,12 +533,12 @@ export default function UserList() {
 
       {/* View Modal */}
       {viewUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setViewUser(null)}>
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <button type="button" onClick={() => setViewUser(null)} className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-              <X size={22} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto" onClick={() => setViewUser(null)}>
+          <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl bg-white p-4 sm:p-8 shadow-2xl my-auto" onClick={(e) => e.stopPropagation()}>
+            <button type="button" onClick={() => setViewUser(null)} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
+              <X size={20} />
             </button>
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewUser.firstName} {viewUser.lastName}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-4">{viewUser.firstName} {viewUser.lastName}</h2>
             <div className="space-y-3 text-sm text-slate-700">
               <p><strong>Email:</strong> {viewUser.email}</p>
               <p><strong>Branch:</strong> {viewUser.branch?.name || "-"}</p>

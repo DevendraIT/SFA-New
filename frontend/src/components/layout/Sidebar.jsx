@@ -26,6 +26,8 @@ import SidebarGroup from "./SidebarGroup";
 export default function Sidebar({
   collapsed,
   setCollapsed,
+  mobileOpen,
+  setMobileOpen,
 }) {
   const location = useLocation();
 
@@ -187,56 +189,67 @@ export default function Sidebar({
 
 
 
+  const closeMobile = () => {
+    if (setMobileOpen) setMobileOpen(false);
+  };
+
   return (
-    <aside
-      className={`h-screen sticky top-0 transition-all duration-300 border-r border-slate-200 bg-white shadow-sm flex flex-col ${collapsed ? "w-20" : "w-72"
-        }`}
-    >
-      {/* Logo */}
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
+        <div
+          onClick={closeMobile}
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          aria-hidden="true"
+        />
+      )}
 
-      <div className="h-20 border-b border-slate-200 flex items-center justify-between px-5">
-
-        {!collapsed && (
-
-          <Link
-            to="/dashboard"
-            className="flex flex-col"
-          >
-
-            <span className="text-2xl font-bold text-blue-600">
-
-              IT360
-
-            </span>
-
-            <span className="text-xs text-slate-500">
-
-              Sales Force Automation
-
-            </span>
-
-          </Link>
-
-        )}
-
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="rounded-lg p-2 hover:bg-slate-100 transition"
-        >
-          {collapsed ? (
-            <PanelLeftOpen size={20} />
-          ) : (
-            <PanelLeftClose size={20} />
+      <aside
+        className={`fixed md:sticky top-0 bottom-0 left-0 z-50 md:z-auto h-screen transition-all duration-300 border-r border-slate-200 bg-white shadow-xl md:shadow-sm flex flex-col ${
+          mobileOpen ? "translate-x-0 w-72" : "-translate-x-full md:translate-x-0"
+        } ${collapsed ? "md:w-20" : "md:w-72"}`}
+      >
+        {/* Logo */}
+        <div className="h-16 sm:h-20 border-b border-slate-200 flex items-center justify-between px-5">
+          {(!collapsed || mobileOpen) && (
+            <Link
+              to="/dashboard"
+              onClick={closeMobile}
+              className="flex flex-col"
+            >
+              <span className="text-2xl font-bold text-blue-600">
+                IT360
+              </span>
+              <span className="text-xs text-slate-500">
+                Sales Force Automation
+              </span>
+            </Link>
           )}
-        </button>
 
-      </div>
+          <button
+            type="button"
+            onClick={() => {
+              if (window.innerWidth < 768) {
+                closeMobile();
+              } else {
+                setCollapsed(!collapsed);
+              }
+            }}
+            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 transition"
+          >
+            {collapsed && !mobileOpen ? (
+              <PanelLeftOpen size={20} />
+            ) : (
+              <PanelLeftClose size={20} />
+            )}
+          </button>
+        </div>
 
       {/* Navigation */}
 
       <div className="flex-1 overflow-y-auto px-3 py-5">
 
-        <nav className="space-y-2">
+        <nav className="space-y-2" onClick={(e) => { if (e.target.closest('a')) closeMobile(); }}>
 
           {filteredNavigation.map((item) => {
 
@@ -337,5 +350,6 @@ export default function Sidebar({
       </div>
 
     </aside>
+    </>
   );
 }

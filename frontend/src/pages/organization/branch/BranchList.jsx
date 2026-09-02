@@ -442,8 +442,8 @@ export default function BranchList() {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border bg-white">
-        <table className="w-full">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table className="w-full min-w-[700px]">
           <thead className="bg-slate-100">
             <tr>
               <th className="px-6 py-4 text-left">Branch</th>
@@ -489,37 +489,23 @@ export default function BranchList() {
                 <tr key={branch.id} className="border-t hover:bg-slate-50 transition">
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-indigo-50 p-2">
-                        <GitBranch size={18} className="text-indigo-600" />
+                      <div className="rounded-xl bg-indigo-50 p-2.5 text-indigo-600">
+                        <GitBranch size={20} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-slate-800">{branch.name}</h4>
-                        <p className="text-sm text-slate-500">
-                          Created {branch.createdAt ? new Date(branch.createdAt).toLocaleDateString() : "-"}
-                        </p>
+                        <p className="font-semibold text-slate-800">{branch.name}</p>
+                        {branch.city && <p className="text-xs text-slate-400">{branch.city}, {branch.state}</p>}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-5 text-slate-600">{branch.code || "-"}</td>
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-2">
-                      <LayoutGrid size={15} className="text-slate-400" />
-                      <span className="text-slate-700">{branch.department?.name || "-"}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-5">
-                    <span className="text-slate-700">{branch.territory?.name || "-"}</span>
-                  </td>
-                  <td className="px-6 py-5 text-center">{branch._count?.teams ?? 0}</td>
+                  <td className="px-6 py-5 font-mono text-sm text-slate-600">{branch.code || "-"}</td>
+                  <td className="px-6 py-5 text-sm text-slate-600">{branch.department?.name || "-"}</td>
+                  <td className="px-6 py-5 text-sm text-slate-600">{branch.territory?.name || "-"}</td>
+                  <td className="px-6 py-5 text-center font-medium">{branch._count?.teams ?? 0}</td>
+                  <td className="px-6 py-5 text-center font-medium">{branch._count?.users ?? 0}</td>
                   <td className="px-6 py-5 text-center">
-                    <div className="flex items-center justify-center gap-1">
-                      <Users size={15} className="text-slate-400" />
-                      <span>{branch._count?.users ?? 0}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-5">
                     <div className="flex items-center justify-center gap-2">
-                      <button onClick={() => setViewBranch(branch)} className="rounded-lg border p-2 hover:bg-slate-100" title="View">
+                      <button onClick={() => setViewBranch(branch)} className="rounded-lg border p-2 text-slate-600 hover:bg-slate-100" title="View">
                         <Eye size={17} />
                       </button>
                       {canManageBranch && (
@@ -549,26 +535,26 @@ export default function BranchList() {
       </div>
 
       {/* Statistics */}
-      <div className="grid gap-5 md:grid-cols-3">
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+      <div className="grid gap-3 sm:gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+        <div className="rounded-2xl border bg-white p-4 sm:p-6 shadow-sm">
           <h4 className="text-sm text-slate-500">Total Branches</h4>
-          <h2 className="mt-2 text-3xl font-bold">{branches?.length || 0}</h2>
+          <h2 className="mt-2 text-2xl sm:text-3xl font-bold">{branches?.length || 0}</h2>
         </div>
 
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border bg-white p-4 sm:p-6 shadow-sm">
           <h4 className="text-sm text-slate-500">Total Users</h4>
-          <h2 className="mt-2 text-3xl font-bold">{totalUsersCount}</h2>
+          <h2 className="mt-2 text-2xl sm:text-3xl font-bold">{totalUsersCount}</h2>
         </div>
       </div>
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl">
-            <button type="button" onClick={() => { setShowModal(false); setSelectedBranch(null); }} className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-              <X size={22} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl bg-white p-4 sm:p-8 shadow-2xl my-auto">
+            <button type="button" onClick={() => { setShowModal(false); setSelectedBranch(null); }} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
+              <X size={20} />
             </button>
-            <h2 className="mb-6 text-2xl font-bold">{selectedBranch ? "Edit Branch" : "Create Branch"}</h2>
+            <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold">{selectedBranch ? "Edit Branch" : "Create Branch"}</h2>
             <BranchForm branch={selectedBranch} onClose={() => { setShowModal(false); setSelectedBranch(null); }} onSuccess={reload} />
           </div>
         </div>
@@ -576,12 +562,12 @@ export default function BranchList() {
 
       {/* View Modal */}
       {viewBranch && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setViewBranch(null)}>
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <button type="button" onClick={() => setViewBranch(null)} className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
-              <X size={22} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto" onClick={() => setViewBranch(null)}>
+          <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl bg-white p-4 sm:p-8 shadow-2xl my-auto" onClick={(e) => e.stopPropagation()}>
+            <button type="button" onClick={() => setViewBranch(null)} className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100">
+              <X size={20} />
             </button>
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">{viewBranch.name}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-4">{viewBranch.name}</h2>
             <div className="space-y-3 text-sm text-slate-700">
               <p><strong>Code:</strong> {viewBranch.code || "-"}</p>
               <p><strong>Organization:</strong> {viewBranch.organization?.name || "-"}</p>
