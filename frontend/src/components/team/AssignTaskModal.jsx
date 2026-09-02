@@ -33,7 +33,6 @@ const INITIAL_REQUIREMENTS = [
   { key: "requirePhoto", label: "Photo Capture", icon: Camera, desc: "Require photo evidence at location" },
   { key: "requireSignature", label: "Digital Signature", icon: FileSignature, desc: "Require customer digital signature" },
   { key: "requireVisitNotes", label: "Visit Notes", icon: FileText, desc: "Require detailed visit notes" },
-  { key: "requireInvoice", label: "Generate Invoice", icon: DollarSign, desc: "Generate invoice upon completion" },
   { key: "requirePayment", label: "Payment Collection", icon: DollarSign, desc: "Collect payment during visit" },
   { key: "requireCheckIn", label: "Geo Check-In", icon: MapPin, desc: "Require geo-verified check-in at customer location" },
   { key: "requireCheckOut", label: "Geo Check-Out", icon: MapPin, desc: "Require geo-verified check-out" },
@@ -44,7 +43,6 @@ const SECTIONS = [
   { id: "assignment", label: "Assignment", icon: Users },
   { id: "customer", label: "Customer Details", icon: Building2 },
   { id: "order", label: "Sales Order", icon: ShoppingCart },
-  { id: "products", label: "Products", icon: Package },
   { id: "requirements", label: "Execution Requirements", icon: Settings },
   { id: "summary", label: "Summary", icon: Check },
 ];
@@ -748,14 +746,6 @@ function SummarySection({ data, executives, customers, customerOrders, categorie
       ],
     },
     {
-      label: "Products",
-      icon: Package,
-      show: (data.products || []).length > 0,
-      items: [
-        { label: "Items", value: `${(data.products || []).length} product(s)` },
-      ],
-    },
-    {
       label: "Requirements",
       icon: Settings,
       items: [
@@ -1133,8 +1123,6 @@ export default function AssignTaskModal({
           />
         );
       case 4:
-        return <ProductsSection data={formData} onChange={setFormData} />;
-      case 5:
         return (
           <RequirementsSection
             data={formData}
@@ -1143,7 +1131,7 @@ export default function AssignTaskModal({
             onAddRequirement={handleAddRequirement}
           />
         );
-      case 6:
+      case 5:
         return (
           <SummarySection
             data={formData}

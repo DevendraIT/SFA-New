@@ -8,10 +8,12 @@ export class DashboardRepository {
 
     return prisma.lead.groupBy({
       by: ['status'],
-      where,
+      where, 
       _count: { id: true },
     });
   }
+
+
 
   async getVisitMetrics(organizationId, userId = null, startDate, endDate) {
     const where = { organizationId };
@@ -1502,17 +1504,34 @@ export class DashboardRepository {
 
   async getSuperAdminRevenueMetrics(organizationId = null) {
     try {
-      const result = await prisma.order.aggregate({
-        where: {
-          isDeleted: false,
-          status: 'APPROVED',
-          ...(organizationId && { organizationId }),
-        },
-        _sum: { totalAmount: true },
-      });
-      return result._sum.totalAmount || 0;
-    } catch {
-      return 0;
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+
+      const [totalResult, todayResult] = await Promise.all([
+        prisma.order.aggregate({
+          where: {
+            isDeleted: false,
+            ...(organizationId && { organizationId }),
+          },
+          _sum: { totalAmount: true },
+        }),
+        prisma.order.aggregate({
+          where: {
+            isDeleted: false,
+            createdAt: { gte: todayStart },
+            ...(organizationId && { organizationId }),
+          },
+          _sum: { totalAmount: true },
+        }),
+      ]);
+
+      return {
+        totalRevenue: Number(totalResult._sum?.totalAmount || 0),
+        todaysRevenue: Number(todayResult._sum?.totalAmount || 0),
+      };
+    } catch (err) {
+      console.error("Error in getSuperAdminRevenueMetrics:", err);
+      return { totalRevenue: 0, todaysRevenue: 0 };
     }
   }
 

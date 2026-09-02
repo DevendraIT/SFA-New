@@ -56,8 +56,8 @@ export class SalesOrderService {
       const { orders, total } = await this.salesOrderRepository.findMany({
         filters,
         pagination: {
-          page: queryParams.page || 1,
-          limit: queryParams.limit || 20,
+          page: parseInt(queryParams.page) || 1,
+          limit: parseInt(queryParams.limit || queryParams.take) || 100,
         },
         sorting: {
           sortBy: queryParams.sortBy || 'createdAt',
@@ -69,15 +69,16 @@ export class SalesOrderService {
       // Transform to DTOs
       const orderDtos = orders.map(order => new OrderListDto(order));
 
+      const limitVal = parseInt(queryParams.limit || queryParams.take) || 100;
       const result = {
         success: true,
         data: {
           orders: orderDtos,
           pagination: {
-            page: queryParams.page || 1,
-            limit: queryParams.limit || 20,
+            page: parseInt(queryParams.page) || 1,
+            limit: limitVal,
             total,
-            totalPages: Math.ceil(total / (queryParams.limit || 20)),
+            totalPages: Math.ceil(total / limitVal),
           },
         },
       };

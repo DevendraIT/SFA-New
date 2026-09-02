@@ -143,6 +143,7 @@ export default function SuperAdminDashboard() {
   const totalCustomers = cards?.totalCustomers ?? 0;
   const totalSalesOrders = cards?.totalSalesOrders ?? 0;
   const revenue = cards?.totalRevenue ?? orders?.APPROVED?.revenue ?? 0;
+  const todaysRevenue = cards?.todaysRevenue ?? 0;
 
   const completedVisits = cards?.completedVisits ?? visitSummary?.COMPLETED ?? 0;
   const pendingVisits = cards?.pendingVisits ?? visitSummary?.PENDING ?? 0;
@@ -311,7 +312,7 @@ export default function SuperAdminDashboard() {
         />
         <StatCard
           title="Today's Revenue"
-          value={revenue}
+          value={todaysRevenue}
           icon={IndianRupee}
           color="bg-amber-500"
           format="currency"
