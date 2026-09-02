@@ -45,7 +45,7 @@ export default function Navbar({
 
         <div className="min-w-0 truncate">
           <h1 className="text-sm sm:text-xl font-bold text-slate-800 tracking-tight truncate">
-            Sales Force Automation
+            SFA
           </h1>
           <p className="text-[10px] sm:text-xs text-slate-500 hidden xs:block truncate">
             Enterprise Dashboard
