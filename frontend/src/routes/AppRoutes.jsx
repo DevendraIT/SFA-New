@@ -13,6 +13,8 @@ import Stock from "../pages/inventory/Stock";
 import ProductIssues from "../pages/inventory/ProductIssues";
 import StockMovements from "../pages/inventory/StockMovements";
 import MyWarehouse from "../pages/inventory/MyWarehouse";
+import FranchiseDashboard from "../pages/franchise/FranchiseDashboard";
+import FranchiseSettings from "../pages/franchise/FranchiseSettings";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 
@@ -104,6 +106,8 @@ export default function AppRoutes() {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/franchise/dashboard" element={<FranchiseDashboard />} />
+        <Route path="/franchise/settings" element={<FranchiseSettings />} />
 
         {/* ===== GLOBAL INVENTORY MANAGER ROUTES ===== */}
         <Route path="/inventory/dashboard" element={<InventoryManagerRoute><InventoryDashboard /></InventoryManagerRoute>} />

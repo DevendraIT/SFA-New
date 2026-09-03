@@ -33,7 +33,7 @@ export class DashboardService {
       recentOrders,
       orderMetrics,
     ] = await Promise.all([
-      this.repo.getOrganizationCount(),
+      this.repo.getOrganizationCount(organizationId),
       this.repo.getCompanyCount(organizationId),
       this.repo.getBranchCount(organizationId),
       this.repo.getDepartmentCount(organizationId),
@@ -45,7 +45,7 @@ export class DashboardService {
       this.repo.getSuperAdminVisitMetrics(organizationId, todayStart, todayEnd),
       this.repo.getSuperAdminAttendanceMetrics(organizationId, now),
       this.repo.getSuperAdminRevenueMetrics(organizationId),
-      this.repo.getRecentOrganizations(),
+      this.repo.getRecentOrganizations(organizationId),
       this.repo.getRecentCompanies(organizationId),
       this.repo.getRecentUsers(organizationId),
       this.repo.getRecentOrders(organizationId),

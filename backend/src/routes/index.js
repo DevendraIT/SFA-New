@@ -85,4 +85,8 @@ router.use("/notifications", notificationsRouter);
 import crmIntegrationRouter from "../modules/crm-integration/index.js";
 router.use("/crm-integration", crmIntegrationRouter);
 
+// Franchise & IT360 Provisioning
+import franchiseRouter from "../modules/franchise/franchise.routes.js";
+router.use("/franchise", franchiseRouter);
+
 export default router;

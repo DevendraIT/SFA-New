@@ -1,5 +1,7 @@
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
+  isFranchiseAdminUser,
   isSuperAdminUser,
   isCompanyAdminUser,
   isHeadOfSalesUser,
@@ -20,6 +22,10 @@ import WarehouseManagerDashboard from "./WarehouseManagerDashboard";
 
 export default function Dashboard() {
   const { user } = useAuth();
+
+  if (isFranchiseAdminUser(user)) {
+    return <Navigate to="/franchise/dashboard" replace />;
+  }
 
   if (isInventoryManagerUser(user)) {
     return <InventoryDashboard />;

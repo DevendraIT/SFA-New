@@ -14,6 +14,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model Franchise
+ * 
+ */
+export type Franchise = $Result.DefaultSelection<Prisma.$FranchisePayload>
+/**
  * Model Organization
  * 
  */
@@ -405,8 +410,8 @@ export const ProductIssueStatus: typeof $Enums.ProductIssueStatus
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Organizations
- * const organizations = await prisma.organization.findMany()
+ * // Fetch zero or more Franchises
+ * const franchises = await prisma.franchise.findMany()
  * ```
  *
  *
@@ -428,8 +433,8 @@ export class PrismaClient<
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Organizations
-   * const organizations = await prisma.organization.findMany()
+   * // Fetch zero or more Franchises
+   * const franchises = await prisma.franchise.findMany()
    * ```
    *
    *
@@ -518,6 +523,16 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.franchise`: Exposes CRUD operations for the **Franchise** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Franchises
+    * const franchises = await prisma.franchise.findMany()
+    * ```
+    */
+  get franchise(): Prisma.FranchiseDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.organization`: Exposes CRUD operations for the **Organization** model.
     * Example usage:
     * ```ts
@@ -1300,6 +1315,7 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    Franchise: 'Franchise',
     Organization: 'Organization',
     Branch: 'Branch',
     Department: 'Department',
@@ -1350,10 +1366,84 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement" | "productIssue" | "cRMImport" | "cRMImportRow"
+      modelProps: "franchise" | "organization" | "branch" | "department" | "territory" | "team" | "role" | "permission" | "rolePermission" | "user" | "userRole" | "session" | "auditLog" | "passwordHistory" | "customer" | "product" | "order" | "orderItem" | "orderActivity" | "visit" | "target" | "notification" | "notificationTemplate" | "task" | "beatPlan" | "calendarEvent" | "notificationPreference" | "businessRuleConfig" | "expense" | "dailyActivityReport" | "warehouse" | "stock" | "stockMovement" | "productIssue" | "cRMImport" | "cRMImportRow"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      Franchise: {
+        payload: Prisma.$FranchisePayload<ExtArgs>
+        fields: Prisma.FranchiseFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FranchiseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FranchiseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>
+          }
+          findFirst: {
+            args: Prisma.FranchiseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FranchiseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>
+          }
+          findMany: {
+            args: Prisma.FranchiseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>[]
+          }
+          create: {
+            args: Prisma.FranchiseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>
+          }
+          createMany: {
+            args: Prisma.FranchiseCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FranchiseCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>[]
+          }
+          delete: {
+            args: Prisma.FranchiseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>
+          }
+          update: {
+            args: Prisma.FranchiseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>
+          }
+          deleteMany: {
+            args: Prisma.FranchiseDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FranchiseUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FranchiseUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>[]
+          }
+          upsert: {
+            args: Prisma.FranchiseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FranchisePayload>
+          }
+          aggregate: {
+            args: Prisma.FranchiseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFranchise>
+          }
+          groupBy: {
+            args: Prisma.FranchiseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FranchiseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FranchiseCountArgs<ExtArgs>
+            result: $Utils.Optional<FranchiseCountAggregateOutputType> | number
+          }
+        }
+      }
       Organization: {
         payload: Prisma.$OrganizationPayload<ExtArgs>
         fields: Prisma.OrganizationFieldRefs
@@ -4052,6 +4142,7 @@ export namespace Prisma {
     comments?: runtime.SqlCommenterPlugin[]
   }
   export type GlobalOmitConfig = {
+    franchise?: FranchiseOmit
     organization?: OrganizationOmit
     branch?: BranchOmit
     department?: DepartmentOmit
@@ -4160,6 +4251,37 @@ export namespace Prisma {
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type FranchiseCountOutputType
+   */
+
+  export type FranchiseCountOutputType = {
+    organizations: number
+  }
+
+  export type FranchiseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organizations?: boolean | FranchiseCountOutputTypeCountOrganizationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FranchiseCountOutputType without action
+   */
+  export type FranchiseCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FranchiseCountOutputType
+     */
+    select?: FranchiseCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FranchiseCountOutputType without action
+   */
+  export type FranchiseCountOutputTypeCountOrganizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrganizationWhereInput
+  }
 
 
   /**
@@ -5191,6 +5313,1146 @@ export namespace Prisma {
    */
 
   /**
+   * Model Franchise
+   */
+
+  export type AggregateFranchise = {
+    _count: FranchiseCountAggregateOutputType | null
+    _min: FranchiseMinAggregateOutputType | null
+    _max: FranchiseMaxAggregateOutputType | null
+  }
+
+  export type FranchiseMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    code: string | null
+    contactName: string | null
+    email: string | null
+    passwordHash: string | null
+    phone: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FranchiseMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    code: string | null
+    contactName: string | null
+    email: string | null
+    passwordHash: string | null
+    phone: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FranchiseCountAggregateOutputType = {
+    id: number
+    name: number
+    code: number
+    contactName: number
+    email: number
+    passwordHash: number
+    phone: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FranchiseMinAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    contactName?: true
+    email?: true
+    passwordHash?: true
+    phone?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FranchiseMaxAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    contactName?: true
+    email?: true
+    passwordHash?: true
+    phone?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FranchiseCountAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    contactName?: true
+    email?: true
+    passwordHash?: true
+    phone?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FranchiseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Franchise to aggregate.
+     */
+    where?: FranchiseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Franchises to fetch.
+     */
+    orderBy?: FranchiseOrderByWithRelationInput | FranchiseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FranchiseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Franchises from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Franchises.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Franchises
+    **/
+    _count?: true | FranchiseCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FranchiseMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FranchiseMaxAggregateInputType
+  }
+
+  export type GetFranchiseAggregateType<T extends FranchiseAggregateArgs> = {
+        [P in keyof T & keyof AggregateFranchise]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFranchise[P]>
+      : GetScalarType<T[P], AggregateFranchise[P]>
+  }
+
+
+
+
+  export type FranchiseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FranchiseWhereInput
+    orderBy?: FranchiseOrderByWithAggregationInput | FranchiseOrderByWithAggregationInput[]
+    by: FranchiseScalarFieldEnum[] | FranchiseScalarFieldEnum
+    having?: FranchiseScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FranchiseCountAggregateInputType | true
+    _min?: FranchiseMinAggregateInputType
+    _max?: FranchiseMaxAggregateInputType
+  }
+
+  export type FranchiseGroupByOutputType = {
+    id: string
+    name: string
+    code: string
+    contactName: string | null
+    email: string
+    passwordHash: string
+    phone: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: FranchiseCountAggregateOutputType | null
+    _min: FranchiseMinAggregateOutputType | null
+    _max: FranchiseMaxAggregateOutputType | null
+  }
+
+  type GetFranchiseGroupByPayload<T extends FranchiseGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FranchiseGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FranchiseGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FranchiseGroupByOutputType[P]>
+            : GetScalarType<T[P], FranchiseGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FranchiseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    contactName?: boolean
+    email?: boolean
+    passwordHash?: boolean
+    phone?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organizations?: boolean | Franchise$organizationsArgs<ExtArgs>
+    _count?: boolean | FranchiseCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["franchise"]>
+
+  export type FranchiseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    contactName?: boolean
+    email?: boolean
+    passwordHash?: boolean
+    phone?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["franchise"]>
+
+  export type FranchiseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    contactName?: boolean
+    email?: boolean
+    passwordHash?: boolean
+    phone?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["franchise"]>
+
+  export type FranchiseSelectScalar = {
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    contactName?: boolean
+    email?: boolean
+    passwordHash?: boolean
+    phone?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FranchiseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "code" | "contactName" | "email" | "passwordHash" | "phone" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["franchise"]>
+  export type FranchiseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organizations?: boolean | Franchise$organizationsArgs<ExtArgs>
+    _count?: boolean | FranchiseCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FranchiseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type FranchiseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $FranchisePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Franchise"
+    objects: {
+      organizations: Prisma.$OrganizationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      code: string
+      contactName: string | null
+      email: string
+      passwordHash: string
+      phone: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["franchise"]>
+    composites: {}
+  }
+
+  type FranchiseGetPayload<S extends boolean | null | undefined | FranchiseDefaultArgs> = $Result.GetResult<Prisma.$FranchisePayload, S>
+
+  type FranchiseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FranchiseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FranchiseCountAggregateInputType | true
+    }
+
+  export interface FranchiseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Franchise'], meta: { name: 'Franchise' } }
+    /**
+     * Find zero or one Franchise that matches the filter.
+     * @param {FranchiseFindUniqueArgs} args - Arguments to find a Franchise
+     * @example
+     * // Get one Franchise
+     * const franchise = await prisma.franchise.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FranchiseFindUniqueArgs>(args: SelectSubset<T, FranchiseFindUniqueArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Franchise that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FranchiseFindUniqueOrThrowArgs} args - Arguments to find a Franchise
+     * @example
+     * // Get one Franchise
+     * const franchise = await prisma.franchise.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FranchiseFindUniqueOrThrowArgs>(args: SelectSubset<T, FranchiseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Franchise that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FranchiseFindFirstArgs} args - Arguments to find a Franchise
+     * @example
+     * // Get one Franchise
+     * const franchise = await prisma.franchise.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FranchiseFindFirstArgs>(args?: SelectSubset<T, FranchiseFindFirstArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Franchise that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FranchiseFindFirstOrThrowArgs} args - Arguments to find a Franchise
+     * @example
+     * // Get one Franchise
+     * const franchise = await prisma.franchise.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FranchiseFindFirstOrThrowArgs>(args?: SelectSubset<T, FranchiseFindFirstOrThrowArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Franchises that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FranchiseFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Franchises
+     * const franchises = await prisma.franchise.findMany()
+     * 
+     * // Get first 10 Franchises
+     * const franchises = await prisma.franchise.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const franchiseWithIdOnly = await prisma.franchise.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FranchiseFindManyArgs>(args?: SelectSubset<T, FranchiseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Franchise.
+     * @param {FranchiseCreateArgs} args - Arguments to create a Franchise.
+     * @example
+     * // Create one Franchise
+     * const Franchise = await prisma.franchise.create({
+     *   data: {
+     *     // ... data to create a Franchise
+     *   }
+     * })
+     * 
+     */
+    create<T extends FranchiseCreateArgs>(args: SelectSubset<T, FranchiseCreateArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Franchises.
+     * @param {FranchiseCreateManyArgs} args - Arguments to create many Franchises.
+     * @example
+     * // Create many Franchises
+     * const franchise = await prisma.franchise.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FranchiseCreateManyArgs>(args?: SelectSubset<T, FranchiseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Franchises and returns the data saved in the database.
+     * @param {FranchiseCreateManyAndReturnArgs} args - Arguments to create many Franchises.
+     * @example
+     * // Create many Franchises
+     * const franchise = await prisma.franchise.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Franchises and only return the `id`
+     * const franchiseWithIdOnly = await prisma.franchise.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FranchiseCreateManyAndReturnArgs>(args?: SelectSubset<T, FranchiseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Franchise.
+     * @param {FranchiseDeleteArgs} args - Arguments to delete one Franchise.
+     * @example
+     * // Delete one Franchise
+     * const Franchise = await prisma.franchise.delete({
+     *   where: {
+     *     // ... filter to delete one Franchise
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FranchiseDeleteArgs>(args: SelectSubset<T, FranchiseDeleteArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Franchise.
+     * @param {FranchiseUpdateArgs} args - Arguments to update one Franchise.
+     * @example
+     * // Update one Franchise
+     * const franchise = await prisma.franchise.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FranchiseUpdateArgs>(args: SelectSubset<T, FranchiseUpdateArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Franchises.
+     * @param {FranchiseDeleteManyArgs} args - Arguments to filter Franchises to delete.
+     * @example
+     * // Delete a few Franchises
+     * const { count } = await prisma.franchise.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FranchiseDeleteManyArgs>(args?: SelectSubset<T, FranchiseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Franchises.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FranchiseUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Franchises
+     * const franchise = await prisma.franchise.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FranchiseUpdateManyArgs>(args: SelectSubset<T, FranchiseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Franchises and returns the data updated in the database.
+     * @param {FranchiseUpdateManyAndReturnArgs} args - Arguments to update many Franchises.
+     * @example
+     * // Update many Franchises
+     * const franchise = await prisma.franchise.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Franchises and only return the `id`
+     * const franchiseWithIdOnly = await prisma.franchise.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FranchiseUpdateManyAndReturnArgs>(args: SelectSubset<T, FranchiseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Franchise.
+     * @param {FranchiseUpsertArgs} args - Arguments to update or create a Franchise.
+     * @example
+     * // Update or create a Franchise
+     * const franchise = await prisma.franchise.upsert({
+     *   create: {
+     *     // ... data to create a Franchise
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Franchise we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FranchiseUpsertArgs>(args: SelectSubset<T, FranchiseUpsertArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Franchises.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FranchiseCountArgs} args - Arguments to filter Franchises to count.
+     * @example
+     * // Count the number of Franchises
+     * const count = await prisma.franchise.count({
+     *   where: {
+     *     // ... the filter for the Franchises we want to count
+     *   }
+     * })
+    **/
+    count<T extends FranchiseCountArgs>(
+      args?: Subset<T, FranchiseCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FranchiseCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Franchise.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FranchiseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FranchiseAggregateArgs>(args: Subset<T, FranchiseAggregateArgs>): Prisma.PrismaPromise<GetFranchiseAggregateType<T>>
+
+    /**
+     * Group by Franchise.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FranchiseGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FranchiseGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FranchiseGroupByArgs['orderBy'] }
+        : { orderBy?: FranchiseGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FranchiseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFranchiseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Franchise model
+   */
+  readonly fields: FranchiseFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Franchise.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FranchiseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organizations<T extends Franchise$organizationsArgs<ExtArgs> = {}>(args?: Subset<T, Franchise$organizationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Franchise model
+   */
+  interface FranchiseFieldRefs {
+    readonly id: FieldRef<"Franchise", 'String'>
+    readonly name: FieldRef<"Franchise", 'String'>
+    readonly code: FieldRef<"Franchise", 'String'>
+    readonly contactName: FieldRef<"Franchise", 'String'>
+    readonly email: FieldRef<"Franchise", 'String'>
+    readonly passwordHash: FieldRef<"Franchise", 'String'>
+    readonly phone: FieldRef<"Franchise", 'String'>
+    readonly isActive: FieldRef<"Franchise", 'Boolean'>
+    readonly createdAt: FieldRef<"Franchise", 'DateTime'>
+    readonly updatedAt: FieldRef<"Franchise", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Franchise findUnique
+   */
+  export type FranchiseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * Filter, which Franchise to fetch.
+     */
+    where: FranchiseWhereUniqueInput
+  }
+
+  /**
+   * Franchise findUniqueOrThrow
+   */
+  export type FranchiseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * Filter, which Franchise to fetch.
+     */
+    where: FranchiseWhereUniqueInput
+  }
+
+  /**
+   * Franchise findFirst
+   */
+  export type FranchiseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * Filter, which Franchise to fetch.
+     */
+    where?: FranchiseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Franchises to fetch.
+     */
+    orderBy?: FranchiseOrderByWithRelationInput | FranchiseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Franchises.
+     */
+    cursor?: FranchiseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Franchises from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Franchises.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Franchises.
+     */
+    distinct?: FranchiseScalarFieldEnum | FranchiseScalarFieldEnum[]
+  }
+
+  /**
+   * Franchise findFirstOrThrow
+   */
+  export type FranchiseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * Filter, which Franchise to fetch.
+     */
+    where?: FranchiseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Franchises to fetch.
+     */
+    orderBy?: FranchiseOrderByWithRelationInput | FranchiseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Franchises.
+     */
+    cursor?: FranchiseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Franchises from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Franchises.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Franchises.
+     */
+    distinct?: FranchiseScalarFieldEnum | FranchiseScalarFieldEnum[]
+  }
+
+  /**
+   * Franchise findMany
+   */
+  export type FranchiseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * Filter, which Franchises to fetch.
+     */
+    where?: FranchiseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Franchises to fetch.
+     */
+    orderBy?: FranchiseOrderByWithRelationInput | FranchiseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Franchises.
+     */
+    cursor?: FranchiseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Franchises from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Franchises.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Franchises.
+     */
+    distinct?: FranchiseScalarFieldEnum | FranchiseScalarFieldEnum[]
+  }
+
+  /**
+   * Franchise create
+   */
+  export type FranchiseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Franchise.
+     */
+    data: XOR<FranchiseCreateInput, FranchiseUncheckedCreateInput>
+  }
+
+  /**
+   * Franchise createMany
+   */
+  export type FranchiseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Franchises.
+     */
+    data: FranchiseCreateManyInput | FranchiseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Franchise createManyAndReturn
+   */
+  export type FranchiseCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * The data used to create many Franchises.
+     */
+    data: FranchiseCreateManyInput | FranchiseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Franchise update
+   */
+  export type FranchiseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Franchise.
+     */
+    data: XOR<FranchiseUpdateInput, FranchiseUncheckedUpdateInput>
+    /**
+     * Choose, which Franchise to update.
+     */
+    where: FranchiseWhereUniqueInput
+  }
+
+  /**
+   * Franchise updateMany
+   */
+  export type FranchiseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Franchises.
+     */
+    data: XOR<FranchiseUpdateManyMutationInput, FranchiseUncheckedUpdateManyInput>
+    /**
+     * Filter which Franchises to update
+     */
+    where?: FranchiseWhereInput
+    /**
+     * Limit how many Franchises to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Franchise updateManyAndReturn
+   */
+  export type FranchiseUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * The data used to update Franchises.
+     */
+    data: XOR<FranchiseUpdateManyMutationInput, FranchiseUncheckedUpdateManyInput>
+    /**
+     * Filter which Franchises to update
+     */
+    where?: FranchiseWhereInput
+    /**
+     * Limit how many Franchises to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Franchise upsert
+   */
+  export type FranchiseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Franchise to update in case it exists.
+     */
+    where: FranchiseWhereUniqueInput
+    /**
+     * In case the Franchise found by the `where` argument doesn't exist, create a new Franchise with this data.
+     */
+    create: XOR<FranchiseCreateInput, FranchiseUncheckedCreateInput>
+    /**
+     * In case the Franchise was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FranchiseUpdateInput, FranchiseUncheckedUpdateInput>
+  }
+
+  /**
+   * Franchise delete
+   */
+  export type FranchiseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    /**
+     * Filter which Franchise to delete.
+     */
+    where: FranchiseWhereUniqueInput
+  }
+
+  /**
+   * Franchise deleteMany
+   */
+  export type FranchiseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Franchises to delete
+     */
+    where?: FranchiseWhereInput
+    /**
+     * Limit how many Franchises to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Franchise.organizations
+   */
+  export type Franchise$organizationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Organization
+     */
+    select?: OrganizationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Organization
+     */
+    omit?: OrganizationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationInclude<ExtArgs> | null
+    where?: OrganizationWhereInput
+    orderBy?: OrganizationOrderByWithRelationInput | OrganizationOrderByWithRelationInput[]
+    cursor?: OrganizationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrganizationScalarFieldEnum | OrganizationScalarFieldEnum[]
+  }
+
+  /**
+   * Franchise without action
+   */
+  export type FranchiseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Organization
    */
 
@@ -5216,6 +6478,7 @@ export namespace Prisma {
     postalCode: string | null
     gstNumber: string | null
     panNumber: string | null
+    franchiseId: string | null
   }
 
   export type OrganizationMaxAggregateOutputType = {
@@ -5234,6 +6497,7 @@ export namespace Prisma {
     postalCode: string | null
     gstNumber: string | null
     panNumber: string | null
+    franchiseId: string | null
   }
 
   export type OrganizationCountAggregateOutputType = {
@@ -5252,6 +6516,7 @@ export namespace Prisma {
     postalCode: number
     gstNumber: number
     panNumber: number
+    franchiseId: number
     _all: number
   }
 
@@ -5272,6 +6537,7 @@ export namespace Prisma {
     postalCode?: true
     gstNumber?: true
     panNumber?: true
+    franchiseId?: true
   }
 
   export type OrganizationMaxAggregateInputType = {
@@ -5290,6 +6556,7 @@ export namespace Prisma {
     postalCode?: true
     gstNumber?: true
     panNumber?: true
+    franchiseId?: true
   }
 
   export type OrganizationCountAggregateInputType = {
@@ -5308,6 +6575,7 @@ export namespace Prisma {
     postalCode?: true
     gstNumber?: true
     panNumber?: true
+    franchiseId?: true
     _all?: true
   }
 
@@ -5399,6 +6667,7 @@ export namespace Prisma {
     postalCode: string | null
     gstNumber: string | null
     panNumber: string | null
+    franchiseId: string | null
     _count: OrganizationCountAggregateOutputType | null
     _min: OrganizationMinAggregateOutputType | null
     _max: OrganizationMaxAggregateOutputType | null
@@ -5434,6 +6703,8 @@ export namespace Prisma {
     postalCode?: boolean
     gstNumber?: boolean
     panNumber?: boolean
+    franchiseId?: boolean
+    franchise?: boolean | Organization$franchiseArgs<ExtArgs>
     branches?: boolean | Organization$branchesArgs<ExtArgs>
     territories?: boolean | Organization$territoriesArgs<ExtArgs>
     teams?: boolean | Organization$teamsArgs<ExtArgs>
@@ -5480,6 +6751,8 @@ export namespace Prisma {
     postalCode?: boolean
     gstNumber?: boolean
     panNumber?: boolean
+    franchiseId?: boolean
+    franchise?: boolean | Organization$franchiseArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
   export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5498,6 +6771,8 @@ export namespace Prisma {
     postalCode?: boolean
     gstNumber?: boolean
     panNumber?: boolean
+    franchiseId?: boolean
+    franchise?: boolean | Organization$franchiseArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
   export type OrganizationSelectScalar = {
@@ -5516,10 +6791,12 @@ export namespace Prisma {
     postalCode?: boolean
     gstNumber?: boolean
     panNumber?: boolean
+    franchiseId?: boolean
   }
 
-  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "isActive" | "createdAt" | "updatedAt" | "email" | "phone" | "address" | "city" | "state" | "country" | "postalCode" | "gstNumber" | "panNumber", ExtArgs["result"]["organization"]>
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "isActive" | "createdAt" | "updatedAt" | "email" | "phone" | "address" | "city" | "state" | "country" | "postalCode" | "gstNumber" | "panNumber" | "franchiseId", ExtArgs["result"]["organization"]>
   export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    franchise?: boolean | Organization$franchiseArgs<ExtArgs>
     branches?: boolean | Organization$branchesArgs<ExtArgs>
     territories?: boolean | Organization$territoriesArgs<ExtArgs>
     teams?: boolean | Organization$teamsArgs<ExtArgs>
@@ -5549,12 +6826,17 @@ export namespace Prisma {
     crmImports?: boolean | Organization$crmImportsArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    franchise?: boolean | Organization$franchiseArgs<ExtArgs>
+  }
+  export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    franchise?: boolean | Organization$franchiseArgs<ExtArgs>
+  }
 
   export type $OrganizationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Organization"
     objects: {
+      franchise: Prisma.$FranchisePayload<ExtArgs> | null
       branches: Prisma.$BranchPayload<ExtArgs>[]
       territories: Prisma.$TerritoryPayload<ExtArgs>[]
       teams: Prisma.$TeamPayload<ExtArgs>[]
@@ -5599,6 +6881,7 @@ export namespace Prisma {
       postalCode: string | null
       gstNumber: string | null
       panNumber: string | null
+      franchiseId: string | null
     }, ExtArgs["result"]["organization"]>
     composites: {}
   }
@@ -5993,6 +7276,7 @@ export namespace Prisma {
    */
   export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    franchise<T extends Organization$franchiseArgs<ExtArgs> = {}>(args?: Subset<T, Organization$franchiseArgs<ExtArgs>>): Prisma__FranchiseClient<$Result.GetResult<Prisma.$FranchisePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     branches<T extends Organization$branchesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$branchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     territories<T extends Organization$territoriesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$territoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TerritoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teams<T extends Organization$teamsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6064,6 +7348,7 @@ export namespace Prisma {
     readonly postalCode: FieldRef<"Organization", 'String'>
     readonly gstNumber: FieldRef<"Organization", 'String'>
     readonly panNumber: FieldRef<"Organization", 'String'>
+    readonly franchiseId: FieldRef<"Organization", 'String'>
   }
     
 
@@ -6318,6 +7603,10 @@ export namespace Prisma {
      */
     data: OrganizationCreateManyInput | OrganizationCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6388,6 +7677,10 @@ export namespace Prisma {
      * Limit how many Organizations to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6454,6 +7747,25 @@ export namespace Prisma {
      * Limit how many Organizations to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Organization.franchise
+   */
+  export type Organization$franchiseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Franchise
+     */
+    select?: FranchiseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Franchise
+     */
+    omit?: FranchiseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FranchiseInclude<ExtArgs> | null
+    where?: FranchiseWhereInput
   }
 
   /**
@@ -49206,6 +50518,22 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const FranchiseScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    code: 'code',
+    contactName: 'contactName',
+    email: 'email',
+    passwordHash: 'passwordHash',
+    phone: 'phone',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FranchiseScalarFieldEnum = (typeof FranchiseScalarFieldEnum)[keyof typeof FranchiseScalarFieldEnum]
+
+
   export const OrganizationScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -49221,7 +50549,8 @@ export namespace Prisma {
     country: 'country',
     postalCode: 'postalCode',
     gstNumber: 'gstNumber',
-    panNumber: 'panNumber'
+    panNumber: 'panNumber',
+    franchiseId: 'franchiseId'
   };
 
   export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
@@ -50110,6 +51439,86 @@ export namespace Prisma {
    */
 
 
+  export type FranchiseWhereInput = {
+    AND?: FranchiseWhereInput | FranchiseWhereInput[]
+    OR?: FranchiseWhereInput[]
+    NOT?: FranchiseWhereInput | FranchiseWhereInput[]
+    id?: UuidFilter<"Franchise"> | string
+    name?: StringFilter<"Franchise"> | string
+    code?: StringFilter<"Franchise"> | string
+    contactName?: StringNullableFilter<"Franchise"> | string | null
+    email?: StringFilter<"Franchise"> | string
+    passwordHash?: StringFilter<"Franchise"> | string
+    phone?: StringNullableFilter<"Franchise"> | string | null
+    isActive?: BoolFilter<"Franchise"> | boolean
+    createdAt?: DateTimeFilter<"Franchise"> | Date | string
+    updatedAt?: DateTimeFilter<"Franchise"> | Date | string
+    organizations?: OrganizationListRelationFilter
+  }
+
+  export type FranchiseOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    contactName?: SortOrderInput | SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organizations?: OrganizationOrderByRelationAggregateInput
+  }
+
+  export type FranchiseWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    email?: string
+    AND?: FranchiseWhereInput | FranchiseWhereInput[]
+    OR?: FranchiseWhereInput[]
+    NOT?: FranchiseWhereInput | FranchiseWhereInput[]
+    name?: StringFilter<"Franchise"> | string
+    contactName?: StringNullableFilter<"Franchise"> | string | null
+    passwordHash?: StringFilter<"Franchise"> | string
+    phone?: StringNullableFilter<"Franchise"> | string | null
+    isActive?: BoolFilter<"Franchise"> | boolean
+    createdAt?: DateTimeFilter<"Franchise"> | Date | string
+    updatedAt?: DateTimeFilter<"Franchise"> | Date | string
+    organizations?: OrganizationListRelationFilter
+  }, "id" | "code" | "email">
+
+  export type FranchiseOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    contactName?: SortOrderInput | SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FranchiseCountOrderByAggregateInput
+    _max?: FranchiseMaxOrderByAggregateInput
+    _min?: FranchiseMinOrderByAggregateInput
+  }
+
+  export type FranchiseScalarWhereWithAggregatesInput = {
+    AND?: FranchiseScalarWhereWithAggregatesInput | FranchiseScalarWhereWithAggregatesInput[]
+    OR?: FranchiseScalarWhereWithAggregatesInput[]
+    NOT?: FranchiseScalarWhereWithAggregatesInput | FranchiseScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Franchise"> | string
+    name?: StringWithAggregatesFilter<"Franchise"> | string
+    code?: StringWithAggregatesFilter<"Franchise"> | string
+    contactName?: StringNullableWithAggregatesFilter<"Franchise"> | string | null
+    email?: StringWithAggregatesFilter<"Franchise"> | string
+    passwordHash?: StringWithAggregatesFilter<"Franchise"> | string
+    phone?: StringNullableWithAggregatesFilter<"Franchise"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Franchise"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Franchise"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Franchise"> | Date | string
+  }
+
   export type OrganizationWhereInput = {
     AND?: OrganizationWhereInput | OrganizationWhereInput[]
     OR?: OrganizationWhereInput[]
@@ -50129,6 +51538,8 @@ export namespace Prisma {
     postalCode?: StringNullableFilter<"Organization"> | string | null
     gstNumber?: StringNullableFilter<"Organization"> | string | null
     panNumber?: StringNullableFilter<"Organization"> | string | null
+    franchiseId?: UuidNullableFilter<"Organization"> | string | null
+    franchise?: XOR<FranchiseNullableScalarRelationFilter, FranchiseWhereInput> | null
     branches?: BranchListRelationFilter
     territories?: TerritoryListRelationFilter
     teams?: TeamListRelationFilter
@@ -50174,6 +51585,8 @@ export namespace Prisma {
     postalCode?: SortOrderInput | SortOrder
     gstNumber?: SortOrderInput | SortOrder
     panNumber?: SortOrderInput | SortOrder
+    franchiseId?: SortOrderInput | SortOrder
+    franchise?: FranchiseOrderByWithRelationInput
     branches?: BranchOrderByRelationAggregateInput
     territories?: TerritoryOrderByRelationAggregateInput
     teams?: TeamOrderByRelationAggregateInput
@@ -50222,6 +51635,8 @@ export namespace Prisma {
     postalCode?: StringNullableFilter<"Organization"> | string | null
     gstNumber?: StringNullableFilter<"Organization"> | string | null
     panNumber?: StringNullableFilter<"Organization"> | string | null
+    franchiseId?: UuidNullableFilter<"Organization"> | string | null
+    franchise?: XOR<FranchiseNullableScalarRelationFilter, FranchiseWhereInput> | null
     branches?: BranchListRelationFilter
     territories?: TerritoryListRelationFilter
     teams?: TeamListRelationFilter
@@ -50267,6 +51682,7 @@ export namespace Prisma {
     postalCode?: SortOrderInput | SortOrder
     gstNumber?: SortOrderInput | SortOrder
     panNumber?: SortOrderInput | SortOrder
+    franchiseId?: SortOrderInput | SortOrder
     _count?: OrganizationCountOrderByAggregateInput
     _max?: OrganizationMaxOrderByAggregateInput
     _min?: OrganizationMinOrderByAggregateInput
@@ -50291,6 +51707,7 @@ export namespace Prisma {
     postalCode?: StringNullableWithAggregatesFilter<"Organization"> | string | null
     gstNumber?: StringNullableWithAggregatesFilter<"Organization"> | string | null
     panNumber?: StringNullableWithAggregatesFilter<"Organization"> | string | null
+    franchiseId?: UuidNullableWithAggregatesFilter<"Organization"> | string | null
   }
 
   export type BranchWhereInput = {
@@ -53659,6 +55076,101 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"CRMImportRow"> | Date | string
   }
 
+  export type FranchiseCreateInput = {
+    id?: string
+    name: string
+    code: string
+    contactName?: string | null
+    email: string
+    passwordHash: string
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organizations?: OrganizationCreateNestedManyWithoutFranchiseInput
+  }
+
+  export type FranchiseUncheckedCreateInput = {
+    id?: string
+    name: string
+    code: string
+    contactName?: string | null
+    email: string
+    passwordHash: string
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organizations?: OrganizationUncheckedCreateNestedManyWithoutFranchiseInput
+  }
+
+  export type FranchiseUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizations?: OrganizationUpdateManyWithoutFranchiseNestedInput
+  }
+
+  export type FranchiseUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizations?: OrganizationUncheckedUpdateManyWithoutFranchiseNestedInput
+  }
+
+  export type FranchiseCreateManyInput = {
+    id?: string
+    name: string
+    code: string
+    contactName?: string | null
+    email: string
+    passwordHash: string
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FranchiseUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FranchiseUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrganizationCreateInput = {
     id?: string
     name: string
@@ -53675,6 +55187,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -53720,6 +55233,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -53765,6 +55279,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -53810,6 +55325,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -53855,6 +55371,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
   }
 
   export type OrganizationUpdateManyMutationInput = {
@@ -53891,6 +55408,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BranchCreateInput = {
@@ -57570,6 +59088,21 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -57586,7 +59119,94 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
+  export type OrganizationListRelationFilter = {
+    every?: OrganizationWhereInput
+    some?: OrganizationWhereInput
+    none?: OrganizationWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type OrganizationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FranchiseCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    contactName?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    phone?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FranchiseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    contactName?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    phone?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FranchiseMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    contactName?: SortOrder
+    email?: SortOrder
+    passwordHash?: SortOrder
+    phone?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type StringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -57598,7 +59218,49 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type FranchiseNullableScalarRelationFilter = {
+    is?: FranchiseWhereInput | null
+    isNot?: FranchiseWhereInput | null
   }
 
   export type BranchListRelationFilter = {
@@ -57763,11 +59425,6 @@ export namespace Prisma {
     none?: CRMImportWhereInput
   }
 
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
-  }
-
   export type BranchOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -57892,6 +59549,7 @@ export namespace Prisma {
     postalCode?: SortOrder
     gstNumber?: SortOrder
     panNumber?: SortOrder
+    franchiseId?: SortOrder
   }
 
   export type OrganizationMaxOrderByAggregateInput = {
@@ -57910,6 +59568,7 @@ export namespace Prisma {
     postalCode?: SortOrder
     gstNumber?: SortOrder
     panNumber?: SortOrder
+    franchiseId?: SortOrder
   }
 
   export type OrganizationMinOrderByAggregateInput = {
@@ -57928,64 +59587,10 @@ export namespace Prisma {
     postalCode?: SortOrder
     gstNumber?: SortOrder
     panNumber?: SortOrder
+    franchiseId?: SortOrder
   }
 
-  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -57993,11 +59598,8 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
@@ -58209,18 +59811,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
   export type BranchScalarRelationFilter = {
     is?: BranchWhereInput
     isNot?: BranchWhereInput
@@ -58270,21 +59860,6 @@ export namespace Prisma {
     description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -60263,6 +61838,70 @@ export namespace Prisma {
     expectedValue?: SortOrder
   }
 
+  export type OrganizationCreateNestedManyWithoutFranchiseInput = {
+    create?: XOR<OrganizationCreateWithoutFranchiseInput, OrganizationUncheckedCreateWithoutFranchiseInput> | OrganizationCreateWithoutFranchiseInput[] | OrganizationUncheckedCreateWithoutFranchiseInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFranchiseInput | OrganizationCreateOrConnectWithoutFranchiseInput[]
+    createMany?: OrganizationCreateManyFranchiseInputEnvelope
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+  }
+
+  export type OrganizationUncheckedCreateNestedManyWithoutFranchiseInput = {
+    create?: XOR<OrganizationCreateWithoutFranchiseInput, OrganizationUncheckedCreateWithoutFranchiseInput> | OrganizationCreateWithoutFranchiseInput[] | OrganizationUncheckedCreateWithoutFranchiseInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFranchiseInput | OrganizationCreateOrConnectWithoutFranchiseInput[]
+    createMany?: OrganizationCreateManyFranchiseInputEnvelope
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type OrganizationUpdateManyWithoutFranchiseNestedInput = {
+    create?: XOR<OrganizationCreateWithoutFranchiseInput, OrganizationUncheckedCreateWithoutFranchiseInput> | OrganizationCreateWithoutFranchiseInput[] | OrganizationUncheckedCreateWithoutFranchiseInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFranchiseInput | OrganizationCreateOrConnectWithoutFranchiseInput[]
+    upsert?: OrganizationUpsertWithWhereUniqueWithoutFranchiseInput | OrganizationUpsertWithWhereUniqueWithoutFranchiseInput[]
+    createMany?: OrganizationCreateManyFranchiseInputEnvelope
+    set?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    disconnect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    delete?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    update?: OrganizationUpdateWithWhereUniqueWithoutFranchiseInput | OrganizationUpdateWithWhereUniqueWithoutFranchiseInput[]
+    updateMany?: OrganizationUpdateManyWithWhereWithoutFranchiseInput | OrganizationUpdateManyWithWhereWithoutFranchiseInput[]
+    deleteMany?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+  }
+
+  export type OrganizationUncheckedUpdateManyWithoutFranchiseNestedInput = {
+    create?: XOR<OrganizationCreateWithoutFranchiseInput, OrganizationUncheckedCreateWithoutFranchiseInput> | OrganizationCreateWithoutFranchiseInput[] | OrganizationUncheckedCreateWithoutFranchiseInput[]
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFranchiseInput | OrganizationCreateOrConnectWithoutFranchiseInput[]
+    upsert?: OrganizationUpsertWithWhereUniqueWithoutFranchiseInput | OrganizationUpsertWithWhereUniqueWithoutFranchiseInput[]
+    createMany?: OrganizationCreateManyFranchiseInputEnvelope
+    set?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    disconnect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    delete?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    connect?: OrganizationWhereUniqueInput | OrganizationWhereUniqueInput[]
+    update?: OrganizationUpdateWithWhereUniqueWithoutFranchiseInput | OrganizationUpdateWithWhereUniqueWithoutFranchiseInput[]
+    updateMany?: OrganizationUpdateManyWithWhereWithoutFranchiseInput | OrganizationUpdateManyWithWhereWithoutFranchiseInput[]
+    deleteMany?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+  }
+
+  export type FranchiseCreateNestedOneWithoutOrganizationsInput = {
+    create?: XOR<FranchiseCreateWithoutOrganizationsInput, FranchiseUncheckedCreateWithoutOrganizationsInput>
+    connectOrCreate?: FranchiseCreateOrConnectWithoutOrganizationsInput
+    connect?: FranchiseWhereUniqueInput
+  }
+
   export type BranchCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<BranchCreateWithoutOrganizationInput, BranchUncheckedCreateWithoutOrganizationInput> | BranchCreateWithoutOrganizationInput[] | BranchUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: BranchCreateOrConnectWithoutOrganizationInput | BranchCreateOrConnectWithoutOrganizationInput[]
@@ -60641,20 +62280,14 @@ export namespace Prisma {
     connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
+  export type FranchiseUpdateOneWithoutOrganizationsNestedInput = {
+    create?: XOR<FranchiseCreateWithoutOrganizationsInput, FranchiseUncheckedCreateWithoutOrganizationsInput>
+    connectOrCreate?: FranchiseCreateOrConnectWithoutOrganizationsInput
+    upsert?: FranchiseUpsertWithoutOrganizationsInput
+    disconnect?: FranchiseWhereInput | boolean
+    delete?: FranchiseWhereInput | boolean
+    connect?: FranchiseWhereUniqueInput
+    update?: XOR<XOR<FranchiseUpdateToOneWithWhereWithoutOrganizationsInput, FranchiseUpdateWithoutOrganizationsInput>, FranchiseUncheckedUpdateWithoutOrganizationsInput>
   }
 
   export type BranchUpdateManyWithoutOrganizationNestedInput = {
@@ -65032,6 +66665,20 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -65046,20 +66693,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
@@ -65104,28 +66737,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -65154,31 +66765,26 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedUuidNullableFilter<$PrismaModel = never> = {
@@ -65204,6 +66810,33 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -65498,6 +67131,175 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProductIssueStatusFilter<$PrismaModel>
     _max?: NestedEnumProductIssueStatusFilter<$PrismaModel>
+  }
+
+  export type OrganizationCreateWithoutFranchiseInput = {
+    id?: string
+    name: string
+    slug: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    gstNumber?: string | null
+    panNumber?: string | null
+    branches?: BranchCreateNestedManyWithoutOrganizationInput
+    territories?: TerritoryCreateNestedManyWithoutOrganizationInput
+    teams?: TeamCreateNestedManyWithoutOrganizationInput
+    roles?: RoleCreateNestedManyWithoutOrganizationInput
+    users?: UserCreateNestedManyWithoutOrganizationInput
+    sessions?: SessionCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
+    visits?: VisitCreateNestedManyWithoutOrganizationInput
+    expenses?: ExpenseCreateNestedManyWithoutOrganizationInput
+    dailyActivities?: DailyActivityReportCreateNestedManyWithoutOrganizationInput
+    targets?: TargetCreateNestedManyWithoutOrganizationInput
+    notifications?: NotificationCreateNestedManyWithoutOrganizationInput
+    notificationTemplates?: NotificationTemplateCreateNestedManyWithoutOrganizationInput
+    tasks?: TaskCreateNestedManyWithoutOrganizationInput
+    beatPlans?: BeatPlanCreateNestedManyWithoutOrganizationInput
+    calendarEvents?: CalendarEventCreateNestedManyWithoutOrganizationInput
+    notificationPrefs?: NotificationPreferenceCreateNestedManyWithoutOrganizationInput
+    businessRules?: BusinessRuleConfigCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerCreateNestedManyWithoutOrganizationInput
+    products?: ProductCreateNestedManyWithoutOrganizationInput
+    orders?: OrderCreateNestedManyWithoutOrganizationInput
+    departments?: DepartmentCreateNestedManyWithoutOrganizationInput
+    warehouses?: WarehouseCreateNestedManyWithoutOrganizationInput
+    stocks?: StockCreateNestedManyWithoutOrganizationInput
+    stockMovements?: StockMovementCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutFranchiseInput = {
+    id?: string
+    name: string
+    slug: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    gstNumber?: string | null
+    panNumber?: string | null
+    branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
+    territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
+    teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
+    roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
+    users?: UserUncheckedCreateNestedManyWithoutOrganizationInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+    visits?: VisitUncheckedCreateNestedManyWithoutOrganizationInput
+    expenses?: ExpenseUncheckedCreateNestedManyWithoutOrganizationInput
+    dailyActivities?: DailyActivityReportUncheckedCreateNestedManyWithoutOrganizationInput
+    targets?: TargetUncheckedCreateNestedManyWithoutOrganizationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutOrganizationInput
+    notificationTemplates?: NotificationTemplateUncheckedCreateNestedManyWithoutOrganizationInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutOrganizationInput
+    beatPlans?: BeatPlanUncheckedCreateNestedManyWithoutOrganizationInput
+    calendarEvents?: CalendarEventUncheckedCreateNestedManyWithoutOrganizationInput
+    notificationPrefs?: NotificationPreferenceUncheckedCreateNestedManyWithoutOrganizationInput
+    businessRules?: BusinessRuleConfigUncheckedCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+    products?: ProductUncheckedCreateNestedManyWithoutOrganizationInput
+    orders?: OrderUncheckedCreateNestedManyWithoutOrganizationInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutOrganizationInput
+    warehouses?: WarehouseUncheckedCreateNestedManyWithoutOrganizationInput
+    stocks?: StockUncheckedCreateNestedManyWithoutOrganizationInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutOrganizationInput
+    productIssues?: ProductIssueUncheckedCreateNestedManyWithoutOrganizationInput
+    crmImports?: CRMImportUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutFranchiseInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutFranchiseInput, OrganizationUncheckedCreateWithoutFranchiseInput>
+  }
+
+  export type OrganizationCreateManyFranchiseInputEnvelope = {
+    data: OrganizationCreateManyFranchiseInput | OrganizationCreateManyFranchiseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithWhereUniqueWithoutFranchiseInput = {
+    where: OrganizationWhereUniqueInput
+    update: XOR<OrganizationUpdateWithoutFranchiseInput, OrganizationUncheckedUpdateWithoutFranchiseInput>
+    create: XOR<OrganizationCreateWithoutFranchiseInput, OrganizationUncheckedCreateWithoutFranchiseInput>
+  }
+
+  export type OrganizationUpdateWithWhereUniqueWithoutFranchiseInput = {
+    where: OrganizationWhereUniqueInput
+    data: XOR<OrganizationUpdateWithoutFranchiseInput, OrganizationUncheckedUpdateWithoutFranchiseInput>
+  }
+
+  export type OrganizationUpdateManyWithWhereWithoutFranchiseInput = {
+    where: OrganizationScalarWhereInput
+    data: XOR<OrganizationUpdateManyMutationInput, OrganizationUncheckedUpdateManyWithoutFranchiseInput>
+  }
+
+  export type OrganizationScalarWhereInput = {
+    AND?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+    OR?: OrganizationScalarWhereInput[]
+    NOT?: OrganizationScalarWhereInput | OrganizationScalarWhereInput[]
+    id?: UuidFilter<"Organization"> | string
+    name?: StringFilter<"Organization"> | string
+    slug?: StringFilter<"Organization"> | string
+    isActive?: BoolFilter<"Organization"> | boolean
+    createdAt?: DateTimeFilter<"Organization"> | Date | string
+    updatedAt?: DateTimeFilter<"Organization"> | Date | string
+    email?: StringNullableFilter<"Organization"> | string | null
+    phone?: StringNullableFilter<"Organization"> | string | null
+    address?: StringNullableFilter<"Organization"> | string | null
+    city?: StringNullableFilter<"Organization"> | string | null
+    state?: StringNullableFilter<"Organization"> | string | null
+    country?: StringNullableFilter<"Organization"> | string | null
+    postalCode?: StringNullableFilter<"Organization"> | string | null
+    gstNumber?: StringNullableFilter<"Organization"> | string | null
+    panNumber?: StringNullableFilter<"Organization"> | string | null
+    franchiseId?: UuidNullableFilter<"Organization"> | string | null
+  }
+
+  export type FranchiseCreateWithoutOrganizationsInput = {
+    id?: string
+    name: string
+    code: string
+    contactName?: string | null
+    email: string
+    passwordHash: string
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FranchiseUncheckedCreateWithoutOrganizationsInput = {
+    id?: string
+    name: string
+    code: string
+    contactName?: string | null
+    email: string
+    passwordHash: string
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FranchiseCreateOrConnectWithoutOrganizationsInput = {
+    where: FranchiseWhereUniqueInput
+    create: XOR<FranchiseCreateWithoutOrganizationsInput, FranchiseUncheckedCreateWithoutOrganizationsInput>
   }
 
   export type BranchCreateWithoutOrganizationInput = {
@@ -66666,6 +68468,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FranchiseUpsertWithoutOrganizationsInput = {
+    update: XOR<FranchiseUpdateWithoutOrganizationsInput, FranchiseUncheckedUpdateWithoutOrganizationsInput>
+    create: XOR<FranchiseCreateWithoutOrganizationsInput, FranchiseUncheckedCreateWithoutOrganizationsInput>
+    where?: FranchiseWhereInput
+  }
+
+  export type FranchiseUpdateToOneWithWhereWithoutOrganizationsInput = {
+    where?: FranchiseWhereInput
+    data: XOR<FranchiseUpdateWithoutOrganizationsInput, FranchiseUncheckedUpdateWithoutOrganizationsInput>
+  }
+
+  export type FranchiseUpdateWithoutOrganizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FranchiseUncheckedUpdateWithoutOrganizationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BranchUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: BranchWhereUniqueInput
     update: XOR<BranchUpdateWithoutOrganizationInput, BranchUncheckedUpdateWithoutOrganizationInput>
@@ -67615,6 +69454,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
     roles?: RoleCreateNestedManyWithoutOrganizationInput
@@ -67659,6 +69499,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
@@ -68040,6 +69881,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
@@ -68084,6 +69926,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -68305,6 +70148,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -68349,6 +70193,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -68651,6 +70496,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -68695,6 +70541,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -68803,6 +70650,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
     roles?: RoleCreateNestedManyWithoutOrganizationInput
@@ -68847,6 +70695,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
@@ -69210,6 +71059,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
@@ -69254,6 +71104,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -69401,6 +71252,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     roles?: RoleCreateNestedManyWithoutOrganizationInput
@@ -69445,6 +71297,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
@@ -69774,6 +71627,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUpdateManyWithoutOrganizationNestedInput
@@ -69818,6 +71672,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -70031,6 +71886,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -70075,6 +71931,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -70246,6 +72103,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -70290,6 +72148,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -70603,6 +72462,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -70647,6 +72507,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -71931,6 +73792,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -71975,6 +73837,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -72983,6 +74846,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -73027,6 +74891,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -73192,6 +75057,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -73236,6 +75102,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -73391,6 +75258,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -73435,6 +75303,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -73600,6 +75469,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -73644,6 +75514,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -74015,6 +75886,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -74059,6 +75931,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -74287,6 +76160,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -74331,6 +76205,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -74423,6 +76298,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -74467,6 +76343,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -74727,6 +76604,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -74771,6 +76649,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -74909,6 +76788,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -74953,6 +76833,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -75257,6 +77138,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -75301,6 +77183,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -75901,6 +77784,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -75945,6 +77829,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -76151,6 +78036,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -76195,6 +78081,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -76397,6 +78284,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -76441,6 +78329,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -76637,6 +78526,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -76681,6 +78571,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -76873,6 +78764,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -76917,6 +78809,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -77082,6 +78975,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -77126,6 +79020,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -77281,6 +79176,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -77325,6 +79221,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -77385,6 +79282,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -77429,6 +79327,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -77473,6 +79372,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -77517,6 +79417,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -77787,6 +79688,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -77831,6 +79733,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -78097,6 +80000,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -78141,6 +80045,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -78306,6 +80211,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -78350,6 +80256,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -78505,6 +80412,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -78549,6 +80457,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -78714,6 +80623,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -78758,6 +80668,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -78913,6 +80824,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -78957,6 +80869,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -79122,6 +81035,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -79166,6 +81080,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -79321,6 +81236,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -79365,6 +81281,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -79425,6 +81342,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -79469,6 +81387,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -79513,6 +81432,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -79557,6 +81477,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -79827,6 +81748,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -79871,6 +81793,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -80137,6 +82060,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -80181,6 +82105,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -80346,6 +82271,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -80390,6 +82316,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -80545,6 +82472,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -80589,6 +82517,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -80907,6 +82836,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -80951,6 +82881,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -81170,6 +83101,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -81214,6 +83146,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -81366,6 +83299,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -81410,6 +83344,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -81558,6 +83493,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -81602,6 +83538,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -81859,6 +83796,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -81903,6 +83841,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -82162,6 +84101,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -82206,6 +84146,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -82621,6 +84562,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -82665,6 +84607,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -83094,6 +85037,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -83138,6 +85082,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    franchiseId?: string | null
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -83371,6 +85316,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -83415,6 +85361,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -84028,6 +85975,132 @@ export namespace Prisma {
     branches?: BranchUncheckedUpdateManyWithoutTerritoryNestedInput
     teams?: TeamUncheckedUpdateManyWithoutTerritoryNestedInput
     users?: UserUncheckedUpdateManyWithoutTerritoryNestedInput
+  }
+
+  export type OrganizationCreateManyFranchiseInput = {
+    id?: string
+    name: string
+    slug: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    city?: string | null
+    state?: string | null
+    country?: string | null
+    postalCode?: string | null
+    gstNumber?: string | null
+    panNumber?: string | null
+  }
+
+  export type OrganizationUpdateWithoutFranchiseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    branches?: BranchUpdateManyWithoutOrganizationNestedInput
+    territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
+    teams?: TeamUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUpdateManyWithoutOrganizationNestedInput
+    users?: UserUpdateManyWithoutOrganizationNestedInput
+    sessions?: SessionUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
+    visits?: VisitUpdateManyWithoutOrganizationNestedInput
+    expenses?: ExpenseUpdateManyWithoutOrganizationNestedInput
+    dailyActivities?: DailyActivityReportUpdateManyWithoutOrganizationNestedInput
+    targets?: TargetUpdateManyWithoutOrganizationNestedInput
+    notifications?: NotificationUpdateManyWithoutOrganizationNestedInput
+    notificationTemplates?: NotificationTemplateUpdateManyWithoutOrganizationNestedInput
+    tasks?: TaskUpdateManyWithoutOrganizationNestedInput
+    beatPlans?: BeatPlanUpdateManyWithoutOrganizationNestedInput
+    calendarEvents?: CalendarEventUpdateManyWithoutOrganizationNestedInput
+    notificationPrefs?: NotificationPreferenceUpdateManyWithoutOrganizationNestedInput
+    businessRules?: BusinessRuleConfigUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUpdateManyWithoutOrganizationNestedInput
+    orders?: OrderUpdateManyWithoutOrganizationNestedInput
+    departments?: DepartmentUpdateManyWithoutOrganizationNestedInput
+    warehouses?: WarehouseUpdateManyWithoutOrganizationNestedInput
+    stocks?: StockUpdateManyWithoutOrganizationNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutFranchiseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
+    territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
+    teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
+    roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+    users?: UserUncheckedUpdateManyWithoutOrganizationNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+    visits?: VisitUncheckedUpdateManyWithoutOrganizationNestedInput
+    expenses?: ExpenseUncheckedUpdateManyWithoutOrganizationNestedInput
+    dailyActivities?: DailyActivityReportUncheckedUpdateManyWithoutOrganizationNestedInput
+    targets?: TargetUncheckedUpdateManyWithoutOrganizationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutOrganizationNestedInput
+    notificationTemplates?: NotificationTemplateUncheckedUpdateManyWithoutOrganizationNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutOrganizationNestedInput
+    beatPlans?: BeatPlanUncheckedUpdateManyWithoutOrganizationNestedInput
+    calendarEvents?: CalendarEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    notificationPrefs?: NotificationPreferenceUncheckedUpdateManyWithoutOrganizationNestedInput
+    businessRules?: BusinessRuleConfigUncheckedUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutOrganizationNestedInput
+    warehouses?: WarehouseUncheckedUpdateManyWithoutOrganizationNestedInput
+    stocks?: StockUncheckedUpdateManyWithoutOrganizationNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutOrganizationNestedInput
+    productIssues?: ProductIssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    crmImports?: CRMImportUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateManyWithoutFranchiseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    panNumber?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BranchCreateManyOrganizationInput = {

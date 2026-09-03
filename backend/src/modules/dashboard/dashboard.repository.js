@@ -1380,9 +1380,11 @@ export class DashboardRepository {
   // Super Admin System-Wide Helper Queries
   // --------------------------------------------------
 
-  async getOrganizationCount() {
+  async getOrganizationCount(organizationId = null) {
     try {
-      return await prisma.organization.count();
+      return await prisma.organization.count({
+        where: organizationId ? { id: organizationId } : {},
+      });
     } catch {
       return 0;
     }
@@ -1535,9 +1537,10 @@ export class DashboardRepository {
     }
   }
 
-  async getRecentOrganizations() {
+  async getRecentOrganizations(organizationId = null) {
     try {
       return await prisma.organization.findMany({
+        where: organizationId ? { id: organizationId } : {},
         take: 5,
         orderBy: { createdAt: 'desc' },
         select: {

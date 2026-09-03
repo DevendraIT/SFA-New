@@ -23,7 +23,10 @@ const authController = new AuthController(authService);
 // Public Endpoints
 // --------------------------------------------------
 
+import { franchiseController } from "../franchise/controllers/franchise.controller.js";
+
 router.post("/login", validateLogin, authController.login);
+router.post("/franchise-login", franchiseController.login);
 router.post("/refresh-token", authController.refresh);
 router.post("/logout", authController.logout);
 router.post("/verify-email", validateVerifyEmail, authController.verifyEmail);

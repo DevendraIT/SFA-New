@@ -18,6 +18,16 @@ export function getRoleNames(user) {
   return roles;
 }
 
+export function isFranchiseAdminUser(user) {
+  const roles = getRoleNames(user).map((r) => r.toLowerCase());
+  return roles.some(
+    (r) =>
+      r.includes("franchise") ||
+      r.includes("franchise admin") ||
+      r.includes("franchise_admin")
+  );
+}
+
 export function isSuperAdminUser(user) {
   const roles = getRoleNames(user).map((r) => r.toLowerCase());
   return roles.some(
