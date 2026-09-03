@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   ClipboardCheck,
   Plus,
@@ -28,14 +29,6 @@ import { useAuth } from "../../context/AuthContext";
 export default function ProductIssues() {
   const { user } = useAuth();
 
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const [productIssues, setProductIssues] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
-  const [users, setUsers] = useState([]);
-
   // Search & Filter State
   const [search, setSearch] = useState("");
   const [selectedStatusFilter, setSelectedStatusFilter] = useState("ALL");
@@ -43,6 +36,37 @@ export default function ProductIssues() {
 
   // Modals
   const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const {
+    data: issuesData = { productIssues: [], products: [], warehouses: [], users: [] },
+    isLoading: loading,
+    isRefetching: refreshing,
+    refetch: fetchData,
+  } = useQuery({
+    queryKey: ["productIssuesData"],
+    queryFn: async () => {
+      const [issuesRes, prodRes, whRes, usersRes] = await Promise.all([
+        inventoryApi.getProductIssues().catch((err) => { console.error("Error fetching product issues:", err); return { data: { data: [] } }; }),
+        inventoryApi.getProducts().catch((err) => { console.error("Error fetching products:", err); return { data: { data: [] } }; }),
+        inventoryApi.getWarehouses().catch((err) => { console.error("Error fetching warehouses:", err); return { data: { data: [] } }; }),
+        userApi.getUsers().catch((err) => { console.error("Error fetching users:", err); return { data: { data: [] } }; }),
+      ]);
+
+      const productIssues = issuesRes.data?.data?.productIssues || issuesRes.data?.productIssues || (Array.isArray(issuesRes.data?.data) ? issuesRes.data.data : []);
+      const products = prodRes.data?.data?.products || prodRes.data?.products || (Array.isArray(prodRes.data?.data) ? prodRes.data.data : []);
+      const warehouses = whRes.data?.data?.warehouses || whRes.data?.warehouses || (Array.isArray(whRes.data?.data) ? whRes.data.data : []);
+      const users = usersRes.data?.data?.users || usersRes.data?.users || (Array.isArray(usersRes.data?.data) ? usersRes.data.data : []);
+
+      return { productIssues, products, warehouses, users };
+    },
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
+
+  const productIssues = issuesData.productIssues;
+  const products = issuesData.products;
+  const warehouses = issuesData.warehouses;
+  const users = issuesData.users;
   const [viewIssueItem, setViewIssueItem] = useState(null);
 
   // Create Form State
@@ -64,43 +88,6 @@ export default function ProductIssues() {
       : [user.role?.name || ""];
     return roleNames.some((r) => r && r.toLowerCase().includes("warehouse manager"));
   }, [user]);
-
-  // Load Data
-  const fetchData = useCallback(async (isManualRefresh = false) => {
-    if (isManualRefresh) setRefreshing(true);
-    else setLoading(true);
-
-    try {
-      const [issuesRes, prodRes, whRes, usersRes] = await Promise.all([
-        inventoryApi.getProductIssues().catch((err) => { console.error("Error fetching product issues:", err); return { data: { data: [] } }; }),
-        inventoryApi.getProducts().catch((err) => { console.error("Error fetching products:", err); return { data: { data: [] } }; }),
-        inventoryApi.getWarehouses().catch((err) => { console.error("Error fetching warehouses:", err); return { data: { data: [] } }; }),
-        userApi.getUsers().catch((err) => { console.error("Error fetching users:", err); return { data: { data: [] } }; }),
-      ]);
-
-      const fetchedIssues = issuesRes.data?.data?.productIssues || issuesRes.data?.productIssues || (Array.isArray(issuesRes.data?.data) ? issuesRes.data.data : []);
-      const fetchedProducts = prodRes.data?.data?.products || prodRes.data?.products || (Array.isArray(prodRes.data?.data) ? prodRes.data.data : []);
-      const fetchedWarehouses = whRes.data?.data?.warehouses || whRes.data?.warehouses || (Array.isArray(whRes.data?.data) ? whRes.data.data : []);
-      const fetchedUsers = usersRes.data?.data?.users || usersRes.data?.users || (Array.isArray(usersRes.data?.data) ? usersRes.data.data : []);
-
-      setProductIssues(fetchedIssues);
-      setProducts(fetchedProducts);
-      setWarehouses(fetchedWarehouses);
-      setUsers(fetchedUsers);
-
-      if (isManualRefresh) toast.success("Product issue requests refreshed");
-    } catch (err) {
-      console.error("Error loading product issue dataset:", err);
-      toast.error("Failed to load product issues");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   // Sales Executives List (filtered users)
   const salesExecutives = useMemo(() => {
@@ -448,7 +435,7 @@ export default function ProductIssues() {
       {/* Product Issues Data Table */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-left text-sm min-w-[850px]">
             <thead className="bg-slate-50 border-b border-slate-200/80 text-slate-500 font-semibold text-xs uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4">Issue Reference</th>

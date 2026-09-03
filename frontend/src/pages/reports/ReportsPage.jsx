@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, Warehouse, Package, Boxes, Activity, RefreshCw, Loader2, Target, MapPin
@@ -13,26 +14,21 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function ReportsPage() {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [analytics, setAnalytics] = useState(null);
   const [activeTab, setActiveTab] = useState("branch");
 
-  const loadReportsData = async () => {
-    try {
-      setLoading(true);
+  const {
+    data: analytics = null,
+    isLoading: loading,
+    refetch: loadReportsData,
+  } = useQuery({
+    queryKey: ["reportsAnalytics"],
+    queryFn: async () => {
       const res = await getReportsAnalytics();
-      const data = res.data?.data || res.data;
-      setAnalytics(data);
-    } catch (e) {
-      console.warn("Failed to load reports analytics:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadReportsData();
-  }, []);
+      return res.data?.data || res.data;
+    },
+    staleTime: 120 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   const reportTabs = [
     { id: "branch", label: "Branch Report", icon: Building2 },
@@ -135,7 +131,7 @@ export default function ReportsPage() {
                         <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                         <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                         <Legend />
-                        <Bar dataKey="totalOrders" name="Total Orders" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="totalOrders" name="Total Orders" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="completedTasks" name="Completed Tasks" fill="#10b981" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="requestedQuantity" name="Requested Quantity" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                       </BarChart>
@@ -191,7 +187,7 @@ export default function ReportsPage() {
                         <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
                         <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                         <Legend />
-                        <Bar dataKey="totalStockQuantity" name="Total Stock Qty" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="totalStockQuantity" name="Total Stock Qty" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="availableStockQuantity" name="Available Qty" fill="#10b981" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="productIssueCount" name="Product Issues" fill="#f59e0b" radius={[6, 6, 0, 0]} />
                       </BarChart>
@@ -247,14 +243,14 @@ export default function ReportsPage() {
                         <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
                         <Legend />
                         <Bar dataKey="totalUnitsSold" name="Units Sold" fill="#10b981" radius={[6, 6, 0, 0]} />
-                        <Bar dataKey="currentStockQuantity" name="Current Stock" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="currentStockQuantity" name="Current Stock" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="totalOrdersCount" name="Total Orders" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
 
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left text-sm min-w-[700px]">
                       <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
                         <tr>
                           <th className="p-4">Product Name</th>
@@ -295,7 +291,7 @@ export default function ReportsPage() {
               {stockPerBranchesReport.length > 0 ? (
                 <div className="space-y-6">
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left text-sm min-w-[700px]">
                       <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
                         <tr>
                           <th className="p-4">Product</th>
@@ -368,7 +364,7 @@ export default function ReportsPage() {
                 {/* Field Workforce Member Breakdown Table */}
                 {(fieldForceReport.workforceList || []).length > 0 ? (
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left text-sm min-w-[700px]">
                       <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
                         <tr>
                           <th className="p-4">Field Worker Name</th>

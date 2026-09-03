@@ -61,7 +61,11 @@ export class ReportsRepository {
   }
 
   async getOrganizationAnalytics(organizationId, userContext = null) {
-    const isSuperAdmin = !userContext || userContext.roles?.some(r => typeof r === 'string' ? r.toLowerCase().includes('super admin') : r.role?.name?.toLowerCase().includes('super admin'));
+    const isSuperAdmin = !userContext || userContext.roles?.some(r => {
+      const name = typeof r === 'string' ? r : (r.name || r.role?.name || '');
+      const lower = (name || '').toLowerCase();
+      return lower.includes('super admin') || lower.includes('company admin') || lower === 'admin';
+    });
     const userBranchId = userContext?.branchId;
 
     const branchFilter = (!isSuperAdmin && userBranchId) ? { id: userBranchId } : {};
@@ -160,12 +164,12 @@ export class ReportsRepository {
         },
         orderBy: { createdAt: 'desc' },
       }),
-      prisma.dailyActivityReport.findMany({
-        where: { organizationId },
-      }).catch(() => []),
-      prisma.attendance.findMany({
-        where: { organizationId },
-      }).catch(() => []),
+      prisma.dailyActivityReport
+        ? prisma.dailyActivityReport.findMany({ where: { organizationId } }).catch(() => [])
+        : Promise.resolve([]),
+      prisma.attendance
+        ? prisma.attendance.findMany({ where: { organizationId } }).catch(() => [])
+        : Promise.resolve([]),
     ]);
 
     return { orders, products, customers, targets, visits, branches, users, warehouses, stocks, tasks, dars, attendance };

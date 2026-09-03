@@ -86,10 +86,16 @@ export class TargetPerformanceRepository {
     const branchFilter = (!isSuperAdmin && userBranchId) ? { id: userBranchId } : {};
     const orderBranchFilter = (!isSuperAdmin && userBranchId) ? { owner: { branchId: userBranchId } } : {};
     const userBranchFilter = (!isSuperAdmin && userBranchId) ? { branchId: userBranchId } : {};
+    const taskBranchFilter = (!isSuperAdmin && userBranchId) ? { assignedTo: { branchId: userBranchId } } : {};
+    const visitBranchFilter = (!isSuperAdmin && userBranchId) ? { user: { branchId: userBranchId } } : {};
+    const targetBranchFilter = (!isSuperAdmin && userBranchId) ? { user: { branchId: userBranchId } } : {};
 
     const [targets, orders, branches, users, visits, tasks] = await Promise.all([
       prisma.target.findMany({
-        where: { organizationId },
+        where: {
+          organizationId,
+          ...targetBranchFilter,
+        },
         include: {
           user: { select: { id: true, firstName: true, lastName: true, email: true, branchId: true } },
           team: { select: { id: true, name: true } },
@@ -126,11 +132,17 @@ export class TargetPerformanceRepository {
         },
       }),
       prisma.visit.findMany({
-        where: { organizationId },
+        where: {
+          organizationId,
+          ...visitBranchFilter,
+        },
         select: { id: true, userId: true, status: true, scheduledAt: true, createdAt: true },
       }),
       prisma.task.findMany({
-        where: { organizationId },
+        where: {
+          organizationId,
+          ...taskBranchFilter,
+        },
         select: { id: true, assignedToId: true, status: true, dueDate: true, createdAt: true },
       }),
     ]);

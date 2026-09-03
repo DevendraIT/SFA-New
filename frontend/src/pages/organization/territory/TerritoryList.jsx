@@ -107,8 +107,8 @@ export default function TerritoryList() {
         />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border bg-white">
-        <table className="w-full">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table className="w-full min-w-[700px]">
           <thead className="bg-slate-100">
             <tr>
               <th className="px-6 py-4 text-left">Territory</th>

@@ -1,13 +1,22 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import cloudinary from '../config/cloudinary.js';
+import config from '../config/env.js';
+
+const isCloudinaryConfigured = Boolean(
+  config.CLOUDINARY?.cloudName &&
+  config.CLOUDINARY?.apiKey &&
+  config.CLOUDINARY?.apiSecret
+);
 
 const uploadDir = path.join(process.cwd(), 'uploads', 'photos');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const storage = multer.diskStorage({
+const diskStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
@@ -17,6 +26,19 @@ const storage = multer.diskStorage({
     cb(null, `photo-${uniqueSuffix}${ext}`);
   },
 });
+
+const cloudinaryStorage = isCloudinaryConfigured
+  ? new CloudinaryStorage({
+      cloudinary: cloudinary,
+      params: {
+        folder: 'sfa_uploads',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+        public_id: (req, file) => `photo-${Date.now()}-${Math.round(Math.random() * 1e9)}`,
+      },
+    })
+  : null;
+
+const storage = isCloudinaryConfigured ? cloudinaryStorage : diskStorage;
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image/')) {

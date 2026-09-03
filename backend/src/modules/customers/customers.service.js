@@ -37,7 +37,7 @@ export class CustomerService {
       orgId: organizationId,
       module: 'customers',
       resource: 'list',
-      userId: userContext?.id,
+      scopeId: userContext?.id || 'all',
       params: query,
     });
 

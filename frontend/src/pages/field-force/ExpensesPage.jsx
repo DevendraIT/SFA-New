@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import { IndianRupee, RefreshCw, Plus, Loader2 } from "lucide-react";
@@ -20,9 +21,6 @@ const CATEGORIES = ["TRAVEL", "MEALS", "ACCOMMODATION", "OTHER"];
 
 export default function ExpensesPage() {
   const { user } = useAuth();
-  const [expenses, setExpenses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -34,21 +32,21 @@ export default function ExpensesPage() {
     receiptUrl: "",
   });
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const {
+    data: expenses = [],
+    isLoading: loading,
+    error,
+    refetch: loadData,
+  } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: async () => {
       const res = await fieldForceApi.listExpenses({ take: 100 });
       const data = res.data?.data || res.data;
-      setExpenses(data?.expenses || data || []);
-    } catch (err) {
-      setError(err?.response?.data || err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadData(); }, []);
+      return data?.expenses || data || [];
+    },
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   const handleCreate = async (e) => {
     e.preventDefault();

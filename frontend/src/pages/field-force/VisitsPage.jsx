@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import { ClipboardCheck, RefreshCw, Plus, Loader2 } from "lucide-react";
@@ -18,9 +19,6 @@ const VISIT_FILTERS = ["ALL", "PLANNED", "IN_PROGRESS", "COMPLETED", "CANCELLED"
 
 export default function VisitsPage() {
   const { user } = useAuth();
-  const [visits, setVisits] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -32,21 +30,21 @@ export default function VisitsPage() {
     notes: "",
   });
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const {
+    data: visits = [],
+    isLoading: loading,
+    error,
+    refetch: loadData,
+  } = useQuery({
+    queryKey: ["visits"],
+    queryFn: async () => {
       const res = await fieldForceApi.listVisits({ take: 100 });
       const data = res.data?.data || res.data;
-      setVisits(data?.visits || data || []);
-    } catch (err) {
-      setError(err?.response?.data || err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { loadData(); }, []);
+      return data?.visits || data || [];
+    },
+    staleTime: 30 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   const handleCreate = async (e) => {
     e.preventDefault();

@@ -21,6 +21,7 @@ import {
 import { SalesOrderEventEmitter } from '../events/sales-order.events.js';
 import { ORDER_STATUS, ACTIVITY_TYPE } from '../constants/sales-order.constants.js';
 import { AppError } from '../../../shared/response.js';
+import cacheService from '../../../shared/cache/cache.service.js';
 
 export class SalesOrderService {
   constructor(salesOrderRepository, inventoryService = null) {
@@ -28,11 +29,26 @@ export class SalesOrderService {
     this.inventoryService = inventoryService;
   }
 
+  _invalidateOrdersCache(orgId) {
+    if (!orgId) return;
+    cacheService.invalidatePrefixes([
+      `sales:orders:${orgId}:`,
+      `${orgId}:dashboard:`,
+      `dashboard:`,
+    ]);
+  }
+
   /**
    * Get paginated orders list with filters and search
    */
   async getOrdersList(queryParams, userContext) {
     try {
+      const orgId = userContext.organizationId;
+      const userId = userContext.userId || userContext.id;
+      const cacheKey = `sales:orders:${orgId}:${userId || 'all'}:${JSON.stringify(queryParams || {})}`;
+      const cached = cacheService.get(cacheKey);
+      if (cached) return cached;
+
       // Build filters based on user context and permissions
       const filters = this.buildUserFilters(queryParams, userContext);
       
@@ -40,8 +56,8 @@ export class SalesOrderService {
       const { orders, total } = await this.salesOrderRepository.findMany({
         filters,
         pagination: {
-          page: queryParams.page || 1,
-          limit: queryParams.limit || 20,
+          page: parseInt(queryParams.page) || 1,
+          limit: parseInt(queryParams.limit || queryParams.take) || 100,
         },
         sorting: {
           sortBy: queryParams.sortBy || 'createdAt',
@@ -53,18 +69,22 @@ export class SalesOrderService {
       // Transform to DTOs
       const orderDtos = orders.map(order => new OrderListDto(order));
 
-      return {
+      const limitVal = parseInt(queryParams.limit || queryParams.take) || 100;
+      const result = {
         success: true,
         data: {
           orders: orderDtos,
           pagination: {
-            page: queryParams.page || 1,
-            limit: queryParams.limit || 20,
+            page: parseInt(queryParams.page) || 1,
+            limit: limitVal,
             total,
-            totalPages: Math.ceil(total / (queryParams.limit || 20)),
+            totalPages: Math.ceil(total / limitVal),
           },
         },
       };
+
+      cacheService.set(cacheKey, result, 60);
+      return result;
     } catch (error) {
       throw AppError.internal('Failed to fetch orders list', error);
     }
@@ -188,6 +208,7 @@ export class SalesOrderService {
         await this.changeOrderStatus(createdOrder.id, ORDER_STATUS.APPROVED, 'Auto-approved', userContext);
       }
 
+      this._invalidateOrdersCache(userContext.organizationId);
       return {
         success: true,
         data: new OrderDetailsDto(createdOrder),
@@ -254,6 +275,7 @@ export class SalesOrderService {
       // Emit events
       await SalesOrderEventEmitter.emitOrderUpdated(updatedOrder, dataToUpdate, userContext.userId, userContext.organizationId);
 
+      this._invalidateOrdersCache(userContext.organizationId);
       return {
         success: true,
         data: new OrderDetailsDto(updatedOrder),
@@ -358,6 +380,7 @@ export class SalesOrderService {
       // Emit events
       await SalesOrderEventEmitter.emitOrderStatusChanged(updatedOrder, currentStatus, newStatus, reason, userContext.userId, userContext.organizationId);
 
+      this._invalidateOrdersCache(userContext.organizationId);
       return {
         success: true,
         data: new OrderStatusDto({ ...updatedOrder, previousStatus: currentStatus }),

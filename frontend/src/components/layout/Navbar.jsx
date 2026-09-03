@@ -6,12 +6,11 @@ import { useNavigate } from "react-router-dom";
 export default function Navbar({
   collapsed,
   setCollapsed,
+  mobileOpen,
+  setMobileOpen,
 }) {
-
   const navigate = useNavigate();
-
   const { user, logout } = useAuth();
-
   const [openProfile, setOpenProfile] = useState(false);
 
   const fullName =
@@ -19,37 +18,39 @@ export default function Navbar({
     "User";
 
   const role =
-  Array.isArray(user?.roles) &&
-  user.roles.length > 0
-    ? user.roles[0]?.role?.name
-    : "User";
+    Array.isArray(user?.roles) && user.roles.length > 0
+      ? user.roles[0]?.role?.name
+      : "User";
+
+  const handleMenuClick = () => {
+    if (window.innerWidth < 768) {
+      if (setMobileOpen) setMobileOpen(!mobileOpen);
+    } else {
+      if (setCollapsed) setCollapsed(!collapsed);
+    }
+  };
 
   return (
-    <header className="h-18 bg-white border-b border-slate-200 px-6 flex items-center justify-between">
-
+    <header className="h-16 sm:h-18 bg-white border-b border-slate-200 px-3 sm:px-6 flex items-center justify-between z-30 shrink-0">
       {/* Left */}
-
-      <div className="flex items-center gap-4">
-
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="rounded-lg p-2 hover:bg-slate-100 transition"
+          type="button"
+          onClick={handleMenuClick}
+          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition focus:outline-none"
+          aria-label="Toggle Navigation"
         >
-          <Menu size={20} />
+          <Menu size={22} />
         </button>
 
-        <div>
-
-          <h1 className="text-xl font-semibold text-slate-800">
+        <div className="min-w-0 truncate">
+          <h1 className="text-sm sm:text-xl font-bold text-slate-800 tracking-tight truncate">
             Sales Force Automation
           </h1>
-
-          <p className="text-xs text-slate-500">
+          <p className="text-[10px] sm:text-xs text-slate-500 hidden xs:block truncate">
             Enterprise Dashboard
           </p>
-
         </div>
-
       </div>
 
       {/* Center */}

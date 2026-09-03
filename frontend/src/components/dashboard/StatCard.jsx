@@ -38,39 +38,39 @@ export default function StatCard({
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-all duration-300"
+      className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300"
     >
-      <div className="flex justify-between">
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-slate-500">{title}</p>
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+      <div className="flex justify-between items-start">
+        <div className="space-y-1.5 sm:space-y-3 min-w-0">
+          <p className="text-xs sm:text-sm font-medium text-slate-500 truncate">{title}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight truncate">
             {displayValue}
           </h2>
 
           {trend !== undefined && (
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
               {trend >= 0 ? (
-                <ArrowUpRight size={18} className="text-emerald-500" />
+                <ArrowUpRight size={16} className="text-emerald-500 shrink-0" />
               ) : (
-                <ArrowDownRight size={18} className="text-red-500" />
+                <ArrowDownRight size={16} className="text-red-500 shrink-0" />
               )}
               <span
-                className={`text-sm font-semibold ${
+                className={`text-xs sm:text-sm font-semibold ${
                   trend >= 0 ? "text-emerald-600" : "text-red-500"
                 }`}
               >
                 {trend >= 0 ? "+" : ""}
                 {trend}%
               </span>
-              <span className="text-xs text-slate-400">{trendLabel}</span>
+              <span className="text-[10px] sm:text-xs text-slate-400 truncate">{trendLabel}</span>
             </div>
           )}
         </div>
 
         <div
-          className={`h-14 w-14 rounded-xl ${color} flex items-center justify-center text-white shadow-sm`}
+          className={`h-11 w-11 sm:h-14 sm:w-14 rounded-xl ${color} flex items-center justify-center text-white shadow-sm shrink-0 ml-3`}
         >
-          {Icon && <Icon size={28} />}
+          {Icon && <Icon size={24} className="sm:w-7 sm:h-7" />}
         </div>
       </div>
     </motion.div>

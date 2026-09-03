@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Warehouse,
   GitBranch,
@@ -21,49 +22,38 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function MyWarehouse() {
   const { user } = useAuth();
-
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [myWarehouse, setMyWarehouse] = useState(null);
-  const [pendingPickups, setPendingPickups] = useState([]);
   const [actionLoadingId, setActionLoadingId] = useState(null);
-  const [error, setError] = useState(null);
 
-  const fetchMyWarehouse = useCallback(async (isManualRefresh = false) => {
-    if (isManualRefresh) setRefreshing(true);
-    else setLoading(true);
-    setError(null);
-
-    try {
+  const {
+    data: warehouseData = { myWarehouse: null, pendingPickups: [] },
+    isLoading: loading,
+    isRefetching: refreshing,
+    error,
+    refetch: fetchMyWarehouse,
+  } = useQuery({
+    queryKey: ["myWarehouse"],
+    queryFn: async () => {
       const res = await inventoryApi.getMyWarehouse();
       const wh = res.data?.data || res.data;
-      setMyWarehouse(wh);
+      let pendingPickups = [];
 
-      // Fetch pending stock pickup requests for this warehouse
       if (wh && wh.id) {
         const issuesRes = await inventoryApi.getProductIssues().catch((err) => {
           console.warn("Product issues fetch warning:", err);
           return { data: { data: [] } };
         });
         const allIssues = issuesRes.data?.data?.productIssues || issuesRes.data?.productIssues || (Array.isArray(issuesRes.data?.data) ? issuesRes.data.data : []);
-        const filtered = allIssues.filter((i) => i.warehouseId === wh.id && i.status === "PENDING");
-        setPendingPickups(filtered);
+        pendingPickups = allIssues.filter((i) => i.warehouseId === wh.id && i.status === "PENDING");
       }
 
-      if (isManualRefresh) toast.success("Warehouse details and pending pickups refreshed");
-    } catch (err) {
-      console.error("Error loading assigned warehouse:", err);
-      const msg = err.response?.data?.message || err.message || "Unable to resolve assigned warehouse";
-      setError(msg);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
+      return { myWarehouse: wh, pendingPickups };
+    },
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    fetchMyWarehouse();
-  }, [fetchMyWarehouse]);
+  const myWarehouse = warehouseData.myWarehouse;
+  const pendingPickups = warehouseData.pendingPickups;
 
   const handleApproveHandover = async (issue) => {
     try {

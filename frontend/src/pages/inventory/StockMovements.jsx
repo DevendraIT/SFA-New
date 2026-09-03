@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Activity,
   Search,
@@ -22,12 +23,6 @@ import toast from "react-hot-toast";
 import inventoryApi from "../../api/inventory.api";
 
 export default function StockMovements() {
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const [movements, setMovements] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
-
   // Search & Filter state
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("ALL");
@@ -36,36 +31,30 @@ export default function StockMovements() {
   // Modal
   const [viewMovement, setViewMovement] = useState(null);
 
-  // Load Movements and Warehouses
-  const fetchData = useCallback(async (isManualRefresh = false) => {
-    if (isManualRefresh) setRefreshing(true);
-    else setLoading(true);
-
-    try {
+  const {
+    data: stockData = { movements: [], warehouses: [] },
+    isLoading: loading,
+    isRefetching: refreshing,
+    refetch: fetchData,
+  } = useQuery({
+    queryKey: ["stockMovementsData"],
+    queryFn: async () => {
       const [mvtRes, whRes] = await Promise.all([
         inventoryApi.getStockMovements().catch((err) => { console.error("Error fetching stock movements:", err); return { data: { data: { movements: [] } } }; }),
         inventoryApi.getWarehouses().catch((err) => { console.error("Error fetching warehouses:", err); return { data: { data: [] } }; }),
       ]);
 
-      const fetchedMovements = mvtRes.data?.data?.movements || mvtRes.data?.movements || (Array.isArray(mvtRes.data?.data) ? mvtRes.data.data : []);
-      const fetchedWarehouses = whRes.data?.data?.warehouses || whRes.data?.warehouses || (Array.isArray(whRes.data?.data) ? whRes.data.data : []);
+      const movements = mvtRes.data?.data?.movements || mvtRes.data?.movements || (Array.isArray(mvtRes.data?.data) ? mvtRes.data.data : []);
+      const warehouses = whRes.data?.data?.warehouses || whRes.data?.warehouses || (Array.isArray(whRes.data?.data) ? whRes.data.data : []);
 
-      setMovements(fetchedMovements);
-      setWarehouses(fetchedWarehouses);
+      return { movements, warehouses };
+    },
+    staleTime: 30 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
-      if (isManualRefresh) toast.success("Audit log refreshed");
-    } catch (err) {
-      console.error("Error loading stock movements:", err);
-      toast.error("Failed to load stock movement audit log");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const movements = stockData.movements;
+  const warehouses = stockData.warehouses;
 
   // Filtered Movements
   const filteredMovements = useMemo(() => {
@@ -198,9 +187,6 @@ export default function StockMovements() {
               <option value="ALL">All Movement Types</option>
               <option value="ADD">ADD (+)</option>
               <option value="REDUCE">REDUCE (-)</option>
-              <option value="ISSUE">ISSUE (Dispatch)</option>
-              <option value="RETURN">RETURN</option>
-              <option value="RESERVE">RESERVE</option>
             </select>
           </div>
 
@@ -225,7 +211,7 @@ export default function StockMovements() {
       {/* Stock Movements Audit Table */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-left text-sm min-w-[850px]">
             <thead className="bg-slate-50 border-b border-slate-200/80 text-slate-500 font-semibold text-xs uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4">Timestamp</th>

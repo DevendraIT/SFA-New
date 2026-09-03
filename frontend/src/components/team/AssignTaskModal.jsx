@@ -33,7 +33,6 @@ const INITIAL_REQUIREMENTS = [
   { key: "requirePhoto", label: "Photo Capture", icon: Camera, desc: "Require photo evidence at location" },
   { key: "requireSignature", label: "Digital Signature", icon: FileSignature, desc: "Require customer digital signature" },
   { key: "requireVisitNotes", label: "Visit Notes", icon: FileText, desc: "Require detailed visit notes" },
-  { key: "requireInvoice", label: "Generate Invoice", icon: DollarSign, desc: "Generate invoice upon completion" },
   { key: "requirePayment", label: "Payment Collection", icon: DollarSign, desc: "Collect payment during visit" },
   { key: "requireCheckIn", label: "Geo Check-In", icon: MapPin, desc: "Require geo-verified check-in at customer location" },
   { key: "requireCheckOut", label: "Geo Check-Out", icon: MapPin, desc: "Require geo-verified check-out" },
@@ -44,7 +43,6 @@ const SECTIONS = [
   { id: "assignment", label: "Assignment", icon: Users },
   { id: "customer", label: "Customer Details", icon: Building2 },
   { id: "order", label: "Sales Order", icon: ShoppingCart },
-  { id: "products", label: "Products", icon: Package },
   { id: "requirements", label: "Execution Requirements", icon: Settings },
   { id: "summary", label: "Summary", icon: Check },
 ];
@@ -748,14 +746,6 @@ function SummarySection({ data, executives, customers, customerOrders, categorie
       ],
     },
     {
-      label: "Products",
-      icon: Package,
-      show: (data.products || []).length > 0,
-      items: [
-        { label: "Items", value: `${(data.products || []).length} product(s)` },
-      ],
-    },
-    {
       label: "Requirements",
       icon: Settings,
       items: [
@@ -1133,8 +1123,6 @@ export default function AssignTaskModal({
           />
         );
       case 4:
-        return <ProductsSection data={formData} onChange={setFormData} />;
-      case 5:
         return (
           <RequirementsSection
             data={formData}
@@ -1143,7 +1131,7 @@ export default function AssignTaskModal({
             onAddRequirement={handleAddRequirement}
           />
         );
-      case 6:
+      case 5:
         return (
           <SummarySection
             data={formData}
@@ -1182,31 +1170,32 @@ export default function AssignTaskModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-3xl max-h-[90vh] flex flex-col"
+            className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-3xl max-h-[92vh] flex flex-col my-auto overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-slate-200">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
-                  <Target size={20} />
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-200">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0">
+                  <Target size={18} className="sm:w-5 sm:h-5" />
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-slate-900">Assign Field Mission</h2>
-                  <p className="text-sm text-slate-500 mt-0.5">
+                <div className="min-w-0">
+                  <h2 className="text-base sm:text-xl font-bold text-slate-900 truncate">Assign Field Mission</h2>
+                  <p className="text-xs sm:text-sm text-slate-500 mt-0.5 truncate">
                     Section {currentSection + 1} of {totalSections} - {section.label}
                   </p>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={onClose}
-                className="h-9 w-9 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-slate-100 transition"
+                className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-slate-100 transition shrink-0 ml-2"
               >
                 <X size={18} />
               </button>
             </div>
 
             {/* Progress Bar */}
-            <div className="px-6 pt-4">
+            <div className="px-4 sm:px-6 pt-3 sm:pt-4">
               <div className="flex gap-1">
                 {SECTIONS.map((s, i) => (
                   <button
@@ -1245,7 +1234,7 @@ export default function AssignTaskModal({
             </div>
 
             {/* Body */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
               {loadingCustomers && currentSection === 2 ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 size={24} className="animate-spin text-blue-600" />
@@ -1264,7 +1253,7 @@ export default function AssignTaskModal({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between p-6 border-t border-slate-200">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-t border-slate-200">
               <button
                 type="button"
                 onClick={isFirstSection ? onClose : handlePrev}

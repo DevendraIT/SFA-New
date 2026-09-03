@@ -286,7 +286,7 @@ export default function InventoryDashboard() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs min-w-[500px]">
             <thead className="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider">
               <tr>
                 <th className="p-3 rounded-l-xl">Product Name</th>

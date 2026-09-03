@@ -1,6 +1,6 @@
 import { ResponsiveContainer, BarChart, Bar, CartesianGrid, Tooltip, XAxis, YAxis, PieChart, Pie, Cell, Legend } from "recharts";
 
-const COLORS = ["#22C55E", "#F59E0B", "#3B82F6", "#EF4444"];
+const COLORS = ["#22C55E", "#F59E0B", "#F97316", "#EF4444"];
 
 export default function ExecutivePerformanceChart({ taskSummary, visitSummary, loading = false }) {
   if (loading) {
@@ -51,7 +51,7 @@ export default function ExecutivePerformanceChart({ taskSummary, visitSummary, l
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
-            <Bar dataKey="visits" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="visits" fill="#F97316" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

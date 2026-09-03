@@ -149,8 +149,8 @@ export default function ExecutiveDetail() {
               <p className="text-slate-500 text-sm">No visits recorded</p>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+              <table className="w-full min-w-[500px]">
                 <thead>
                   <tr className="border-b bg-slate-50">
                     <th className="text-left px-5 py-4 text-xs font-semibold text-slate-500 uppercase">Date</th>
@@ -180,7 +180,7 @@ export default function ExecutiveDetail() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-slate-900">Attendance Record ({attendance.length})</h2>
           </div>
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
             <div className="bg-emerald-50 rounded-xl p-5 text-center">
               <p className="text-3xl font-bold text-emerald-600">{attendanceSummary.present}</p>
               <p className="text-sm text-slate-600 mt-1">Present</p>
@@ -199,8 +199,8 @@ export default function ExecutiveDetail() {
               <p className="text-slate-500 text-sm">No attendance records found</p>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <table className="w-full">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+              <table className="w-full min-w-[500px]">
                 <thead>
                   <tr className="border-b bg-slate-50">
                     <th className="text-left px-5 py-4 text-xs font-semibold text-slate-500 uppercase">Date</th>

@@ -258,6 +258,10 @@ export class CRMIntegrationService {
    * List Import History
    */
   async listImports(organizationId, query = {}) {
+    const cacheKey = `crm:imports:${organizationId}:${JSON.stringify(query || {})}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const page = parseInt(query.page, 10) || 1;
     const limit = Math.min(100, parseInt(query.limit, 10) || 20);
     const skip = (page - 1) * limit;
@@ -268,7 +272,7 @@ export class CRMIntegrationService {
       status: query.status,
     });
 
-    return {
+    const result = {
       imports: imports.map(formatImportSummary),
       meta: {
         total,
@@ -277,6 +281,9 @@ export class CRMIntegrationService {
         totalPages: Math.ceil(total / limit),
       },
     };
+
+    cacheService.set(cacheKey, result, 600);
+    return result;
   }
 
   /**
@@ -513,6 +520,7 @@ export class CRMIntegrationService {
     });
 
     cacheService.invalidatePrefixes([
+      `crm:imports:${organizationId}:`,
       `${organizationId}:customers:`,
       `${organizationId}:sales:`,
       `${organizationId}:dashboard:`,

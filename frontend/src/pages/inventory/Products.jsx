@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Package,
   Plus,
@@ -24,9 +25,6 @@ import toast from "react-hot-toast";
 import inventoryApi from "../../api/inventory.api";
 
 export default function Products() {
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   
@@ -44,7 +42,6 @@ export default function Products() {
     productCode: "",
     description: "",
     category: "",
-    brand: "",
     unit: "pcs",
     price: "",
     costPrice: "",
@@ -56,27 +53,20 @@ export default function Products() {
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
-  const fetchProducts = useCallback(async (isManualRefresh = false) => {
-    if (isManualRefresh) setRefreshing(true);
-    else setLoading(true);
-
-    try {
+  const {
+    data: products = [],
+    isLoading: loading,
+    isRefetching: refreshing,
+    refetch: fetchProducts,
+  } = useQuery({
+    queryKey: ["products", search],
+    queryFn: async () => {
       const res = await inventoryApi.getProducts({ q: search });
-      const rawProducts = res.data?.data?.products || res.data?.products || (Array.isArray(res.data?.data) ? res.data.data : []);
-      setProducts(rawProducts);
-      if (isManualRefresh) toast.success("Product list updated");
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      toast.error("Failed to load products");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [search]);
-
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+      return res.data?.data?.products || res.data?.products || (Array.isArray(res.data?.data) ? res.data.data : []);
+    },
+    staleTime: 120 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   // Derived Categories for filter dropdown
   const categories = useMemo(() => {
@@ -278,7 +268,7 @@ export default function Products() {
       {/* Products Data Table */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-left text-sm min-w-[700px]">
             <thead className="bg-slate-50 border-b border-slate-200/80 text-slate-500 font-semibold text-xs uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4">Product Name</th>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import { LogIn, LogOut, Clock, MapPin, CalendarDays, RefreshCw, Loader2, BarChart3 } from "lucide-react";
@@ -18,11 +19,6 @@ import { TableSkeleton } from "../../components/dashboard/LoadingSkeleton";
 
 export default function AttendancePage() {
   const { user } = useAuth();
-  const [todayAttendance, setTodayAttendance] = useState(null);
-  const [attendanceHistory, setAttendanceHistory] = useState([]);
-  const [attendanceSummary, setAttendanceSummary] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkingOut, setCheckingOut] = useState(false);
   const [gpsLocation, setGpsLocation] = useState(null);
@@ -43,11 +39,14 @@ export default function AttendancePage() {
     }
   }, []);
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
+  const {
+    data: attendanceData = { todayAttendance: null, attendanceHistory: [], attendanceSummary: null },
+    isLoading: loading,
+    error,
+    refetch: loadData,
+  } = useQuery({
+    queryKey: ["attendanceData"],
+    queryFn: async () => {
       const startOfMonth = dayjs().startOf("month").format("YYYY-MM-DD");
       const endOfMonth = dayjs().endOf("month").format("YYYY-MM-DD");
 
@@ -57,25 +56,20 @@ export default function AttendancePage() {
         fieldForceApi.getAttendanceSummary({ startDate: startOfMonth, endDate: endOfMonth }),
       ]);
 
-      if (todayRes.status === "fulfilled") {
-        setTodayAttendance(todayRes.value.data?.data || todayRes.value.data);
-      }
-      if (historyRes.status === "fulfilled") {
-        const data = historyRes.value.data?.data || historyRes.value.data;
-        setAttendanceHistory(data?.attendance || data || []);
-      }
-      if (summaryRes.status === "fulfilled") {
-        const data = summaryRes.value.data?.data || summaryRes.value.data;
-        setAttendanceSummary(data);
-      }
-    } catch (err) {
-      setError(err?.response?.data || err);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const todayAttendance = todayRes.status === "fulfilled" ? (todayRes.value.data?.data || todayRes.value.data) : null;
+      const historyRaw = historyRes.status === "fulfilled" ? (historyRes.value.data?.data || historyRes.value.data) : null;
+      const attendanceHistory = historyRaw?.attendance || historyRaw || [];
+      const attendanceSummary = summaryRes.status === "fulfilled" ? (summaryRes.value.data?.data || summaryRes.value.data) : null;
 
-  useEffect(() => { loadData(); }, []);
+      return { todayAttendance, attendanceHistory, attendanceSummary };
+    },
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
+
+  const todayAttendance = attendanceData.todayAttendance;
+  const attendanceHistory = attendanceData.attendanceHistory;
+  const attendanceSummary = attendanceData.attendanceSummary;
 
   const handleCheckIn = async () => {
     if (!gpsLocation) { toast.error("GPS required"); return; }

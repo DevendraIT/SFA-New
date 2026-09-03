@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import dayjs from "dayjs";
 import { 
@@ -23,9 +24,6 @@ import { FileSpreadsheet } from "lucide-react";
 export default function OrdersPage() {
   const { user } = useAuth();
   const isSuperAdmin = isSuperAdminUser(user);
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [filter, setFilter] = useState("ALL");
   
   // Selected order details state for modal
@@ -34,25 +32,21 @@ export default function OrdersPage() {
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
 
-  const loadOrders = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const {
+    data: orders = [],
+    isLoading: loading,
+    error,
+    refetch: loadOrders,
+  } = useQuery({
+    queryKey: ["orders"],
+    queryFn: async () => {
       const res = await salesApi.listOrders({ take: 100 });
       const data = res.data?.data || res.data;
-      const orderList = Array.isArray(data?.orders) ? data.orders : Array.isArray(data) ? data : [];
-      setOrders(orderList);
-    } catch (err) {
-      console.error(err);
-      setError(err?.response?.data || err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadOrders();
-  }, []);
+      return Array.isArray(data?.orders) ? data.orders : Array.isArray(data) ? data : [];
+    },
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   const openOrderModal = async (order) => {
     setSelectedOrderId(order.id);

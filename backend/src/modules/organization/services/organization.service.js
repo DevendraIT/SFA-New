@@ -521,12 +521,18 @@ export class OrganizationService {
   // --------------------------------------------------
 
   async listDepartments(organizationId, query) {
+    const cacheKey = `org:departments:${organizationId}:${JSON.stringify(query || {})}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const options = this._buildListOptions(query);
     const { departments, total } = await this.departmentRepo.findAll(organizationId, {
       ...options,
       branchId: query.branchId,
     });
-    return { departments, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    const result = { departments, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    cacheService.set(cacheKey, result, 300);
+    return result;
   }
 
   async getDepartment(id, organizationId) {
@@ -551,6 +557,7 @@ export class OrganizationService {
       req,
     });
 
+    cacheService.invalidatePrefix("org:departments:");
     return department;
   }
 
@@ -574,6 +581,7 @@ export class OrganizationService {
       req,
     });
 
+    cacheService.invalidatePrefix("org:departments:");
     return updated;
   }
 
@@ -620,6 +628,7 @@ export class OrganizationService {
       }).catch(err => console.warn('Audit log warning:', err.message));
     }
 
+    cacheService.invalidatePrefix("org:departments:");
     return deleted;
   }
 
@@ -643,12 +652,17 @@ export class OrganizationService {
   // --------------------------------------------------
 
   async listTerritories(organizationId, query) {
+    const cacheKey = `org:territories:${organizationId}:${JSON.stringify(query || {})}`;
+    const cached = cacheService.get(cacheKey);
+    if (cached) return cached;
+
     const options = this._buildListOptions(query);
     const { territories, total } = await this.territoryRepo.findAll(organizationId, {
       ...options,
-
     });
-    return { territories, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    const result = { territories, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+    cacheService.set(cacheKey, result, 300);
+    return result;
   }
 
   async getTerritory(id, organizationId) {
@@ -689,6 +703,7 @@ export class OrganizationService {
       req,
     });
 
+    cacheService.invalidatePrefix("org:territories:");
     return territory;
   }
 
@@ -714,6 +729,7 @@ export class OrganizationService {
       req,
     });
 
+    cacheService.invalidatePrefix("org:territories:");
     return updated;
   }
 
@@ -740,6 +756,7 @@ export class OrganizationService {
       }).catch(err => console.warn('Audit log warning:', err.message));
     }
 
+    cacheService.invalidatePrefix("org:territories:");
     return deleted;
   }
 

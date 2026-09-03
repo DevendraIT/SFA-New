@@ -24,59 +24,68 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem(key);
   };
 
+  let initAuthPromise = null;
+
   useEffect(() => {
     initializeAuth();
   }, []);
 
   const initializeAuth = async () => {
-    try {
-      const token = getStoredItem(STORAGE_KEYS.ACCESS_TOKEN);
+    if (initAuthPromise) return initAuthPromise;
 
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+    initAuthPromise = (async () => {
+      try {
+        const token = getStoredItem(STORAGE_KEYS.ACCESS_TOKEN);
 
-      // Restore the cached user (with roles) immediately so the UI doesn't
-      // lose context or redirect to login on page refresh before network request finishes.
-      const cachedUserRaw = getStoredItem(STORAGE_KEYS.USER);
-      let parsedCachedUser = null;
-      if (cachedUserRaw) {
-        try {
-          parsedCachedUser = JSON.parse(cachedUserRaw);
-          setUser(parsedCachedUser);
-        } catch (e) {
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        // Restore the cached user (with roles) immediately so the UI doesn't
+        // lose context or redirect to login on page refresh before network request finishes.
+        const cachedUserRaw = getStoredItem(STORAGE_KEYS.USER);
+        let parsedCachedUser = null;
+        if (cachedUserRaw) {
+          try {
+            parsedCachedUser = JSON.parse(cachedUserRaw);
+            setUser(parsedCachedUser);
+          } catch (e) {
+            removeStoredItem(STORAGE_KEYS.USER);
+          }
+        }
+
+        const response = await authService.getProfile();
+        const profileData = response.data || response;
+
+        let mergedUser = { ...profileData };
+        if (profileData && (profileData.id || profileData.email)) {
+          if (parsedCachedUser) {
+            mergedUser = {
+              ...parsedCachedUser,
+              ...profileData,
+              roles: profileData.roles?.length ? profileData.roles : parsedCachedUser.roles,
+            };
+          }
+          setUser(mergedUser);
+          setStoredItem(STORAGE_KEYS.USER, JSON.stringify(mergedUser));
+        }
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+
+        // ONLY wipe session if server explicitly returned 401 Unauthorized
+        if (error?.response?.status === 401) {
+          removeStoredItem(STORAGE_KEYS.ACCESS_TOKEN);
           removeStoredItem(STORAGE_KEYS.USER);
+          setUser(null);
         }
+      } finally {
+        setLoading(false);
+        initAuthPromise = null;
       }
+    })();
 
-      const response = await authService.getProfile();
-      const profileData = response.data || response;
-
-      let mergedUser = { ...profileData };
-      if (profileData && (profileData.id || profileData.email)) {
-        if (parsedCachedUser) {
-          mergedUser = {
-            ...parsedCachedUser,
-            ...profileData,
-            roles: profileData.roles?.length ? profileData.roles : parsedCachedUser.roles,
-          };
-        }
-        setUser(mergedUser);
-        setStoredItem(STORAGE_KEYS.USER, JSON.stringify(mergedUser));
-      }
-    } catch (error) {
-      console.error("Auth initialization error:", error);
-
-      // ONLY wipe session if server explicitly returned 401 Unauthorized
-      if (error?.response?.status === 401) {
-        removeStoredItem(STORAGE_KEYS.ACCESS_TOKEN);
-        removeStoredItem(STORAGE_KEYS.USER);
-        setUser(null);
-      }
-    } finally {
-      setLoading(false);
-    }
+    return initAuthPromise;
   };
 
   const login = async (credentials) => {

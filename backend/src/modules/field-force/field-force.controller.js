@@ -82,8 +82,10 @@ export class FieldForceController {
       if (!req.file) {
         return res.status(400).json({ success: false, message: 'No file uploaded' });
       }
-      const fileUrl = `/uploads/photos/${req.file.filename}`;
-      return successResponse(res, { url: fileUrl, filename: req.file.filename }, 'File uploaded successfully.', 201);
+      const fileUrl = (req.file.path && (req.file.path.startsWith('http://') || req.file.path.startsWith('https://')))
+        ? req.file.path
+        : `/uploads/photos/${req.file.filename}`;
+      return successResponse(res, { url: fileUrl, filename: req.file.filename || req.file.originalname }, 'File uploaded successfully.', 201);
     } catch (err) {
       next(err);
     }
