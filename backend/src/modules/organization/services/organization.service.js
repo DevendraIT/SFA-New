@@ -382,7 +382,7 @@ export class OrganizationService {
       }).catch(err => console.warn('Audit log warning:', err.message));
     }
 
-    cacheService.flushByPrefix("org:branches:");
+    cacheService.invalidatePrefix("org:branches:");
     return branch;
   }
 

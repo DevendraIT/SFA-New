@@ -33,7 +33,12 @@ export class DashboardRepository {
     if (userId) {
       where.assignedToId = userId;
     } else if (managerId) {
-      where.OR = [{ assignedById: managerId }, { assignedToId: managerId }];
+      where.OR = [
+        { assignedById: managerId },
+        { assignedToId: managerId },
+        { assignedTo: { managerId } },
+        ...(branchId ? [{ assignedTo: { branchId } }] : [])
+      ];
     } else if (branchId) {
       where.assignedTo = { branchId };
     }
@@ -52,7 +57,7 @@ export class DashboardRepository {
     todayEnd.setHours(23, 59, 59, 999);
 
     const where = {
-      organizationId,
+      ...(organizationId && { organizationId }),
       OR: [
         { dueDate: { gte: todayStart, lte: todayEnd } },
         { createdAt: { gte: todayStart, lte: todayEnd } }
@@ -61,7 +66,16 @@ export class DashboardRepository {
     if (userId) {
       where.assignedToId = userId;
     } else if (managerId) {
-      where.OR = [{ assignedById: managerId }, { assignedToId: managerId }];
+      where.AND = [
+        {
+          OR: [
+            { assignedById: managerId },
+            { assignedToId: managerId },
+            { assignedTo: { managerId } },
+            ...(branchId ? [{ assignedTo: { branchId } }] : [])
+          ]
+        }
+      ];
     } else if (branchId) {
       where.assignedTo = { branchId };
     }
@@ -672,42 +686,26 @@ export class DashboardRepository {
 
   async getManagerCustomerCount(organizationId, branchId = null) {
     try {
+      if (!organizationId && !branchId) return 0;
+
       if (branchId) {
-        return await prisma.customer.count({
+        const branchCustomerCount = await prisma.customer.count({
           where: {
+            ...(organizationId && { organizationId }),
             OR: [
-              {
-                crmImportRows: {
-                  some: {
-                    status: { in: ['MAPPED', 'PROCESSED'] },
-                    branch: { id: branchId }
-                  }
-                }
-              },
-              {
-                orders: {
-                  some: {
-                    branchId,
-                    isDeleted: false
-                  }
-                }
-              }
+              { crmImportRows: { some: { mappedBranchId: branchId } } },
+              { orders: { some: { branchId, isDeleted: false } } },
+              { visits: { some: { user: { branchId } } } }
             ]
           }
         });
-      } else if (organizationId) {
-        return await prisma.customer.count({
-          where: {
-            organizationId,
-            OR: [
-              { crmImportRows: { some: { status: { in: ['MAPPED', 'PROCESSED'] } } } },
-              { orders: { some: { isDeleted: false } } }
-            ]
-          }
-        });
+        if (branchCustomerCount > 0) return branchCustomerCount;
       }
-      return 0;
-    } catch {
+
+      const where = organizationId ? { organizationId } : {};
+      return await prisma.customer.count({ where });
+    } catch (err) {
+      console.error("Error in getManagerCustomerCount:", err);
       return 0;
     }
   }
@@ -741,34 +739,68 @@ export class DashboardRepository {
 
   async getManagerCompletedOrderRevenue(organizationId, branchId = null, startDate = null, endDate = null) {
     try {
-      const taskWhere = {
-        status: 'COMPLETED',
-        referenceId: { not: null },
-      };
+      const isTodayQuery = startDate && endDate && startDate instanceof Date && !isNaN(startDate.getTime());
 
-      if (startDate && endDate && startDate instanceof Date && !isNaN(startDate.getTime()) && endDate instanceof Date && !isNaN(endDate.getTime())) {
+      const taskWhere = {
+        status: { in: ['COMPLETED', 'CHECKED_OUT'] },
+      };
+      if (organizationId) taskWhere.organizationId = organizationId;
+      if (isTodayQuery) {
         taskWhere.completedAt = { gte: startDate, lte: endDate };
       }
 
       const completedTasks = await prisma.task.findMany({
         where: taskWhere,
-        select: { referenceId: true }
+        select: {
+          referenceId: true,
+          metadata: true,
+        }
       });
 
-      const completedOrderIds = completedTasks.map(t => t.referenceId).filter(Boolean);
+      const completedOrderIds = new Set();
+      for (const t of completedTasks) {
+        if (t.referenceId) completedOrderIds.add(t.referenceId);
+        const meta = typeof t.metadata === 'object' && t.metadata !== null ? t.metadata : {};
+        if (meta.orderId) completedOrderIds.add(meta.orderId);
+        if (meta.order?.id) completedOrderIds.add(meta.order.id);
+      }
+
+      const orderIdList = Array.from(completedOrderIds);
 
       const orderWhere = {
         isDeleted: false,
-        OR: [
-          { status: { in: ['COMPLETED', 'DELIVERED'] } },
-          ...(completedOrderIds.length > 0 ? [{ id: { in: completedOrderIds } }] : [])
-        ]
       };
 
       if (branchId) {
-        orderWhere.branchId = branchId;
+        orderWhere.OR = [{ branchId }, { owner: { branchId } }];
       } else if (organizationId) {
         orderWhere.organizationId = organizationId;
+      }
+
+      if (isTodayQuery) {
+        orderWhere.AND = [
+          {
+            OR: [
+              ...(orderIdList.length > 0 ? [{ id: { in: orderIdList } }] : []),
+              {
+                status: { in: ['COMPLETED', 'DELIVERED', 'APPROVED'] },
+                OR: [
+                  { updatedAt: { gte: startDate, lte: endDate } },
+                  { createdAt: { gte: startDate, lte: endDate } }
+                ]
+              }
+            ]
+          }
+        ];
+      } else {
+        orderWhere.AND = [
+          {
+            OR: [
+              ...(orderIdList.length > 0 ? [{ id: { in: orderIdList } }] : []),
+              { status: { in: ['COMPLETED', 'DELIVERED', 'APPROVED'] } }
+            ]
+          }
+        ];
       }
 
       const result = await prisma.order.aggregate({

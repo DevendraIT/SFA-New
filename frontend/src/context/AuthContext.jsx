@@ -84,7 +84,13 @@ export const AuthProvider = ({ children }) => {
 
     const loginData = response.data || response;
     const userObj = loginData.user || response.user;
-    const accessToken = loginData.tokens?.accessToken || response.tokens?.accessToken;
+    const accessToken =
+      loginData.accessToken ||
+      loginData.tokens?.accessToken ||
+      response.tokens?.accessToken ||
+      response.accessToken ||
+      loginData.token ||
+      response.token;
 
     if (accessToken) {
       setStoredItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);

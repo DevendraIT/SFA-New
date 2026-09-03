@@ -78,13 +78,13 @@ export default function Sidebar({
   const filteredNavigation = useMemo(() => {
     if (isInventoryManager) {
       return navigation.filter(
-        (item) => ["Dashboard", "Inventory"].includes(item.title)
+        (item) => ["Dashboard", "Inventory", "Notifications", "Settings"].includes(item.title)
       );
     }
 
     if (isWarehouseManager) {
       return navigation
-        .filter((item) => ["Dashboard", "Inventory"].includes(item.title))
+        .filter((item) => ["Dashboard", "Inventory", "Notifications", "Settings"].includes(item.title))
         .map((item) => {
           if (item.title === "Inventory" && Array.isArray(item.children)) {
             return {

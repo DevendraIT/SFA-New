@@ -142,7 +142,11 @@ export const requireOrganization = (req, res, next) => {
       throw AppError.unauthorized('Authentication required');
     }
 
-    if (!req.user.organizationId) {
+    const isSuperAdmin = req.user.roles?.some((r) =>
+      r && typeof r === 'string' && (r.toLowerCase().includes('super admin') || r.toLowerCase().includes('organization super admin'))
+    );
+
+    if (!req.user.organizationId && !isSuperAdmin) {
       throw AppError.forbidden('User does not belong to any organization');
     }
 

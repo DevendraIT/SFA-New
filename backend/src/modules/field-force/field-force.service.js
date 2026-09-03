@@ -37,13 +37,15 @@ export class FieldForceService {
     }
 
     const attendance = await this.repo.checkIn(organizationId, userId, data);
-    this._invalidateFieldForce(organizationId, userId);
+
+
     return attendance;
   }
 
   async checkOut(organizationId, userId, data) {
     const attendance = await this.repo.checkOut(organizationId, userId, data);
-    this._invalidateFieldForce(organizationId, userId);
+
+
     return attendance;
   }
 
@@ -55,13 +57,15 @@ export class FieldForceService {
 
   async startVisit(visitId, organizationId, userId) {
     const visit = await this.repo.updateVisitStatus(visitId, organizationId, 'IN_PROGRESS');
-    this._invalidateFieldForce(organizationId, userId);
+
+
     return visit;
   }
 
   async completeVisit(visitId, organizationId, userId, data) {
     const visit = await this.repo.updateVisitStatus(visitId, organizationId, 'COMPLETED', data);
-    this._invalidateFieldForce(organizationId, userId);
+
+
     return visit;
   }
 

@@ -141,7 +141,7 @@ export class UserService {
       req,
     });
 
-    cacheService.flushByPrefix("dashboard:");
+    cacheService.invalidatePrefix("dashboard:");
     return user;
   }
 
@@ -203,7 +203,7 @@ export class UserService {
       req,
     });
 
-    cacheService.flushByPrefix("dashboard:");
+    cacheService.invalidatePrefix("dashboard:");
     return this.repo.findUserById(id, organizationId);
   }
 

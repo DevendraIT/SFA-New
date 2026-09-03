@@ -33,7 +33,7 @@ export class UserRepository {
     territory: { select: { id: true, name: true } },
     manager: { select: { id: true, firstName: true, lastName: true, email: true } },
     roles: {
-      include: { role: { select: { id: true, name: true, description: true } } },
+      select: { role: { select: { id: true, name: true, description: true } } },
     },
   };
 
@@ -136,7 +136,7 @@ export class UserRepository {
         where: { id: user.id },
         select: {
           ...this.#userSelect,
-          roles: { include: { role: { select: { id: true, name: true } } } },
+          roles: { select: { role: { select: { id: true, name: true } } } },
         },
       });
     });
@@ -305,7 +305,7 @@ export class UserRepository {
       where: { id: { in: userIds }, organizationId, deletedAt: null },
       select: {
         ...this.#userSelect,
-        roles: { include: { role: { select: { id: true, name: true } } } },
+        roles: { select: { role: { select: { id: true, name: true } } } },
       },
     });
   }

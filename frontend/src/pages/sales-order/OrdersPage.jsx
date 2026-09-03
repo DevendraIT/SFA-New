@@ -131,7 +131,7 @@ export default function OrdersPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="rounded-2xl bg-blue-50/80 border border-blue-200 p-5 shadow-sm">
-          <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total Revenue</p>
+          <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total Amount</p>
           <p className="text-2xl font-extrabold text-blue-950 mt-1">₹{totalRevenue.toLocaleString("en-IN")}</p>
         </div>
         <div className="rounded-2xl bg-emerald-50/80 border border-emerald-200 p-5 shadow-sm">

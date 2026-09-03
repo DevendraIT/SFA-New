@@ -153,8 +153,12 @@ export default function UserList() {
   };
 
   const handleDelete = async (userItem) => {
+    if (isTargetSuperAdmin(userItem)) {
+      toast.error("Super Admin accounts cannot be deleted.");
+      return;
+    }
     if (!canManageUserItem(userItem)) {
-      toast.error("Company Admin cannot delete Super Admin accounts");
+      toast.error("You do not have permission to delete this account");
       return;
     }
     const confirmed = window.confirm(
@@ -498,9 +502,11 @@ export default function UserList() {
                           <button onClick={() => { setSelectedUser(userItem); setShowModal(true); }} className="rounded-lg border p-2 hover:bg-slate-100" title="Edit">
                             <Pencil size={17} />
                           </button>
-                          <button onClick={() => handleDelete(userItem)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
-                            <Trash2 size={17} />
-                          </button>
+                          {!isTargetSuperAdmin(userItem) && (
+                            <button onClick={() => handleDelete(userItem)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50" title="Delete">
+                              <Trash2 size={17} />
+                            </button>
+                          )}
                         </>
                       )}
                     </div>
