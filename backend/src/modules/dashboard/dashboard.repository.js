@@ -1592,6 +1592,38 @@ export class DashboardRepository {
     }
   }
 
+  async getSuperAdminMonthlyRevenue(organizationId = null, targetYear = new Date().getFullYear()) {
+    try {
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const monthlyData = [];
+
+      for (let month = 0; month < 12; month++) {
+        const startOfMonth = new Date(targetYear, month, 1, 0, 0, 0);
+        const endOfMonth = new Date(targetYear, month + 1, 0, 23, 59, 59, 999);
+        const monthLabel = monthNames[month];
+
+        const agg = await prisma.order.aggregate({
+          where: {
+            isDeleted: false,
+            ...(organizationId && { organizationId }),
+            createdAt: { gte: startOfMonth, lte: endOfMonth },
+          },
+          _sum: { totalAmount: true },
+        });
+
+        monthlyData.push({
+          month: monthLabel,
+          revenue: Number(agg._sum?.totalAmount || 0),
+        });
+      }
+
+      return monthlyData;
+    } catch (err) {
+      console.error("Error in getSuperAdminMonthlyRevenue:", err);
+      return [];
+    }
+  }
+
   async getRecentOrders(organizationId = null) {
     try {
       return await prisma.order.findMany({
@@ -1599,7 +1631,7 @@ export class DashboardRepository {
           isDeleted: false,
           ...(organizationId && { organizationId }),
         },
-        take: 5,
+        take: 8,
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,

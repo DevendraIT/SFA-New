@@ -93,6 +93,31 @@ export default function OrdersPage() {
     return sum + (Number(val) || 0);
   }, 0);
 
+  const completedOrdersList = orders.filter((o) => {
+    const s = String(o.status || "").toUpperCase();
+    return s.includes("DELIVERED") || s.includes("COMPLETED") || s.includes("APPROVED");
+  });
+
+  const draftOrdersList = orders.filter((o) => {
+    const s = String(o.status || "").toUpperCase();
+    return s.includes("DRAFT") || s.includes("PENDING");
+  });
+
+  const completedRevenue = completedOrdersList.reduce((sum, o) => {
+    const val = typeof o.totalAmount === "object" ? o.totalAmount?.amount : o.totalAmount;
+    return sum + (Number(val) || 0);
+  }, 0);
+
+  const draftRevenue = draftOrdersList.reduce((sum, o) => {
+    const val = typeof o.totalAmount === "object" ? o.totalAmount?.amount : o.totalAmount;
+    return sum + (Number(val) || 0);
+  }, 0);
+
+  const filteredAmount = filteredOrders.reduce((sum, o) => {
+    const val = typeof o.totalAmount === "object" ? o.totalAmount?.amount : o.totalAmount;
+    return sum + (Number(val) || 0);
+  }, 0);
+
   const getStatusBadgeClass = (status) => {
     const s = String(status || "").toUpperCase();
     if (s.includes("DELIVERED") || s.includes("COMPLETED")) return "bg-emerald-100 text-emerald-800 border-emerald-300";
@@ -122,21 +147,77 @@ export default function OrdersPage() {
         </div>
       </PageHeader>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl bg-blue-50/80 border border-blue-200 p-5 shadow-sm">
-          <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total Amount</p>
-          <p className="text-2xl font-extrabold text-blue-950 mt-1">₹{totalRevenue.toLocaleString("en-IN")}</p>
+      {/* Dynamic Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Order Value */}
+        <div
+          onClick={() => setFilter("ALL")}
+          title="Total gross value of all created sales orders across all statuses (Draft, Pending, and Completed)"
+          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
+            filter === "ALL"
+              ? "bg-blue-50/90 border-blue-400 ring-2 ring-blue-300/50"
+              : "bg-white border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total Order Value</p>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{orders.length}</span>
+          </div>
+          <p className="text-2xl font-black text-slate-900 mt-1.5">₹{totalRevenue.toLocaleString("en-IN")}</p>
+          <p className="text-xs text-slate-500 mt-0.5">All created sales orders</p>
         </div>
-        <div className="rounded-2xl bg-emerald-50/80 border border-emerald-200 p-5 shadow-sm">
-          <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Total Orders</p>
-          <p className="text-2xl font-extrabold text-emerald-950 mt-1">{orders.length}</p>
+
+        {/* Completed Revenue */}
+        <div
+          onClick={() => setFilter("COMPLETED")}
+          title="Total revenue realized from delivered, completed, or approved sales orders"
+          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
+            filter === "COMPLETED"
+              ? "bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-300/50"
+              : "bg-white border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Completed Revenue</p>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+              {completedOrdersList.length}
+            </span>
+          </div>
+          <p className="text-2xl font-black text-emerald-700 mt-1.5">₹{completedRevenue.toLocaleString("en-IN")}</p>
+          <p className="text-xs text-slate-500 mt-0.5">Realized & delivered revenue</p>
         </div>
-        <div className="rounded-2xl bg-purple-50/80 border border-purple-200 p-5 shadow-sm cursor-pointer" onClick={() => setFilter("COMPLETED")}>
-          <p className="text-xs font-semibold text-purple-700 uppercase tracking-wider">Completed Orders</p>
-          <p className="text-2xl font-extrabold text-purple-950 mt-1">
-            {orders.filter((o) => String(o.status).toUpperCase().includes("DELIVERED") || String(o.status).toUpperCase().includes("COMPLETED")).length}
-          </p>
+
+        {/* Draft / Pending Amount */}
+        <div
+          onClick={() => setFilter("DRAFT")}
+          title="Total value of sales orders currently in Draft, Pending review, or awaiting fulfillment"
+          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
+            filter === "DRAFT"
+              ? "bg-amber-50/90 border-amber-400 ring-2 ring-amber-300/50"
+              : "bg-white border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Pending / Draft Value</p>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">{draftOrdersList.length}</span>
+          </div>
+          <p className="text-2xl font-black text-amber-700 mt-1.5">₹{draftRevenue.toLocaleString("en-IN")}</p>
+          <p className="text-xs text-slate-500 mt-0.5">Awaiting fulfillment / review</p>
+        </div>
+
+        {/* Filtered Active View */}
+        <div
+          title="Dynamic total amount and order count matching your currently selected tab or filter (All, Pending/Draft, or Completed)"
+          className="rounded-2xl bg-slate-900 text-white border border-slate-800 p-5 shadow-sm transition hover:border-slate-700"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Active Filter View</p>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+              {filter}
+            </span>
+          </div>
+          <p className="text-2xl font-black text-white mt-1.5">₹{filteredAmount.toLocaleString("en-IN")}</p>
+          <p className="text-xs text-slate-400 mt-0.5">{filteredOrders.length} order(s) displayed</p>
         </div>
       </div>
 

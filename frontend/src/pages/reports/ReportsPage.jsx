@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Building2, Warehouse, Package, Boxes, Activity, RefreshCw, Loader2, Target, MapPin
+  Building2, Warehouse, Package, Boxes, Activity, RefreshCw, Loader2, Target, MapPin, HelpCircle
 } from "lucide-react";
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid
@@ -128,22 +128,29 @@ export default function ReportsPage() {
                       <BarChart data={branchReport} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                         <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} />
-                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
-                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} allowDecimals={false} />
+                        <Tooltip
+                          contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", backgroundColor: "#ffffff", boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
+                          formatter={(value, name) => [
+                            name.includes("Qty") || name.includes("Quantity") ? `${value} Units` : `${value}`,
+                            name,
+                          ]}
+                        />
                         <Legend />
                         <Bar dataKey="totalOrders" name="Total Orders" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="completedTasks" name="Completed Tasks" fill="#10b981" radius={[6, 6, 0, 0]} />
-                        <Bar dataKey="requestedQuantity" name="Requested Quantity" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="requestedQuantity" name="Requested Qty" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
 
+                  {/* Branch Performance KPI Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {branchReport.map((b) => (
-                      <div key={b.id} className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-3">
+                      <div key={b.id || b.name} className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-3">
                         <div className="flex items-center justify-between">
                           <h3 className="font-bold text-slate-900 text-lg">{b.name}</h3>
-                          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 font-mono">{b.code}</span>
+                          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 font-mono">{b.code || "BR"}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="p-2.5 rounded-xl bg-slate-50">
@@ -152,19 +159,68 @@ export default function ReportsPage() {
                           </div>
                           <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-800">
                             <span className="block text-emerald-600 font-medium">Completed Tasks</span>
-                            <span className="font-bold text-sm">{b.completedTasks ?? 0}</span>
-                          </div>
-                          <div className="p-2.5 rounded-xl bg-blue-50 text-blue-800">
-                            <span className="block text-blue-600 font-medium">Requested Qty</span>
-                            <span className="font-bold text-sm">{b.requestedQuantity ?? 0}</span>
+                            <span className="font-bold text-sm">{b.completedTasks ?? 0} / {b.totalTasks ?? 0}</span>
                           </div>
                           <div className="p-2.5 rounded-xl bg-purple-50 text-purple-800">
-                            <span className="block text-purple-600 font-medium">Staff Members</span>
-                            <span className="font-bold text-sm">{b.memberCount ?? 0}</span>
+                            <span className="block text-purple-600 font-medium">Fulfillment %</span>
+                            <span className="font-bold text-sm">{b.fulfillmentPercentage ?? b.fulfillmentRate ?? 0}%</span>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-blue-50 text-blue-800">
+                            <span className="block text-blue-600 font-medium">Team Size</span>
+                            <span className="font-bold text-sm">{b.teamSize ?? b.memberCount ?? 0} Workforce</span>
                           </div>
                         </div>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Comprehensive Branch Performance Table */}
+                  <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+                        <tr>
+                          <th className="p-3">Branch Name</th>
+                          <th className="p-3 text-center">Team Size</th>
+                          <th className="p-3 text-center">Total Orders</th>
+                          <th className="p-3 text-center cursor-help" title="Total number of product units ordered across all sales orders placed">
+                            <span className="inline-flex items-center gap-1">Requested Qty <HelpCircle size={12} className="text-slate-400 inline" /></span>
+                          </th>
+                          <th className="p-3 text-center cursor-help" title="Total number of product units successfully delivered and approved">
+                            <span className="inline-flex items-center gap-1">Fulfilled Qty <HelpCircle size={12} className="text-slate-400 inline" /></span>
+                          </th>
+                          <th className="p-3 text-center cursor-help" title="Percentage of ordered product units that have been successfully fulfilled">
+                            <span className="inline-flex items-center gap-1">Fulfillment % <HelpCircle size={12} className="text-slate-400 inline" /></span>
+                          </th>
+                          <th className="p-3 text-center">Completed Tasks</th>
+                          <th className="p-3 text-right">Total Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-medium">
+                        {branchReport.map((b) => (
+                          <tr key={b.id || b.name} className="hover:bg-slate-50/50">
+                            <td className="p-3 font-bold text-slate-900">
+                              {b.name}
+                              {b.code ? <span className="ml-1.5 px-1.5 py-0.5 rounded bg-slate-100 text-[10px] text-slate-500 font-semibold">{b.code}</span> : null}
+                            </td>
+                            <td className="p-3 text-center text-slate-600">{b.teamSize ?? b.memberCount ?? 0} Staff</td>
+                            <td className="p-3 text-center font-bold text-slate-900">{b.totalOrders ?? 0}</td>
+                            <td className="p-3 text-center font-bold text-purple-700">{b.requestedQuantity ?? 0} Units</td>
+                            <td className="p-3 text-center font-bold text-emerald-700">{b.fulfilledQuantity ?? 0} Units</td>
+                            <td className="p-3 text-center">
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                                (b.fulfillmentPercentage ?? 0) >= 75 ? "bg-emerald-50 text-emerald-700" : (b.fulfillmentPercentage ?? 0) >= 40 ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-700"
+                              }`}>
+                                {b.fulfillmentPercentage ?? b.fulfillmentRate ?? 0}%
+                              </span>
+                            </td>
+                            <td className="p-3 text-center font-bold text-emerald-700">
+                              {b.completedTasks ?? 0} / {b.totalTasks ?? 0}
+                            </td>
+                            <td className="p-3 text-right font-bold text-emerald-700">₹{(b.totalRevenue || 0).toLocaleString("en-IN")}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               ) : (
@@ -184,8 +240,8 @@ export default function ReportsPage() {
                       <BarChart data={warehousesReport} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                         <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} />
-                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
-                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} allowDecimals={false} />
+                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", backgroundColor: "#ffffff" }} />
                         <Legend />
                         <Bar dataKey="totalStockQuantity" name="Total Stock Qty" fill="#f97316" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="availableStockQuantity" name="Available Qty" fill="#10b981" radius={[6, 6, 0, 0]} />
@@ -196,7 +252,7 @@ export default function ReportsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {warehousesReport.map((w) => (
-                      <div key={w.id} className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-3">
+                      <div key={w.id || w.name} className="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-3">
                         <div className="flex items-center justify-between">
                           <h3 className="font-bold text-slate-900 text-lg">{w.name}</h3>
                           <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${w.isActive ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
@@ -239,8 +295,8 @@ export default function ReportsPage() {
                       <BarChart data={productReport} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                         <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} />
-                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
-                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                        <YAxis stroke="#64748b" fontSize={12} tickLine={false} allowDecimals={false} />
+                        <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", backgroundColor: "#ffffff" }} />
                         <Legend />
                         <Bar dataKey="totalUnitsSold" name="Units Sold" fill="#10b981" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="currentStockQuantity" name="Current Stock" fill="#f97316" radius={[6, 6, 0, 0]} />
@@ -260,18 +316,20 @@ export default function ReportsPage() {
                           <th className="p-4 text-center">Orders Count</th>
                           <th className="p-4 text-center">Units Sold</th>
                           <th className="p-4 text-center">Current Stock</th>
+                          <th className="p-4 text-right">Revenue Generated</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
                         {productReport.map((p) => (
-                          <tr key={p.id} className="hover:bg-slate-50/50">
+                          <tr key={p.id || p.sku} className="hover:bg-slate-50/50">
                             <td className="p-4 font-bold text-slate-900">{p.name}</td>
                             <td className="p-4 font-mono text-xs text-slate-600">{p.sku}</td>
                             <td className="p-4 text-slate-600">{p.category}</td>
-                            <td className="p-4 text-right font-semibold text-slate-900">₹{p.price.toLocaleString("en-IN")}</td>
-                            <td className="p-4 text-center font-bold text-blue-700">{p.totalOrdersCount}</td>
-                            <td className="p-4 text-center font-bold text-emerald-700">{p.totalUnitsSold}</td>
-                            <td className="p-4 text-center font-bold text-purple-700">{p.currentStockQuantity}</td>
+                            <td className="p-4 text-right font-semibold text-slate-900">₹{(p.price || 0).toLocaleString("en-IN")}</td>
+                            <td className="p-4 text-center font-bold text-blue-700">{p.totalOrdersCount ?? 0}</td>
+                            <td className="p-4 text-center font-bold text-emerald-700">{p.totalUnitsSold ?? 0}</td>
+                            <td className="p-4 text-center font-bold text-purple-700">{p.currentStockQuantity ?? 0}</td>
+                            <td className="p-4 text-right font-bold text-emerald-700">₹{(p.totalRevenue || (p.price || 0) * (p.totalUnitsSold || 0)).toLocaleString("en-IN")}</td>
                           </tr>
                         ))}
                       </tbody>
