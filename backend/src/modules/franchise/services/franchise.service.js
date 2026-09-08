@@ -383,7 +383,7 @@ export class FranchiseService {
   }
 
   /**
-   * Delete an organization and cascade delete all associated data
+   * Delete an organization and cascade delete all associated data (including all users, staff, and records)
    */
   async deleteOrganization(franchiseId, organizationId) {
     const org = await prisma.organization.findUnique({
@@ -394,7 +394,71 @@ export class FranchiseService {
       throw AppError.notFound('Organization not found');
     }
 
-    // Direct cascade delete removes the organization and all its children
+    // 1. Fetch all user IDs associated with this organization
+    const users = await prisma.user.findMany({
+      where: { organizationId },
+      select: { id: true },
+    });
+    const userIds = users.map((u) => u.id);
+
+    // 2. Break self-referencing hierarchy on users to avoid constraint locks
+    if (userIds.length > 0) {
+      await prisma.user.updateMany({
+        where: { id: { in: userIds } },
+        data: { managerId: null },
+      }).catch(() => {});
+    }
+
+    // 3. Delete user-specific dependencies
+    if (userIds.length > 0) {
+      await prisma.userRole.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.session.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.passwordHistory.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.notificationPreference.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.notification.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.calendarEvent.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.beatPlan.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.target.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.task.deleteMany({
+        where: { OR: [{ assignedToId: { in: userIds } }, { assignedById: { in: userIds } }] },
+      }).catch(() => {});
+      await prisma.dailyActivityReport.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+      await prisma.expense.deleteMany({
+        where: { OR: [{ userId: { in: userIds } }, { approverId: { in: userIds } }] },
+      }).catch(() => {});
+      await prisma.visit.deleteMany({ where: { userId: { in: userIds } } }).catch(() => {});
+    }
+
+    // 4. Delete organization-level child dependencies
+    await prisma.orderItem.deleteMany({ where: { order: { organizationId } } }).catch(() => {});
+    await prisma.orderActivity.deleteMany({ where: { order: { organizationId } } }).catch(() => {});
+    await prisma.order.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.stockMovement.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.productIssue.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.stock.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.product.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.warehouse.deleteMany({ where: { organizationId } }).catch(() => {});
+
+    await prisma.customer.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.auditLog.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.cRMImportRow.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.cRMImport.deleteMany({ where: { organizationId } }).catch(() => {});
+
+    // 5. Delete all Users of this organization
+    await prisma.user.deleteMany({ where: { organizationId } }).catch(() => {});
+
+    // 6. Delete Roles & Permissions of this organization
+    await prisma.rolePermission.deleteMany({ where: { role: { organizationId } } }).catch(() => {});
+    await prisma.role.deleteMany({ where: { organizationId } }).catch(() => {});
+
+    // 7. Delete Organizational Structure
+    await prisma.team.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.branch.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.department.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.territory.deleteMany({ where: { organizationId } }).catch(() => {});
+    await prisma.businessRuleConfig.deleteMany({ where: { organizationId } }).catch(() => {});
+
+    // 8. Finally delete the Organization record itself
     await prisma.organization.delete({
       where: { id: organizationId },
     });
