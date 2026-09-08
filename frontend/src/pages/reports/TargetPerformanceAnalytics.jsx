@@ -43,10 +43,60 @@ export default function TargetPerformanceAnalytics() {
   const managers = overview?.managersPerformance || [];
   const branchPerformance = overview?.branchPerformance || [];
 
+  const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
   const currentTrendData = useMemo(() => {
-    if (trendPeriod === "daily") return revenueTrends.daily || [];
-    if (trendPeriod === "weekly") return revenueTrends.weekly || [];
-    return revenueTrends.monthly || [];
+    if (trendPeriod === "daily") {
+      const daily = revenueTrends.daily || [];
+      return daily.map((d) => {
+        let period = d.period;
+        if (period && period.includes("-")) {
+          const parsed = new Date(period);
+          if (!isNaN(parsed.getTime())) {
+            period = parsed.toLocaleDateString("en-US", { day: "2-digit", month: "short" });
+          }
+        }
+        return {
+          ...d,
+          period,
+          revenue: Number(d.revenue || 0),
+          orders: Number(d.orders || 0),
+        };
+      });
+    }
+
+    if (trendPeriod === "weekly") {
+      const weekly = revenueTrends.weekly || [];
+      return weekly.map((w) => ({
+        ...w,
+        revenue: Number(w.revenue || 0),
+        orders: Number(w.orders || 0),
+      }));
+    }
+
+    // Monthly: Ensure all 12 calendar months from Jan to Dec are always displayed dynamically
+    const monthly = revenueTrends.monthly || [];
+    const monthlyMap = new Map();
+    monthly.forEach((m) => {
+      if (m.period) monthlyMap.set(m.period, m);
+    });
+
+    return allMonths.map((month) => {
+      if (monthlyMap.has(month)) {
+        const item = monthlyMap.get(month);
+        return {
+          ...item,
+          period: month,
+          revenue: Number(item.revenue || 0),
+          orders: Number(item.orders || 0),
+        };
+      }
+      return {
+        period: month,
+        revenue: 0,
+        orders: 0,
+      };
+    });
   }, [trendPeriod, revenueTrends]);
 
   const totalRevenue = overview?.totalRevenue || 0;
@@ -165,20 +215,63 @@ export default function TargetPerformanceAnalytics() {
           <div className="h-72 w-full pt-2">
             {currentTrendData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={currentTrendData} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+                <AreaChart data={currentTrendData} margin={{ top: 10, right: 30, left: 10, bottom: 20 }}>
                   <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.35} />
                       <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                   <XAxis dataKey="period" stroke="#64748b" fontSize={12} tickLine={false} />
-                  <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
-                  <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                  <YAxis
+                    yAxisId="left"
+                    stroke="#10b981"
+                    fontSize={11}
+                    tickLine={false}
+                    tickFormatter={(val) => (val >= 100000 ? `₹${(val / 100000).toFixed(1)}L` : val >= 1000 ? `₹${(val / 1000).toFixed(0)}k` : `₹${val}`)}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    stroke="#f97316"
+                    fontSize={11}
+                    tickLine={false}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "12px",
+                      border: "1px solid #e2e8f0",
+                      backgroundColor: "#ffffff",
+                      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                    }}
+                    formatter={(value, name) => [
+                      name.includes("Revenue") ? `₹${Number(value).toLocaleString("en-IN")}` : `${value} Orders`,
+                      name,
+                    ]}
+                  />
                   <Legend />
-                  <Area type="monotone" dataKey="revenue" name="Sales Order Revenue (₹)" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
-                  <Line type="monotone" dataKey="orders" name="Orders Count" stroke="#f97316" strokeWidth={2} />
+                  <Area
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="revenue"
+                    name="Sales Order Revenue (₹)"
+                    stroke="#10b981"
+                    strokeWidth={3}
+                    fillOpacity={1}
+                    fill="url(#colorRevenue)"
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="orders"
+                    name="Orders Count"
+                    stroke="#f97316"
+                    strokeWidth={2.5}
+                    dot={{ r: 4, fill: "#f97316" }}
+                    activeDot={{ r: 6 }}
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
@@ -279,23 +372,77 @@ export default function TargetPerformanceAnalytics() {
         </SectionCard>
       </div>
 
-      {/* GRAPH 4: Branch-level Target Comparison Chart */}
+      {/* GRAPH 4: Branch-level Target Comparison Chart & Detailed Table */}
       <SectionCard title="Branch-level Operational Performance Breakdown" subtitle="Sales Orders, Completed Tasks, and Requested Quantities by Branch" icon={Layers} iconColor="text-indigo-600">
         {branchPerformance.length > 0 ? (
           <div className="space-y-6">
             <div className="h-72 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={branchPerformance} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+                <BarChart data={branchPerformance} margin={{ top: 10, right: 30, left: 10, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                   <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} />
-                  <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
-                  <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0" }} />
+                  <YAxis stroke="#64748b" fontSize={12} tickLine={false} allowDecimals={false} />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "12px",
+                      border: "1px solid #e2e8f0",
+                      backgroundColor: "#ffffff",
+                      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                    }}
+                    formatter={(value, name) => [
+                      name === "Requested Qty" ? `${value} Units` : `${value}`,
+                      name,
+                    ]}
+                  />
                   <Legend />
                   <Bar dataKey="totalOrders" name="Total Orders" fill="#f97316" radius={[6, 6, 0, 0]} />
                   <Bar dataKey="completedTasks" name="Completed Tasks" fill="#10b981" radius={[6, 6, 0, 0]} />
                   <Bar dataKey="requestedQty" name="Requested Qty" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+            </div>
+
+            {/* Branch-level Performance Breakdown Table */}
+            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+                  <tr>
+                    <th className="p-3">Branch Name</th>
+                    <th className="p-3 text-center">Staff Members</th>
+                    <th className="p-3 text-center">Total Orders</th>
+                    <th className="p-3 text-center cursor-help" title="Total number of product units ordered by customers across all sales orders placed">
+                      <span className="inline-flex items-center gap-1">Requested Qty <HelpCircle size={12} className="text-slate-400 inline" /></span>
+                    </th>
+                    <th className="p-3 text-center">Completed Tasks</th>
+                    <th className="p-3 text-center">Task Execution %</th>
+                    <th className="p-3 text-right">Total Revenue</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {branchPerformance.map((b) => (
+                    <tr key={b.id || b.name} className="hover:bg-slate-50/50">
+                      <td className="p-3 font-bold text-slate-900">
+                        {b.name}
+                        {b.code ? <span className="ml-1.5 px-1.5 py-0.5 rounded bg-slate-100 text-[10px] text-slate-500 font-semibold">{b.code}</span> : null}
+                      </td>
+                      <td className="p-3 text-center text-slate-600">{b.memberCount || 0} Workforce</td>
+                      <td className="p-3 text-center font-bold text-slate-900">{b.totalOrders || 0}</td>
+                      <td className="p-3 text-center font-bold text-purple-700">{b.requestedQty || 0} Units</td>
+                      <td className="p-3 text-center font-bold text-emerald-700">
+                        {b.completedTasks || 0} / {b.totalTasks || 0}
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                          b.taskCompletionRate >= 75 ? "bg-emerald-50 text-emerald-700" : b.taskCompletionRate >= 40 ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-700"
+                        }`}>
+                          {b.taskCompletionRate || 0}%
+                        </span>
+                      </td>
+                      <td className="p-3 text-right font-bold text-emerald-700">₹{(b.totalRevenue || 0).toLocaleString("en-IN")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         ) : (

@@ -101,36 +101,98 @@ export class TargetPerformanceService {
     let requestedQuantity = 0;
     let fulfilledQuantity = 0;
 
-    // Revenue Trend Maps
-    const monthlyRevenueMap = {};
-    const weeklyRevenueMap = {};
-    const dailyRevenueMap = {};
+    // All 12 calendar months
+    const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const now = new Date();
 
+    // 1. Initialize 12 Calendar Months (Jan to Dec)
+    const monthlyRevenueMap = {};
+    allMonths.forEach((m, idx) => {
+      monthlyRevenueMap[m] = {
+        period: m,
+        monthIndex: idx,
+        revenue: 0,
+        orders: 0,
+      };
+    });
+
+    // 2. Initialize Month-wise Weeks (e.g. past 8 rolling weeks)
+    const weeklyRevenueMap = new Map();
+    for (let i = 7; i >= 0; i--) {
+      const wDate = new Date(now.getTime() - i * 7 * 24 * 60 * 60 * 1000);
+      const mName = allMonths[wDate.getMonth()];
+      const wNum = Math.ceil(wDate.getDate() / 7);
+      const key = `${mName} W${wNum}`;
+      if (!weeklyRevenueMap.has(key)) {
+        weeklyRevenueMap.set(key, {
+          period: key,
+          revenue: 0,
+          orders: 0,
+          timestamp: wDate.getTime(),
+        });
+      }
+    }
+
+    // 3. Initialize Daily Timeline (e.g. last 14 days)
+    const dailyRevenueMap = new Map();
+    for (let i = 13; i >= 0; i--) {
+      const dDate = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dayKey = dDate.toISOString().split("T")[0];
+      const dayLabel = dDate.toLocaleDateString("en-US", { day: "2-digit", month: "short" });
+      dailyRevenueMap.set(dayKey, {
+        period: dayLabel,
+        rawDate: dayKey,
+        revenue: 0,
+        orders: 0,
+        timestamp: dDate.getTime(),
+      });
+    }
+
+    // Process all live database orders
     orders.forEach((o) => {
       const amt = Number(o.totalAmount || 0);
       totalRevenue += amt;
 
       const d = new Date(o.createdAt);
-      const monthKey = d.toLocaleString("default", { month: "short" });
-      const dayKey = d.toISOString().split("T")[0];
+      if (!isNaN(d.getTime())) {
+        // Monthly trajectory (all 12 months)
+        const monthName = allMonths[d.getMonth()];
+        if (monthlyRevenueMap[monthName]) {
+          monthlyRevenueMap[monthName].orders += 1;
+          monthlyRevenueMap[monthName].revenue += amt;
+        }
 
-      const firstDayOfYear = new Date(d.getFullYear(), 0, 1);
-      const pastDaysOfYear = (d - firstDayOfYear) / 86400000;
-      const weekNum = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-      const weekKey = `W${weekNum}`;
+        // Weekly trajectory (Month-wise weeks: e.g. Aug W1, Aug W2, Sep W1)
+        const wNum = Math.ceil(d.getDate() / 7);
+        const weekKey = `${monthName} W${wNum}`;
+        if (!weeklyRevenueMap.has(weekKey)) {
+          weeklyRevenueMap.set(weekKey, {
+            period: weekKey,
+            revenue: 0,
+            orders: 0,
+            timestamp: d.getTime(),
+          });
+        }
+        const wItem = weeklyRevenueMap.get(weekKey);
+        wItem.orders += 1;
+        wItem.revenue += amt;
 
-      if (!monthlyRevenueMap[monthKey]) monthlyRevenueMap[monthKey] = { period: monthKey, revenue: 0, orders: 0 };
-      if (!weeklyRevenueMap[weekKey]) weeklyRevenueMap[weekKey] = { period: weekKey, revenue: 0, orders: 0 };
-      if (!dailyRevenueMap[dayKey]) dailyRevenueMap[dayKey] = { period: dayKey, revenue: 0, orders: 0 };
-
-      monthlyRevenueMap[monthKey].orders += 1;
-      monthlyRevenueMap[monthKey].revenue += amt;
-
-      weeklyRevenueMap[weekKey].orders += 1;
-      weeklyRevenueMap[weekKey].revenue += amt;
-
-      dailyRevenueMap[dayKey].orders += 1;
-      dailyRevenueMap[dayKey].revenue += amt;
+        // Daily trajectory (Formatted e.g. 28 Aug, 04 Sep)
+        const dayKey = d.toISOString().split("T")[0];
+        const dayLabel = d.toLocaleDateString("en-US", { day: "2-digit", month: "short" });
+        if (!dailyRevenueMap.has(dayKey)) {
+          dailyRevenueMap.set(dayKey, {
+            period: dayLabel,
+            rawDate: dayKey,
+            revenue: 0,
+            orders: 0,
+            timestamp: d.getTime(),
+          });
+        }
+        const dItem = dailyRevenueMap.get(dayKey);
+        dItem.orders += 1;
+        dItem.revenue += amt;
+      }
 
       (o.items || []).forEach((item) => {
         const q = item.quantity || 0;
@@ -145,9 +207,9 @@ export class TargetPerformanceService {
     const fulfillmentRate = requestedQuantity > 0 ? Math.round((fulfilledQuantity / requestedQuantity) * 100) : 0;
 
     const revenueTrends = {
-      monthly: Object.values(monthlyRevenueMap),
-      weekly: Object.values(weeklyRevenueMap),
-      daily: Object.values(dailyRevenueMap),
+      monthly: allMonths.map((m) => monthlyRevenueMap[m]),
+      weekly: Array.from(weeklyRevenueMap.values()).sort((a, b) => a.timestamp - b.timestamp),
+      daily: Array.from(dailyRevenueMap.values()).sort((a, b) => a.timestamp - b.timestamp).slice(-30),
     };
 
     // Categorize Users (Sales Managers vs Sales Executives)
@@ -217,10 +279,10 @@ export class TargetPerformanceService {
       const branchUsers = users.filter((u) => u.branchId === b.id);
       const branchUserIds = new Set(branchUsers.map((u) => u.id));
 
-      const branchOrders = orders.filter((o) => o.owner?.branchId === b.id || branchUserIds.has(o.ownerId));
+      const branchOrders = orders.filter((o) => o.branchId === b.id || o.owner?.branchId === b.id || branchUserIds.has(o.ownerId));
       const branchCompletedOrders = branchOrders.filter((o) => ["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status));
       const branchTasks = tasks.filter((t) => branchUserIds.has(t.assignedToId));
-      const branchCompletedTasks = branchTasks.filter((t) => t.status === "COMPLETED");
+      const branchCompletedTasks = branchTasks.filter((t) => ["COMPLETED", "CHECKED_OUT"].includes(t.status));
 
       let bReqQty = 0;
       let bFulQty = 0;

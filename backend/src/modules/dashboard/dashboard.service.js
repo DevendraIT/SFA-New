@@ -32,6 +32,7 @@ export class DashboardService {
       recentUsers,
       recentOrders,
       orderMetrics,
+      monthlyRevenue,
     ] = await Promise.all([
       this.repo.getOrganizationCount(organizationId),
       this.repo.getCompanyCount(organizationId),
@@ -50,6 +51,7 @@ export class DashboardService {
       this.repo.getRecentUsers(organizationId),
       this.repo.getRecentOrders(organizationId),
       this.repo.getOrderMetrics(organizationId, null, null, null),
+      this.repo.getSuperAdminMonthlyRevenue(organizationId, now.getFullYear()),
     ]);
 
     const formattedAllVisits = this._formatGroupBy(visitMetricsAll, 'status');
@@ -91,6 +93,7 @@ export class DashboardService {
         todaysRevenue: typeof revenueMetrics === 'object' ? (revenueMetrics.todaysRevenue || 0) : 0,
       },
       orders: formattedOrders,
+      monthlyRevenue,
       visitSummary: formattedAllVisits,
       attendanceToday: formattedAttendance,
       recentOrganizations,

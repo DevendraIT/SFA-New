@@ -65,7 +65,7 @@ export default function CompanyAdminDashboard() {
               Good {greetingTime}, {fullName} 👋
             </h1>
             <p className="text-sm md:text-base text-indigo-200 max-w-xl">
-              Manage your company&apos;s branches, departments, teams, and staff directory from a centralized operational workspace.
+              Manage your Company&apos;s branches, departments, teams, and staff directory from a centralized operational workspace.
             </p>
           </div>
 

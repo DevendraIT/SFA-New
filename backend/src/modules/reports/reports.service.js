@@ -152,31 +152,36 @@ export class ReportsService {
       const bUsers = users.filter((u) => u.branchId === b.id);
       const bUserIds = new Set(bUsers.map((u) => u.id));
       
-      const bOrders = orders.filter((o) => o.owner?.branchId === b.id || bUserIds.has(o.ownerId));
-      const bCompletedOrders = bOrders.filter((o) => ["COMPLETED", "DELIVERED"].includes(o.status));
+      const bOrders = orders.filter((o) => o.branchId === b.id || o.owner?.branchId === b.id || bUserIds.has(o.ownerId));
+      const bCompletedOrders = bOrders.filter((o) => ["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status));
       const bCancelledOrders = bOrders.filter((o) => o.status === "CANCELLED");
 
       const bTasks = tasks.filter((t) => bUserIds.has(t.assignedToId) || t.assignedTo?.branchId === b.id);
-      const bCompletedTasks = bTasks.filter((t) => t.status === "COMPLETED");
+      const bCompletedTasks = bTasks.filter((t) => ["COMPLETED", "CHECKED_OUT"].includes(t.status));
 
       const bVisits = visits.filter((v) => bUserIds.has(v.userId) || v.user?.branchId === b.id);
       const bCompletedVisits = bVisits.filter((v) => v.status === "COMPLETED");
 
       let bReqQty = 0;
       let bFulQty = 0;
+      let bRevenue = 0;
       bOrders.forEach((o) => {
+        bRevenue += Number(o.totalAmount || 0);
         (o.items || []).forEach((i) => {
-          const q = i.quantity || 0;
+          const q = Number(i.quantity || 0);
           bReqQty += q;
-          if (["COMPLETED", "DELIVERED"].includes(o.status)) bFulQty += q;
+          if (["COMPLETED", "DELIVERED", "APPROVED"].includes(o.status)) bFulQty += q;
         });
       });
+
+      const fulfillmentPct = bReqQty > 0 ? Math.round((bFulQty / bReqQty) * 100) : 0;
 
       return {
         id: b.id,
         name: b.name,
         code: b.code || "BR",
         memberCount: bUsers.length,
+        teamSize: bUsers.length,
         totalOrders: bOrders.length,
         completedOrders: bCompletedOrders.length,
         cancelledOrders: bCancelledOrders.length,
@@ -184,9 +189,13 @@ export class ReportsService {
         completedTasks: bCompletedTasks.length,
         totalVisits: bVisits.length,
         completedVisits: bCompletedVisits.length,
+        totalRevenue: bRevenue,
         requestedQuantity: bReqQty,
         fulfilledQuantity: bFulQty,
-        fulfillmentRate: bReqQty > 0 ? Math.round((bFulQty / bReqQty) * 100) : 0,
+        fulfillmentRate: fulfillmentPct,
+        fulfillmentPercentage: fulfillmentPct,
+        orderCompletionRate: bOrders.length > 0 ? Math.round((bCompletedOrders.length / bOrders.length) * 100) : 0,
+        taskCompletionRate: bTasks.length > 0 ? Math.round((bCompletedTasks.length / bTasks.length) * 100) : 0,
       };
     });
 
@@ -219,9 +228,14 @@ export class ReportsService {
     const productReport = products.map((p) => {
       const pOrders = orders.filter((o) => (o.items || []).some((i) => i.productId === p.id));
       let unitsSold = 0;
+      let revenue = 0;
       orders.forEach((o) => {
         (o.items || []).forEach((i) => {
-          if (i.productId === p.id) unitsSold += i.quantity || 0;
+          if (i.productId === p.id) {
+            const q = Number(i.quantity || 0);
+            unitsSold += q;
+            revenue += q * Number(i.unitPrice || p.price || 0);
+          }
         });
       });
       const totalStockQty = (p.stocks || []).reduce((sum, s) => sum + (s.quantity || 0), 0);
@@ -234,6 +248,7 @@ export class ReportsService {
         price: Number(p.price || 0),
         totalOrdersCount: pOrders.length,
         totalUnitsSold: unitsSold,
+        totalRevenue: revenue,
         currentStockQuantity: totalStockQty,
       };
     });
@@ -261,14 +276,14 @@ export class ReportsService {
       return roleNames.some((r) => r.includes("sales executive") || r.includes("field executive"));
     });
 
-    const completedTasksCount = tasks.filter((t) => t.status === "COMPLETED").length;
+    const completedTasksCount = tasks.filter((t) => ["COMPLETED", "CHECKED_OUT"].includes(t.status)).length;
+    const inProgressTasksCount = tasks.filter((t) => ["IN_PROGRESS", "DELIVERY_IN_PROGRESS", "CHECKED_IN", "ARRIVED", "NAVIGATING", "ACCEPTED", "ASSIGNED"].includes(t.status)).length;
     const pendingTasksCount = tasks.filter((t) => t.status === "PENDING").length;
-    const inProgressTasksCount = tasks.filter((t) => ["IN_PROGRESS", "DELIVERY_IN_PROGRESS"].includes(t.status)).length;
 
     const workforceMembers = fieldExecutives.map((u) => {
       const uTasks = tasks.filter((t) => t.assignedToId === u.id);
-      const uCompleted = uTasks.filter((t) => t.status === "COMPLETED").length;
-      const uInProgress = uTasks.filter((t) => ["IN_PROGRESS", "DELIVERY_IN_PROGRESS"].includes(t.status)).length;
+      const uCompleted = uTasks.filter((t) => ["COMPLETED", "CHECKED_OUT"].includes(t.status)).length;
+      const uInProgress = uTasks.filter((t) => ["IN_PROGRESS", "DELIVERY_IN_PROGRESS", "CHECKED_IN", "ARRIVED", "NAVIGATING", "ACCEPTED", "ASSIGNED"].includes(t.status)).length;
       const uPending = uTasks.filter((t) => t.status === "PENDING").length;
 
       return {
@@ -280,6 +295,7 @@ export class ReportsService {
         completedTasks: uCompleted,
         inProgressTasks: uInProgress,
         pendingTasks: uPending,
+        taskCompletionRate: uTasks.length > 0 ? Math.round((uCompleted / uTasks.length) * 100) : 0,
       };
     });
 

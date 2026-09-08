@@ -103,37 +103,11 @@ export default function SuperAdminDashboard() {
     );
   }, [user, dashboard]);
 
-  if (loading) {
-    return <DashboardGridSkeleton />;
-  }
-
-  if (error) {
-    return (
-      <ErrorState
-        title="Failed to load dashboard"
-        message="Unable to fetch executive dashboard data. Please ensure the backend server is running."
-        onRetry={refresh}
-      />
-    );
-  }
-
-  const hasData = dashboard && Object.keys(dashboard).length > 0;
-
-  if (!hasData) {
-    return (
-      <EmptyDashboard
-        title="No Dashboard Data"
-        description="The dashboard data is not available yet. Data will appear once activities are recorded."
-        onAction={refresh}
-      />
-    );
-  }
-
-  // Extract metrics from API response
+  // Extract metrics from API response safely
   const orgOverview = dashboard?.organizationOverview || {};
   const cards = dashboard?.cards || {};
   const visitSummary = dashboard?.visitSummary || {};
-  const targets = dashboard?.targets || [];
+  const targets = Array.isArray(dashboard?.targets) ? dashboard.targets : [];
   const attendanceToday = dashboard?.attendanceToday || {};
   const orders = dashboard?.orders || {};
 
@@ -159,54 +133,137 @@ export default function SuperAdminDashboard() {
   const cancelledOrders = orders?.CANCELLED?.count || 0;
   const totalOrdersCount = totalSalesOrders || (approvedOrders + pendingOrders + cancelledOrders);
 
-  // Revenue chart data (monthly)
-  const revenueData = [
-    { month: "Jan", revenue: Math.round(revenue * 0.1) || 28000 },
-    { month: "Feb", revenue: Math.round(revenue * 0.15) || 35000 },
-    { month: "Mar", revenue: Math.round(revenue * 0.2) || 42000 },
-    { month: "Apr", revenue: Math.round(revenue * 0.18) || 40000 },
-    { month: "May", revenue: Math.round(revenue * 0.25) || 55000 },
-    { month: "Jun", revenue: revenue || 65000 },
-  ];
+  // Dynamic 12-month calendar revenue data from backend (Jan to Dec trajectory)
+  const revenueData = useMemo(() => {
+    const allMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if (Array.isArray(dashboard?.monthlyRevenue) && dashboard.monthlyRevenue.length === 12) {
+      return dashboard.monthlyRevenue;
+    }
+    if (Array.isArray(dashboard?.monthlyRevenue) && dashboard.monthlyRevenue.length > 0) {
+      // Map received months into the 12 calendar months
+      const map = {};
+      dashboard.monthlyRevenue.forEach((m) => {
+        if (m.month) map[m.month] = m.revenue || 0;
+      });
+      return allMonths.map((name) => ({
+        month: name,
+        revenue: map[name] ?? 0,
+      }));
+    }
+    // Default 12 months with active total placed on the active month
+    const currentMonthIdx = dayjs().month();
+    return allMonths.map((name, idx) => ({
+      month: name,
+      revenue: idx === currentMonthIdx ? (revenue || 0) : 0,
+    }));
+  }, [dashboard?.monthlyRevenue, revenue]);
+
+  // Dynamic growth computation based on real consecutive monthly order revenue
+  const revenueGrowthInfo = useMemo(() => {
+    if (!revenueData || revenueData.length < 2) {
+      return { text: "+18.4% YoY Growth", isPositive: true };
+    }
+    const currentMonthIdx = dayjs().month();
+    const current = revenueData[currentMonthIdx]?.revenue || 0;
+    const previous = currentMonthIdx > 0 ? (revenueData[currentMonthIdx - 1]?.revenue || 0) : 0;
+
+    if (previous === 0 && current > 0) {
+      return { text: "+100% MoM Growth", isPositive: true };
+    }
+    if (previous === 0 && current === 0) {
+      // Look back for last non-zero active month
+      const nonZero = revenueData.filter((d) => d.revenue > 0);
+      if (nonZero.length > 0) {
+        return { text: "Enterprise Active", isPositive: true };
+      }
+      return { text: "Active Tracking", isPositive: true };
+    }
+    const diff = ((current - previous) / previous) * 100;
+    const isPos = diff >= 0;
+    return {
+      text: `${isPos ? "+" : ""}${diff.toFixed(1)}% MoM Growth`,
+      isPositive: isPos,
+    };
+  }, [revenueData]);
 
   // Order status pie data
-  const orderData = [
-    { name: "Approved", value: totalOrdersCount > 0 ? Math.round((approvedOrders / totalOrdersCount) * 100) : 70 },
-    { name: "Pending", value: totalOrdersCount > 0 ? Math.round((pendingOrders / totalOrdersCount) * 100) : 20 },
-    { name: "Cancelled", value: totalOrdersCount > 0 ? Math.round((cancelledOrders / totalOrdersCount) * 100) : 10 },
-  ].filter((d) => d.value > 0);
+  const orderData = useMemo(() => {
+    return [
+      { name: "Approved", value: totalOrdersCount > 0 ? Math.round((approvedOrders / totalOrdersCount) * 100) : 70 },
+      { name: "Pending", value: totalOrdersCount > 0 ? Math.round((pendingOrders / totalOrdersCount) * 100) : 20 },
+      { name: "Cancelled", value: totalOrdersCount > 0 ? Math.round((cancelledOrders / totalOrdersCount) * 100) : 10 },
+    ].filter((d) => d.value > 0);
+  }, [totalOrdersCount, approvedOrders, pendingOrders, cancelledOrders]);
 
   // Performance metrics from targets
-  const performanceMetrics = targets.slice(0, 3).map((t) => ({
-    label: t.metric || "Target",
-    value: t.targetValue > 0 ? Math.round((t.achievedValue / t.targetValue) * 100) : 0,
-    suffix: "%",
-  }));
+  const performanceMetrics = useMemo(() => {
+    const list = targets.slice(0, 3).map((t) => ({
+      label: t.metric || "Target",
+      value: t.targetValue > 0 ? Math.round((t.achievedValue / t.targetValue) * 100) : 0,
+      suffix: "%",
+    }));
 
-  if (performanceMetrics.length < 3) {
-    const defaultMetrics = [
-      { label: "Visit Completion Rate", value: totalVisits > 0 ? Math.round((completedVisits / totalVisits) * 100) : 100 },
-      { label: "Sales Target Achievement", value: totalSalesOrders > 0 ? 100 : 85 },
-      { label: "User Active Engagement", value: totalUsers > 0 ? 100 : 92 },
-    ];
-    for (let i = performanceMetrics.length; i < 3; i++) {
-      performanceMetrics.push(defaultMetrics[i]);
+    if (list.length < 3) {
+      const defaultMetrics = [
+        { label: "Visit Completion Rate", value: totalVisits > 0 ? Math.round((completedVisits / totalVisits) * 100) : 100 },
+        { label: "Sales Target Achievement", value: totalSalesOrders > 0 ? 100 : 85 },
+        { label: "User Active Engagement", value: totalUsers > 0 ? 100 : 92 },
+      ];
+      for (let i = list.length; i < 3; i++) {
+        list.push(defaultMetrics[i]);
+      }
     }
+    return list;
+  }, [targets, totalVisits, completedVisits, totalSalesOrders, totalUsers]);
+
+  // Dynamic real-time activity feed from actual sales orders and live system logs
+  const recentActivities = useMemo(() => {
+    const list = [];
+    if (Array.isArray(dashboard?.recentOrders) && dashboard.recentOrders.length > 0) {
+      dashboard.recentOrders.forEach((o) => {
+        list.push({
+          title: `Sales Order #${o.orderNumber || o.id?.slice(0, 8)}`,
+          description: `${o.customer?.name || "Customer"} — Status: ${o.status || "CONFIRMED"} — ₹${Number(o.totalAmount || 0).toLocaleString("en-IN")}`,
+          time: dayjs(o.createdAt).format("MMM D, h:mm A"),
+          completed: o.status === "APPROVED" || o.status === "COMPLETED" || o.status === "DELIVERED",
+        });
+      });
+    }
+    if (list.length === 0) {
+      list.push(
+        { title: "System Operational", description: `Enterprise active with ${totalUsers} users across ${totalOrganizations} organizations`, time: "Just now", completed: true },
+        { title: "Revenue Sync Active", description: `Total aggregated revenue: ₹${Number(revenue).toLocaleString("en-IN")}`, time: "Today", completed: true },
+        { title: "Field Operations Active", description: `${presentCount} employees logged in today`, time: dayjs().format("h:mm A"), completed: true }
+      );
+    }
+    return list;
+  }, [dashboard?.recentOrders, totalUsers, totalOrganizations, revenue, presentCount]);
+
+  if (loading) {
+    return <DashboardGridSkeleton />;
   }
 
-  // Recent activities
-  const recentActivities = Array.isArray(dashboard?.recentOrders) && dashboard.recentOrders.length > 0
-    ? dashboard.recentOrders.map((o) => ({
-      title: `Order ${o.orderNumber}`,
-      description: `${o.customer?.name || "Customer"} - Status: ${o.status} - Amount: ₹${Number(o.totalAmount || 0).toLocaleString("en-IN")}`,
-      time: dayjs(o.createdAt).format("MMM D, h:mm A"),
-      completed: o.status === "APPROVED",
-    }))
-    : [
-      { title: "System Analytics Active", description: "Executive dashboard synced with live database", time: dayjs().format("h:mm A"), completed: true },
-      { title: "Organization Hierarchy Active", description: `${totalUsers} system users actively operational`, time: "Today" },
-      { title: "Field Operations Active", description: `${presentCount} employees checked in today`, time: dayjs().subtract(1, "hour").format("h:mm A") },
-    ];
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load dashboard"
+        message="Unable to fetch executive dashboard data. Please ensure the backend server is running."
+        onRetry={refresh}
+      />
+    );
+  }
+
+  const hasData = dashboard && Object.keys(dashboard).length > 0;
+
+  if (!hasData) {
+    return (
+      <EmptyDashboard
+        title="No Dashboard Data"
+        description="The dashboard data is not available yet. Data will appear once activities are recorded."
+        onAction={refresh}
+      />
+    );
+  }
 
   return (
     <motion.div
@@ -347,9 +404,15 @@ export default function SuperAdminDashboard() {
           className="xl:col-span-2"
           delay={0.2}
           action={
-            <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200">
+            <span
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
+                revenueGrowthInfo.isPositive
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                  : "bg-amber-50 text-amber-700 border-amber-200"
+              }`}
+            >
               <TrendingUp size={14} />
-              +18.4% YoY Growth
+              {revenueGrowthInfo.text}
             </span>
           }
         >
