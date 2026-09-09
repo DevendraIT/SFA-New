@@ -8,7 +8,7 @@ export class DashboardRepository {
 
     return prisma.lead.groupBy({
       by: ['status'],
-      where, 
+      where,
       _count: { id: true },
     });
   }
@@ -85,7 +85,7 @@ export class DashboardRepository {
     return prisma.task.count({ where });
   }
 
-  
+
   async getHeadOfSalesTargetAnalytics(organizationId) {
     try {
       const targetWhere = { organizationId, status: 'ACTIVE' };

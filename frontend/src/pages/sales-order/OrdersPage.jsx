@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import dayjs from "dayjs";
-import { 
-  ShoppingCart, RefreshCw, Eye, X, Building2, User, MapPin, 
-  FileText, Calendar, Tag, CreditCard, CheckCircle2, AlertCircle, 
+import {
+  ShoppingCart, RefreshCw, Eye, X, Building2, User, MapPin,
+  FileText, Calendar, Tag, CreditCard, CheckCircle2, AlertCircle,
   Clock, ShieldCheck, Mail, Phone, Hash, Layers
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -25,7 +25,7 @@ export default function OrdersPage() {
   const { user } = useAuth();
   const isSuperAdmin = isSuperAdminUser(user);
   const [filter, setFilter] = useState("ALL");
-  
+
   // Selected order details state for modal
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
@@ -153,11 +153,10 @@ export default function OrdersPage() {
         <div
           onClick={() => setFilter("ALL")}
           title="Total gross value of all created sales orders across all statuses (Draft, Pending, and Completed)"
-          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
-            filter === "ALL"
+          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${filter === "ALL"
               ? "bg-blue-50/90 border-blue-400 ring-2 ring-blue-300/50"
               : "bg-white border-slate-200 hover:bg-slate-50"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total Order Value</p>
@@ -171,11 +170,10 @@ export default function OrdersPage() {
         <div
           onClick={() => setFilter("COMPLETED")}
           title="Total revenue realized from delivered, completed, or approved sales orders"
-          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
-            filter === "COMPLETED"
+          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${filter === "COMPLETED"
               ? "bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-300/50"
               : "bg-white border-slate-200 hover:bg-slate-50"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Completed Revenue</p>
@@ -191,11 +189,10 @@ export default function OrdersPage() {
         <div
           onClick={() => setFilter("DRAFT")}
           title="Total value of sales orders currently in Draft, Pending review, or awaiting fulfillment"
-          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
-            filter === "DRAFT"
+          className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${filter === "DRAFT"
               ? "bg-amber-50/90 border-amber-400 ring-2 ring-amber-300/50"
               : "bg-white border-slate-200 hover:bg-slate-50"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Pending / Draft Value</p>
@@ -231,11 +228,10 @@ export default function OrdersPage() {
           <button
             key={tab.key}
             onClick={() => setFilter(tab.key)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
-              filter === tab.key
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${filter === tab.key
                 ? "bg-blue-600 text-white shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-            }`}
+              }`}
           >
             {tab.label}
           </button>
@@ -440,10 +436,10 @@ export default function OrdersPage() {
                               const qty = item.quantity || 1;
                               const priceVal = typeof item.unitPrice === "object" ? item.unitPrice?.amount : item.unitPrice;
                               const formattedPrice = typeof item.unitPrice === "object" ? item.unitPrice?.formatted : `₹${Number(priceVal || 0).toLocaleString("en-IN")}`;
-                              
+
                               const discVal = typeof item.discountAmount === "object" ? item.discountAmount?.amount : item.discountAmount;
                               const taxVal = typeof item.taxAmount === "object" ? item.taxAmount?.amount : item.taxAmount;
-                              
+
                               const lineTotalVal = typeof item.lineTotal === "object" ? item.lineTotal?.amount : (qty * (Number(priceVal) || 0) - (Number(discVal) || 0) + (Number(taxVal) || 0));
                               const formattedLineTotal = typeof item.lineTotal === "object" ? item.lineTotal?.formatted : `₹${Number(lineTotalVal || 0).toLocaleString("en-IN")}`;
 

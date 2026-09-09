@@ -3,20 +3,20 @@
  * Business logic and orchestration for sales order operations
  */
 
-import { 
-  OrderCalculations, 
-  OrderBusinessRules, 
+import {
+  OrderCalculations,
+  OrderBusinessRules,
   OrderStatusManager,
   OrderNumberGenerator,
-  OrderDataSanitizer 
+  OrderDataSanitizer
 } from '../helpers/sales-order.helpers.js';
-import { 
-  OrderListDto, 
-  OrderDetailsDto, 
-  OrderCreateDto, 
+import {
+  OrderListDto,
+  OrderDetailsDto,
+  OrderCreateDto,
   OrderUpdateDto,
   OrderStatusDto,
-  BulkOperationResultDto 
+  BulkOperationResultDto
 } from '../dto/sales-order.dto.js';
 import { SalesOrderEventEmitter } from '../events/sales-order.events.js';
 import { ORDER_STATUS, ACTIVITY_TYPE } from '../constants/sales-order.constants.js';
@@ -51,7 +51,7 @@ export class SalesOrderService {
 
       // Build filters based on user context and permissions
       const filters = this.buildUserFilters(queryParams, userContext);
-      
+
       // Get orders with pagination
       const { orders, total } = await this.salesOrderRepository.findMany({
         filters,
@@ -141,21 +141,21 @@ export class SalesOrderService {
       if (this.inventoryService && createDto.items?.length > 0) {
         for (const item of createDto.items) {
           if (!item.productId) continue;
-          
+
           // Get product and its stock
           const prodRes = await this.inventoryService.getProductById(item.productId, userContext);
           const product = prodRes.data;
-          
+
           if (!product || !product.isActive) {
             throw AppError.badRequest(`Product ${item.productId} is not available or inactive`);
           }
-          
+
           // Find a warehouse with enough stock
           const availableStock = product.warehouses?.find(w => w.available >= item.quantity);
           if (!availableStock) {
             throw AppError.badRequest(`Insufficient stock for product ${product.name}`);
           }
-          
+
           reservations.push({
             productId: item.productId,
             warehouseId: availableStock.warehouseId,
@@ -188,10 +188,10 @@ export class SalesOrderService {
       if (this.inventoryService && reservations.length > 0) {
         for (const res of reservations) {
           await this.inventoryService.reserveStock(
-            res.productId, 
-            res.warehouseId, 
-            res.quantity, 
-            createdOrder.id, 
+            res.productId,
+            res.warehouseId,
+            res.quantity,
+            createdOrder.id,
             userContext
           );
         }
@@ -341,28 +341,28 @@ export class SalesOrderService {
             }
           }
         }
-        
+
         // If Cancelled or Rejected, release reserved stock
         if (newStatus === ORDER_STATUS.CANCELLED || newStatus === ORDER_STATUS.REJECTED) {
           if (currentStatus === ORDER_STATUS.DRAFT || currentStatus === ORDER_STATUS.PENDING) {
-             const orderWithItems = await this.salesOrderRepository.findById(orderId, { includeItems: true });
-             for (const item of orderWithItems.items) {
-               if (!item.productId) continue;
-               const prodRes = await this.inventoryService.getProductById(item.productId, userContext);
-               const product = prodRes.data;
-               if (product && product.warehouses && product.warehouses.length > 0) {
-                 const reservedStock = product.warehouses.find(w => w.reservedQuantity >= item.quantity) || product.warehouses[0];
-                 if (reservedStock) {
-                   await this.inventoryService.releaseStock(
-                     item.productId,
-                     reservedStock.warehouseId,
-                     item.quantity,
-                     orderId,
-                     userContext
-                   );
-                 }
-               }
-             }
+            const orderWithItems = await this.salesOrderRepository.findById(orderId, { includeItems: true });
+            for (const item of orderWithItems.items) {
+              if (!item.productId) continue;
+              const prodRes = await this.inventoryService.getProductById(item.productId, userContext);
+              const product = prodRes.data;
+              if (product && product.warehouses && product.warehouses.length > 0) {
+                const reservedStock = product.warehouses.find(w => w.reservedQuantity >= item.quantity) || product.warehouses[0];
+                if (reservedStock) {
+                  await this.inventoryService.releaseStock(
+                    item.productId,
+                    reservedStock.warehouseId,
+                    item.quantity,
+                    orderId,
+                    userContext
+                  );
+                }
+              }
+            }
           }
         }
       }
@@ -563,12 +563,12 @@ export class SalesOrderService {
     // Add organization context
     filters.organizationId = userContext.organizationId;
 
-    const userRoles = (userContext.roles || []).map(r => 
+    const userRoles = (userContext.roles || []).map(r =>
       typeof r === 'string' ? r : (r.role?.name || r.name || '')
     );
 
     // Roles that see ALL orders in the org (no branch filter)
-    const isGlobalAdmin = userRoles.some(r => 
+    const isGlobalAdmin = userRoles.some(r =>
       ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
     );
 
@@ -592,11 +592,11 @@ export class SalesOrderService {
    * Validate user access to order
    */
   validateUserAccess(order, userContext, operation) {
-    const userRoles = (userContext.roles || []).map(r => 
+    const userRoles = (userContext.roles || []).map(r =>
       typeof r === 'string' ? r : (r.role?.name || r.name || '')
     );
 
-    const isGlobalAdmin = userRoles.some(r => 
+    const isGlobalAdmin = userRoles.some(r =>
       ['organization super admin', 'super admin', 'company admin', 'head of sales', 'administrator'].includes(r.toLowerCase())
     );
 
@@ -639,7 +639,7 @@ export class SalesOrderService {
    */
   getChanges(oldData, newData) {
     const changes = {};
-    
+
     Object.keys(newData).forEach(key => {
       if (oldData[key] !== newData[key]) {
         changes[key] = {

@@ -9,7 +9,7 @@ import { AppError } from '../../../shared/response.js';
 export class SalesOrderController {
   constructor(salesOrderService) {
     this.salesOrderService = salesOrderService;
-    
+
     // Bind methods to maintain context
     this.getOrdersList = this.getOrdersList.bind(this);
     this.getOrderById = this.getOrderById.bind(this);
@@ -68,7 +68,7 @@ export class SalesOrderController {
   async getOrderById(req, res, next) {
     try {
       const orderId = req.params.id;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -90,7 +90,7 @@ export class SalesOrderController {
   async createOrder(req, res, next) {
     try {
       const orderData = req.body;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -116,7 +116,7 @@ export class SalesOrderController {
     try {
       const orderId = req.params.id;
       const updateData = req.body;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -138,7 +138,7 @@ export class SalesOrderController {
   async deleteOrder(req, res, next) {
     try {
       const orderId = req.params.id;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -165,7 +165,7 @@ export class SalesOrderController {
       if (!status) {
         throw AppError.badRequest('Status is required');
       }
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -199,7 +199,7 @@ export class SalesOrderController {
       if (orderIds.length > 100) {
         throw AppError.badRequest('Bulk operations are limited to 100 orders at a time');
       }
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -226,7 +226,7 @@ export class SalesOrderController {
       if (!note || !note.trim()) {
         throw AppError.badRequest('Note text is required');
       }
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -248,7 +248,7 @@ export class SalesOrderController {
   async getOrderActivities(req, res, next) {
     try {
       const orderId = req.params.id;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -278,7 +278,7 @@ export class SalesOrderController {
         territoryId: req.query.territoryId,
         ownerId: req.query.ownerId,
       };
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -326,7 +326,7 @@ export class SalesOrderController {
       if (orderIds.length > 100) {
         throw AppError.badRequest('Bulk operations are limited to 100 orders at a time');
       }
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -372,7 +372,7 @@ export class SalesOrderController {
       if (!assignToUserId) {
         throw AppError.badRequest('Assign to user ID is required');
       }
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -399,7 +399,7 @@ export class SalesOrderController {
     try {
       const orderId = req.params.id;
       const { reason, approvalLevel } = req.body;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -426,7 +426,7 @@ export class SalesOrderController {
       if (!reason || !reason.trim()) {
         throw AppError.badRequest('Rejection reason is required');
       }
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -449,7 +449,7 @@ export class SalesOrderController {
     try {
       const orderId = req.params.id;
       const { reason } = req.body;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -472,7 +472,7 @@ export class SalesOrderController {
     try {
       const orderId = req.params.id;
       const { reason } = req.body;
-      
+
       const userContext = {
         userId: req.user.id,
         organizationId: req.user.organizationId,
@@ -495,11 +495,11 @@ export class SalesOrderController {
     try {
       const format = req.query.format || 'csv';
       const filters = req.query;
-      
+
       // TODO: Implement export functionality
       // This would typically generate a file and return download URL or stream
-      
-      return successResponse(res, { 
+
+      return successResponse(res, {
         exportUrl: '/downloads/orders-export-123.csv',
         format,
         message: 'Export initiated successfully',
