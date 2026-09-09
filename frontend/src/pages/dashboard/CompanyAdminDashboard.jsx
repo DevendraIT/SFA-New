@@ -118,7 +118,7 @@ export default function CompanyAdminDashboard() {
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Organization Seat License Quota
+                  Organization License Quota
                 </span>
                 <span
                   className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
@@ -133,7 +133,7 @@ export default function CompanyAdminDashboard() {
                 </span>
               </div>
               <p className="text-sm sm:text-base font-bold text-slate-800 mt-0.5">
-                {licenseQuota.consumed} of {licenseQuota.max} Seats Consumed (1 user = 1 license)
+                {licenseQuota.consumed} of {licenseQuota.max} License Consumed (1 user = 1 license)
               </p>
             </div>
           </div>
@@ -141,11 +141,11 @@ export default function CompanyAdminDashboard() {
           {licenseQuota.isLimitReached ? (
             <div className="text-xs font-medium text-red-700 bg-red-100/80 border border-red-200 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
               <AlertTriangle size={14} className="shrink-0" />
-              <span>All licenses consumed. Contact your Franchise Administrator to upgrade seats.</span>
+              <span>All licenses consumed. Contact your Franchise Administrator to upgrade.</span>
             </div>
           ) : (
             <div className="text-xs text-slate-500 font-medium">
-              Every created role (Super Admin, Admin, Manager, Sales Executive) counts as 1 seat.
+              Every created role (Super Admin, Admin, Manager, Sales Executive) counts as 1.
             </div>
           )}
         </div>
