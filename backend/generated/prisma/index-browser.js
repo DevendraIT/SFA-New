@@ -149,7 +149,8 @@ exports.Prisma.OrganizationScalarFieldEnum = {
   postalCode: 'postalCode',
   gstNumber: 'gstNumber',
   panNumber: 'panNumber',
-  franchiseId: 'franchiseId'
+  franchiseId: 'franchiseId',
+  maxLicenses: 'maxLicenses'
 };
 
 exports.Prisma.BranchScalarFieldEnum = {

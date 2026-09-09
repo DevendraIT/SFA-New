@@ -1433,6 +1433,44 @@ export class DashboardRepository {
     }
   }
 
+  async getOrganizationLicenseQuota(organizationId = null) {
+    try {
+      if (!organizationId) {
+        return {
+          maxLicenses: 20,
+          consumedLicenses: 0,
+          availableLicenses: 20,
+          isLimitReached: false,
+        };
+      }
+      const org = await prisma.organization.findUnique({
+        where: { id: organizationId },
+        select: { id: true, name: true, maxLicenses: true },
+      });
+      const maxLicenses = org?.maxLicenses || 20;
+      const consumedLicenses = await prisma.user.count({
+        where: {
+          deletedAt: null,
+          organizationId,
+        },
+      });
+      const availableLicenses = Math.max(0, maxLicenses - consumedLicenses);
+      return {
+        maxLicenses,
+        consumedLicenses,
+        availableLicenses,
+        isLimitReached: consumedLicenses >= maxLicenses,
+      };
+    } catch {
+      return {
+        maxLicenses: 20,
+        consumedLicenses: 0,
+        availableLicenses: 20,
+        isLimitReached: false,
+      };
+    }
+  }
+
   async getTeamCount(organizationId = null) {
     try {
       return await prisma.team.count({

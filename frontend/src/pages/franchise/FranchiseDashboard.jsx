@@ -48,6 +48,7 @@ export default function FranchiseDashboard() {
     state: "",
     gstNumber: "",
     panNumber: "",
+    maxLicenses: 20,
     isActive: true,
   });
   const [updating, setUpdating] = useState(false);
@@ -64,6 +65,7 @@ export default function FranchiseDashboard() {
     city: "",
     state: "",
     gstNumber: "",
+    maxLicenses: 20,
     adminFirstName: "",
     adminLastName: "",
     adminEmail: "",
@@ -135,6 +137,7 @@ export default function FranchiseDashboard() {
           city: formData.city.trim(),
           state: formData.state.trim(),
           gstNumber: formData.gstNumber.trim(),
+          maxLicenses: Math.max(1, Number(formData.maxLicenses) || 20),
         },
         superAdmin: {
           firstName: formData.adminFirstName.trim() || "Super",
@@ -159,6 +162,7 @@ export default function FranchiseDashboard() {
         city: "",
         state: "",
         gstNumber: "",
+        maxLicenses: 20,
         adminFirstName: "",
         adminLastName: "",
         adminEmail: "",
@@ -185,6 +189,7 @@ export default function FranchiseDashboard() {
       state: org.state || "",
       gstNumber: org.gstNumber || "",
       panNumber: org.panNumber || "",
+      maxLicenses: org.maxLicenses || 20,
       isActive: org.isActive ?? true,
     });
   };
@@ -195,7 +200,10 @@ export default function FranchiseDashboard() {
 
     try {
       setUpdating(true);
-      await franchiseApi.updateOrganization(editOrg.id, editFormData);
+      await franchiseApi.updateOrganization(editOrg.id, {
+        ...editFormData,
+        maxLicenses: Math.max(1, Number(editFormData.maxLicenses) || 20),
+      });
       toast.success("Organization details updated successfully!");
       setEditOrg(null);
       loadData();
@@ -314,7 +322,8 @@ export default function FranchiseDashboard() {
                 <th className="px-5 py-4">Client Organization</th>
                 <th className="px-5 py-4">Designated Super Admin</th>
                 <th className="px-5 py-4">Location & Contact</th>
-                <th className="px-5 py-4 text-center">Branches & Staff</th>
+                <th className="px-5 py-4 text-center">Branches</th>
+                <th className="px-5 py-4 text-center">License Allocation & Usage</th>
                 <th className="px-5 py-4 text-center">Status</th>
                 <th className="px-5 py-4 text-center">Actions</th>
               </tr>
@@ -322,20 +331,28 @@ export default function FranchiseDashboard() {
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     <Loader2 size={24} className="animate-spin mx-auto mb-2 text-blue-600" />
                     Loading client organizations...
                   </td>
                 </tr>
               ) : filteredOrgs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     <Building2 size={36} className="mx-auto mb-2 text-slate-300" />
                     No client organizations found. Click "Create Organization & Super Admin" to provision your first client.
                   </td>
                 </tr>
               ) : (
-                filteredOrgs.map((org) => (
+                filteredOrgs.map((org) => {
+                  const maxLic = org.maxLicenses || 20;
+                  const usedLic = org.totalUsers || 0;
+                  const remainingLic = Math.max(0, maxLic - usedLic);
+                  const isFull = usedLic >= maxLic;
+                  const isNearFull = !isFull && (usedLic / maxLic) >= 0.8;
+                  const percentUsed = Math.min(100, Math.round((usedLic / maxLic) * 100));
+
+                  return (
                   <tr key={org.id} className="hover:bg-slate-50/80 transition">
                     <td className="px-5 py-4">
                       <div className="font-bold text-slate-900">{org.name}</div>
@@ -357,8 +374,39 @@ export default function FranchiseDashboard() {
 
                     <td className="px-5 py-4 text-center">
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-xs font-semibold text-slate-700">
-                        {org.totalBranches || 0} Branches / {org.totalUsers || 0} Users
+                        {org.totalBranches || 0} Branches
                       </span>
+                    </td>
+
+                    {/* License Allocation & Usage Column */}
+                    <td className="px-5 py-4">
+                      <div className="flex flex-col gap-1.5 min-w-[150px]">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-bold text-slate-900">
+                            {usedLic} / {maxLic} Seats
+                          </span>
+                          <span
+                            className={`font-semibold px-2 py-0.5 rounded-full text-[10px] ${
+                              isFull
+                                ? "bg-red-100 text-red-700 border border-red-200"
+                                : isNearFull
+                                ? "bg-amber-100 text-amber-700 border border-amber-200"
+                                : "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                            }`}
+                          >
+                            {isFull ? "Limit Reached" : `${remainingLic} left`}
+                          </span>
+                        </div>
+                        {/* Progress Bar */}
+                        <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-300 ${
+                              isFull ? "bg-red-500" : isNearFull ? "bg-amber-500" : "bg-blue-600"
+                            }`}
+                            style={{ width: `${percentUsed}%` }}
+                          />
+                        </div>
+                      </div>
                     </td>
 
                     <td className="px-5 py-4 text-center">
@@ -408,9 +456,10 @@ export default function FranchiseDashboard() {
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
+                );
+              })
+            )}
+          </tbody>
           </table>
         </div>
       </div>
@@ -465,7 +514,17 @@ export default function FranchiseDashboard() {
                   </p>
                 </div>
 
-                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                <div className="bg-purple-50/70 p-3.5 rounded-xl border border-purple-100">
+                  <p className="text-xs font-semibold text-purple-700 uppercase">License Quota</p>
+                  <p className="font-bold text-slate-800 mt-0.5">
+                    {viewOrg.totalUsers || 0} / {viewOrg.maxLicenses || 20} Seats
+                    <span className="text-xs font-medium text-slate-500 ml-1.5">
+                      ({Math.max(0, (viewOrg.maxLicenses || 20) - (viewOrg.totalUsers || 0))} available)
+                    </span>
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 sm:col-span-2">
                   <p className="text-xs font-semibold text-slate-400 uppercase">Location</p>
                   <p className="font-bold text-slate-800 mt-0.5">
                     {viewOrg.city ? `${viewOrg.city}, ${viewOrg.state || "India"}` : "India"}
@@ -607,6 +666,25 @@ export default function FranchiseDashboard() {
                     onChange={(e) => setEditFormData({ ...editFormData, panNumber: e.target.value })}
                     className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
+                </div>
+              </div>
+
+              <div className="bg-purple-50/60 p-3.5 rounded-xl border border-purple-200">
+                <label className="block text-xs font-bold text-purple-900 mb-1">
+                  User Licenses (Seat Quota) <span className="text-red-500">*</span>
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="number"
+                    min="1"
+                    required
+                    value={editFormData.maxLicenses}
+                    onChange={(e) => setEditFormData({ ...editFormData, maxLicenses: parseInt(e.target.value, 10) || 1 })}
+                    className="w-32 px-3.5 py-2 text-sm rounded-xl border border-purple-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-bold text-slate-900"
+                  />
+                  <p className="text-xs text-slate-600">
+                    Total user seats allowed (Super Admin, Admin, Manager, Sales Executive). 1 user = 1 license.
+                  </p>
                 </div>
               </div>
 
@@ -783,6 +861,26 @@ export default function FranchiseDashboard() {
                       placeholder="e.g. Maharashtra"
                       className="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                  </div>
+                </div>
+
+                <div className="bg-purple-50/60 p-3.5 rounded-xl border border-purple-200">
+                  <label className="block text-xs font-bold text-purple-900 mb-1">
+                    Purchased User Licenses (Seats) <span className="text-red-500">*</span>
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="number"
+                      min="1"
+                      required
+                      value={formData.maxLicenses}
+                      onChange={(e) => setFormData({ ...formData, maxLicenses: parseInt(e.target.value, 10) || 1 })}
+                      placeholder="20"
+                      className="w-32 px-3.5 py-2 text-sm rounded-xl border border-purple-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-bold text-slate-900"
+                    />
+                    <p className="text-xs text-slate-600">
+                      Standard package is 20 seats. Every created user (Super Admin, Admin, Manager, Sales Executive) consumes 1 license.
+                    </p>
                   </div>
                 </div>
               </div>

@@ -33,6 +33,7 @@ export class DashboardService {
       recentOrders,
       orderMetrics,
       monthlyRevenue,
+      licenseQuota,
     ] = await Promise.all([
       this.repo.getOrganizationCount(organizationId),
       this.repo.getCompanyCount(organizationId),
@@ -52,6 +53,7 @@ export class DashboardService {
       this.repo.getRecentOrders(organizationId),
       this.repo.getOrderMetrics(organizationId, null, null, null),
       this.repo.getSuperAdminMonthlyRevenue(organizationId, now.getFullYear()),
+      this.repo.getOrganizationLicenseQuota(organizationId),
     ]);
 
     const formattedAllVisits = this._formatGroupBy(visitMetricsAll, 'status');
@@ -100,6 +102,8 @@ export class DashboardService {
       recentCompanies,
       recentUsers,
       recentOrders,
+      licenseQuota,
+      license: licenseQuota,
     };
 
     cacheService.set(cacheKey, result, 120);
@@ -129,7 +133,8 @@ export class DashboardService {
       organizationInfo,
       branchOrderMetrics,
       orgTargets,
-      executiveTasks
+      executiveTasks,
+      licenseQuota,
     ] = await Promise.all([
       this.repo.getVisitMetrics(organizationId, userId, null, null),
       this.repo.getVisitMetrics(organizationId, userId, todayStart, todayEnd),
@@ -144,6 +149,7 @@ export class DashboardService {
       this.repo.getManagerOrderMetrics(organizationId, null, branchId, null, null, null),
       this.repo.getTargetMetrics(organizationId, null),
       this.repo.getManagerTasks(organizationId, userId, branchId, null),
+      this.repo.getOrganizationLicenseQuota(organizationId),
     ]);
 
     const formattedAllVisits = this._formatGroupBy(visitMetricsAll, 'status');
@@ -186,6 +192,8 @@ export class DashboardService {
       myTasks: taskSummary,
       recentTasks: executiveTasks || [],
       recentOrders: recentOrdersList,
+      licenseQuota,
+      license: licenseQuota,
 
       recentActivities: [
         { title: "Dashboard Accessed", description: "Personal sales dashboard loaded", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), completed: true },

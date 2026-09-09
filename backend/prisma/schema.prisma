@@ -46,6 +46,7 @@ model Organization {
   gstNumber   String?
   panNumber   String?
   franchiseId String?        @db.Uuid
+  maxLicenses Int            @default(20)
 
   franchise   Franchise?     @relation(fields: [franchiseId], references: [id], onDelete: SetNull)
   branches    Branch[]

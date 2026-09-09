@@ -18,6 +18,7 @@ import {
   UserCheck,
   Award,
   CheckCircle,
+  AlertTriangle,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -69,9 +70,18 @@ export default function UserList() {
     return roleNames.some((r) => r && r.toLowerCase().includes("super admin"));
   }, [user]);
 
-  const { users, loading, search, setSearch, reload } = useUsers({
+  const { users, license, loading, search, setSearch, reload } = useUsers({
     debounce: true,
   });
+
+  const licenseQuota = useMemo(() => {
+    const max = license?.maxLicenses ?? user?.organization?.maxLicenses ?? 20;
+    const consumed = license?.consumedLicenses ?? users?.length ?? 0;
+    const available = license?.availableLicenses ?? Math.max(0, max - consumed);
+    const isLimitReached = license?.isLimitReached ?? (consumed >= max);
+    const percentUsed = Math.min(100, Math.round((consumed / max) * 100));
+    return { max, consumed, available, isLimitReached, percentUsed };
+  }, [license, users, user]);
 
   const displayedUsers = useMemo(() => {
     if (!users) return [];
@@ -339,10 +349,20 @@ export default function UserList() {
           !hasCompanyAdmin ? (
             <button
               onClick={() => {
+                if (licenseQuota.isLimitReached) {
+                  toast.error("License limit reached. Your organization has consumed all seat licenses. Contact Franchise Administrator.");
+                  return;
+                }
                 setSelectedUser(null);
                 setShowModal(true);
               }}
-              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white font-semibold hover:bg-indigo-700 transition"
+              disabled={licenseQuota.isLimitReached}
+              className={`flex items-center gap-2 rounded-xl px-5 py-3 text-white font-semibold transition ${
+                licenseQuota.isLimitReached
+                  ? "bg-slate-400 cursor-not-allowed opacity-80"
+                  : "bg-indigo-600 hover:bg-indigo-700 cursor-pointer shadow-sm"
+              }`}
+              title={licenseQuota.isLimitReached ? "All seat licenses consumed. Contact Franchise Administrator." : "Create Company Admin"}
             >
               <Plus size={18} />
               Create Company Admin
@@ -351,15 +371,98 @@ export default function UserList() {
         ) : (
           <button
             onClick={() => {
+              if (licenseQuota.isLimitReached) {
+                toast.error("License limit reached. Your organization has consumed all seat licenses. Contact Franchise Administrator.");
+                return;
+              }
               setSelectedUser(null);
               setShowModal(true);
             }}
-            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white font-semibold hover:bg-indigo-700 transition"
+            disabled={licenseQuota.isLimitReached}
+            className={`flex items-center gap-2 rounded-xl px-5 py-3 text-white font-semibold transition ${
+              licenseQuota.isLimitReached
+                ? "bg-slate-400 cursor-not-allowed opacity-80"
+                : "bg-indigo-600 hover:bg-indigo-700 cursor-pointer shadow-sm"
+            }`}
+            title={licenseQuota.isLimitReached ? "All seat licenses consumed. Contact Franchise Administrator." : "Create User"}
           >
             <Plus size={18} />
             Create User
           </button>
         ))}
+      </div>
+
+      {/* License Seat Allocation Banner */}
+      <div
+        className={`p-4 rounded-2xl border transition-all ${
+          licenseQuota.isLimitReached
+            ? "bg-red-50/90 border-red-200 text-red-950"
+            : licenseQuota.available <= 3
+            ? "bg-amber-50/90 border-amber-200 text-amber-950"
+            : "bg-slate-50/90 border-slate-200 text-slate-900"
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div
+              className={`p-2.5 rounded-xl ${
+                licenseQuota.isLimitReached
+                  ? "bg-red-100 text-red-700"
+                  : licenseQuota.available <= 3
+                  ? "bg-amber-100 text-amber-700"
+                  : "bg-indigo-100 text-indigo-700"
+              }`}
+            >
+              <Shield size={20} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Organization Seat License Quota
+                </span>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                    licenseQuota.isLimitReached
+                      ? "bg-red-200 text-red-800"
+                      : licenseQuota.available <= 3
+                      ? "bg-amber-200 text-amber-800"
+                      : "bg-emerald-100 text-emerald-800"
+                  }`}
+                >
+                  {licenseQuota.isLimitReached ? "Limit Reached" : `${licenseQuota.available} Seats Available`}
+                </span>
+              </div>
+              <p className="text-sm font-semibold text-slate-800 mt-0.5">
+                {licenseQuota.consumed} of {licenseQuota.max} Seats Consumed (1 user = 1 license)
+              </p>
+            </div>
+          </div>
+
+          {licenseQuota.isLimitReached ? (
+            <div className="text-xs font-medium text-red-700 bg-red-100/80 border border-red-200 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+              <AlertTriangle size={14} className="shrink-0" />
+              <span>All licenses consumed. Contact your Franchise Administrator to upgrade seats.</span>
+            </div>
+          ) : (
+            <div className="text-xs text-slate-500 font-medium">
+              Every created role (Super Admin, Admin, Manager, Sales Executive) counts as 1 seat.
+            </div>
+          )}
+        </div>
+
+        {/* Quota Progress Bar */}
+        <div className="w-full bg-slate-200/80 rounded-full h-2 mt-3 overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-300 ${
+              licenseQuota.isLimitReached
+                ? "bg-red-500"
+                : licenseQuota.available <= 3
+                ? "bg-amber-500"
+                : "bg-indigo-600"
+            }`}
+            style={{ width: `${licenseQuota.percentUsed}%` }}
+          />
+        </div>
       </div>
 
       {/* Search */}
@@ -406,15 +509,37 @@ export default function UserList() {
                     </p>
                     {!search && (!isCurrentSuperAdmin ? (
                       <button
-                        onClick={() => setShowModal(true)}
-                        className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
+                        onClick={() => {
+                          if (licenseQuota.isLimitReached) {
+                            toast.error("License limit reached. Cannot create more users.");
+                            return;
+                          }
+                          setShowModal(true);
+                        }}
+                        disabled={licenseQuota.isLimitReached}
+                        className={`mt-6 rounded-xl px-6 py-3 text-white transition ${
+                          licenseQuota.isLimitReached
+                            ? "bg-slate-400 cursor-not-allowed opacity-80"
+                            : "bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                        }`}
                       >
                         Create User
                       </button>
                     ) : !hasCompanyAdmin ? (
                       <button
-                        onClick={() => setShowModal(true)}
-                        className="mt-6 rounded-xl bg-indigo-600 px-6 py-3 text-white hover:bg-indigo-700"
+                        onClick={() => {
+                          if (licenseQuota.isLimitReached) {
+                            toast.error("License limit reached. Cannot create more users.");
+                            return;
+                          }
+                          setShowModal(true);
+                        }}
+                        disabled={licenseQuota.isLimitReached}
+                        className={`mt-6 rounded-xl px-6 py-3 text-white transition ${
+                          licenseQuota.isLimitReached
+                            ? "bg-slate-400 cursor-not-allowed opacity-80"
+                            : "bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
+                        }`}
                       >
                         Create Company Admin
                       </button>
@@ -526,7 +651,12 @@ export default function UserList() {
               <X size={20} />
             </button>
             <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold">{selectedUser ? "Edit User" : "Create User"}</h2>
-            <UserForm user={selectedUser} onClose={() => { setShowModal(false); setSelectedUser(null); }} onSuccess={reload} />
+            <UserForm
+              user={selectedUser}
+              onClose={() => { setShowModal(false); setSelectedUser(null); }}
+              onSuccess={reload}
+              isLimitReached={licenseQuota.isLimitReached && !selectedUser}
+            />
           </div>
         </div>
       )}

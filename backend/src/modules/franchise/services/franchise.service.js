@@ -117,6 +117,8 @@ export class FranchiseService {
     const passwordHash = await bcrypt.hash(superAdminData.password.trim(), 10);
 
     // 1. Create Organization
+    const maxLicenses = Math.max(1, parseInt(organizationData.maxLicenses) || 20);
+
     const organization = await prisma.organization.create({
       data: {
         franchiseId: franchiseId || null,
@@ -131,6 +133,7 @@ export class FranchiseService {
         postalCode: organizationData.postalCode?.trim() || null,
         gstNumber: organizationData.gstNumber?.trim() || null,
         panNumber: organizationData.panNumber?.trim() || null,
+        maxLicenses,
         isActive: true,
       },
     });
@@ -143,7 +146,7 @@ export class FranchiseService {
       throw AppError.internal('Failed to generate Organization Super Admin role for new organization.');
     }
 
-    // 3. Create Super Admin User
+    // 3. Create Super Admin User (Consumes 1 license)
     const superAdmin = await prisma.user.create({
       data: {
         organizationId: organization.id,
@@ -176,6 +179,9 @@ export class FranchiseService {
         state: organization.state,
         isActive: organization.isActive,
         createdAt: organization.createdAt,
+        maxLicenses: organization.maxLicenses,
+        totalUsers: 1,
+        availableLicenses: Math.max(0, organization.maxLicenses - 1),
       },
       superAdmin: {
         id: superAdmin.id,
@@ -236,7 +242,9 @@ export class FranchiseService {
       state: org.state,
       isActive: org.isActive,
       createdAt: org.createdAt,
+      maxLicenses: org.maxLicenses || 20,
       totalUsers: org._count.users,
+      availableLicenses: Math.max(0, (org.maxLicenses || 20) - org._count.users),
       totalBranches: org._count.branches,
       superAdmin: org.users[0] || null,
     }));
@@ -356,10 +364,24 @@ export class FranchiseService {
   async updateOrganization(franchiseId, organizationId, data) {
     const org = await prisma.organization.findUnique({
       where: { id: organizationId },
+      include: {
+        _count: {
+          select: { users: true },
+        },
+      },
     });
 
     if (!org) {
       throw AppError.notFound('Organization not found');
+    }
+
+    let maxLicenses = org.maxLicenses;
+    if (data.maxLicenses !== undefined && data.maxLicenses !== null && data.maxLicenses !== '') {
+      const parsedLicenses = parseInt(data.maxLicenses);
+      if (isNaN(parsedLicenses) || parsedLicenses < 1) {
+        throw AppError.badRequest('Number of licenses must be at least 1');
+      }
+      maxLicenses = parsedLicenses;
     }
 
     const updated = await prisma.organization.update({
@@ -376,10 +398,15 @@ export class FranchiseService {
         gstNumber: data.gstNumber !== undefined ? data.gstNumber?.trim() || null : org.gstNumber,
         panNumber: data.panNumber !== undefined ? data.panNumber?.trim() || null : org.panNumber,
         isActive: data.isActive !== undefined ? !!data.isActive : org.isActive,
+        maxLicenses,
       },
     });
 
-    return updated;
+    return {
+      ...updated,
+      totalUsers: org._count.users,
+      availableLicenses: Math.max(0, updated.maxLicenses - org._count.users),
+    };
   }
 
   /**

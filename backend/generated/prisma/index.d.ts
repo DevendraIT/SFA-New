@@ -6458,8 +6458,18 @@ export namespace Prisma {
 
   export type AggregateOrganization = {
     _count: OrganizationCountAggregateOutputType | null
+    _avg: OrganizationAvgAggregateOutputType | null
+    _sum: OrganizationSumAggregateOutputType | null
     _min: OrganizationMinAggregateOutputType | null
     _max: OrganizationMaxAggregateOutputType | null
+  }
+
+  export type OrganizationAvgAggregateOutputType = {
+    maxLicenses: number | null
+  }
+
+  export type OrganizationSumAggregateOutputType = {
+    maxLicenses: number | null
   }
 
   export type OrganizationMinAggregateOutputType = {
@@ -6479,6 +6489,7 @@ export namespace Prisma {
     gstNumber: string | null
     panNumber: string | null
     franchiseId: string | null
+    maxLicenses: number | null
   }
 
   export type OrganizationMaxAggregateOutputType = {
@@ -6498,6 +6509,7 @@ export namespace Prisma {
     gstNumber: string | null
     panNumber: string | null
     franchiseId: string | null
+    maxLicenses: number | null
   }
 
   export type OrganizationCountAggregateOutputType = {
@@ -6517,9 +6529,18 @@ export namespace Prisma {
     gstNumber: number
     panNumber: number
     franchiseId: number
+    maxLicenses: number
     _all: number
   }
 
+
+  export type OrganizationAvgAggregateInputType = {
+    maxLicenses?: true
+  }
+
+  export type OrganizationSumAggregateInputType = {
+    maxLicenses?: true
+  }
 
   export type OrganizationMinAggregateInputType = {
     id?: true
@@ -6538,6 +6559,7 @@ export namespace Prisma {
     gstNumber?: true
     panNumber?: true
     franchiseId?: true
+    maxLicenses?: true
   }
 
   export type OrganizationMaxAggregateInputType = {
@@ -6557,6 +6579,7 @@ export namespace Prisma {
     gstNumber?: true
     panNumber?: true
     franchiseId?: true
+    maxLicenses?: true
   }
 
   export type OrganizationCountAggregateInputType = {
@@ -6576,6 +6599,7 @@ export namespace Prisma {
     gstNumber?: true
     panNumber?: true
     franchiseId?: true
+    maxLicenses?: true
     _all?: true
   }
 
@@ -6617,6 +6641,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: OrganizationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OrganizationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: OrganizationMinAggregateInputType
@@ -6647,6 +6683,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: OrganizationCountAggregateInputType | true
+    _avg?: OrganizationAvgAggregateInputType
+    _sum?: OrganizationSumAggregateInputType
     _min?: OrganizationMinAggregateInputType
     _max?: OrganizationMaxAggregateInputType
   }
@@ -6668,7 +6706,10 @@ export namespace Prisma {
     gstNumber: string | null
     panNumber: string | null
     franchiseId: string | null
+    maxLicenses: number
     _count: OrganizationCountAggregateOutputType | null
+    _avg: OrganizationAvgAggregateOutputType | null
+    _sum: OrganizationSumAggregateOutputType | null
     _min: OrganizationMinAggregateOutputType | null
     _max: OrganizationMaxAggregateOutputType | null
   }
@@ -6704,6 +6745,7 @@ export namespace Prisma {
     gstNumber?: boolean
     panNumber?: boolean
     franchiseId?: boolean
+    maxLicenses?: boolean
     franchise?: boolean | Organization$franchiseArgs<ExtArgs>
     branches?: boolean | Organization$branchesArgs<ExtArgs>
     territories?: boolean | Organization$territoriesArgs<ExtArgs>
@@ -6752,6 +6794,7 @@ export namespace Prisma {
     gstNumber?: boolean
     panNumber?: boolean
     franchiseId?: boolean
+    maxLicenses?: boolean
     franchise?: boolean | Organization$franchiseArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -6772,6 +6815,7 @@ export namespace Prisma {
     gstNumber?: boolean
     panNumber?: boolean
     franchiseId?: boolean
+    maxLicenses?: boolean
     franchise?: boolean | Organization$franchiseArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -6792,9 +6836,10 @@ export namespace Prisma {
     gstNumber?: boolean
     panNumber?: boolean
     franchiseId?: boolean
+    maxLicenses?: boolean
   }
 
-  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "isActive" | "createdAt" | "updatedAt" | "email" | "phone" | "address" | "city" | "state" | "country" | "postalCode" | "gstNumber" | "panNumber" | "franchiseId", ExtArgs["result"]["organization"]>
+  export type OrganizationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "isActive" | "createdAt" | "updatedAt" | "email" | "phone" | "address" | "city" | "state" | "country" | "postalCode" | "gstNumber" | "panNumber" | "franchiseId" | "maxLicenses", ExtArgs["result"]["organization"]>
   export type OrganizationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     franchise?: boolean | Organization$franchiseArgs<ExtArgs>
     branches?: boolean | Organization$branchesArgs<ExtArgs>
@@ -6882,6 +6927,7 @@ export namespace Prisma {
       gstNumber: string | null
       panNumber: string | null
       franchiseId: string | null
+      maxLicenses: number
     }, ExtArgs["result"]["organization"]>
     composites: {}
   }
@@ -7349,6 +7395,7 @@ export namespace Prisma {
     readonly gstNumber: FieldRef<"Organization", 'String'>
     readonly panNumber: FieldRef<"Organization", 'String'>
     readonly franchiseId: FieldRef<"Organization", 'String'>
+    readonly maxLicenses: FieldRef<"Organization", 'Int'>
   }
     
 
@@ -50550,7 +50597,8 @@ export namespace Prisma {
     postalCode: 'postalCode',
     gstNumber: 'gstNumber',
     panNumber: 'panNumber',
-    franchiseId: 'franchiseId'
+    franchiseId: 'franchiseId',
+    maxLicenses: 'maxLicenses'
   };
 
   export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
@@ -51241,20 +51289,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -51265,6 +51299,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -51539,6 +51587,7 @@ export namespace Prisma {
     gstNumber?: StringNullableFilter<"Organization"> | string | null
     panNumber?: StringNullableFilter<"Organization"> | string | null
     franchiseId?: UuidNullableFilter<"Organization"> | string | null
+    maxLicenses?: IntFilter<"Organization"> | number
     franchise?: XOR<FranchiseNullableScalarRelationFilter, FranchiseWhereInput> | null
     branches?: BranchListRelationFilter
     territories?: TerritoryListRelationFilter
@@ -51586,6 +51635,7 @@ export namespace Prisma {
     gstNumber?: SortOrderInput | SortOrder
     panNumber?: SortOrderInput | SortOrder
     franchiseId?: SortOrderInput | SortOrder
+    maxLicenses?: SortOrder
     franchise?: FranchiseOrderByWithRelationInput
     branches?: BranchOrderByRelationAggregateInput
     territories?: TerritoryOrderByRelationAggregateInput
@@ -51636,6 +51686,7 @@ export namespace Prisma {
     gstNumber?: StringNullableFilter<"Organization"> | string | null
     panNumber?: StringNullableFilter<"Organization"> | string | null
     franchiseId?: UuidNullableFilter<"Organization"> | string | null
+    maxLicenses?: IntFilter<"Organization"> | number
     franchise?: XOR<FranchiseNullableScalarRelationFilter, FranchiseWhereInput> | null
     branches?: BranchListRelationFilter
     territories?: TerritoryListRelationFilter
@@ -51683,9 +51734,12 @@ export namespace Prisma {
     gstNumber?: SortOrderInput | SortOrder
     panNumber?: SortOrderInput | SortOrder
     franchiseId?: SortOrderInput | SortOrder
+    maxLicenses?: SortOrder
     _count?: OrganizationCountOrderByAggregateInput
+    _avg?: OrganizationAvgOrderByAggregateInput
     _max?: OrganizationMaxOrderByAggregateInput
     _min?: OrganizationMinOrderByAggregateInput
+    _sum?: OrganizationSumOrderByAggregateInput
   }
 
   export type OrganizationScalarWhereWithAggregatesInput = {
@@ -51708,6 +51762,7 @@ export namespace Prisma {
     gstNumber?: StringNullableWithAggregatesFilter<"Organization"> | string | null
     panNumber?: StringNullableWithAggregatesFilter<"Organization"> | string | null
     franchiseId?: UuidNullableWithAggregatesFilter<"Organization"> | string | null
+    maxLicenses?: IntWithAggregatesFilter<"Organization"> | number
   }
 
   export type BranchWhereInput = {
@@ -55187,6 +55242,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -55234,6 +55290,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -55279,6 +55336,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -55326,6 +55384,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -55372,6 +55431,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
   }
 
   export type OrganizationUpdateManyMutationInput = {
@@ -55390,6 +55450,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
   }
 
   export type OrganizationUncheckedUpdateManyInput = {
@@ -55409,6 +55470,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
   }
 
   export type BranchCreateInput = {
@@ -59258,6 +59320,17 @@ export namespace Prisma {
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type FranchiseNullableScalarRelationFilter = {
     is?: FranchiseWhereInput | null
     isNot?: FranchiseWhereInput | null
@@ -59550,6 +59623,11 @@ export namespace Prisma {
     gstNumber?: SortOrder
     panNumber?: SortOrder
     franchiseId?: SortOrder
+    maxLicenses?: SortOrder
+  }
+
+  export type OrganizationAvgOrderByAggregateInput = {
+    maxLicenses?: SortOrder
   }
 
   export type OrganizationMaxOrderByAggregateInput = {
@@ -59569,6 +59647,7 @@ export namespace Prisma {
     gstNumber?: SortOrder
     panNumber?: SortOrder
     franchiseId?: SortOrder
+    maxLicenses?: SortOrder
   }
 
   export type OrganizationMinOrderByAggregateInput = {
@@ -59588,6 +59667,11 @@ export namespace Prisma {
     gstNumber?: SortOrder
     panNumber?: SortOrder
     franchiseId?: SortOrder
+    maxLicenses?: SortOrder
+  }
+
+  export type OrganizationSumOrderByAggregateInput = {
+    maxLicenses?: SortOrder
   }
 
   export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -59603,6 +59687,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -60042,17 +60142,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type BranchNullableScalarRelationFilter = {
     is?: BranchWhereInput | null
     isNot?: BranchWhereInput | null
@@ -60195,22 +60284,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -62278,6 +62351,14 @@ export namespace Prisma {
     connectOrCreate?: CRMImportCreateOrConnectWithoutOrganizationInput | CRMImportCreateOrConnectWithoutOrganizationInput[]
     createMany?: CRMImportCreateManyOrganizationInputEnvelope
     connect?: CRMImportWhereUniqueInput | CRMImportWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type FranchiseUpdateOneWithoutOrganizationsNestedInput = {
@@ -64362,14 +64443,6 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type OrganizationUpdateOneRequiredWithoutUsersNestedInput = {
@@ -66812,6 +66885,33 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -66878,33 +66978,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -67149,6 +67222,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -67194,6 +67268,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -67269,6 +67344,7 @@ export namespace Prisma {
     gstNumber?: StringNullableFilter<"Organization"> | string | null
     panNumber?: StringNullableFilter<"Organization"> | string | null
     franchiseId?: UuidNullableFilter<"Organization"> | string | null
+    maxLicenses?: IntFilter<"Organization"> | number
   }
 
   export type FranchiseCreateWithoutOrganizationsInput = {
@@ -69454,6 +69530,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -69500,6 +69577,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
@@ -69881,6 +69959,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -69927,6 +70006,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -70148,6 +70228,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -70194,6 +70275,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -70496,6 +70578,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -70542,6 +70625,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -70650,6 +70734,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     teams?: TeamCreateNestedManyWithoutOrganizationInput
@@ -70696,6 +70781,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
@@ -71059,6 +71145,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -71105,6 +71192,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -71252,6 +71340,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -71298,6 +71387,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     roles?: RoleUncheckedCreateNestedManyWithoutOrganizationInput
@@ -71627,6 +71717,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -71673,6 +71764,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     roles?: RoleUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -71886,6 +71978,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -71932,6 +72025,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -72103,6 +72197,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -72149,6 +72244,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -72462,6 +72558,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -72508,6 +72605,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -73792,6 +73890,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -73838,6 +73937,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -74846,6 +74946,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -74892,6 +74993,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -75057,6 +75159,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -75103,6 +75206,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -75258,6 +75362,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -75304,6 +75409,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -75469,6 +75575,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -75515,6 +75622,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -75886,6 +75994,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -75932,6 +76041,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -76160,6 +76270,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -76206,6 +76317,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -76298,6 +76410,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -76344,6 +76457,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -76604,6 +76718,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -76650,6 +76765,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -76788,6 +76904,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -76834,6 +76951,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -77138,6 +77256,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -77184,6 +77303,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -77784,6 +77904,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -77830,6 +77951,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -78036,6 +78158,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -78082,6 +78205,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -78284,6 +78408,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -78330,6 +78455,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -78526,6 +78652,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -78572,6 +78699,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -78764,6 +78892,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -78810,6 +78939,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -78975,6 +79105,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -79021,6 +79152,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -79176,6 +79308,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -79222,6 +79355,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -79282,6 +79416,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -79328,6 +79463,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -79372,6 +79508,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -79418,6 +79555,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -79688,6 +79826,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -79734,6 +79873,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -80000,6 +80140,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -80046,6 +80187,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -80211,6 +80353,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -80257,6 +80400,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -80412,6 +80556,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -80458,6 +80603,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -80623,6 +80769,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -80669,6 +80816,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -80824,6 +80972,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -80870,6 +81019,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -81035,6 +81185,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -81081,6 +81232,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -81236,6 +81388,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -81282,6 +81435,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -81342,6 +81496,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -81388,6 +81543,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -81432,6 +81588,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -81478,6 +81635,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -81748,6 +81906,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -81794,6 +81953,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -82060,6 +82220,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -82106,6 +82267,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -82271,6 +82433,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -82317,6 +82480,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -82472,6 +82636,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -82518,6 +82683,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -82836,6 +83002,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -82882,6 +83049,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -83101,6 +83269,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -83147,6 +83316,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -83299,6 +83469,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -83345,6 +83516,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -83493,6 +83665,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -83539,6 +83712,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -83796,6 +83970,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -83842,6 +84017,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -84101,6 +84277,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -84147,6 +84324,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -84562,6 +84740,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -84608,6 +84787,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -85037,6 +85217,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
     franchise?: FranchiseCreateNestedOneWithoutOrganizationsInput
     branches?: BranchCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryCreateNestedManyWithoutOrganizationInput
@@ -85083,6 +85264,7 @@ export namespace Prisma {
     gstNumber?: string | null
     panNumber?: string | null
     franchiseId?: string | null
+    maxLicenses?: number
     branches?: BranchUncheckedCreateNestedManyWithoutOrganizationInput
     territories?: TerritoryUncheckedCreateNestedManyWithoutOrganizationInput
     teams?: TeamUncheckedCreateNestedManyWithoutOrganizationInput
@@ -85316,6 +85498,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     franchise?: FranchiseUpdateOneWithoutOrganizationsNestedInput
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
@@ -85362,6 +85545,7 @@ export namespace Prisma {
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
     franchiseId?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -85993,6 +86177,7 @@ export namespace Prisma {
     postalCode?: string | null
     gstNumber?: string | null
     panNumber?: string | null
+    maxLicenses?: number
   }
 
   export type OrganizationUpdateWithoutFranchiseInput = {
@@ -86011,6 +86196,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUpdateManyWithoutOrganizationNestedInput
@@ -86056,6 +86242,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
     branches?: BranchUncheckedUpdateManyWithoutOrganizationNestedInput
     territories?: TerritoryUncheckedUpdateManyWithoutOrganizationNestedInput
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -86101,6 +86288,7 @@ export namespace Prisma {
     postalCode?: NullableStringFieldUpdateOperationsInput | string | null
     gstNumber?: NullableStringFieldUpdateOperationsInput | string | null
     panNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    maxLicenses?: IntFieldUpdateOperationsInput | number
   }
 
   export type BranchCreateManyOrganizationInput = {

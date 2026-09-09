@@ -22,8 +22,13 @@ export default function useUsers(options = {}) {
         params.search = debouncedSearch;
       }
       const response = await userService.getUsers(params);
-      const userList = response?.data?.users || response?.users || response?.data || [];
-      return Array.isArray(userList) ? userList : [];
+      const userList = response?.data?.users || response?.users || (Array.isArray(response?.data) ? response?.data : []);
+      const meta = response?.data?.meta || response?.meta || null;
+      return {
+        users: Array.isArray(userList) ? userList : [],
+        meta,
+        license: meta?.license || null,
+      };
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000,
@@ -32,7 +37,9 @@ export default function useUsers(options = {}) {
   });
 
   return {
-    users: data || [],
+    users: data?.users || [],
+    meta: data?.meta || null,
+    license: data?.license || null,
     loading: isLoading,
     search,
     setSearch,
