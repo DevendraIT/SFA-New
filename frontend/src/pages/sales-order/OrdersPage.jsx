@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { 
   ShoppingCart, RefreshCw, Eye, X, Building2, User, MapPin, 
   FileText, Calendar, Tag, CreditCard, CheckCircle2, AlertCircle, 
-  Clock, ShieldCheck, Mail, Phone, Hash, Layers
+  Clock, ShieldCheck, Mail, Phone, Hash, Layers, ChevronLeft, ChevronRight
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -25,6 +25,8 @@ export default function OrdersPage() {
   const { user } = useAuth();
   const isSuperAdmin = isSuperAdminUser(user);
   const [filter, setFilter] = useState("ALL");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   
   // Selected order details state for modal
   const [selectedOrderId, setSelectedOrderId] = useState(null);
@@ -33,20 +35,34 @@ export default function OrdersPage() {
   const [showImportModal, setShowImportModal] = useState(false);
 
   const {
-    data: orders = [],
+    data: orderResult = { orders: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 1 }, stats: null },
     isLoading: loading,
     error,
     refetch: loadOrders,
   } = useQuery({
-    queryKey: ["orders"],
+    queryKey: ["orders", page, pageSize, filter],
     queryFn: async () => {
-      const res = await salesApi.listOrders({ take: 100 });
+      const params = { page, limit: pageSize };
+      if (filter === "COMPLETED") {
+        params.status = "COMPLETED";
+      } else if (filter === "DRAFT") {
+        params.status = "DRAFT";
+      }
+      const res = await salesApi.listOrders(params);
       const data = res.data?.data || res.data;
-      return Array.isArray(data?.orders) ? data.orders : Array.isArray(data) ? data : [];
+      return {
+        orders: Array.isArray(data?.orders) ? data.orders : Array.isArray(data) ? data : [],
+        pagination: data?.pagination || { page: 1, limit: pageSize, total: data?.orders?.length || 0, totalPages: 1 },
+        stats: data?.stats || null,
+      };
     },
-    staleTime: 60 * 1000,
+    staleTime: 30 * 1000,
     gcTime: 5 * 60 * 1000,
   });
+
+  const orders = orderResult.orders;
+  const pagination = orderResult.pagination;
+  const stats = orderResult.stats;
 
   const openOrderModal = async (order) => {
     setSelectedOrderId(order.id);
@@ -82,11 +98,12 @@ export default function OrdersPage() {
     return <ErrorState message="Failed to load Sales Orders" onRetry={loadOrders} />;
   }
 
-  const filteredOrders = filter === "ALL"
-    ? orders
-    : filter === "COMPLETED"
-      ? orders.filter((o) => String(o.status).toUpperCase().includes("DELIVERED") || String(o.status).toUpperCase().includes("COMPLETED"))
-      : orders.filter((o) => o.status === filter || (filter === "DRAFT" && (o.status === "DRAFT" || o.status === "PENDING")));
+  const handleFilterClick = (newFilter) => {
+    setFilter(newFilter);
+    setPage(1);
+  };
+
+  const filteredOrders = orders;
 
   const totalRevenue = orders.reduce((sum, o) => {
     const val = typeof o.totalAmount === "object" ? o.totalAmount?.amount : o.totalAmount;
@@ -118,6 +135,16 @@ export default function OrdersPage() {
     return sum + (Number(val) || 0);
   }, 0);
 
+  // Overall Organization Totals (across all orders in the organization)
+  const displayTotalRevenue = stats?.totalValue ?? totalRevenue;
+  const displayTotalCount = stats?.totalOrders ?? pagination.total ?? orders.length;
+
+  const displayCompletedRevenue = stats?.byStatus?.COMPLETED?.value ?? completedRevenue;
+  const displayCompletedCount = stats?.byStatus?.COMPLETED?.count ?? completedOrdersList.length;
+
+  const displayDraftRevenue = (Number(stats?.byStatus?.DRAFT?.value || 0) + Number(stats?.byStatus?.PENDING?.value || 0)) || draftRevenue;
+  const displayDraftCount = (Number(stats?.byStatus?.DRAFT?.count || 0) + Number(stats?.byStatus?.PENDING?.count || 0)) || draftOrdersList.length;
+
   const getStatusBadgeClass = (status) => {
     const s = String(status || "").toUpperCase();
     if (s.includes("DELIVERED") || s.includes("COMPLETED")) return "bg-emerald-100 text-emerald-800 border-emerald-300";
@@ -148,11 +175,11 @@ export default function OrdersPage() {
       </PageHeader>
 
       {/* Dynamic Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Total Order Value */}
         <div
-          onClick={() => setFilter("ALL")}
-          title="Total gross value of all created sales orders across all statuses (Draft, Pending, and Completed)"
+          onClick={() => handleFilterClick("ALL")}
+          title="Total gross value of all created sales orders across all statuses in your organization"
           className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
             filter === "ALL"
               ? "bg-blue-50/90 border-blue-400 ring-2 ring-blue-300/50"
@@ -161,16 +188,16 @@ export default function OrdersPage() {
         >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total Order Value</p>
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{orders.length}</span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">{displayTotalCount}</span>
           </div>
-          <p className="text-2xl font-black text-slate-900 mt-1.5">₹{totalRevenue.toLocaleString("en-IN")}</p>
+          <p className="text-2xl font-black text-slate-900 mt-1.5">₹{displayTotalRevenue.toLocaleString("en-IN")}</p>
           <p className="text-xs text-slate-500 mt-0.5">All created sales orders</p>
         </div>
 
         {/* Completed Revenue */}
         <div
-          onClick={() => setFilter("COMPLETED")}
-          title="Total revenue realized from delivered, completed, or approved sales orders"
+          onClick={() => handleFilterClick("COMPLETED")}
+          title="Total revenue realized from delivered or completed sales orders in your organization"
           className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
             filter === "COMPLETED"
               ? "bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-300/50"
@@ -180,17 +207,17 @@ export default function OrdersPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Completed Revenue</p>
             <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-              {completedOrdersList.length}
+              {displayCompletedCount}
             </span>
           </div>
-          <p className="text-2xl font-black text-emerald-700 mt-1.5">₹{completedRevenue.toLocaleString("en-IN")}</p>
+          <p className="text-2xl font-black text-emerald-700 mt-1.5">₹{displayCompletedRevenue.toLocaleString("en-IN")}</p>
           <p className="text-xs text-slate-500 mt-0.5">Realized & delivered revenue</p>
         </div>
 
         {/* Draft / Pending Amount */}
         <div
-          onClick={() => setFilter("DRAFT")}
-          title="Total value of sales orders currently in Draft, Pending review, or awaiting fulfillment"
+          onClick={() => handleFilterClick("DRAFT")}
+          title="Total value of sales orders currently in Draft, Pending review, or awaiting fulfillment in your organization"
           className={`rounded-2xl border p-5 shadow-sm cursor-pointer transition ${
             filter === "DRAFT"
               ? "bg-amber-50/90 border-amber-400 ring-2 ring-amber-300/50"
@@ -199,38 +226,38 @@ export default function OrdersPage() {
         >
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Pending / Draft Value</p>
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">{draftOrdersList.length}</span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">{displayDraftCount}</span>
           </div>
-          <p className="text-2xl font-black text-amber-700 mt-1.5">₹{draftRevenue.toLocaleString("en-IN")}</p>
+          <p className="text-2xl font-black text-amber-700 mt-1.5">₹{displayDraftRevenue.toLocaleString("en-IN")}</p>
           <p className="text-xs text-slate-500 mt-0.5">Awaiting fulfillment / review</p>
         </div>
 
         {/* Filtered Active View */}
-        <div
-          title="Dynamic total amount and order count matching your currently selected tab or filter (All, Pending/Draft, or Completed)"
+        {/* <div
+          title="Dynamic total amount and order count matching your currently selected tab on this page"
           className="rounded-2xl bg-slate-900 text-white border border-slate-800 p-5 shadow-sm transition hover:border-slate-700"
         >
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Active Filter View</p>
+            <p className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Active Page View</p>
             <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
-              {filter}
+              {filter} (Page {page})
             </span>
           </div>
           <p className="text-2xl font-black text-white mt-1.5">₹{filteredAmount.toLocaleString("en-IN")}</p>
-          <p className="text-xs text-slate-400 mt-0.5">{filteredOrders.length} order(s) displayed</p>
-        </div>
+          <p className="text-xs text-slate-400 mt-0.5">{filteredOrders.length} order(s) on current page</p>
+        </div> */}
       </div>
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
         {[
-          { key: "ALL", label: `All Orders (${orders.length})` },
-          { key: "DRAFT", label: `Pending / Draft (${orders.filter(o => o.status === 'DRAFT' || o.status === 'PENDING').length})` },
-          { key: "COMPLETED", label: `Completed Orders (${orders.filter(o => String(o.status).toUpperCase().includes('COMPLETED') || String(o.status).toUpperCase().includes('DELIVERED')).length})` },
+          { key: "ALL", label: `All Orders (${displayTotalCount})` },
+          { key: "DRAFT", label: `Pending / Draft (${displayDraftCount})` },
+          { key: "COMPLETED", label: `Completed Orders (${displayCompletedCount})` },
         ].map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setFilter(tab.key)}
+            onClick={() => handleFilterClick(tab.key)}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
               filter === tab.key
                 ? "bg-blue-600 text-white shadow-sm"
@@ -243,11 +270,17 @@ export default function OrdersPage() {
       </div>
 
       {/* Orders Table */}
-      <SectionCard title="All Sales Orders" subtitle={`${filteredOrders.length} order(s)`} icon={ShoppingCart} iconColor="text-blue-600">
+      <SectionCard 
+        title="All Sales Orders" 
+        subtitle={pagination.total > 0 ? `Showing ${Math.min((page - 1) * pageSize + 1, pagination.total)}-${Math.min(page * pageSize, pagination.total)} of ${pagination.total} orders` : `${filteredOrders.length} order(s)`} 
+        icon={ShoppingCart} 
+        iconColor="text-blue-600"
+      >
         {filteredOrders.length === 0 ? (
           <EmptyDashboard title="No Sales Orders Found" description="No orders found for the active filter." />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+            <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-100/80 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
@@ -308,7 +341,67 @@ export default function OrdersPage() {
               </tbody>
             </table>
           </div>
-        )}
+
+          {/* Pagination Controls Bar */}
+          {pagination.total > 0 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-3.5 bg-slate-50/80 border-t border-slate-200 text-sm text-slate-600">
+              <div className="flex items-center gap-2">
+                <span>
+                  Showing <span className="font-bold text-slate-900">{Math.min((page - 1) * pageSize + 1, pagination.total)}</span> to{" "}
+                  <span className="font-bold text-slate-900">{Math.min(page * pageSize, pagination.total)}</span> of{" "}
+                  <span className="font-bold text-slate-900">{pagination.total}</span> orders
+                </span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setPage(1);
+                  }}
+                  className="ml-3 px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-300 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                >
+                  <option value={10}>10 per page</option>
+                  <option value={20}>20 per page</option>
+                  <option value={50}>50 per page</option>
+                  <option value={100}>100 per page</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-xs transition cursor-pointer"
+                >
+                  <ChevronLeft size={14} /> Previous
+                </button>
+
+                {/* Page Indicator Buttons */}
+                {Array.from({ length: pagination.totalPages || 1 }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`min-w-8 h-8 rounded-lg text-xs font-bold transition cursor-pointer ${
+                      page === p
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setPage((p) => Math.min(pagination.totalPages || 1, p + 1))}
+                  disabled={page >= (pagination.totalPages || 1)}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-xs transition cursor-pointer"
+                >
+                  Next <ChevronRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
       </SectionCard>
 
       {/* FULL SALES ORDER DETAILS MODAL */}
