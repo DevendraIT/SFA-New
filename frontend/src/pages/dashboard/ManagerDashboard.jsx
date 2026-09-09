@@ -149,10 +149,10 @@ export default function ManagerDashboard() {
       ];
 
   const chartData = [
-    { name: "Sales Orders", visits: totalSalesOrders },
-    { name: "Completed Tasks", visits: completedTasks },
-    { name: "In Progress", visits: inProgressTasks },
-    { name: "Pending Tasks", visits: pendingTasks },
+    { name: "Sales Orders", count: totalSalesOrders },
+    { name: "Completed Tasks", count: completedTasks },
+    { name: "In Progress",count: inProgressTasks },
+    { name: "Pending Tasks", count: pendingTasks },
   ];
 
   const recentTasksList = (dashboard?.recentTasks && dashboard.recentTasks.length > 0)
@@ -320,7 +320,7 @@ export default function ManagerDashboard() {
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="visits" fill="#2563EB" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="count" fill="#2563EB" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
