@@ -262,19 +262,27 @@ export class SalesOrderRepository {
    */
   async getOrderStats(filters = {}) {
     try {
+      const statsWhere = this.buildWhereClause({
+        ...filters,
+        status: undefined,
+      });
+
       const stats = await prisma.order.groupBy({
         by: ['status'],
-        where: this.buildWhereClause(filters),
+        where: statsWhere,
         _count: { id: true },
         _sum: { totalAmount: true },
       });
 
       const totalOrders = stats.reduce((acc, curr) => acc + curr._count.id, 0);
-      const totalValue = stats.reduce((acc, curr) => acc + (curr._sum.totalAmount || 0), 0);
+      const totalValue = stats.reduce((acc, curr) => acc + Number(curr._sum.totalAmount || 0), 0);
 
       const byStatus = {};
       stats.forEach(stat => {
-        byStatus[stat.status] = stat._count.id;
+        byStatus[stat.status] = {
+          count: stat._count.id,
+          value: Number(stat._sum.totalAmount || 0),
+        };
       });
 
       return {

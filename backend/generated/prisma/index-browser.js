@@ -120,6 +120,19 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.FranchiseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  contactName: 'contactName',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  phone: 'phone',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.OrganizationScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -135,7 +148,9 @@ exports.Prisma.OrganizationScalarFieldEnum = {
   country: 'country',
   postalCode: 'postalCode',
   gstNumber: 'gstNumber',
-  panNumber: 'panNumber'
+  panNumber: 'panNumber',
+  franchiseId: 'franchiseId',
+  maxLicenses: 'maxLicenses'
 };
 
 exports.Prisma.BranchScalarFieldEnum = {
@@ -750,6 +765,7 @@ exports.ProductIssueStatus = exports.$Enums.ProductIssueStatus = {
 };
 
 exports.Prisma.ModelName = {
+  Franchise: 'Franchise',
   Organization: 'Organization',
   Branch: 'Branch',
   Department: 'Department',

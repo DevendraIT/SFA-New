@@ -1380,9 +1380,11 @@ export class DashboardRepository {
   // Super Admin System-Wide Helper Queries
   // --------------------------------------------------
 
-  async getOrganizationCount() {
+  async getOrganizationCount(organizationId = null) {
     try {
-      return await prisma.organization.count();
+      return await prisma.organization.count({
+        where: organizationId ? { id: organizationId } : {},
+      });
     } catch {
       return 0;
     }
@@ -1428,6 +1430,44 @@ export class DashboardRepository {
       });
     } catch {
       return 0;
+    }
+  }
+
+  async getOrganizationLicenseQuota(organizationId = null) {
+    try {
+      if (!organizationId) {
+        return {
+          maxLicenses: 20,
+          consumedLicenses: 0,
+          availableLicenses: 20,
+          isLimitReached: false,
+        };
+      }
+      const org = await prisma.organization.findUnique({
+        where: { id: organizationId },
+        select: { id: true, name: true, maxLicenses: true },
+      });
+      const maxLicenses = org?.maxLicenses || 20;
+      const consumedLicenses = await prisma.user.count({
+        where: {
+          deletedAt: null,
+          organizationId,
+        },
+      });
+      const availableLicenses = Math.max(0, maxLicenses - consumedLicenses);
+      return {
+        maxLicenses,
+        consumedLicenses,
+        availableLicenses,
+        isLimitReached: consumedLicenses >= maxLicenses,
+      };
+    } catch {
+      return {
+        maxLicenses: 20,
+        consumedLicenses: 0,
+        availableLicenses: 20,
+        isLimitReached: false,
+      };
     }
   }
 
@@ -1535,9 +1575,10 @@ export class DashboardRepository {
     }
   }
 
-  async getRecentOrganizations() {
+  async getRecentOrganizations(organizationId = null) {
     try {
       return await prisma.organization.findMany({
+        where: organizationId ? { id: organizationId } : {},
         take: 5,
         orderBy: { createdAt: 'desc' },
         select: {

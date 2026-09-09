@@ -13,6 +13,7 @@ const quantitySchema = z.coerce.number().positive('Quantity must be greater than
 export const listOrdersQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
+  take: z.coerce.number().int().min(1).max(100).optional(),
   q: z.string().trim().optional(),
   status: z.string().trim().max(50).optional(),
   organizationId: uuidSchema('Organization').optional(),

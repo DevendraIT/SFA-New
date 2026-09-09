@@ -17,6 +17,33 @@ export const authenticate = async (req, res, next) => {
     const token = authHeader.substring(7);
     const decoded = verifyAccessToken(token);
 
+    // Handle Franchise Admin token
+    if (decoded.isFranchiseAdmin || decoded.roleName === 'Franchise Admin') {
+      const franchise = await prisma.franchise.findUnique({
+        where: { id: decoded.userId || decoded.franchiseId },
+      });
+
+      if (!franchise || !franchise.isActive) {
+        throw AppError.unauthorized('Franchise account not found or inactive');
+      }
+
+      req.user = {
+        id: franchise.id,
+        email: franchise.email,
+        firstName: franchise.contactName || 'Franchise',
+        lastName: 'Admin',
+        role: 'Franchise Admin',
+        roles: [{ role: { name: 'Franchise Admin' } }],
+        isFranchiseAdmin: true,
+        franchiseId: franchise.id,
+      };
+      req.franchise = {
+        id: franchise.id,
+        email: franchise.email,
+      };
+      return next();
+    }
+
     // Fetch user from database matching multi-role relational schema with targeted field selection
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },

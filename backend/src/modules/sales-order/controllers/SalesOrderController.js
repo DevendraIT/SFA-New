@@ -31,7 +31,7 @@ export class SalesOrderController {
     try {
       const queryParams = {
         page: parseInt(req.query.page) || 1,
-        limit: Math.min(100, parseInt(req.query.limit) || 20),
+        limit: Math.min(100, parseInt(req.query.limit || req.query.take) || 20),
         status: req.query.status,
         customerId: req.query.customerId,
         organizationId: req.query.organizationId,

@@ -1,4 +1,5 @@
 export const ENTERPRISE_ROLES = {
+  FRANCHISE_ADMIN: 'Franchise Admin',
   ORGANIZATION_SUPER_ADMIN: 'Organization Super Admin',
   COMPANY_ADMIN: 'Company Admin',
   HEAD_OF_SALES: 'Head of Sales',
@@ -9,6 +10,7 @@ export const ENTERPRISE_ROLES = {
 };
 
 export const ENTERPRISE_ROLE_LEVELS = {
+  FRANCHISE_ADMIN: 0,
   ORGANIZATION_SUPER_ADMIN: 1,
   COMPANY_ADMIN: 2,
   HEAD_OF_SALES: 3,

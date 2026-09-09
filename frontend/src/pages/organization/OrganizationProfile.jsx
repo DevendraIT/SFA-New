@@ -49,8 +49,6 @@ export default function OrganizationProfile() {
   const { organization, loading, reload } = useOrganizations();
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const isSuperAdmin = useMemo(() => {
     if (!user) return false;
@@ -118,25 +116,6 @@ export default function OrganizationProfile() {
       toast.error(error?.response?.data?.message || "Failed to save organization");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!organization?.id || !isSuperAdmin) {
-      toast.error("Only Super Admin can delete the organization.");
-      return;
-    }
-    try {
-      setIsDeleting(true);
-      await organizationService.deleteOrganization(organization.id);
-      toast.success("Organization deleted successfully");
-      setShowDeleteModal(false);
-      reload();
-    } catch (error) {
-      console.error(error);
-      toast.error(error?.response?.data?.message || "Failed to delete organization");
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -315,21 +294,12 @@ export default function OrganizationProfile() {
 
         <div className="flex items-center gap-3">
           {isSuperAdmin && !isEditing && (
-            <>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="rounded-xl bg-[#4F46E5] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer shadow-sm"
-              >
-                Edit Details
-              </button>
-              <button
-                onClick={() => setShowDeleteModal(true)}
-                className="rounded-xl bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 px-4 py-2.5 text-sm font-medium transition cursor-pointer flex items-center gap-1.5"
-              >
-                <Trash2 className="w-4 h-4" />
-                Delete
-              </button>
-            </>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="rounded-xl bg-[#4F46E5] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer shadow-sm"
+            >
+              Edit Details
+            </button>
           )}
         </div>
       </div>
@@ -598,43 +568,6 @@ export default function OrganizationProfile() {
           )}
         </div>
       </div>
-
-      {/* Delete Organization Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl space-y-4">
-            <div className="flex items-center gap-3 text-red-600">
-              <div className="p-3 bg-red-100 rounded-full">
-                <Trash2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-800">Delete Organization</h3>
-            </div>
-            
-            <p className="text-sm text-slate-600">
-              Are you sure you want to delete <span className="font-semibold text-slate-800">{organization?.name}</span>? 
-              This action will remove the organization record and allow you to create a new single organization.
-            </p>
-
-            <div className="flex justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowDeleteModal(false)}
-                className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="rounded-xl bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-70 cursor-pointer shadow-sm"
-              >
-                {isDeleting ? "Deleting..." : "Yes, Delete Organization"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

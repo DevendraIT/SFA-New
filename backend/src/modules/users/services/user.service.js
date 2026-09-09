@@ -49,7 +49,36 @@ export class UserService {
       teamId: query.teamId,
       territoryId: query.territoryId,
     });
-    return { users, meta: this._buildPaginationMeta(total, query.page, query.limit) };
+
+    // Fetch Organization License Info
+    let license = null;
+    try {
+      const { prisma } = await import('../../../config/database.js');
+      const org = await prisma.organization.findUnique({
+        where: { id: organizationId },
+        select: { maxLicenses: true },
+      });
+      const currentHeadcount = await prisma.user.count({
+        where: { organizationId, deletedAt: null },
+      });
+      const maxLicenses = org?.maxLicenses || 20;
+      license = {
+        maxLicenses,
+        consumedLicenses: currentHeadcount,
+        availableLicenses: Math.max(0, maxLicenses - currentHeadcount),
+        isLimitReached: currentHeadcount >= maxLicenses,
+      };
+    } catch {
+      // Graceful fallback if error
+    }
+
+    return { 
+      users, 
+      meta: {
+        ...this._buildPaginationMeta(total, query.page, query.limit),
+        license,
+      } 
+    };
   }
 
   async getUser(id, organizationId) {
@@ -59,6 +88,24 @@ export class UserService {
   }
 
   async createUser(organizationId, data, req) {
+    // 0. Hard License Quota Verification
+    const { prisma } = await import('../../../config/database.js');
+    const org = await prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: { maxLicenses: true, name: true },
+    });
+
+    const activeUsersCount = await prisma.user.count({
+      where: { organizationId, deletedAt: null },
+    });
+
+    const maxAllowed = org?.maxLicenses || 20;
+    if (activeUsersCount >= maxAllowed) {
+      throw AppError.forbidden(
+        `License limit reached. Your organization "${org?.name || 'Your Organization'}" has consumed all ${maxAllowed} user licenses. Please contact your Franchise Administrator to upgrade or purchase additional user licenses.`
+      );
+    }
+
     // Validate required fields
     if (!data.email?.trim()) {
       throw AppError.badRequest('Email is required.');
@@ -134,7 +181,7 @@ export class UserService {
 
     await logAudit({
       organizationId,
-      userId: req.user.id,
+      userId: req?.user?.id || user.id,
       action: 'user.create',
       moduleName: 'users',
       details: { newUserId: user.id, email: user.email },

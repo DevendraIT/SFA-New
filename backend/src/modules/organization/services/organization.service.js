@@ -98,14 +98,6 @@ export class OrganizationService {
       throw AppError.forbidden('Only Super Admin is authorized to create an organization.');
     }
 
-    // 2. Strict Single Organization Limit (Max 1 Organization in system)
-    const existingCount = await prisma.organization.count();
-    if (existingCount >= 1) {
-      throw AppError.badRequest(
-        'System limit reached: Only a single organization can be created. An organization already exists.'
-      );
-    }
-
     if (await this.repo.existsByName(data.name)) {
       throw AppError.badRequest(`Organization name '${data.name}' is already in use.`);
     }

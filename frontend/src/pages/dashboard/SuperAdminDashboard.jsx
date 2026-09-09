@@ -23,6 +23,7 @@ import {
   Layers,
   CheckCircle2,
   Check,
+  Shield,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -216,6 +217,17 @@ export default function SuperAdminDashboard() {
     return list;
   }, [targets, totalVisits, completedVisits, totalSalesOrders, totalUsers]);
 
+  // License seat allocation quota
+  const licenseQuota = useMemo(() => {
+    const lic = dashboard?.licenseQuota || dashboard?.license;
+    const max = lic?.maxLicenses ?? user?.organization?.maxLicenses ?? 20;
+    const consumed = lic?.consumedLicenses ?? totalUsers ?? orgOverview?.users ?? 0;
+    const available = lic?.availableLicenses ?? Math.max(0, max - consumed);
+    const isLimitReached = lic?.isLimitReached ?? (consumed >= max);
+    const percentUsed = Math.min(100, Math.round((consumed / max) * 100));
+    return { max, consumed, available, isLimitReached, percentUsed };
+  }, [dashboard, user, totalUsers, orgOverview]);
+
   // Dynamic real-time activity feed from actual sales orders and live system logs
   const recentActivities = useMemo(() => {
     const list = [];
@@ -299,6 +311,79 @@ export default function SuperAdminDashboard() {
           <Sparkles className="w-4 h-4 text-amber-300" />
           Refresh Data
         </button>
+      </div>
+
+      {/* Organization Seat License Quota Banner */}
+      <div
+        className={`p-4 sm:p-5 rounded-2xl border transition-all shadow-xs ${
+          licenseQuota.isLimitReached
+            ? "bg-red-50/90 border-red-200 text-red-950"
+            : licenseQuota.available <= 5
+            ? "bg-amber-50/90 border-amber-200 text-amber-950"
+            : "bg-slate-50/90 border-slate-200 text-slate-900"
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3.5">
+            <div
+              className={`p-3 rounded-xl ${
+                licenseQuota.isLimitReached
+                  ? "bg-red-100 text-red-700"
+                  : licenseQuota.available <= 5
+                  ? "bg-amber-100 text-amber-700"
+                  : "bg-indigo-100 text-indigo-700"
+              }`}
+            >
+              <Shield size={22} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Organization License Quota
+                </span>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                    licenseQuota.isLimitReached
+                      ? "bg-red-200 text-red-800"
+                      : licenseQuota.available <= 5
+                      ? "bg-amber-200 text-amber-800"
+                      : "bg-emerald-100 text-emerald-800"
+                  }`}
+                >
+                  {licenseQuota.isLimitReached ? "Limit Reached" : `${licenseQuota.available} Seats Available`}
+                </span>
+              </div>
+              <p className="text-sm sm:text-base font-bold text-slate-800 mt-0.5">
+                {licenseQuota.consumed} of {licenseQuota.max} License Consumed (1 user = 1 license)
+              </p>
+            </div>
+          </div>
+
+          {licenseQuota.isLimitReached ? (
+            <div className="text-xs font-medium text-red-700 bg-red-100/80 border border-red-200 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+              <AlertTriangle size={14} className="shrink-0" />
+              <span>All licenses consumed. Contact your Franchise Administrator to upgrade.</span>
+            </div>
+          ) : (
+            <div className="text-xs text-slate-500 font-medium">
+              Every created role (Super Admin, Admin, Manager, Sales Executive) counts as 1.
+            </div>
+          )}
+        </div>
+
+        {/* Quota Progress Bar */}
+        <div className="w-full bg-slate-200/80 rounded-full h-2.5 mt-3.5 overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-300 ${
+              licenseQuota.isLimitReached
+                ? "bg-red-500"
+                : licenseQuota.available <= 5
+                ? "bg-amber-500"
+                : "bg-indigo-600"
+            }`}
+            style={{ width: `${licenseQuota.percentUsed}%` }}
+          />
+        </div>
       </div>
 
       {/* Read-Only Organization Overview Card with Vibrant Styling */}

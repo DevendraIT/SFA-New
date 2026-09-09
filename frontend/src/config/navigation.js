@@ -33,6 +33,17 @@ import {
 
 const navigation = [
   {
+    title: "Franchise Console",
+    icon: Building2,
+    path: "/franchise/dashboard",
+  },
+  {
+    title: "Franchise Settings",
+    icon: Settings,
+    path: "/franchise/settings",
+  },
+
+  {
     title: "Dashboard",
     icon: LayoutDashboard,
     path: "/dashboard",

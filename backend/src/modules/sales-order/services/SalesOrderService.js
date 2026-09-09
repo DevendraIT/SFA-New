@@ -51,29 +51,33 @@ export class SalesOrderService {
 
       // Build filters based on user context and permissions
       const filters = this.buildUserFilters(queryParams, userContext);
-
-      // Get orders with pagination
-      const { orders, total } = await this.salesOrderRepository.findMany({
-        filters,
-        pagination: {
-          page: parseInt(queryParams.page) || 1,
-          limit: parseInt(queryParams.limit || queryParams.take) || 100,
-        },
-        sorting: {
-          sortBy: queryParams.sortBy || 'createdAt',
-          sortOrder: queryParams.sortOrder || 'desc',
-        },
-        searchTerm: queryParams.q,
-      });
+      
+      // Get orders with pagination and overall statistics
+      const limitVal = parseInt(queryParams.limit || queryParams.take) || 20;
+      const [{ orders, total }, stats] = await Promise.all([
+        this.salesOrderRepository.findMany({
+          filters,
+          pagination: {
+            page: parseInt(queryParams.page) || 1,
+            limit: limitVal,
+          },
+          sorting: {
+            sortBy: queryParams.sortBy || 'createdAt',
+            sortOrder: queryParams.sortOrder || 'desc',
+          },
+          searchTerm: queryParams.q,
+        }),
+        this.salesOrderRepository.getOrderStats(filters),
+      ]);
 
       // Transform to DTOs
       const orderDtos = orders.map(order => new OrderListDto(order));
 
-      const limitVal = parseInt(queryParams.limit || queryParams.take) || 100;
       const result = {
         success: true,
         data: {
           orders: orderDtos,
+          stats,
           pagination: {
             page: parseInt(queryParams.page) || 1,
             limit: limitVal,

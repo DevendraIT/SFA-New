@@ -9,7 +9,7 @@ import departmentService from "../../../services/department.service";
 import teamService from "../../../services/team.service";
 import { useAuth } from "../../../context/AuthContext";
 
-export default function UserForm({ user, onClose, onSuccess }) {
+export default function UserForm({ user, onClose, onSuccess, isLimitReached }) {
   const queryClient = useQueryClient();
   const { user: currentUser } = useAuth();
   const isEditMode = !!user;
@@ -635,6 +635,17 @@ export default function UserForm({ user, onClose, onSuccess }) {
         </div>
       )}
 
+      {/* License Seat Limit Warning Banner */}
+      {isLimitReached && !isEditMode && (
+        <div className="rounded-xl border border-red-300 bg-red-50 p-4 text-xs font-semibold text-red-800 flex items-start gap-2.5 shadow-sm">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block text-sm text-red-900 mb-0.5">License Seat Limit Reached</span>
+            Your organization has reached its maximum allocated user seats. You cannot create new users until your Franchise Administrator upgrades your license quota.
+          </div>
+        </div>
+      )}
+
       {/* Buttons */}
       <div className="flex justify-end gap-3 border-t pt-5">
         <button
@@ -646,8 +657,8 @@ export default function UserForm({ user, onClose, onSuccess }) {
         </button>
         <button
           type="submit"
-          disabled={submitting}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition disabled:opacity-60"
+          disabled={submitting || (isLimitReached && !isEditMode)}
+          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting && <Loader2 size={16} className="animate-spin" />}
           {isEditMode ? "Update User" : "Create User"}

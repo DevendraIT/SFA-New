@@ -12,6 +12,7 @@ import {
 import navigation from "../../config/navigation";
 import { useAuth } from "../../context/AuthContext";
 import {
+  isFranchiseAdminUser,
   isSuperAdminUser,
   isCompanyAdminUser,
   isSalesManagerUser,
@@ -69,6 +70,7 @@ export default function Sidebar({
     );
   };
 
+  const isFranchiseAdmin = useMemo(() => isFranchiseAdminUser(user), [user]);
   const isSuperAdmin = useMemo(() => isSuperAdminUser(user), [user]);
   const isCompanyAdmin = useMemo(() => isCompanyAdminUser(user), [user]);
   const isSalesManager = useMemo(() => isSalesManagerUser(user), [user]);
@@ -78,14 +80,26 @@ export default function Sidebar({
   const isWarehouseManager = useMemo(() => isWarehouseManagerUser(user), [user]);
 
   const filteredNavigation = useMemo(() => {
+    // If user is Franchise Admin, show Franchise Console and Franchise Settings
+    if (isFranchiseAdmin) {
+      return navigation.filter((item) =>
+        ["Franchise Console", "Franchise Settings"].includes(item.title)
+      );
+    }
+
+    // For ALL standard roles (Super Admin, Company Admin, etc.), NEVER show Franchise items
+    const baseNav = navigation.filter(
+      (item) => !["Franchise Console", "Franchise Settings"].includes(item.title)
+    );
+
     if (isInventoryManager) {
-      return navigation.filter(
+      return baseNav.filter(
         (item) => ["Dashboard", "Inventory", "Notifications", "Settings"].includes(item.title)
       );
     }
 
     if (isWarehouseManager) {
-      return navigation
+      return baseNav
         .filter((item) => ["Dashboard", "Inventory", "Notifications", "Settings"].includes(item.title))
         .map((item) => {
           if (item.title === "Inventory" && Array.isArray(item.children)) {
@@ -106,7 +120,7 @@ export default function Sidebar({
     }
 
     if (isSuperAdmin) {
-      return navigation
+      return baseNav
         .filter((item) => !["Inventory", "Team Management"].includes(item.title))
         .map((item) => {
           if (item.title === "Field Force") {
@@ -121,7 +135,7 @@ export default function Sidebar({
     }
 
     if (isCompanyAdmin) {
-      return navigation
+      return baseNav
         .filter(
           (item) => !["Inventory", "Field Force", "Target & Performance", "Reports", "Team Management", "Sales Orders"].includes(item.title)
         )
@@ -141,13 +155,13 @@ export default function Sidebar({
     }
 
     if (isHeadOfSales) {
-      return navigation.filter(
+      return baseNav.filter(
         (item) => !["Inventory", "Organization", "Field Force", "Team Management"].includes(item.title)
       );
     }
 
     if (isSalesExecutive) {
-      return navigation
+      return baseNav
         .filter(
           (item) => !["Inventory", "Organization", "Team Management", "Sales Orders", "Reports", "Target & Performance"].includes(item.title)
         )
@@ -166,7 +180,7 @@ export default function Sidebar({
     }
 
     if (isSalesManager) {
-      return navigation
+      return baseNav
         .filter((item) => !["Inventory", "Field Force", "Reports", "Target & Performance"].includes(item.title))
         .map((item) => {
           if (item.title === "Organization" && Array.isArray(item.children)) {
@@ -184,8 +198,8 @@ export default function Sidebar({
     }
 
     // Default fallback: Filter out Inventory for any unspecified role
-    return navigation.filter((item) => item.title !== "Inventory");
-  }, [isSuperAdmin, isCompanyAdmin, isSalesManager, isSalesExecutive, isHeadOfSales, isInventoryManager, isWarehouseManager]);
+    return baseNav.filter((item) => item.title !== "Inventory");
+  }, [isFranchiseAdmin, isSuperAdmin, isCompanyAdmin, isSalesManager, isSalesExecutive, isHeadOfSales, isInventoryManager, isWarehouseManager]);
 
 
 
@@ -218,7 +232,7 @@ export default function Sidebar({
               className="flex flex-col"
             >
               <span className="text-2xl font-bold text-blue-600">
-                IT360
+                ITSOFTLAB360
               </span>
               <span className="text-xs text-slate-500">
                 Sales Force Automation

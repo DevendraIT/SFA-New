@@ -3,6 +3,7 @@ import { EmailService } from "../../shared/email/index.js";
 import { AppError } from "../../shared/response.js";
 import { generateAccessToken, generateRefreshToken } from "../../config/jwt.js";
 import config from "../../config/env.js";
+import { prisma } from "../../config/database.js";
 import {
   hashPassword,
   comparePassword,
@@ -39,8 +40,51 @@ export class AuthService {
 
     const authRecord = await this.authRepository.findAuthByEmail(email);
 
-
     if (!authRecord || !authRecord.user) {
+      // Check if this is a Franchise Admin
+      const franchise = await prisma.franchise.findFirst({
+        where: { email: email.trim().toLowerCase() },
+      });
+
+      if (franchise) {
+        if (!franchise.isActive) {
+          throw AppError.forbidden("Franchise account is inactive. Please contact support.");
+        }
+        const isMatch = await comparePassword(password, franchise.passwordHash);
+        if (!isMatch) {
+          throw AppError.unauthorized("Invalid email or password.");
+        }
+
+        const accessPayload = {
+          userId: franchise.id,
+          franchiseId: franchise.id,
+          roleName: "Franchise Admin",
+          isFranchiseAdmin: true,
+          email: franchise.email,
+        };
+
+        const accessToken = generateAccessToken(accessPayload);
+        const refreshToken = generateRefreshToken({
+          userId: franchise.id,
+          isFranchiseAdmin: true,
+        });
+
+        return {
+          emailVerified: true,
+          accessToken,
+          refreshToken,
+          user: {
+            id: franchise.id,
+            email: franchise.email,
+            firstName: franchise.contactName || "Franchise",
+            lastName: "Admin",
+            role: "Franchise Admin",
+            roles: [{ role: { name: "Franchise Admin" } }],
+            isFranchiseAdmin: true,
+          },
+        };
+      }
+
       throw AppError.unauthorized("Invalid email or password.");
     }
 
@@ -678,6 +722,20 @@ export class AuthService {
     const user = await this.authRepository.findUserById(userId);
 
     if (!user) {
+      const franchise = await prisma.franchise.findUnique({
+        where: { id: userId },
+      });
+      if (franchise) {
+        return {
+          id: franchise.id,
+          email: franchise.email,
+          firstName: franchise.contactName || "Franchise",
+          lastName: "Admin",
+          role: "Franchise Admin",
+          roles: [{ role: { name: "Franchise Admin" } }],
+          isFranchiseAdmin: true,
+        };
+      }
       throw AppError.notFound("User not found.");
     }
 
