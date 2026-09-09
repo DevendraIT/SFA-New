@@ -322,6 +322,8 @@ export class DashboardService {
       customersList,
       recentVisitsList,
       recentOrdersList,
+      revenueMetrics,
+      monthlyRevenueData,
     ] = await Promise.all([
       this.repo.getSalesManagerCount(organizationId, null, null),
       this.repo.getPresentSalesManagerCount(organizationId, null, null, now),
@@ -343,6 +345,8 @@ export class DashboardService {
       this.repo.getHeadOfSalesCustomers(organizationId),
       this.repo.getHeadOfSalesVisits(organizationId, null, null),
       this.repo.getRecentOrders(organizationId),
+      this.repo.getSuperAdminRevenueMetrics(organizationId),
+      this.repo.getSuperAdminMonthlyRevenue(organizationId, now.getFullYear()),
     ]);
 
 
@@ -372,6 +376,9 @@ export class DashboardService {
       pendingVisits,
       completedVisits,
       revenue,
+      totalRevenue: revenueMetrics?.totalRevenue || revenue,
+      todaysRevenue: revenueMetrics?.todaysRevenue || 0,
+      monthlyRevenue: monthlyRevenueData,
       approvedOrders,
       pendingOrders,
       attendance: attendanceFormatted,

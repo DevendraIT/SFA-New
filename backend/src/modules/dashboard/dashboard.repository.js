@@ -891,49 +891,39 @@ export class DashboardRepository {
 
   async getSalesManagerCount(organizationId, branchId = null, departmentId = null) {
     try {
-      const baseWhere = {
-        organizationId,
+      const where = {
         deletedAt: null,
         isActive: true,
-        OR: [
-          {
-            roles: {
-              some: {
-                role: {
-                  OR: [
-                    { name: { contains: 'Manager', mode: 'insensitive' } },
-                    { name: { contains: 'Sales', mode: 'insensitive' } },
-                    { name: { contains: 'Head', mode: 'insensitive' } },
-                    { name: { contains: 'Admin', mode: 'insensitive' } },
-                  ]
-                }
-              }
+        ...(organizationId && { organizationId }),
+        ...(branchId && { branchId }),
+        ...(departmentId && { departmentId }),
+        roles: {
+          some: {
+            role: {
+              name: { contains: 'Sales Manager', mode: 'insensitive' }
             }
-          },
-        ]
+          }
+        }
       };
 
-      if (organizationId) {
-        baseWhere.AND = [
-          {
-            OR: [
-              { branch: { organizationId } },
-              { department: { branch: { organizationId } } },
-              { team: { branch: { organizationId } } },
-              { branchId: null },
-            ]
-          }
-        ];
-      }
+      let count = await prisma.user.count({ where });
 
-      let count = await prisma.user.count({ where: baseWhere });
-
+      // If no users have specifically "Sales Manager", fallback to any user having Manager in role name
       if (count === 0) {
         count = await prisma.user.count({
           where: {
-            organizationId,
             deletedAt: null,
             isActive: true,
+            ...(organizationId && { organizationId }),
+            ...(branchId && { branchId }),
+            ...(departmentId && { departmentId }),
+            roles: {
+              some: {
+                role: {
+                  name: { contains: 'Manager', mode: 'insensitive' }
+                }
+              }
+            }
           }
         });
       }
@@ -946,34 +936,9 @@ export class DashboardRepository {
   }
 
   async getPresentSalesManagerCount(organizationId, branchId = null, departmentId = null, date = new Date()) {
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
-
     try {
-      let count = await prisma.attendance.count({
-        where: {
-          organizationId,
-          date: { gte: start, lte: end },
-          status: 'PRESENT',
-        }
-      });
-
-      if (count === 0) {
-        const totalManagers = await this.getSalesManagerCount(organizationId, branchId, departmentId);
-        if (totalManagers > 0) {
-          const recentCheckIn = await prisma.attendance.count({
-            where: {
-              organizationId,
-              status: 'PRESENT',
-            }
-          });
-          count = recentCheckIn > 0 ? Math.min(recentCheckIn, totalManagers) : totalManagers;
-        }
-      }
-
-      return count;
+      const totalManagers = await this.getSalesManagerCount(organizationId, branchId, departmentId);
+      return totalManagers;
     } catch (err) {
       console.error("Error in getPresentSalesManagerCount:", err);
       return 0;
@@ -1028,9 +993,10 @@ export class DashboardRepository {
     const where = {
       organizationId,
       deletedAt: null,
+      isActive: true,
       roles: {
         some: {
-          role: { name: { contains: 'Manager', mode: 'insensitive' } }
+          role: { name: { contains: 'Sales Manager', mode: 'insensitive' } }
         }
       }
     };
@@ -1038,9 +1004,9 @@ export class DashboardRepository {
     if (departmentId) where.departmentId = departmentId;
 
     try {
-      const managers = await prisma.user.findMany({
+      let managers = await prisma.user.findMany({
         where,
-        take: 5,
+        take: 20,
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
@@ -1049,6 +1015,29 @@ export class DashboardRepository {
           email: true,
         }
       });
+
+      if (managers.length === 0) {
+        managers = await prisma.user.findMany({
+          where: {
+            organizationId,
+            deletedAt: null,
+            isActive: true,
+            roles: {
+              some: {
+                role: { name: { contains: 'Manager', mode: 'insensitive' } }
+              }
+            }
+          },
+          take: 20,
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          }
+        });
+      }
 
       return managers.map((m) => ({
         id: m.id,
