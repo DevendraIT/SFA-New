@@ -289,7 +289,7 @@ export default function HeadOfSalesDashboard() {
           </div>
         </ChartCard> */}
 
-        <ChartCard title="Branch Performance" subtitle="Total sales revenue per branch facility">
+        {/* <ChartCard title="Branch Performance" subtitle="Total sales revenue per branch facility">
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={branchPerformance}>
@@ -316,7 +316,7 @@ export default function HeadOfSalesDashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </ChartCard>
+        </ChartCard> */}
       </div>
 
       {/* Row 3: Product Performance & Sales Trend */}
@@ -433,7 +433,7 @@ export default function HeadOfSalesDashboard() {
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
               <tr>
-                <th className="py-3 px-4">Order Number</th>
+                <th className="py-3 px-4">Order</th>
                 <th className="py-3 px-4">Customer</th>
                 <th className="py-3 px-4">Amount</th>
                 <th className="py-3 px-4">Status</th>
