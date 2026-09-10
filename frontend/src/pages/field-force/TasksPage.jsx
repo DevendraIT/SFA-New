@@ -14,7 +14,7 @@ import EmptyDashboard from "../../components/dashboard/EmptyDashboard";
 import ErrorState from "../../components/dashboard/ErrorState";
 import { TableSkeleton } from "../../components/dashboard/LoadingSkeleton";
 
-const TASK_FILTERS = ["ALL", "PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"];
+const TASK_FILTERS = ["ALL", "PENDING", "IN_PROGRESS", "COMPLETED"];
 
 export default function TasksPage() {
   const { user } = useAuth();
@@ -44,7 +44,7 @@ export default function TasksPage() {
     : tasks.filter((t) => t.status === activeFilter);
 
   const overdueTasks = tasks.filter(
-    (t) => t.dueDate && t.status !== "COMPLETED" && t.status !== "CANCELLED" && new Date(t.dueDate) < new Date()
+    (t) => t.dueDate && t.status !== "COMPLETED" && new Date(t.dueDate) < new Date()
   );
 
   if (loading) {

@@ -171,7 +171,7 @@ export default function Sidebar({
               ...item,
               children: item.children.filter(
                 (child) =>
-                  !["Visits", "Visit", "DAR", "Daily Activity", "Daily Activity Reports", "Attendance", "Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar"].includes(child.title)
+                  !["Visits", "Visit", "DAR", "Daily Activity", "Daily Activity Reports", "Attendance", "Beat Plans", "Beat Plan", "Route", "Photos", "Meeting Notes", "Expenses", "Calendar", "Profile"].includes(child.title)
               ),
             };
           }

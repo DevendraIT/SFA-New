@@ -250,13 +250,23 @@ export class FieldForceController {
 
   listExpensesData = async (req, res, next) => {
     try {
+      const roleNames = Array.isArray(req.user.roles)
+        ? req.user.roles.map((r) => (typeof r === "string" ? r : r.name || r.role?.name || ""))
+        : [];
+      const isSalesExecutive = roleNames.some((r) => r && r.toLowerCase().includes("sales executive"));
+
+      let filterUserId = req.query.userId;
+      if (isSalesExecutive) {
+        filterUserId = req.user.id;
+      }
+
       const result = await this.service.listExpenses(req.user.organizationId, {
-        userId: req.query.userId,
+        userId: filterUserId,
         status: req.query.status,
         startDate: req.query.startDate,
         endDate: req.query.endDate,
         skip: parseInt(req.query.skip) || 0,
-        take: parseInt(req.query.take) || 20,
+        take: parseInt(req.query.take) || 50,
       });
       return successResponse(res, result, 'Expenses retrieved.');
     } catch (err) {
@@ -336,13 +346,27 @@ export class FieldForceController {
 
   listTasksData = async (req, res, next) => {
     try {
+      const roleNames = Array.isArray(req.user.roles)
+        ? req.user.roles.map((r) => (typeof r === "string" ? r : r.name || r.role?.name || ""))
+        : [];
+      const isSalesExecutive = roleNames.some((r) => r && r.toLowerCase().includes("sales executive"));
+      const isSalesManager = roleNames.some((r) => r && r.toLowerCase().includes("sales manager"));
+      const isSuperOrCompanyAdmin = roleNames.some(
+        (r) => r && (r.toLowerCase().includes("super admin") || r.toLowerCase().includes("company admin") || r.toLowerCase() === "admin")
+      );
+
+      let assignedToId = req.query.assignedToId;
+      if (isSalesExecutive) {
+        assignedToId = req.user.id;
+      }
+
       const filters = {
-        assignedToId: req.query.assignedToId,
-        assignedById: req.query.assignedById,
-        branchId: req.user.branchId || undefined,
+        assignedToId,
+        assignedById: isSalesExecutive ? undefined : req.query.assignedById,
+        branchId: (!isSuperOrCompanyAdmin && isSalesManager) ? req.user.branchId : (isSalesExecutive ? undefined : req.query.branchId),
         status: req.query.status,
         skip: parseInt(req.query.skip) || 0,
-        take: parseInt(req.query.take) || 20,
+        take: parseInt(req.query.take) || 100,
       };
       // Remove undefined keys so they don't interfere
       Object.keys(filters).forEach(k => filters[k] === undefined && delete filters[k]);

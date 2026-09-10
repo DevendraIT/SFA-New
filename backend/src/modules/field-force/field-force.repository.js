@@ -372,7 +372,7 @@ export class FieldForceRepository {
   }
 
   async listTasks(organizationId, filters = {}) {
-    const { assignedToId, assignedById, status, branchId, skip = 0, take = 20 } = filters;
+    const { assignedToId, assignedById, status, branchId, skip = 0, take = 50 } = filters;
 
     const where = { organizationId };
     if (assignedToId) where.assignedToId = assignedToId;
@@ -389,9 +389,9 @@ export class FieldForceRepository {
       prisma.task.findMany({
         where,
         skip: Number(skip) || 0,
-        take: Number(take) || 20,
+        take: Number(take) || 50,
         include: { assignedTo: true, assignedBy: true },
-        orderBy: { dueDate: 'asc' },
+        orderBy: { updatedAt: 'desc' },
       }),
       prisma.task.count({ where }),
     ]);

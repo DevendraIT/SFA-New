@@ -191,7 +191,7 @@ const { user } = useAuth();
       </SectionCard>
 
       {/* Recent Activity */}
-      <SectionCard
+      {/* <SectionCard
         title="Recent Activity"
         subtitle="Your latest activities"
         icon={Activity}
@@ -199,7 +199,7 @@ const { user } = useAuth();
         <ActivityTimeline
           activities={recentActivitiesList}
         />
-      </SectionCard>
+      </SectionCard> */}
     </motion.div>
   );
 }
